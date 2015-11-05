@@ -57,6 +57,7 @@ SET(LIBS ${OpenCV_LIBS})
 # Configurable options, depending on desired functionality
 OPTION(USE_FILES "Use file resources (like video files)" OFF)
 OPTION(USE_BLACKMAGIC "Use BlackMagic SDK" OFF)
+OPTION(USE_LIBVLC "Use libVLC for grabbing frames" OFF)
 
 # Video files
 if(USE_FILES)
@@ -79,6 +80,21 @@ if(USE_BLACKMAGIC)
         MESSAGE(FATAL_ERROR "Blackmagic SDK could not be found.")
     endif(BlackMagicSDK_FOUND)
 endif(USE_BLACKMAGIC)
+
+# libVLC
+if(USE_LIBVLC)
+    LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+    FIND_PACKAGE(LIBVLC REQUIRED)
+    if(LIBVLC_FOUND)
+        ADD_DEFINITIONS(-DUSE_LIBVLC)
+        LIST(APPEND HEADERS vlc/vlc_video_source.h)
+        LIST(APPEND SOURCES vlc/vlc_video_source.cpp)
+        LIST(APPEND LIBS ${LIBVLC_LIBRARY})
+    else(LIBVLC_FOUND)
+        SET(USE_LIBVLC OFF CACHE BOOL "ON OFF" FORCE)
+        MESSAGE(FATAL_ERROR "libVLC could not be found.")
+    endif(LIBVLC_FOUND)
+endif(USE_LIBVLC)
 
 # Compile and link
 ADD_LIBRARY(${NAME} ${HEADERS} ${SOURCES})
