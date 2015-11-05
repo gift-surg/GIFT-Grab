@@ -56,6 +56,7 @@ SET(LIBS ${OpenCV_LIBS})
 
 # Configurable options, depending on desired functionality
 OPTION(USE_FILES "Use file resources (like video files)" OFF)
+OPTION(USE_BLACKMAGIC "Use BlackMagic SDK" OFF)
 
 # Video files
 if(USE_FILES)
@@ -63,6 +64,21 @@ if(USE_FILES)
     LIST(APPEND HEADERS offline/opencv_video_source.h)
     LIST(APPEND SOURCES offline/opencv_video_source.cpp)
 endif(USE_FILES)
+
+# BlackMagicSDK
+if(USE_BLACKMAGIC)
+    FIND_PACKAGE(BlackMagicSDK CONFIG REQUIRED)
+    if(BlackMagicSDK_FOUND)
+        INCLUDE_DIRECTORIES(${BlackMagicSDK_INCLUDE_DIR})
+        ADD_DEFINITIONS(-DUSE_BLACKMAGIC)
+        LIST(APPEND HEADERS blackmagic/blackmagic_frame_grabber.h)
+        LIST(APPEND SOURCES blackmagic/blackmagic_frame_grabber.cpp)
+        LIST(APPEND LIBS ${BlackMagicSDK_LIBS})
+    else(BlackMagicSDK_FOUND)
+        SET(USE_BLACKMAGIC OFF CACHE BOOL "ON OFF" FORCE)
+        MESSAGE(FATAL_ERROR "Blackmagic SDK could not be found.")
+    endif(BlackMagicSDK_FOUND)
+endif(USE_BLACKMAGIC)
 
 # Compile and link
 ADD_LIBRARY(${NAME} ${HEADERS} ${SOURCES})
