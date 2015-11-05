@@ -28,6 +28,7 @@ endif()
 FIND_PACKAGE(OpenCV REQUIRED)
 if(OpenCV_FOUND)
     ADD_DEFINITIONS(-DUSE_OPENCV)
+    INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
 else(OpenCV_FOUND)
     SET(USE_FILES OFF CACHE BOOL "ON OFF" FORCE)
     SET(USE_BLACKMAGIC OFF CACHE BOOL "ON OFF" FORCE)
@@ -39,6 +40,7 @@ SET(NAME giftgrab)
 
 # Library include dirs
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/api)
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/utils)
 
 # Variable for header and source files
 SET(HEADERS
@@ -50,7 +52,17 @@ SET(SOURCES
     api/videoframe.cpp
     api/maskframe.cpp
     )
-SET(LIBS)
+SET(LIBS ${OpenCV_LIBS})
+
+# Configurable options, depending on desired functionality
+OPTION(USE_FILES "Use file resources (like video files)" OFF)
+
+# Video files
+if(USE_FILES)
+    ADD_DEFINITIONS(-DUSE_FILES)
+    LIST(APPEND HEADERS offline/opencv_video_source.h)
+    LIST(APPEND SOURCES offline/opencv_video_source.cpp)
+endif(USE_FILES)
 
 # Compile and link
 ADD_LIBRARY(${NAME} ${HEADERS} ${SOURCES})
