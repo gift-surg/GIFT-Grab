@@ -47,10 +47,14 @@ SET(HEADERS
     api/ivideosource.h
     api/videoframe.h
     api/maskframe.h
+    api/factory.h
+    api/except.h
     )
 SET(SOURCES
     api/videoframe.cpp
     api/maskframe.cpp
+    api/factory.cpp
+    api/except.cpp
     )
 SET(LIBS ${OpenCV_LIBS})
 
