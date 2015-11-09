@@ -17,6 +17,13 @@ enum Device {
 //! framegrabber hardware
 //!
 class Factory {
+protected:
+    //!
+    //! \brief So that can keep track of everything
+    //! opened and in use
+    //!
+    static IVideoSource * _sources[1];
+
 public:
     //!
     //! \brief Try to connect to specified device
@@ -28,11 +35,15 @@ public:
     static IVideoSource * connect(enum Device type);
 
     //!
-    //! \brief Disconnect from specified \c device, if
-    //! already connected
-    //! \param device
+    //! \brief Disconnect from specified \c type device,
+    //! if already connected
+    //! \param type
+    //! \throw DeviceNotFound if \c type not recognised
+    //! \sa connect - IVideoSource object \c connect
+    //! returns will be destroyed by this, and hence the
+    //! pointer unusable
     //!
-    static void disconnect(IVideoSource * device);
+    static void disconnect(enum Device type);
 };
 
 }
