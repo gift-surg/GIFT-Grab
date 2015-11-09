@@ -3,6 +3,7 @@
 
 #include "ivideosource.h"
 #include "macros.h"
+#include "except.h"
 
 // OpenCV includes
 #include "opencv2/opencv.hpp"
@@ -15,6 +16,15 @@ class VideoSourceOpenCV: public IVideoSource
 {
 public:
     VideoSourceOpenCV(const char *path);
+    //!
+    //! \brief Connects to device with specified \c deviceId,
+    //! e.g. for streaming
+    //! \param deviceId for instance \c 0 for \c /dev/video0
+    //! (assuming your device is mapped to \c video0 on Linux)
+    //! \throw gg::DeviceNotFound if cannot connect to device
+    //! with \c deviceId
+    //!
+    VideoSourceOpenCV(const int deviceId);
     bool get_frame_dimensions(int & width, int & height);
     bool get_frame(VideoFrame_BGRA &frame);
     double get_frame_rate();

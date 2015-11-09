@@ -1,12 +1,14 @@
 #include "factory.h"
+#include "opencv_video_source.h"
 
 namespace gg {
 
 IVideoSource * Factory::connect(enum Device type) {
+    IVideoSource * _current = NULL;
     switch (type) {
     case DVI2PCIeDuo:
-        // TODO
-        throw DeviceNotFound("not implemented");
+        _current = new VideoSourceOpenCV(0);
+        return _current;
         break;
     default:
         std::string msg;

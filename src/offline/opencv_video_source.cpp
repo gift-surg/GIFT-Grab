@@ -13,6 +13,18 @@ VideoSourceOpenCV::VideoSourceOpenCV(const char * path)
     }
 }
 
+VideoSourceOpenCV::VideoSourceOpenCV(int deviceId)
+    : IVideoSource()
+{
+    _cap.open(deviceId);
+    if (!_cap.isOpened()) {
+        std::string error("Device with id ");
+        error.append(std::to_string(deviceId));
+        error.append(" could not be opened");
+        throw gg::DeviceNotFound(error);
+    }
+}
+
 double VideoSourceOpenCV::get_frame_rate()
 {
     if (!_cap.isOpened()) return 0;
