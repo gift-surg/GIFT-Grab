@@ -141,13 +141,14 @@ private:
 
     //!
     //! \brief
-    //! \deprecated
+    //! \todo Currently not used
     //!
     size_t                  _rows;
 
     //!
     //! \brief
-    //! \deprecated
+    //! \todo Currently not used
+    //!
     size_t                  _cols;
 
     //!
