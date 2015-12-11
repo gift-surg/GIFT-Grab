@@ -1,0 +1,17 @@
+before_script:
+  - export SCRATCH_DIR="$(pwd)/../scratch-space"
+  - export GiftGrab_SOURCE_DIR="$(pwd)/src"
+  - export GiftGrab_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab"
+  - export INSTALL_DIR="$SCRATCH_DIR/install"
+
+# Linux ##################
+gift-linux:
+  script:
+    - rm -rf "$GiftGrab_BUILD_DIR"
+    - mkdir -p "$GiftGrab_BUILD_DIR"
+    - cd "$GiftGrab_BUILD_DIR"
+    - cmake -D CMAKE_INSTALL_PREFIX="$INSTALL_DIR" -D USE_FILES=ON -D BUILD_DOC=ON "$GiftGrab_SOURCE_DIR"
+    - make -j
+    - make install
+  tags:
+    - gift-linux
