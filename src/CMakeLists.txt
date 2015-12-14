@@ -62,9 +62,7 @@ SET(LIBS ${OpenCV_LIBS})
 
 # Video files
 if(USE_FILES OR USE_EPIPHAN)
-    INCLUDE_DIRECTORIES(offline)
-    LIST(APPEND HEADERS offline/opencv_video_source.h)
-    LIST(APPEND SOURCES offline/opencv_video_source.cpp)
+    SET(USE_OPENCV ON CACHE BOOL "OFF ON" FORCE)
 endif(USE_FILES OR USE_EPIPHAN)
 
 # BlackMagicSDK
@@ -85,6 +83,13 @@ endif(USE_BLACKMAGIC)
 
 # we do not officially support libVLC yet!
 SET(USE_LIBVLC OFF CACHE BOOL "ON OFF" FORCE)
+
+# OpenCV framegrabber
+if(USE_OPENCV)
+    INCLUDE_DIRECTORIES(offline)
+    LIST(APPEND HEADERS offline/opencv_video_source.h)
+    LIST(APPEND SOURCES offline/opencv_video_source.cpp)
+endif(USE_OPENCV)
 
 # libVLC
 if(USE_LIBVLC)
