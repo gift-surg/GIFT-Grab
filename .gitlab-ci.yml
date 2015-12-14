@@ -1,8 +1,21 @@
+variables:
+  CI_SCRIPTS_DIR: "./ci"
+  Qt5Widgets_DIR: "/opt/qt5/5.5/gcc_64/lib/cmake/Qt5Widgets"
+  Qt5OpenGL_DIR: "/opt/qt5/5.5/gcc_64/lib/cmake/Qt5OpenGL"
+
 before_script:
   - export SCRATCH_DIR="$(pwd)/../scratch-space"
   - export GiftGrab_SOURCE_DIR="$(pwd)/src"
   - export GiftGrab_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab"
   - export INSTALL_DIR="$SCRATCH_DIR/install"
+  - export GiftGrab_DIR="$INSTALL_DIR/include/giftgrab"
+  - export NiftyMatch_REPO_DIR="$SCRATCH_DIR/source/NiftyMatch"
+  - export NiftyMatch_SOURCE_DIR="$NiftyMatch_REPO_DIR/src"
+  - export NiftyMatch_BUILD_DIR="$SCRATCH_DIR/build/NiftyMatch"
+  - export NiftyMatch_DIR="$INSTALL_DIR/include/nm"
+  - export GpuMosaicing_REPO_DIR="$SCRATCH_DIR/source/gpu-mosaicing"
+  - export GpuMosaicing_SOURCE_DIR="$GpuMosaicing_REPO_DIR/src"
+  - export GpuMosaicing_BUILD_DIR="$SCRATCH_DIR/build/gpu-mosaicing"
 
 # Linux ##################
 gift-linux:
@@ -13,5 +26,6 @@ gift-linux:
     - cmake -D CMAKE_INSTALL_PREFIX="$INSTALL_DIR" -D USE_FILES=ON -D BUILD_DOC=ON "$GiftGrab_SOURCE_DIR"
     - make -j
     - make install
+    - "$CI_SCRIPTS_DIR/deploy-linux.sh"
   tags:
     - gift-linux
