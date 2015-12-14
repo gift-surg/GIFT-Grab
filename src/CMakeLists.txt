@@ -27,7 +27,9 @@ endif()
 # Configurable options, depending on desired functionality
 OPTION(USE_FILES "Support for loading video from files" OFF)
 OPTION(USE_BLACKMAGIC "Support for streaming video using BlackMagic framegrabbers" OFF)
-OPTION(USE_LIBVLC "Use libVLC for grabbing frames" OFF)
+
+# we do not officially support libVLC yet!
+SET(USE_LIBVLC OFF CACHE BOOL "ON OFF" FORCE)
 
 # OpenCV
 FIND_PACKAGE(OpenCV REQUIRED)
