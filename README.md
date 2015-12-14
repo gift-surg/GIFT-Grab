@@ -39,6 +39,7 @@ sudo make install # CMAKE_INSTALL_PREFIX defaults to /usr/local
 ## Advanced
 
 * `-D BUILD_DOC=ON` for building documentation.
+* `-D BUILD_EPIPHAN=ON` for building support for Epiphan framegrabbers (currently at least this option or `USE_FILES` needs to be specified for the library to build properly).
 
 # Use
 1. Put `FIND_PACKAGE(GiftGrab CONFIG REQUIRED)` into your project's CMake file.
