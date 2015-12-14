@@ -1,11 +1,10 @@
 #ifndef __VIDEOFRAME_H__
 #define __VIDEOFRAME_H__
 
-#ifdef USE_OPENCV
-    #include "opencv2/core/core.hpp"
-    #include "opencv/cv.h"
-    #include "opencv/highgui.h"
-#endif
+// OpenCV includes
+#include <opencv2/core/core.hpp>
+#include <opencv/cv.h>
+#include <opencv/highgui.h>
 
 #include <memory>
 #include "maskframe.h"
@@ -31,7 +30,6 @@ public:
     //! \param manage_data
     //!
     VideoFrame_BGRA(bool manage_data=false);
-#ifdef USE_OPENCV
 
     //!
     //! \brief OpenCV based constructor
@@ -79,8 +77,6 @@ public:
     //!
     std::unique_ptr<MaskFrame> compute_image_mask(int x, int y, int width,
                                                   int height);
-
-#endif
 
     //!
     //! \brief Destructor that will free allocated data in case data
