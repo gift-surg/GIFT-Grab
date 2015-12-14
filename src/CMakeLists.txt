@@ -34,7 +34,7 @@ FIND_PACKAGE(OpenCV REQUIRED)
 if(OpenCV_FOUND)
     INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
 else(OpenCV_FOUND)
-    MESSAGE(FATAL_ERROR "OpenCV could not be found.")
+    MESSAGE(FATAL_ERROR "OpenCV could not be found. This library requires OpenCV.")
 endif(OpenCV_FOUND)
 
 # Library name
