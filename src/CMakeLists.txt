@@ -26,6 +26,7 @@ endif()
 
 # Configurable options, depending on desired functionality
 OPTION(USE_FILES "Support for loading video from files" OFF)
+OPTION(USE_EPIPHAN "Support for streaming video using Epiphan framegrabbers" OFF)
 OPTION(USE_BLACKMAGIC "Support for streaming video using BlackMagic framegrabbers" OFF)
 
 # we do not officially support libVLC yet!
@@ -63,11 +64,11 @@ SET(SOURCES
 SET(LIBS ${OpenCV_LIBS})
 
 # Video files
-if(USE_FILES)
+if(USE_FILES OR USE_EPIPHAN)
     INCLUDE_DIRECTORIES(offline)
     LIST(APPEND HEADERS offline/opencv_video_source.h)
     LIST(APPEND SOURCES offline/opencv_video_source.cpp)
-endif(USE_FILES)
+endif(USE_FILES OR USE_EPIPHAN)
 
 # BlackMagicSDK
 if(USE_BLACKMAGIC)
