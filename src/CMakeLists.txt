@@ -24,6 +24,11 @@ else()
     endif()
 endif()
 
+# Configurable options, depending on desired functionality
+OPTION(USE_FILES "Support for loading video from files" OFF)
+OPTION(USE_BLACKMAGIC "Support for streaming video using BlackMagic framegrabbers" OFF)
+OPTION(USE_LIBVLC "Use libVLC for grabbing frames" OFF)
+
 # OpenCV
 FIND_PACKAGE(OpenCV REQUIRED)
 if(OpenCV_FOUND)
@@ -56,11 +61,6 @@ SET(SOURCES
     api/except.cpp
     )
 SET(LIBS ${OpenCV_LIBS})
-
-# Configurable options, depending on desired functionality
-OPTION(USE_FILES "Use file resources (like video files)" OFF)
-OPTION(USE_BLACKMAGIC "Use BlackMagic SDK" OFF)
-OPTION(USE_LIBVLC "Use libVLC for grabbing frames" OFF)
 
 # Video files
 if(USE_FILES)
