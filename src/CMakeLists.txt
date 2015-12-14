@@ -24,15 +24,17 @@ else()
     endif()
 endif()
 
+# Configurable options, depending on desired functionality
+OPTION(USE_FILES "Support for loading video from files" OFF)
+OPTION(USE_EPIPHAN "Support for streaming video using Epiphan framegrabbers" OFF)
+OPTION(USE_BLACKMAGIC "Support for streaming video using BlackMagic framegrabbers" OFF)
+
 # OpenCV
 FIND_PACKAGE(OpenCV REQUIRED)
 if(OpenCV_FOUND)
-    ADD_DEFINITIONS(-DUSE_OPENCV)
     INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
 else(OpenCV_FOUND)
-    SET(USE_FILES OFF CACHE BOOL "ON OFF" FORCE)
-    SET(USE_BLACKMAGIC OFF CACHE BOOL "ON OFF" FORCE)
-    MESSAGE(FATAL_ERROR "OpenCV could not be found.")
+    MESSAGE(FATAL_ERROR "OpenCV could not be found. This library requires OpenCV.")
 endif(OpenCV_FOUND)
 
 # Library name
@@ -58,18 +60,10 @@ SET(SOURCES
     )
 SET(LIBS ${OpenCV_LIBS})
 
-# Configurable options, depending on desired functionality
-OPTION(USE_FILES "Use file resources (like video files)" OFF)
-OPTION(USE_BLACKMAGIC "Use BlackMagic SDK" OFF)
-OPTION(USE_LIBVLC "Use libVLC for grabbing frames" OFF)
-
 # Video files
-if(USE_FILES)
-    ADD_DEFINITIONS(-DUSE_FILES)
-    INCLUDE_DIRECTORIES(offline)
-    LIST(APPEND HEADERS offline/opencv_video_source.h)
-    LIST(APPEND SOURCES offline/opencv_video_source.cpp)
-endif(USE_FILES)
+if(USE_FILES OR USE_EPIPHAN)
+    SET(USE_OPENCV ON CACHE BOOL "OFF ON" FORCE)
+endif(USE_FILES OR USE_EPIPHAN)
 
 # BlackMagicSDK
 if(USE_BLACKMAGIC)
@@ -86,6 +80,16 @@ if(USE_BLACKMAGIC)
         MESSAGE(FATAL_ERROR "Blackmagic SDK could not be found.")
     endif(BlackMagicSDK_FOUND)
 endif(USE_BLACKMAGIC)
+
+# we do not officially support libVLC yet!
+SET(USE_LIBVLC OFF CACHE BOOL "ON OFF" FORCE)
+
+# OpenCV framegrabber
+if(USE_OPENCV)
+    INCLUDE_DIRECTORIES(opencv)
+    LIST(APPEND HEADERS opencv/opencv_video_source.h)
+    LIST(APPEND SOURCES opencv/opencv_video_source.cpp)
+endif(USE_OPENCV)
 
 # libVLC
 if(USE_LIBVLC)

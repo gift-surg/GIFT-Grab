@@ -39,7 +39,6 @@ void VideoFrame_BGRA::init_from_pointer(unsigned char * data, size_t rows, size_
     }
 }
 
-#ifdef USE_OPENCV
 VideoFrame_BGRA::VideoFrame_BGRA(const cv::Mat & mat, bool manage_data)
 {
     _manage_data = manage_data;
@@ -160,8 +159,6 @@ std::unique_ptr<MaskFrame> VideoFrame_BGRA::compute_image_mask(int x, int y,
     }
     return mask;
 }
-
-#endif
 
 VideoFrame_BGRA::~VideoFrame_BGRA()
 {
