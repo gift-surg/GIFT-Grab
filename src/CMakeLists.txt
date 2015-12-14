@@ -29,9 +29,6 @@ OPTION(USE_FILES "Support for loading video from files" OFF)
 OPTION(USE_EPIPHAN "Support for streaming video using Epiphan framegrabbers" OFF)
 OPTION(USE_BLACKMAGIC "Support for streaming video using BlackMagic framegrabbers" OFF)
 
-# we do not officially support libVLC yet!
-SET(USE_LIBVLC OFF CACHE BOOL "ON OFF" FORCE)
-
 # OpenCV
 FIND_PACKAGE(OpenCV REQUIRED)
 if(OpenCV_FOUND)
@@ -85,6 +82,9 @@ if(USE_BLACKMAGIC)
         MESSAGE(FATAL_ERROR "Blackmagic SDK could not be found.")
     endif(BlackMagicSDK_FOUND)
 endif(USE_BLACKMAGIC)
+
+# we do not officially support libVLC yet!
+SET(USE_LIBVLC OFF CACHE BOOL "ON OFF" FORCE)
 
 # libVLC
 if(USE_LIBVLC)
