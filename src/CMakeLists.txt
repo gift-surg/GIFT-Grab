@@ -86,9 +86,9 @@ SET(USE_LIBVLC OFF CACHE BOOL "ON OFF" FORCE)
 
 # OpenCV framegrabber
 if(USE_OPENCV)
-    INCLUDE_DIRECTORIES(offline)
-    LIST(APPEND HEADERS offline/opencv_video_source.h)
-    LIST(APPEND SOURCES offline/opencv_video_source.cpp)
+    INCLUDE_DIRECTORIES(opencv)
+    LIST(APPEND HEADERS opencv/opencv_video_source.h)
+    LIST(APPEND SOURCES opencv/opencv_video_source.cpp)
 endif(USE_OPENCV)
 
 # libVLC
