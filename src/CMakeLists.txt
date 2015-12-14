@@ -62,7 +62,6 @@ SET(LIBS ${OpenCV_LIBS})
 
 # Video files
 if(USE_FILES)
-    ADD_DEFINITIONS(-DUSE_FILES)
     INCLUDE_DIRECTORIES(offline)
     LIST(APPEND HEADERS offline/opencv_video_source.h)
     LIST(APPEND SOURCES offline/opencv_video_source.cpp)
