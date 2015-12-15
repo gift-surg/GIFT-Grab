@@ -23,7 +23,8 @@ public:
     //! \brief Get frame dimensions
     //! \param width
     //! \param height
-    //! \return
+    //! \return whether querying frame dimensions has
+    //! succeeded
     //!
     virtual bool get_frame_dimensions(int & width, int & height) = 0;
 
