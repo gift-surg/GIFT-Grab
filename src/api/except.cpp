@@ -2,20 +2,42 @@
 
 namespace gg {
 
-DeviceNotFound::DeviceNotFound(const std::string & detail) :
+BasicException::BasicException(const std::string & detail) :
     _detail(detail)
+{
+
+}
+
+BasicException::~BasicException() noexcept
+{
+    _detail.clear();
+}
+
+const char * BasicException::what() const noexcept
+{
+    return _detail.data();
+}
+
+DeviceNotFound::DeviceNotFound(const std::string & detail) :
+    BasicException(detail)
 {
 
 }
 
 DeviceNotFound::~DeviceNotFound() noexcept
 {
-    _detail.clear();
+
 }
 
-const char * DeviceNotFound::what() const noexcept
+DeviceOffline::DeviceOffline(const std::string & detail) :
+    BasicException(detail)
 {
-    return _detail.data();
+
+}
+
+DeviceOffline::~DeviceOffline() noexcept
+{
+
 }
 
 }

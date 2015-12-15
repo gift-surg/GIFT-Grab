@@ -31,6 +31,8 @@ public:
     //! \return pointer to the device's framegrabber
     //! \throw DeviceNotFound if connection attempt
     //! fails
+    //! \throw DeviceOffline if connection attempt
+    //! OK, but device offline (i.e. getting no frames)
     //!
     static IVideoSource * connect(enum Device type);
 
