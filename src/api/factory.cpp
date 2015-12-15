@@ -19,6 +19,7 @@ IVideoSource * Factory::connect(enum Device type) {
                     IVideoSource * src = new VideoSourceOpenCV(deviceId);
                     found = true;
                     _sources[Device::DVI2PCIeDuo] = src;
+                    break;
                 }
                 catch (DeviceNotFound & dnf)
                 {
