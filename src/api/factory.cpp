@@ -10,32 +10,44 @@ IVideoSource * Factory::connect(enum Device type) {
     case DVI2PCIeDuo:
         if (_sources[Device::DVI2PCIeDuo] == NULL)
         {
+            // error string, in case devices found that
+            // disappoint us by returning meaningless data
             std::string framerate_checks = "";
+            // check devices start through end (e.g. /dev/video1)
             int start = 0, end = 4;
+            // flag indicating something found
             bool found = false;
-            for (int deviceId = start; deviceId <= end; deviceId++)
+            // device that was found
+            int deviceId = -1;
+
+            // go through devices from start to end
+            for (deviceId = start; deviceId <= end; deviceId++)
             {
                 try
                 {
                     IVideoSource * src = new VideoSourceOpenCV(deviceId);
                     int width = -1, height = -1;
                     if (src->get_frame_dimensions(width, height))
+                    {
                         if (width > 0 and height > 0) {
                             found = true;
                             _sources[Device::DVI2PCIeDuo] = src;
                             break;
                         }
-
-                    // meaningless frame dimensions, or unsuccessful query:
-                    if (not framerate_checks.empty())
-                        framerate_checks.append(", ");
-                    framerate_checks.append(std::to_string(deviceId));
+                        else {
+                            if (not framerate_checks.empty())
+                                framerate_checks.append(", ");
+                            framerate_checks.append(std::to_string(deviceId));
+                        }
+                    }
                 }
                 catch (DeviceNotFound & dnf)
                 {
                     continue;
                 }
             }
+
+            // no glory
             if (not found)
             {
                 std::string error = "Tried to locate Epiphan DVI2PCIeDuo in devices ";
@@ -55,8 +67,21 @@ IVideoSource * Factory::connect(enum Device type) {
                 }
                 throw DeviceNotFound(error);
             }
+
+            // check if found device returns frames
+            VideoFrame_BGRA frame;
+            if (not _sources[Device::DVI2PCIeDuo]->get_frame(frame))
+            {
+                std::string error = "Device ";
+                error.append(std::to_string(deviceId));
+                error.append(" connected, but appears to be offline.");
+                throw DeviceOffline(error);
+            }
         }
+
+        // if no exception raised up to here, glory be to GiftGrab
         return _sources[Device::DVI2PCIeDuo];
+
     default:
         std::string msg;
         msg.append("Device ")
