@@ -12,7 +12,7 @@ IVideoSource * Factory::connect(enum Device type) {
         {
             // error string, in case devices found that
             // disappoint us by returning meaningless data
-            std::string framerate_checks = "";
+            std::string error_device_checks = "";
             // check devices start through end (e.g. /dev/video1)
             int start = 0, end = 4;
             // flag indicating something found
@@ -35,9 +35,9 @@ IVideoSource * Factory::connect(enum Device type) {
                             break;
                         }
                         else {
-                            if (not framerate_checks.empty())
-                                framerate_checks.append(", ");
-                            framerate_checks.append(std::to_string(deviceId));
+                            if (not error_device_checks.empty())
+                                error_device_checks.append(", ");
+                            error_device_checks.append(std::to_string(deviceId));
                         }
                     }
                 }
@@ -58,10 +58,10 @@ IVideoSource * Factory::connect(enum Device type) {
                 error.append(" to ");
                 error.append(std::to_string(end));
                 error.append(" with no success");
-                if (not framerate_checks.empty())
+                if (not error_device_checks.empty())
                 {
                     error.append(" (");
-                    error.append(framerate_checks);
+                    error.append(error_device_checks);
                     error.append(" could be connected to, ");
                     error.append("but replied with meaningless frame dimensions)");
                 }
