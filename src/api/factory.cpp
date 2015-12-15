@@ -10,6 +10,7 @@ IVideoSource * Factory::connect(enum Device type) {
     case DVI2PCIeDuo:
         if (_sources[Device::DVI2PCIeDuo] == NULL)
         {
+            std::string framerate_checks = "";
             int start = 0, end = 4;
             bool found = false;
             for (int deviceId = start; deviceId <= end; deviceId++)
@@ -24,6 +25,11 @@ IVideoSource * Factory::connect(enum Device type) {
                             _sources[Device::DVI2PCIeDuo] = src;
                             break;
                         }
+
+                    // meaningless frame dimensions, or unsuccessful query:
+                    if (not framerate_checks.empty())
+                        framerate_checks.append(", ");
+                    framerate_checks.append(std::to_string(deviceId));
                 }
                 catch (DeviceNotFound & dnf)
                 {
@@ -40,6 +46,13 @@ IVideoSource * Factory::connect(enum Device type) {
                 error.append(" to ");
                 error.append(std::to_string(end));
                 error.append(" with no success");
+                if (not framerate_checks.empty())
+                {
+                    error.append(" (");
+                    error.append(framerate_checks);
+                    error.append(" could be connected to, ");
+                    error.append("but replied with meaningless frame dimensions)");
+                }
                 throw DeviceNotFound(error);
             }
         }
