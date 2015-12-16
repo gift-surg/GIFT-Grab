@@ -38,7 +38,7 @@ double VideoSourceOpenCV::get_frame_rate()
     if (_frame_rate > 0) // already obtained or estimated
         return _frame_rate;
 
-    // will work for files, but 0 for most online devices
+    // will work for files, but <= 0 for most online devices
     _frame_rate = _cap.get(CV_CAP_PROP_FPS);
 
     if (_frame_rate <= 0) // i.e. not a file, see:
@@ -72,6 +72,10 @@ double VideoSourceOpenCV::get_frame_rate()
         _frame_rate  = num_frames / seconds;
         std::cout << "Estimated frames per second : " << _frame_rate << std::endl;
     }
+
+    // to make sure e.g. -1 is not returned,
+    // which could lead to bugs in computations
+    if (_frame_rate < 0) _frame_rate = 0;
 
     return _frame_rate;
 }
