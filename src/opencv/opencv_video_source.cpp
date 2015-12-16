@@ -4,6 +4,7 @@
 
 VideoSourceOpenCV::VideoSourceOpenCV(const char * path)
     :IVideoSource()
+    , _frame_rate(0)
 {
     _cap.open(path);
     if (!_cap.isOpened()) {
@@ -15,6 +16,7 @@ VideoSourceOpenCV::VideoSourceOpenCV(const char * path)
 
 VideoSourceOpenCV::VideoSourceOpenCV(int deviceId)
     : IVideoSource()
+    , _frame_rate(0)
 {
     _cap.open(deviceId);
     if (!_cap.isOpened()) {
@@ -27,8 +29,16 @@ VideoSourceOpenCV::VideoSourceOpenCV(int deviceId)
 
 double VideoSourceOpenCV::get_frame_rate()
 {
-    if (!_cap.isOpened()) return 0;
+    if (!_cap.isOpened())
+    {
+        _frame_rate = 0;
+        return _frame_rate;
+    }
 
+    if (_frame_rate > 0) // already obtained or estimated
+        return _frame_rate;
+
+    // will work for files, but 0 for most online devices
     _frame_rate = _cap.get(CV_CAP_PROP_FPS);
 
     if (_frame_rate <= 0) // i.e. not a file, see:
