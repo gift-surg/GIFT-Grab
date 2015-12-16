@@ -48,6 +48,13 @@ public:
 
 private:
     //!
+    //! \brief Frame rate (fps), needed as a
+    //! variable esp. in case it needs to be
+    //! estimated -- see GIFT-Surg/GiftGrab#15
+    //!
+    float                   _frame_rate;
+
+    //!
     //! \brief OpenCV capture object
     //!
     cv::VideoCapture        _cap;

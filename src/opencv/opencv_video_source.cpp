@@ -4,6 +4,7 @@
 
 VideoSourceOpenCV::VideoSourceOpenCV(const char * path)
     :IVideoSource()
+    , _frame_rate(0)
 {
     _cap.open(path);
     if (!_cap.isOpened()) {
@@ -15,6 +16,7 @@ VideoSourceOpenCV::VideoSourceOpenCV(const char * path)
 
 VideoSourceOpenCV::VideoSourceOpenCV(int deviceId)
     : IVideoSource()
+    , _frame_rate(0)
 {
     _cap.open(deviceId);
     if (!_cap.isOpened()) {
@@ -27,8 +29,53 @@ VideoSourceOpenCV::VideoSourceOpenCV(int deviceId)
 
 double VideoSourceOpenCV::get_frame_rate()
 {
-    if (!_cap.isOpened()) return 0;
-    return _cap.get(CV_CAP_PROP_FPS);
+    if (!_cap.isOpened())
+    {
+        _frame_rate = 0;
+        return _frame_rate;
+    }
+
+    if (_frame_rate > 0) // already obtained or estimated
+        return _frame_rate;
+
+    // will work for files, but <= 0 for most online devices
+    _frame_rate = _cap.get(CV_CAP_PROP_FPS);
+
+    if (_frame_rate <= 0) // i.e. not a file, see:
+    // http://www.learnopencv.com/how-to-find-frame-rate-or-frames-per-second-fps-in-opencv-python-cpp/
+    {
+        // Number of frames to capture
+        int num_frames = 120;
+
+        // Start and end times
+        time_t start, end;
+
+        VideoFrame_BGRA buffer(true);
+
+        // Start time
+        time(&start);
+
+        // Grab a few frames
+        for(int i = 0; i < num_frames; i++)
+        {
+            get_frame(buffer);
+        }
+
+        // End Time
+        time(&end);
+
+        // Time elapsed
+        float seconds = difftime(end, start);
+
+        // Calculate frames per second
+        _frame_rate  = num_frames / seconds;
+    }
+
+    // to make sure e.g. -1 is not returned,
+    // which could lead to bugs in computations
+    if (_frame_rate < 0) _frame_rate = 0;
+
+    return _frame_rate;
 }
 
 bool VideoSourceOpenCV::get_frame_dimensions(int &width, int & height)
