@@ -66,11 +66,9 @@ double VideoSourceOpenCV::get_frame_rate()
 
         // Time elapsed
         float seconds = difftime(end, start);
-        std::cout << "Time taken : " << seconds << " seconds" << std::endl;
 
         // Calculate frames per second
         _frame_rate  = num_frames / seconds;
-        std::cout << "Estimated frames per second : " << _frame_rate << std::endl;
     }
 
     // to make sure e.g. -1 is not returned,
