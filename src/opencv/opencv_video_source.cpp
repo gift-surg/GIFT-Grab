@@ -28,7 +28,42 @@ VideoSourceOpenCV::VideoSourceOpenCV(int deviceId)
 double VideoSourceOpenCV::get_frame_rate()
 {
     if (!_cap.isOpened()) return 0;
-    return _cap.get(CV_CAP_PROP_FPS);
+
+    _frame_rate = _cap.get(CV_CAP_PROP_FPS);
+
+    if (_frame_rate <= 0) // i.e. not a file, see:
+    // http://www.learnopencv.com/how-to-find-frame-rate-or-frames-per-second-fps-in-opencv-python-cpp/
+    {
+        // Number of frames to capture
+        int num_frames = 120;
+
+        // Start and end times
+        time_t start, end;
+
+        VideoFrame_BGRA buffer(true);
+
+        // Start time
+        time(&start);
+
+        // Grab a few frames
+        for(int i = 0; i < num_frames; i++)
+        {
+            get_frame(buffer);
+        }
+
+        // End Time
+        time(&end);
+
+        // Time elapsed
+        float seconds = difftime(end, start);
+        std::cout << "Time taken : " << seconds << " seconds" << std::endl;
+
+        // Calculate frames per second
+        _frame_rate  = num_frames / seconds;
+        std::cout << "Estimated frames per second : " << _frame_rate << std::endl;
+    }
+
+    return _frame_rate;
 }
 
 bool VideoSourceOpenCV::get_frame_dimensions(int &width, int & height)
