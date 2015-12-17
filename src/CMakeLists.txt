@@ -24,53 +24,53 @@ else()
     endif()
 endif()
 
+# Configurable options, depending on desired functionality
+OPTION(USE_FILES "Support for loading video from files" OFF)
+OPTION(USE_EPIPHAN "Support for streaming video using Epiphan framegrabbers" OFF)
+OPTION(USE_BLACKMAGIC "Support for streaming video using BlackMagic framegrabbers" OFF)
+
 # OpenCV
 FIND_PACKAGE(OpenCV REQUIRED)
 if(OpenCV_FOUND)
-    ADD_DEFINITIONS(-DUSE_OPENCV)
     INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
 else(OpenCV_FOUND)
-    SET(USE_FILES OFF CACHE BOOL "ON OFF" FORCE)
-    SET(USE_BLACKMAGIC OFF CACHE BOOL "ON OFF" FORCE)
-    MESSAGE(FATAL_ERROR "OpenCV could not be found.")
+    MESSAGE(FATAL_ERROR "OpenCV could not be found. This library requires OpenCV.")
 endif(OpenCV_FOUND)
 
 # Library name
 SET(NAME giftgrab)
 
 # Library include dirs
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/api)
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/utils)
+INCLUDE_DIRECTORIES(api)
+INCLUDE_DIRECTORIES(utils)
 
 # Variable for header and source files
 SET(HEADERS
     api/ivideosource.h
     api/videoframe.h
     api/maskframe.h
+    api/factory.h
+    api/except.h
     )
 SET(SOURCES
     api/videoframe.cpp
     api/maskframe.cpp
+    api/factory.cpp
+    api/except.cpp
     )
 SET(LIBS ${OpenCV_LIBS})
 
-# Configurable options, depending on desired functionality
-OPTION(USE_FILES "Use file resources (like video files)" OFF)
-OPTION(USE_BLACKMAGIC "Use BlackMagic SDK" OFF)
-OPTION(USE_LIBVLC "Use libVLC for grabbing frames" OFF)
-
 # Video files
-if(USE_FILES)
-    ADD_DEFINITIONS(-DUSE_FILES)
-    LIST(APPEND HEADERS offline/opencv_video_source.h)
-    LIST(APPEND SOURCES offline/opencv_video_source.cpp)
-endif(USE_FILES)
+if(USE_FILES OR USE_EPIPHAN)
+    SET(USE_OPENCV ON CACHE BOOL "OFF ON" FORCE)
+endif(USE_FILES OR USE_EPIPHAN)
 
 # BlackMagicSDK
 if(USE_BLACKMAGIC)
     FIND_PACKAGE(BlackMagicSDK CONFIG REQUIRED)
     if(BlackMagicSDK_FOUND)
         INCLUDE_DIRECTORIES(${BlackMagicSDK_INCLUDE_DIR})
+        INCLUDE_DIRECTORIES(blackmagic)
         ADD_DEFINITIONS(-DUSE_BLACKMAGIC)
         LIST(APPEND HEADERS blackmagic/blackmagic_frame_grabber.h)
         LIST(APPEND SOURCES blackmagic/blackmagic_frame_grabber.cpp)
@@ -81,12 +81,23 @@ if(USE_BLACKMAGIC)
     endif(BlackMagicSDK_FOUND)
 endif(USE_BLACKMAGIC)
 
+# we do not officially support libVLC yet!
+SET(USE_LIBVLC OFF CACHE BOOL "ON OFF" FORCE)
+
+# OpenCV framegrabber
+if(USE_OPENCV)
+    INCLUDE_DIRECTORIES(opencv)
+    LIST(APPEND HEADERS opencv/opencv_video_source.h)
+    LIST(APPEND SOURCES opencv/opencv_video_source.cpp)
+endif(USE_OPENCV)
+
 # libVLC
 if(USE_LIBVLC)
     LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
     FIND_PACKAGE(LIBVLC REQUIRED)
     if(LIBVLC_FOUND)
         ADD_DEFINITIONS(-DUSE_LIBVLC)
+        INCLUDE_DIRECTORIES(vlc)
         LIST(APPEND HEADERS vlc/vlc_video_source.h)
         LIST(APPEND SOURCES vlc/vlc_video_source.cpp)
         LIST(APPEND LIBS ${LIBVLC_LIBRARY})
@@ -111,3 +122,19 @@ INSTALL(TARGETS ${NAME}
     LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${GiftGrab_PATH_SUFFIX}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${GiftGrab_PATH_SUFFIX}
     )
+
+# Documentation
+OPTION(BUILD_DOC "Build source code documentation" OFF)
+if(BUILD_DOC)
+    FIND_PACKAGE(Doxygen)
+    if(DOXYGEN_FOUND)
+        SET(DOXYFILE_IN ${CMAKE_CURRENT_SOURCE_DIR}/../doc/Doxyfile.in)
+        SET(DOXYFILE ${CMAKE_CURRENT_BINARY_DIR}/doc/Doxyfile)
+        CONFIGURE_FILE(${DOXYFILE_IN}
+            ${DOXYFILE} @ONLY)
+        ADD_CUSTOM_TARGET(doc ALL
+            ${DOXYGEN_EXECUTABLE} ${DOXYFILE}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc
+            COMMENT "Generating API documentation with Doxygen" VERBATIM)
+    endif(DOXYGEN_FOUND)
+endif(BUILD_DOC)
