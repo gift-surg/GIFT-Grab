@@ -1,0 +1,6 @@
+# December 2015
+
+Use `git checkout v1512`.
+
+* Added support for Epiphan DVI2PCIe Duo
+* Added support for video files
