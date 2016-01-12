@@ -26,3 +26,4 @@ cmake -D NiftyMatch_DIR="$NiftyMatch_DIR" \
       -D Qt5OpenGL_DIR="$Qt5OpenGL_DIR" \
       -D CMAKE_BUILD_TYPE=Release \
       "$GpuMosaicing_SOURCE_DIR"
+make -j
