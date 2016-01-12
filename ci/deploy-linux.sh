@@ -15,6 +15,7 @@ make -j
 make install
 
 # And finally gpu-mosaicing
+rm -rf "$GpuMosaicing_REPO_DIR"
 git clone git@cmiclab.cs.ucl.ac.uk:pdaga/gpu-mosaicing.git \
     "$GpuMosaicing_REPO_DIR" --branch dev
 rm -rf "$GpuMosaicing_BUILD_DIR"
