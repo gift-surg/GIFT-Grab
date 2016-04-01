@@ -39,7 +39,7 @@ sudo make install # CMAKE_INSTALL_PREFIX defaults to /usr/local
 ## Advanced
 
 * `-D BUILD_DOC=ON` for building documentation.
-* `-D BUILD_EPIPHAN=ON` for building support for Epiphan framegrabbers (currently at least this option or `USE_FILES` needs to be specified for the library to build properly). __Note when using this option:__
+* `-D USE_EPIPHAN=ON` for building support for Epiphan framegrabbers (currently at least this option or `USE_FILES` needs to be specified for the library to build properly). __Note when using this option:__
    1. `/dev/video0` to `/dev/video4` will be probed (in ascending order) to locate an Epiphan framegrabber, and the first one to be found active will be assumed to be the device.
    1. Due to the use of the generic [OpenCV VideoCapture](http://docs.opencv.org/2.4/modules/highgui/doc/reading_and_writing_images_and_video.html#VideoCapture::VideoCapture%28int%20device%29) API for grabbing frames from Epiphan cards, it is currently not possible to distinguish Epiphan framegrabbers from others.
 
