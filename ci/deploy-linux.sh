@@ -16,7 +16,7 @@ make install
 
 # And finally gpu-mosaicing
 rm -rf "$GpuMosaicing_REPO_DIR"
-git clone git@cmiclab.cs.ucl.ac.uk:pdaga/gpu-mosaicing.git \
+git clone git@cmiclab.cs.ucl.ac.uk:GIFT-Surg/GIFT-Nav-Mosaic.git \
     "$GpuMosaicing_REPO_DIR" --branch dev
 rm -rf "$GpuMosaicing_BUILD_DIR"
 mkdir -p "$GpuMosaicing_BUILD_DIR"
