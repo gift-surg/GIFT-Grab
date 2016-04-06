@@ -3,101 +3,17 @@
 
 namespace gg {
 
-IVideoSource * Factory::_sources[1] = { NULL };
+IVideoSource * Factory::_sources[2] = { NULL, NULL };
 
 IVideoSource * Factory::connect(enum Device type) {
+    int device_id = -1; // default value makes no sense
+
     switch (type) {
-    case DVI2PCIeDuo:
-        if (_sources[Device::DVI2PCIeDuo] == NULL)
-        {
-            // error string, in case devices found that
-            // disappoint us by returning meaningless data
-            std::string error_device_checks = "";
-            // check devices start through end (e.g. /dev/video1)
-            int start = 0, end = 4;
-            // flag indicating something found
-            bool found = false;
-            // device that was found
-            int deviceId = -1;
-
-            // go through devices from start to end
-            for (deviceId = start; deviceId <= end; deviceId++)
-            {
-                try
-                {
-                    IVideoSource * src = new VideoSourceOpenCV(deviceId);
-                    int width = -1, height = -1;
-                    if (src->get_frame_dimensions(width, height))
-                    {
-                        if (width > 0 and height > 0) {
-                            found = true;
-                            _sources[Device::DVI2PCIeDuo] = src;
-                            break;
-                        }
-                        else {
-                            if (not error_device_checks.empty())
-                                error_device_checks.append(", ");
-                            error_device_checks.append(std::to_string(deviceId));
-                        }
-                    }
-                }
-                catch (DeviceNotFound & dnf)
-                {
-                    continue;
-                }
-            }
-
-            // no glory
-            if (not found)
-            {
-                std::string error = "Tried to locate Epiphan DVI2PCIeDuo in devices ";
-                error.append(std::to_string(start));
-                error.append(" (e.g. /dev/video");
-                error.append(std::to_string(start));
-                error.append(" on Linux)");
-                error.append(" to ");
-                error.append(std::to_string(end));
-                error.append(" with no success");
-                if (not error_device_checks.empty())
-                {
-                    error.append(" (");
-                    error.append(error_device_checks);
-                    error.append(" could be connected to, ");
-                    error.append("but replied with meaningless frame dimensions)");
-                }
-                throw DeviceNotFound(error);
-            }
-
-            // check if found device returns frames
-            VideoFrame_BGRA frame;
-            if (not _sources[Device::DVI2PCIeDuo]->get_frame(frame))
-            {
-                std::string error = "Device ";
-                error.append(std::to_string(deviceId));
-                error.append(" connected, but appears to be offline.");
-                throw DeviceOffline(error);
-            }
-        }
-
-        // if no exception raised up to here, glory be to GiftGrab
-        return _sources[Device::DVI2PCIeDuo];
-
-    default:
-        std::string msg;
-        msg.append("Device ")
-           .append(std::to_string(type))
-           .append(" not recognised");
-        throw DeviceNotFound(msg);
-    }
-}
-
-void Factory::disconnect(enum Device type) {
-    switch (type) {
-    case DVI2PCIeDuo:
-        if (_sources[Device::DVI2PCIeDuo]) {
-            delete _sources[Device::DVI2PCIeDuo];
-            _sources[Device::DVI2PCIeDuo] = NULL;
-        }
+    case DVI2PCIeDuo_DVI:
+        device_id = 0; // always /dev/video0
+        break;
+    case DVI2PCIeDuo_SDI:
+        device_id = 1; // always /dev/video1
         break;
     default:
         std::string msg;
@@ -105,6 +21,71 @@ void Factory::disconnect(enum Device type) {
            .append(std::to_string(type))
            .append(" not recognised");
         throw DeviceNotFound(msg);
+    }
+
+    if (_sources[(int) type] == NULL)
+    {
+        IVideoSource * src = new VideoSourceOpenCV(device_id);
+
+        // check querying frame dimensions
+        int width = -1, height = -1;
+        if (not src->get_frame_dimensions(width, height))
+        {
+            std::string error;
+            error.append("Device ")
+                 .append(std::to_string(device_id))
+                 .append(" connected, but ")
+                 .append(" does not return frame dimensions.");
+            throw DeviceOffline(error);
+        }
+
+        // check meaningful frame dimensions
+        if (width <= 0 or height <= 0)
+        {
+            std::string error;
+            error.append("Device ")
+                 .append(std::to_string(device_id))
+                 .append(" connected, but ")
+                 .append(" returns meaningless frame dimensions.");
+            throw DeviceOffline(error);
+        }
+
+        // check querying frames
+        VideoFrame_BGRA frame;
+        if (not src->get_frame(frame))
+        {
+            std::string error;
+            error.append("Device ")
+                 .append(std::to_string(device_id))
+                 .append(" connected, but ")
+                 .append(" does not return frames.");
+            throw DeviceOffline(error);
+        }
+
+        // if no exception raised up to here, glory be to GiftGrab
+        _sources[(int) type] = src;
+    }
+
+    return _sources[(int) type];
+}
+
+void Factory::disconnect(enum Device type) {
+    switch (type) {
+    case DVI2PCIeDuo_DVI:
+    case DVI2PCIeDuo_SDI:
+        break; // everything up to here is recognised
+    default:
+        std::string msg;
+        msg.append("Device ")
+           .append(std::to_string(type))
+           .append(" not recognised");
+        throw DeviceNotFound(msg);
+    }
+
+    if (_sources[(int) type])
+    {
+        delete _sources[(int) type];
+        _sources[(int) type] = NULL;
     }
 }
 
