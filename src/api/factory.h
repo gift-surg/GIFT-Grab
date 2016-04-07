@@ -9,7 +9,8 @@ namespace gg {
 //! \brief Lists supported framegrabber hardware
 //!
 enum Device {
-    DVI2PCIeDuo
+    DVI2PCIeDuo_DVI,
+    DVI2PCIeDuo_SDI
 };
 
 //!
@@ -22,7 +23,7 @@ protected:
     //! \brief So that can keep track of everything
     //! opened and in use
     //!
-    static IVideoSource * _sources[1];
+    static IVideoSource * _sources[2];
 
 public:
     //!
