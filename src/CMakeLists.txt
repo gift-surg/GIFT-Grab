@@ -89,7 +89,9 @@ SET(USE_LIBVLC OFF CACHE BOOL "ON OFF" FORCE)
 if(USE_OPENCV)
     INCLUDE_DIRECTORIES(opencv)
     LIST(APPEND HEADERS opencv/opencv_video_source.h)
+    LIST(APPEND HEADERS opencv/opencv_video_target.h)
     LIST(APPEND SOURCES opencv/opencv_video_source.cpp)
+    LIST(APPEND SOURCES opencv/opencv_video_target.cpp)
 endif(USE_OPENCV)
 
 # libVLC
