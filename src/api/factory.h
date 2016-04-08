@@ -66,7 +66,7 @@ public:
     //! message if creation of video target with
     //! specified \c type fails for some reason
     //!
-    IVideoTarget * create(enum Target type);
+    static IVideoTarget * create(enum Target type);
 };
 
 }
