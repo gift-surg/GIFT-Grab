@@ -3,6 +3,9 @@
 #include "ivideotarget.h"
 #include "except.h"
 
+namespace gg
+{
+
 //!
 //! \brief Uses OpenCV's video saving capabilities
 //!
@@ -31,3 +34,5 @@ public:
 
     void finalise();
 };
+
+}

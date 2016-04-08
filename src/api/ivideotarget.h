@@ -2,6 +2,9 @@
 
 #include "videoframe.h"
 
+namespace gg
+{
+
 //!
 //! \brief This abstract class provides the API
 //! to be implemented by classes that provide
@@ -36,3 +39,5 @@ public:
     //!
     virtual void finalise() = 0;
 };
+
+}

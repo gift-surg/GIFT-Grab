@@ -1,5 +1,8 @@
 #include "opencv_video_target.h"
 
+namespace gg
+{
+
 VideoTargetOpenCV::VideoTargetOpenCV(const std::string fourcc)
 {
     // TODO
@@ -18,4 +21,6 @@ void VideoTargetOpenCV::append(const VideoFrame_BGRA & frame)
 void VideoTargetOpenCV::finalise()
 {
     // TODO
+}
+
 }
