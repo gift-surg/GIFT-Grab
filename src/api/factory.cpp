@@ -89,4 +89,23 @@ void Factory::disconnect(enum Device type) {
     }
 }
 
+IVideoTarget * Factory::create(Target type)
+{
+    switch (type)
+    {
+    case File_XviD:
+        // TODO
+        break;
+    case File_H265:
+        // TODO
+        break;
+    default:
+        std::string msg;
+        msg.append("Video target type ")
+           .append(std::to_string(type))
+           .append(" not recognised");
+        throw VideoTargetError(msg);
+    }
+}
+
 }
