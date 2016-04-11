@@ -141,3 +141,13 @@ if(BUILD_DOC)
             COMMENT "Generating API documentation with Doxygen" VERBATIM)
     endif(DOXYGEN_FOUND)
 endif(BUILD_DOC)
+
+OPTION(BUILD_TESTS "Build tests" OFF)
+if(BUILD_TESTS)
+    if(USE_EPIPHAN)
+        SET(TEST_NAME save_1min_epiphan_dvi_xvid)
+        ADD_EXECUTABLE(${TEST_NAME}
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests/save_1min_epiphan_dvi_xvid.cpp)
+TARGET_LINK_LIBRARIES(${TEST_NAME} ${NAME} ${LIBS})
+    endif(USE_EPIPHAN)
+endif(BUILD_TESTS)
