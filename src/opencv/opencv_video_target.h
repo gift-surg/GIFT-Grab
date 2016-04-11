@@ -13,6 +13,27 @@ class VideoTargetOpenCV : public IVideoTarget
 {
 protected:
     //!
+    //! \brief
+    //!
+    cv::VideoWriter _writer;
+
+    //!
+    //! \brief This buffer will hold BGR data
+    //! when writing to file
+    //!
+    cv::Mat _buffer_bgr;
+
+    //!
+    //! \brief
+    //!
+    std::string _filepath;
+
+    //!
+    //! \brief
+    //!
+    float _fps;
+
+    //!
     //! \brief FOURCC code
     //! \sa VideoTargetOpenCV
     //!

@@ -1,5 +1,6 @@
 #include "factory.h"
 #include "opencv_video_source.h"
+#include "opencv_video_target.h"
 
 namespace gg {
 
@@ -94,8 +95,7 @@ IVideoTarget * Factory::create(Target type)
     switch (type)
     {
     case File_XviD:
-        // TODO
-        break;
+        return new VideoTargetOpenCV("XVID");
     case File_H265:
         // TODO
         break;
