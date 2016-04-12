@@ -28,6 +28,7 @@ endif()
 OPTION(USE_FILES "Support for loading video from files" OFF)
 OPTION(USE_EPIPHAN "Support for streaming video using Epiphan framegrabbers" OFF)
 OPTION(USE_BLACKMAGIC "Support for streaming video using BlackMagic framegrabbers" OFF)
+OPTION(USE_FFMPEG "Support for saving video to files using FFmpeg" OFF)
 
 # OpenCV
 FIND_PACKAGE(OpenCV REQUIRED)
@@ -93,6 +94,14 @@ if(USE_OPENCV)
     LIST(APPEND SOURCES opencv/opencv_video_source.cpp)
     LIST(APPEND SOURCES opencv/opencv_video_target.cpp)
 endif(USE_OPENCV)
+
+# FFmpeg video encoder
+if(USE_FFMPEG)
+    ADD_DEFINITIONS(-DUSE_FFMPEG)
+    INCLUDE_DIRECTORIES(ffmpeg)
+    LIST(APPEND HEADERS ffmpeg/ffmpeg_video_target.h)
+    LIST(APPEND SOURCES ffmpeg/ffmpeg_video_target.cpp)
+endif(USE_FFMPEG)
 
 # libVLC
 if(USE_LIBVLC)

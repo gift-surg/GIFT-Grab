@@ -1,6 +1,9 @@
 #include "factory.h"
 #include "opencv_video_source.h"
 #include "opencv_video_target.h"
+#ifdef USE_FFMPEG
+#include "ffmpeg_video_target.h"
+#endif
 
 namespace gg {
 
@@ -97,8 +100,11 @@ IVideoTarget * Factory::create(Target type)
     case File_XviD:
         return new VideoTargetOpenCV("XVID");
     case File_H265:
-        // TODO
-        break;
+#ifdef USE_FFMPEG
+        return new VideoTargetFFmpeg("H265");
+#else
+        // nop, see default below
+#endif
     default:
         std::string msg;
         msg.append("Video target type ")
