@@ -17,16 +17,16 @@ VideoTargetOpenCV::VideoTargetOpenCV(const std::string fourcc)
         _fourcc = fourcc;
 }
 
-void VideoTargetOpenCV::init(const std::string filepath, const float fps)
+void VideoTargetOpenCV::init(const std::string filepath, const float framerate)
 {
-    if (fps <= 0)
+    if (framerate <= 0)
         throw VideoTargetError("Negative fps does not make sense");
 
     if (filepath.length() <= 0)
         throw VideoTargetError("File path cannot be an empty string");
 
     _filepath = filepath;
-    _fps = fps;
+    _framerate = framerate;
 }
 
 void VideoTargetOpenCV::append(const VideoFrame_BGRA & frame)
@@ -45,7 +45,7 @@ void VideoTargetOpenCV::append(const VideoFrame_BGRA & frame)
 
         try
         {
-            _writer.open(_filepath, ex, _fps, size, true);
+            _writer.open(_filepath, ex, _framerate, size, true);
         }
         catch (std::exception & e)
         {

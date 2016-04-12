@@ -31,7 +31,7 @@ protected:
     //!
     //! \brief
     //!
-    float _fps;
+    float _framerate;
 
     //!
     //! \brief FOURCC code
@@ -49,7 +49,7 @@ public:
     VideoTargetOpenCV(const std::string fourcc = "XVID");
 
 public:
-    void init(const std::string filepath, const float fps);
+    void init(const std::string filepath, const float framerate);
 
     void append(const VideoFrame_BGRA & frame);
 

@@ -17,11 +17,11 @@ public:
     //!
     //! \brief Initialise a file writer
     //! \param filepath
-    //! \param fps frames per second
+    //! \param framerate how many frames per second
     //! \throw VideoTargetError if writer cannot
     //! be initialised, e.g. for IO reasons
     //!
-    virtual void init(const std::string filepath, const float fps) = 0;
+    virtual void init(const std::string filepath, const float framerate) = 0;
 
     //!
     //! \brief Append \c frame to output
