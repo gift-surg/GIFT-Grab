@@ -98,9 +98,15 @@ endif(USE_OPENCV)
 # FFmpeg video encoder
 if(USE_FFMPEG)
     ADD_DEFINITIONS(-DUSE_FFMPEG)
+    INCLUDE_DIRECTORIES(${FFmpeg_DIR}/include)
     INCLUDE_DIRECTORIES(ffmpeg)
     LIST(APPEND HEADERS ffmpeg/ffmpeg_video_target.h)
     LIST(APPEND SOURCES ffmpeg/ffmpeg_video_target.cpp)
+    LIST(APPEND LIBS
+        ${FFmpeg_DIR}/lib/libavformat.so
+        ${FFmpeg_DIR}/lib/libavcodec.so
+        ${FFmpeg_DIR}/lib/libavutil.so
+    )
 endif(USE_FFMPEG)
 
 # libVLC

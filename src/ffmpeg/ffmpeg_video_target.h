@@ -2,6 +2,12 @@
 
 #include "ivideotarget.h"
 
+extern "C" {
+#include <libavutil/opt.h>
+#include <libavutil/imgutils.h>
+#include <libavformat/avformat.h>
+}
+
 namespace gg
 {
 
