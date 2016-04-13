@@ -31,6 +31,7 @@ void VideoTargetOpenCV::init(const std::string filepath, const float framerate)
 
 void VideoTargetOpenCV::append(const VideoFrame_BGRA & frame)
 {
+    // TODO if not init?
     if (not _writer.isOpened())
     {
         const char * buffer = _fourcc.c_str();
