@@ -2,6 +2,12 @@
 #include <chrono>
 #include <thread>
 
+void synopsis()
+{
+    std::cout << "save_1min_epiphan" << "    [ xvid | h265 ]"
+              << "    [ sdi | dvi ]" << std::endl;
+}
+
 int main(int argc, char ** argv)
 {
     enum gg::Device port = gg::Device::DVI2PCIeDuo_DVI;
@@ -11,6 +17,12 @@ int main(int argc, char ** argv)
 
     if (argc >= 2)
     {
+        if (std::string(argv[1]) == "help")
+        {
+            synopsis();
+            return 0;
+        }
+
         codec_string = std::string(argv[1]);
         if (codec_string == "xvid")
             codec = gg::Target::File_XviD;
@@ -19,6 +31,7 @@ int main(int argc, char ** argv)
         else
         {
             std::cerr << "Codec " << codec_string << " not recognised" << std::endl;
+            synopsis();
             exit(-1);
         }
 
@@ -32,13 +45,14 @@ int main(int argc, char ** argv)
             else
             {
                 std::cerr << "Port " << port_string << " not recognised" << std::endl;
+                synopsis();
                 exit(-1);
             }
         }
     }
 
     IVideoSource * epiphan = gg::Factory::connect(port);
-    epiphan->set_sub_frame(600, 190, 678, 678); // optimal for Storz 27020 AA straight
+    epiphan->set_sub_frame(600, 185, 678, 688); // optimal for Storz 27020 AA straight
     float fps = 20;
     int duration = 1; // min
     int num_frames = duration * 60 * fps;
