@@ -45,6 +45,11 @@ protected:
     //!
     int _framerate;
 
+    //!
+    //! \brief
+    //!
+    SwsContext * _sws_context;
+
 public:
     //!
     //! \brief Constructor defining what \c codec to

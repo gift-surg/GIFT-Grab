@@ -10,7 +10,8 @@ VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
     _file_handle(NULL),
     _codec_id(AV_CODEC_ID_NONE),
     _frame(NULL),
-    _framerate(-1)
+    _framerate(-1),
+    _sws_context(NULL)
 {
     if (codec != "H265")
     {
@@ -113,6 +114,16 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
                              _codec_context->pix_fmt, 32);
         if (ret < 0)
             throw VideoTargetError("Could not allocate raw picture buffer");
+
+        if (_codec_context->pix_fmt != AV_PIX_FMT_BGRA)
+        {
+            _sws_context = sws_getContext(
+                        frame.cols(), frame.rows(), AV_PIX_FMT_BGRA,
+                        frame.cols(), frame.rows(), _codec_context->pix_fmt,
+                        0, NULL, NULL, NULL);
+            if (_sws_context == NULL)
+                throw VideoTargetError("Could not allocate Sws context");
+        }
     }
 
     // TODO
@@ -128,17 +139,15 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
 
         fflush(stdout);
 
-        SwsContext * ctx = sws_getContext(frame.cols(), frame.rows(), //imgWidth, imgHeight,
-                                          AV_PIX_FMT_BGRA, frame.cols(), frame.rows(), //imgWidth, imgHeight,
-                                          AV_PIX_FMT_YUV420P, 0, NULL, NULL, NULL);
-        const uint8_t * inData[1] = { frame.data() }; // RGB24 have one plane
-//        int inLinesize[1] = { 3*imgWidth }; // RGB stride
-        int inLinesize[1] = { 4*frame.cols() }; // RGB stride
-        sws_scale(ctx, inData, inLinesize, 0,
-                  frame.rows(), //imgHeight,
-                  _frame->data, //dst_picture.data,
-                  _frame->linesize //dst_picture.linesize
-                  );
+        if (_codec_context->pix_fmt != AV_PIX_FMT_BGRA)
+        {
+            const uint8_t * src_data_ptr[1] = { frame.data() }; // BGRA has one plane
+            int bgra_stride[1] = { 4*frame.cols() };
+            sws_scale(_sws_context, src_data_ptr, bgra_stride,
+                      0, frame.rows(),
+                      _frame->data, _frame->linesize
+                      );
+        }
 
         /* prepare a dummy image * /
         /* Y * /
@@ -211,6 +220,7 @@ void VideoTargetFFmpeg::finalise()
     if (_codec_context) av_free(_codec_context);
 //  av_freep(&_frame->data[0]); no need for this because _frame never manages its own data
     if (_frame) av_frame_free(&_frame);
+    if (_sws_context) sws_freeContext(_sws_context);
 
     // default values, for next init
     _codec = NULL;
@@ -219,6 +229,7 @@ void VideoTargetFFmpeg::finalise()
     _codec_id = AV_CODEC_ID_NONE;
     _frame = NULL;
     _framerate = -1;
+    _sws_context = NULL;
 }
 
 }
