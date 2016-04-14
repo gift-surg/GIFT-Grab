@@ -54,7 +54,6 @@ int main(int argc, char ** argv)
     float fps = 20;
     int duration = 1; // min
     int num_frames = duration * 60 * fps;
-    int sleep_duration = (int)(1000/fps); // ms
     VideoFrame_BGRA frame;
     cv::Mat image(height * square_size, width * square_size, CV_8UC4);
 
