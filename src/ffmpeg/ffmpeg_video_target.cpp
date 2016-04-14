@@ -127,78 +127,53 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
     }
 
     // TODO
-    AVPacket pkt;
     // TODO
-//    int i, ret, x, y, got_output;
+    AVPacket packet;
 
-    /* encode 1 second of video */
-//    for (i = 0; i < 10*25; i++) {
-        av_init_packet(&pkt);
-        pkt.data = NULL;    // packet data will be allocated by the encoder
-        pkt.size = 0;
+    av_init_packet(&packet);
+    packet.data = NULL;    // packet data will be allocated by the encoder
+    packet.size = 0;
 
-        fflush(stdout);
+    fflush(stdout);
 
-        if (_codec_context->pix_fmt != AV_PIX_FMT_BGRA)
-        {
-            const uint8_t * src_data_ptr[1] = { frame.data() }; // BGRA has one plane
-            int bgra_stride[1] = { 4*frame.cols() };
-            sws_scale(_sws_context, src_data_ptr, bgra_stride,
-                      0, frame.rows(),
-                      _frame->data, _frame->linesize
-                      );
-        }
+    if (_codec_context->pix_fmt != AV_PIX_FMT_BGRA)
+    {
+        const uint8_t * src_data_ptr[1] = { frame.data() }; // BGRA has one plane
+        int bgra_stride[1] = { 4*frame.cols() };
+        sws_scale(_sws_context, src_data_ptr, bgra_stride,
+                  0, frame.rows(),
+                  _frame->data, _frame->linesize
+                  );
+    }
 
-        /* prepare a dummy image * /
-        /* Y * /
-        for (y = 0; y < _codec_context->height; y++) {
-            for (x = 0; x < _codec_context->width; x++) {
-                _frame->data[0][y * _frame->linesize[0] + x] = x + y + i * 3;
-            }
-        }
+    _frame->pts = 1; // i.e. only one frame
 
-        /* Cb and Cr * /
-        for (y = 0; y < _codec_context->height/2; y++) {
-            for (x = 0; x < _codec_context->width/2; x++) {
-                _frame->data[1][y * _frame->linesize[1] + x] = 128 + y + i * 2;
-                _frame->data[2][y * _frame->linesize[2] + x] = 64 + x + i * 5;
-            }
-        }
-        */
+    /* encode the image */
+    // TODO - allocate pkt.data ?
+    ret = avcodec_encode_video2(_codec_context, &packet, _frame, &got_output);
+    if (ret < 0)
+        throw VideoTargetError("Error encoding frame");
 
-//        _frame->pts = i;
-        _frame->pts = 1; // i.e. only one frame
-
-        /* encode the image */
-        // TODO - allocate pkt.data ?
-        ret = avcodec_encode_video2(_codec_context, &pkt, _frame, &got_output);
-        if (ret < 0)
-            throw VideoTargetError("Error encoding frame");
-
-        if (got_output)
-        {
-//            printf("Write frame %3d (size=%5d)\n", i, pkt.size);
-            if (fwrite(pkt.data, 1, pkt.size, _file_handle) < pkt.size)
-                throw VideoTargetError("Could not write packet data");
-            av_packet_unref(&pkt);
-        }
-//    }
+    if (got_output)
+    {
+        if (fwrite(packet.data, 1, packet.size, _file_handle) < packet.size)
+            throw VideoTargetError("Could not write packet data");
+        av_packet_unref(&packet);
+    }
 
     /* get the delayed frames */
-//    for (got_output = 1; got_output; i++) {
     for (got_output = 1; got_output; ) {
         fflush(stdout);
 
-        ret = avcodec_encode_video2(_codec_context, &pkt, NULL, &got_output);
+        ret = avcodec_encode_video2(_codec_context, &packet, NULL, &got_output);
         if (ret < 0)
             throw VideoTargetError("Error encoding frame");
 
         if (got_output)
         {
-//            printf("Write frame %3d (size=%5d)\n", i, pkt.size);
-            if (fwrite(pkt.data, 1, pkt.size, _file_handle) < pkt.size)
+            if (fwrite(packet.data, 1, packet.size, _file_handle) < packet.size)
                 throw VideoTargetError("Could not write packet data (delayed frames)");
-            av_packet_unref(&pkt);
+            av_packet_unref(&packet);
         }
     }
 
