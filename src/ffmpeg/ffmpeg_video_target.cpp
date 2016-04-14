@@ -35,65 +35,130 @@ void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
 
     _framerate = (int) framerate;
 
-    _file_handle = fopen(filepath.c_str(), "wb");
-    if (not _file_handle)
-    {
-        std::string msg;
-        msg.append("File ")
-           .append(filepath)
-           .append(" could not be opened");
-        throw VideoTargetError(msg);
-    }
+//    _file_handle = fopen(filepath.c_str(), "wb");
+//    if (not _file_handle)
+//    {
+//        std::string msg;
+//        msg.append("File ")
+//           .append(filepath)
+//           .append(" could not be opened");
+//        throw VideoTargetError(msg);
+//    }
 
     int ret;
-    AVFormatContext *oc;
-    AVOutputFormat *fmt;
+    AVFormatContext *_format_context; // oc
+    AVOutputFormat *_output_format; // fmt
     /* allocate the output media context */
-    avformat_alloc_output_context2(&oc, NULL, NULL, filepath.c_str());
-    if (!oc) {
+    avformat_alloc_output_context2(&_format_context, NULL, NULL, filepath.c_str());
+    if (!_format_context) {
         printf("Could not deduce output format from file extension: using MPEG.\n");
-        avformat_alloc_output_context2(&oc, NULL, "mpeg", filepath.c_str());
+        avformat_alloc_output_context2(&_format_context, NULL, "mpeg", filepath.c_str());
     }
-    if (!oc)
+    if (!_format_context)
         throw VideoTargetError("Could not allocate output media context");
 //        return 1;
 
-    fmt = oc->oformat;
+    _output_format = _format_context->oformat;
     /* Add the audio and video streams using the default format codecs
      * and initialize the codecs. */
+    /* find the mpeg1 video encoder */
+    _codec = avcodec_find_encoder(_codec_id);
+    if (not _codec)
+        throw VideoTargetError("Codec not found");
+
+    /* TODO skip _codec_context stuff as allocated automatically
+     * as part of format context
+     */
+//    _codec_context = avcodec_alloc_context3(_codec);
+//    if (not _codec_context)
+//        throw VideoTargetError("Could not allocate video codec context");
+
+    /* TODO: using default reduces filesize
+     * but should we set it nonetheless?
+     */
+//        _codec_context->bit_rate = 400000;
+    /* TODO - resolution must be a multiple of two
+     * Why, because it's used that way in the sample
+     * code? (Dzhoshkun Shakir)
+     */
+//    _codec_context->width = frame.cols();
+//    _codec_context->height = frame.rows();
+//    _codec_context->time_base = (AVRational){1, _framerate};
+    /* TODO
+     * emit one intra frame every ten frames
+     * check frame pict_type before passing frame
+     * to encoder, if frame->pict_type is AV_PICTURE_TYPE_I
+     * then gop_size is ignored and the output of encoder
+     * will always be I frame irrespective to gop_size
+     *
+     * Not setting these, i.e. using defaults does not seem
+     * to have any negative consequences. (Dzhoshkun Shakir)
+     */
+//        _codec_context->gop_size = 10;
+//        _codec_context->max_b_frames = 1;
+//    _codec_context->pix_fmt = AV_PIX_FMT_YUV420P;
+
     // TODO - after _codec initialised!
     AVStream * st;
-    st = avformat_new_stream(oc, _codec);
+    st = avformat_new_stream(_format_context, _codec);
     if (!st) {
         fprintf(stderr, "Could not allocate stream\n");
         exit(1);
     }
-    st->id = oc->nb_streams-1;
+    st->id = _format_context->nb_streams-1;
     _codec_context = st->codec;
+    _codec_context->codec_id = _codec_id; // TODO Is this necessary?
     st->time_base = (AVRational){ 1, _framerate };
     _codec_context->time_base = st->time_base;
     /* Some formats want stream headers to be separate. */
-    if (oc->oformat->flags & AVFMT_GLOBALHEADER)
+    if (_format_context->oformat->flags & AVFMT_GLOBALHEADER)
         _codec_context->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
+
+    switch (_codec_id)
+    {
+    case AV_CODEC_ID_H264:
+    case AV_CODEC_ID_HEVC:
+        /* TODO will this work in real-time with a framegrabber ?
+         * "slow" produces 2x larger file compared to "ultrafast",
+         * but with a substantial visual quality degradation
+         * (judged using the coloured chessboard pattern)
+         * "fast" is a trade-off: visual quality looks similar
+         * while file size is reasonable
+         */
+        av_opt_set(_codec_context->priv_data, "preset", "fast", 0);
+        break;
+    default:
+        // nop
+        break;
+    }
+
+    /* open it */
+    if (avcodec_open2(_codec_context, _codec, NULL) < 0)
+        throw VideoTargetError("Could not open codec");
+
     /* Now that all the parameters are set, we can open the audio and
      * video codecs and allocate the necessary encode buffers. */
 //    if (have_video)
 //        open_video(oc, video_codec, &video_st, opt);
     // TODO - only does avcodec_open2 basically
-    av_dump_format(oc, 0, filepath.c_str(), 1); // TODO - debug only
+    av_dump_format(_format_context, 0, filepath.c_str(), 1); // TODO - debug only
     /* open the output file, if needed */
-    if (!(fmt->flags & AVFMT_NOFILE))
+    if (!(_output_format->flags & AVFMT_NOFILE))
     {
-        ret = avio_open(&oc->pb, filepath.c_str(), AVIO_FLAG_WRITE);
-        if (ret < 0) // {
-            throw VideoTargetError("Could not open file");
+        ret = avio_open(&_format_context->pb, filepath.c_str(), AVIO_FLAG_WRITE);
+        if (ret < 0) {
+            std::string msg;
+            msg.append("File ")
+               .append(filepath)
+               .append(" could not be opened");
+            throw VideoTargetError(msg);
 //            fprintf(stderr, "Could not open '%s': %s\n", filename,
 //                    av_err2str(ret));
 //            return 1;
-//        }
+        }
     }
     /* Write the stream header, if any. */
-    ret = avformat_write_header(oc, NULL);
+    ret = avformat_write_header(_format_context, NULL);
     if (ret < 0) // {
         throw VideoTargetError("Could not write header to file");
 //        fprintf(stderr, "Error occurred when opening output file: %s\n",
@@ -111,64 +176,8 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
     int ret, got_output;
 
     // if first frame, initialise
-    if (_codec == NULL or _codec_context == NULL or _frame == NULL)
+    if (_frame == NULL)
     {
-        /* find the mpeg1 video encoder */
-        _codec = avcodec_find_encoder(_codec_id);
-        if (not _codec)
-            throw VideoTargetError("Codec not found");
-
-        _codec_context = avcodec_alloc_context3(_codec);
-        if (not _codec_context)
-            throw VideoTargetError("Could not allocate video codec context");
-
-        /* TODO: using default reduces filesize
-         * but should we set it nonetheless?
-         */
-//        _codec_context->bit_rate = 400000;
-        /* TODO - resolution must be a multiple of two
-         * Why, because it's used that way in the sample
-         * code? (Dzhoshkun Shakir)
-         */
-        _codec_context->width = frame.cols();
-        _codec_context->height = frame.rows();
-        _codec_context->time_base = (AVRational){1, _framerate};
-        /* TODO
-         * emit one intra frame every ten frames
-         * check frame pict_type before passing frame
-         * to encoder, if frame->pict_type is AV_PICTURE_TYPE_I
-         * then gop_size is ignored and the output of encoder
-         * will always be I frame irrespective to gop_size
-         *
-         * Not setting these, i.e. using defaults does not seem
-         * to have any negative consequences. (Dzhoshkun Shakir)
-         */
-//        _codec_context->gop_size = 10;
-//        _codec_context->max_b_frames = 1;
-        _codec_context->pix_fmt = AV_PIX_FMT_YUV420P;
-
-        switch (_codec_id)
-        {
-        case AV_CODEC_ID_H264:
-        case AV_CODEC_ID_HEVC:
-            /* TODO will this work in real-time with a framegrabber ?
-             * "slow" produces 2x larger file compared to "ultrafast",
-             * but with a substantial visual quality degradation
-             * (judged using the coloured chessboard pattern)
-             * "fast" is a trade-off: visual quality looks similar
-             * while file size is reasonable
-             */
-            av_opt_set(_codec_context->priv_data, "preset", "fast", 0);
-            break;
-        default:
-            // nop
-            break;
-        }
-
-        /* open it */
-        if (avcodec_open2(_codec_context, _codec, NULL) < 0)
-            throw VideoTargetError("Could not open codec");
-
         _frame = av_frame_alloc();
         if (not _frame)
             throw VideoTargetError("Could not allocate video frame");
@@ -176,11 +185,15 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
         _frame->width  = _codec_context->width;
         _frame->height = _codec_context->height;
         _frame->pts = 1; // i.e. only one frame
+        // TODO do we need this after _codec_context almost unused ?
+        _codec_context->width = frame.cols();
+        _codec_context->height = frame.rows();
 
         /* TODO - can we skip allocating this each time ?
          *
          * the image can be allocated by any means and av_image_alloc() is
          * just the most convenient way if av_malloc() is to be used */
+        // TODO - vs alloc_picture ??
         ret = av_image_alloc(_frame->data, _frame->linesize,
                              _codec_context->width, _codec_context->height,
                              _codec_context->pix_fmt, 32);
@@ -222,6 +235,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
         // from write_frame
         /* rescale output packet timestamp values from codec to stream timebase */
         av_packet_rescale_ts(&packet, _codec_context->time_base, st->time_base);
+        // TODO - above time bases are the same, or not?
         packet.stream_index = st->index;
 
         /* Write the compressed frame to the media file. */
@@ -287,8 +301,6 @@ void VideoTargetFFmpeg::finalise()
 
     /* free the stream */
     avformat_free_context(oc);
-
-
 }
 
 }
