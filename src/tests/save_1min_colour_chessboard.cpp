@@ -72,7 +72,6 @@ int main(int argc, char ** argv)
         {
             if (i % 5 == 0)
                 std::cout << "Saving frame " << i+1 << " of " << num_frames
-                          << " (" << (int)((num_frames - i) / fps) << " sec. remaining)"
                           << "\r";
             float elapsed = (((float) i) / num_frames);
             float remaining = 1 - elapsed;
@@ -99,7 +98,6 @@ int main(int argc, char ** argv)
             }
             frame.init_from_opencv_mat(image);
             file->append(frame);
-            std::this_thread::sleep_for(std::chrono::milliseconds(sleep_duration));
         }
         file->finalise();
     }
