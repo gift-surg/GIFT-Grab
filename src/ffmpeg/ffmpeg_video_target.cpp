@@ -51,7 +51,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
     if (_framerate <= 0 or not _file_handle)
         throw VideoTargetError("Video target not initialised");
 
-    // TODO
+    // return value buffers
     int ret, got_output;
 
     // if first frame, initialise
@@ -105,6 +105,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
         _frame->format = _codec_context->pix_fmt;
         _frame->width  = _codec_context->width;
         _frame->height = _codec_context->height;
+        _frame->pts = 1; // i.e. only one frame
 
         /* TODO
          * the image can be allocated by any means and av_image_alloc() is
@@ -126,30 +127,25 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
         }
     }
 
-    // TODO
-    // TODO
-    AVPacket packet;
-
-    av_init_packet(&packet);
-    packet.data = NULL;    // packet data will be allocated by the encoder
-    packet.size = 0;
-
-    fflush(stdout);
-
+    /* convert pixel format if necessary */
     if (_codec_context->pix_fmt != AV_PIX_FMT_BGRA)
     {
         const uint8_t * src_data_ptr[1] = { frame.data() }; // BGRA has one plane
         int bgra_stride[1] = { 4*frame.cols() };
-        sws_scale(_sws_context, src_data_ptr, bgra_stride,
+        sws_scale(_sws_context,
+                  src_data_ptr, bgra_stride,
                   0, frame.rows(),
                   _frame->data, _frame->linesize
                   );
     }
 
-    _frame->pts = 1; // i.e. only one frame
-
     /* encode the image */
-    // TODO - allocate pkt.data ?
+    // TODO - make packet member variable to avoid memory allocation / deallocation ?
+    AVPacket packet;
+    av_init_packet(&packet);
+    packet.data = NULL;    // packet data will be allocated by the encoder
+    packet.size = 0;
+
     ret = avcodec_encode_video2(_codec_context, &packet, _frame, &got_output);
     if (ret < 0)
         throw VideoTargetError("Error encoding frame");
@@ -163,8 +159,6 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
 
     /* get the delayed frames */
     for (got_output = 1; got_output; ) {
-        fflush(stdout);
-
         ret = avcodec_encode_video2(_codec_context, &packet, NULL, &got_output);
         if (ret < 0)
             throw VideoTargetError("Error encoding frame");
