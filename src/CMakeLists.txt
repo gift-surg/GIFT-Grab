@@ -163,6 +163,11 @@ if(BUILD_TESTS)
         SET(TEST_NAME save_1min_epiphan)
         ADD_EXECUTABLE(${TEST_NAME}
             ${CMAKE_CURRENT_SOURCE_DIR}/tests/save_1min_epiphan.cpp)
-TARGET_LINK_LIBRARIES(${TEST_NAME} ${NAME} ${LIBS})
+        TARGET_LINK_LIBRARIES(${TEST_NAME} ${NAME} ${LIBS})
     endif(USE_EPIPHAN)
+
+    SET(TEST_NAME save_1min_colour_chessboard)
+    ADD_EXECUTABLE(${TEST_NAME}
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests/save_1min_colour_chessboard.cpp)
+    TARGET_LINK_LIBRARIES(${TEST_NAME} ${NAME} ${LIBS})
 endif(BUILD_TESTS)
