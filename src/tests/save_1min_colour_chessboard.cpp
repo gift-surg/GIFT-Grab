@@ -64,7 +64,7 @@ int main(int argc, char ** argv)
         filename.append("1min_")
                 .append(codec_string)
                 .append("_colour_chessboard")
-                .append(".avi");
+                .append(".mp4");
         std::cout << "Saving to file " << filename << std::endl;
         file->init(filename, fps);
         for (int i = 0; i < num_frames; i++)

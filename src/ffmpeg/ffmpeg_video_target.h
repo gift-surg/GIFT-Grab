@@ -50,6 +50,24 @@ protected:
     //!
     SwsContext * _sws_context;
 
+    //!
+    //! \brief
+    //!
+    AVFormatContext *_format_context;
+
+    //!
+    //! \brief
+    //!
+    AVOutputFormat *_output_format;
+
+    //!
+    //! \brief
+    //!
+    AVStream * _stream;
+
+    std::string _filepath;
+
+
 public:
     //!
     //! \brief Constructor defining what \c codec to
