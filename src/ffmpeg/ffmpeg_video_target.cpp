@@ -116,28 +116,22 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
         if (ret < 0)
             throw VideoTargetError("Could not allocate raw picture buffer");
 
-        if (_codec_context->pix_fmt != AV_PIX_FMT_BGRA)
-        {
-            _sws_context = sws_getContext(
-                        frame.cols(), frame.rows(), AV_PIX_FMT_BGRA,
-                        frame.cols(), frame.rows(), _codec_context->pix_fmt,
-                        0, NULL, NULL, NULL);
-            if (_sws_context == NULL)
-                throw VideoTargetError("Could not allocate Sws context");
-        }
+        _sws_context = sws_getContext(
+                    frame.cols(), frame.rows(), AV_PIX_FMT_BGRA,
+                    frame.cols(), frame.rows(), _codec_context->pix_fmt,
+                    0, NULL, NULL, NULL);
+        if (_sws_context == NULL)
+            throw VideoTargetError("Could not allocate Sws context");
     }
 
     /* convert pixel format if necessary */
-    if (_codec_context->pix_fmt != AV_PIX_FMT_BGRA)
-    {
-        const uint8_t * src_data_ptr[1] = { frame.data() }; // BGRA has one plane
-        int bgra_stride[1] = { 4*frame.cols() };
-        sws_scale(_sws_context,
-                  src_data_ptr, bgra_stride,
-                  0, frame.rows(),
-                  _frame->data, _frame->linesize
-                  );
-    }
+    const uint8_t * src_data_ptr[1] = { frame.data() }; // BGRA has one plane
+    int bgra_stride[1] = { 4*frame.cols() };
+    sws_scale(_sws_context,
+              src_data_ptr, bgra_stride,
+              0, frame.rows(),
+              _frame->data, _frame->linesize
+              );
 
     /* encode the image */
     // TODO - make packet member variable to avoid memory allocation / deallocation ?
