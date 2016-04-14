@@ -96,9 +96,13 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
         case AV_CODEC_ID_H264:
         case AV_CODEC_ID_HEVC:
             /* TODO will this work in real-time with a framegrabber ?
-             * slow produces 2x larger file
+             * "slow" produces 2x larger file compared to "ultrafast",
+             * but with a substantial visual quality degradation
+             * (judged using the coloured chessboard pattern)
+             * "fast" is a trade-off: visual quality looks similar
+             * while file size is reasonable
              */
-            av_opt_set(_codec_context->priv_data, "preset", "ultrafast", 0);
+            av_opt_set(_codec_context->priv_data, "preset", "fast", 0);
             break;
         default:
             // nop
