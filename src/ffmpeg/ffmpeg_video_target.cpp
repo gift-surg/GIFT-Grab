@@ -133,7 +133,8 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
                               CV_8UC4,
                               const_cast<unsigned char *>(frame.data()));
         cv::cvtColor(cv_frame_bgra, buffer_yuv420p_tmp, CV_BGRA2BGR);
-        cv::cvtColor(buffer_yuv420p_tmp, buffer_yuv420p, CV_BGR2YUV);
+        cv::cvtColor(buffer_yuv420p_tmp, buffer_yuv420p,
+                     CV_RGB2YUV); // see https://github.com/Itseez/opencv/issues/4946
 
         std::vector<cv::Mat> ycbcr_planes;
         cv::split(buffer_yuv420p, ycbcr_planes);
