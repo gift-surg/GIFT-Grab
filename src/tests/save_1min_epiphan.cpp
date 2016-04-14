@@ -4,8 +4,12 @@
 
 void synopsis()
 {
-    std::cout << "save_1min_epiphan" << "    [ xvid | h265 ]"
-              << "    [ sdi | dvi ]" << std::endl;
+    std::cout << "save_1min_epiphan"
+              << "    [ help    | "
+              << "    [ xvid | h265 ]"
+              << "    [ sdi | dvi ]"
+              << " ]"
+              << std::endl;
 }
 
 int main(int argc, char ** argv)
