@@ -66,12 +66,16 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
         if (not _codec_context)
             throw VideoTargetError("Could not allocate video codec context");
 
-        /* TODO put sample parameters */
-        _codec_context->bit_rate = 400000;
-        /* TODO - resolution must be a multiple of two */
+        /* TODO: using default reduces filesize
+         * but should we set it nonetheless?
+         */
+//        _codec_context->bit_rate = 400000;
+        /* TODO - resolution must be a multiple of two
+         * Why, because it's used that way in the sample
+         * code? (Dzhoshkun Shakir)
+         */
         _codec_context->width = frame.cols();
         _codec_context->height = frame.rows();
-        /* frames per second */
         _codec_context->time_base = (AVRational){1, _framerate};
         /* TODO
          * emit one intra frame every ten frames
@@ -79,15 +83,19 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
          * to encoder, if frame->pict_type is AV_PICTURE_TYPE_I
          * then gop_size is ignored and the output of encoder
          * will always be I frame irrespective to gop_size
+         *
+         * Not setting these, i.e. using defaults does not seem
+         * to have any negative consequences. (Dzhoshkun Shakir)
          */
-        _codec_context->gop_size = 10;
-        _codec_context->max_b_frames = 1; // TODO
+//        _codec_context->gop_size = 10;
+//        _codec_context->max_b_frames = 1;
         _codec_context->pix_fmt = AV_PIX_FMT_YUV420P;
 
         switch (_codec_id)
         {
         case AV_CODEC_ID_H264:
         case AV_CODEC_ID_HEVC:
+            // TODO will this work in real-time with a framegrabber ?
             av_opt_set(_codec_context->priv_data, "preset", "slow", 0);
             break;
         default:
@@ -107,7 +115,8 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
         _frame->height = _codec_context->height;
         _frame->pts = 1; // i.e. only one frame
 
-        /* TODO
+        /* TODO - can we skip allocating this each time ?
+         *
          * the image can be allocated by any means and av_image_alloc() is
          * just the most convenient way if av_malloc() is to be used */
         ret = av_image_alloc(_frame->data, _frame->linesize,
@@ -124,7 +133,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
             throw VideoTargetError("Could not allocate Sws context");
     }
 
-    /* convert pixel format if necessary */
+    /* convert pixel format */
     const uint8_t * src_data_ptr[1] = { frame.data() }; // BGRA has one plane
     int bgra_stride[1] = { 4*frame.cols() };
     sws_scale(_sws_context,
@@ -164,10 +173,6 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
             av_packet_unref(&packet);
         }
     }
-
-    // TODO
-
-    // TODO - exceptions when write/open/close fails!!!
 }
 
 void VideoTargetFFmpeg::finalise()
