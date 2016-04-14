@@ -44,6 +44,62 @@ void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
            .append(" could not be opened");
         throw VideoTargetError(msg);
     }
+
+    int ret;
+    AVFormatContext *oc;
+    AVOutputFormat *fmt;
+    /* allocate the output media context */
+    avformat_alloc_output_context2(&oc, NULL, NULL, filepath.c_str());
+    if (!oc) {
+        printf("Could not deduce output format from file extension: using MPEG.\n");
+        avformat_alloc_output_context2(&oc, NULL, "mpeg", filepath.c_str());
+    }
+    if (!oc)
+        throw VideoTargetError("Could not allocate output media context");
+//        return 1;
+
+    fmt = oc->oformat;
+    /* Add the audio and video streams using the default format codecs
+     * and initialize the codecs. */
+    // TODO - after _codec initialised!
+    AVStream * st;
+    st = avformat_new_stream(oc, _codec);
+    if (!st) {
+        fprintf(stderr, "Could not allocate stream\n");
+        exit(1);
+    }
+    st->id = oc->nb_streams-1;
+    _codec_context = st->codec;
+    st->time_base = (AVRational){ 1, _framerate };
+    _codec_context->time_base = st->time_base;
+    /* Some formats want stream headers to be separate. */
+    if (oc->oformat->flags & AVFMT_GLOBALHEADER)
+        _codec_context->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
+    /* Now that all the parameters are set, we can open the audio and
+     * video codecs and allocate the necessary encode buffers. */
+//    if (have_video)
+//        open_video(oc, video_codec, &video_st, opt);
+    // TODO - only does avcodec_open2 basically
+    av_dump_format(oc, 0, filepath.c_str(), 1); // TODO - debug only
+    /* open the output file, if needed */
+    if (!(fmt->flags & AVFMT_NOFILE))
+    {
+        ret = avio_open(&oc->pb, filepath.c_str(), AVIO_FLAG_WRITE);
+        if (ret < 0) // {
+            throw VideoTargetError("Could not open file");
+//            fprintf(stderr, "Could not open '%s': %s\n", filename,
+//                    av_err2str(ret));
+//            return 1;
+//        }
+    }
+    /* Write the stream header, if any. */
+    ret = avformat_write_header(oc, NULL);
+    if (ret < 0) // {
+        throw VideoTargetError("Could not write header to file");
+//        fprintf(stderr, "Error occurred when opening output file: %s\n",
+//                av_err2str(ret));
+//        return 1;
+//    }
 }
 
 void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
@@ -161,9 +217,22 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
 
     if (got_output)
     {
-        if (fwrite(packet.data, 1, packet.size, _file_handle) < packet.size)
-            throw VideoTargetError("Could not write packet data");
-        av_packet_unref(&packet);
+        AVFormatContext * fmt_ctx; // TODO var
+        AVStream * st; // TODO var
+        // from write_frame
+        /* rescale output packet timestamp values from codec to stream timebase */
+        av_packet_rescale_ts(&packet, _codec_context->time_base, st->time_base);
+        packet.stream_index = st->index;
+
+        /* Write the compressed frame to the media file. */
+        int ret = av_interleaved_write_frame(fmt_ctx, &packet);
+        if (ret < 0)
+            throw VideoTargetError("Could not interleaved write frame");
+
+        // TODO _file_handle no more needed
+//        if (fwrite(packet.data, 1, packet.size, _file_handle) < packet.size)
+//            throw VideoTargetError("Could not write packet data");
+//        av_packet_unref(&packet); taken care of by av_interleaved_write_frame
     }
 
     /* get the delayed frames */
@@ -204,6 +273,22 @@ void VideoTargetFFmpeg::finalise()
     _frame = NULL;
     _framerate = -1;
     _sws_context = NULL;
+
+    AVFormatContext *oc;
+    AVOutputFormat *fmt;
+    /* Write the trailer, if any. The trailer must be written before you
+     * close the CodecContexts open when you wrote the header; otherwise
+     * av_write_trailer() may try to use memory that was freed on
+     * av_codec_close(). */
+    av_write_trailer(oc);
+    if (!(fmt->flags & AVFMT_NOFILE))
+        /* Close the output file. */
+        avio_closep(&oc->pb);
+
+    /* free the stream */
+    avformat_free_context(oc);
+
+
 }
 
 }
