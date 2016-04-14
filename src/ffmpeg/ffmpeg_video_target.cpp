@@ -127,20 +127,19 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
         pkt.size = 0;
 
         fflush(stdout);
-        cv::Mat buffer_yuv420p_tmp, buffer_yuv420p;
 
-        cv::Mat cv_frame_bgra(frame.rows(), frame.cols(),
-                              CV_8UC4,
-                              const_cast<unsigned char *>(frame.data()));
-        cv::cvtColor(cv_frame_bgra, buffer_yuv420p_tmp, CV_BGRA2BGR);
-        cv::cvtColor(buffer_yuv420p_tmp, buffer_yuv420p,
-                     CV_RGB2YUV); // see https://github.com/Itseez/opencv/issues/4946
+        SwsContext * ctx = sws_getContext(frame.cols(), frame.rows(), //imgWidth, imgHeight,
+                                          AV_PIX_FMT_BGRA, frame.cols(), frame.rows(), //imgWidth, imgHeight,
+                                          AV_PIX_FMT_YUV420P, 0, NULL, NULL, NULL);
+        const uint8_t * inData[1] = { frame.data() }; // RGB24 have one plane
+//        int inLinesize[1] = { 3*imgWidth }; // RGB stride
+        int inLinesize[1] = { 4*frame.cols() }; // RGB stride
+        sws_scale(ctx, inData, inLinesize, 0,
+                  frame.rows(), //imgHeight,
+                  _frame->data, //dst_picture.data,
+                  _frame->linesize //dst_picture.linesize
+                  );
 
-        std::vector<cv::Mat> ycbcr_planes;
-        cv::split(buffer_yuv420p, ycbcr_planes);
-        _frame->data[0] = ycbcr_planes[0].data;
-        _frame->data[1] = ycbcr_planes[1].data;
-        _frame->data[2] = ycbcr_planes[2].data;
         /* prepare a dummy image * /
         /* Y * /
         for (y = 0; y < _codec_context->height; y++) {

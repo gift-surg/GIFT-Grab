@@ -106,6 +106,7 @@ if(USE_FFMPEG)
         ${FFmpeg_DIR}/lib/libavformat.so
         ${FFmpeg_DIR}/lib/libavcodec.so
         ${FFmpeg_DIR}/lib/libavutil.so
+        ${FFmpeg_DIR}/lib/libswscale.so
     )
 endif(USE_FFMPEG)
 

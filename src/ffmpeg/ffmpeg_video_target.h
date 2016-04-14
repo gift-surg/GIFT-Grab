@@ -6,6 +6,7 @@ extern "C" {
 #include "libavutil/opt.h"
 #include "libavutil/imgutils.h"
 #include "libavformat/avformat.h"
+#include "libswscale/swscale.h" // for BGRA to YUV420p conversion
 }
 
 namespace gg
