@@ -13,11 +13,15 @@ void synopsis()
               << std::endl << "                "
               << " file </file/path> [xvid | h265] " << " | "
               << std::endl << "                "
-              << " chess [ xvid | h265 [ <width> <height> ] "
+              << " chess xvid | h265   <width> <height> "
               << std::endl << "            "
               << " ]"
               << std::endl;
 }
+
+enum TestMode { Epiphan, File, Chessboard };
+
+enum TestMode test_mode = TestMode::Chessboard;
 
 enum gg::Target codec = gg::Target::File_XviD;
 std::string codec_string = "xvid", filetype = "avi";
@@ -30,40 +34,51 @@ int width = 11, height = 7, square_size = 61;
 
 void parse_args(int argc, char ** argv)
 {
-    if (argc >= 2)
-    {
-        if (std::string(argv[1]) == "help")
-        {
-            synopsis();
-            exit(0);
-        }
-        else
-        {
-            codec_string = std::string(argv[1]);
-            if (codec_string == "xvid")
-                codec = gg::Target::File_XviD;
-            else if (codec_string == "h265")
-            {
-                codec = gg::Target::File_H265;
-                filetype = "mp4";
-            }
-            else
-            {
-                std::cerr << "Codec " << codec_string << " not recognised" << std::endl;
-                synopsis();
-                exit(-1);
-            }
+    std::vector<std::string> args;
+    for (int i = 0; i < argc; i++)
+        args.push_back(std::string(argv[i]));
 
-            if (argc == 3)
-            {
-                synopsis();
-                exit(-1);
-            }
-            else if (argc >= 4)
-            {
-                width = atoi(argv[2]); height = atoi(argv[3]);
-            }
+    if (args[1]=="help")
+    {
+        synopsis(); exit(0);
+    }
+
+    if (args[1]=="epiphan")
+    {
+        return;
+    }
+
+    if (args[1]=="file")
+    {
+        return;
+    }
+
+    if (args[1]=="chess")
+    {
+        test_mode = TestMode::Chessboard;
+
+        if (argc < 5)
+        {
+            synopsis(); exit(-1);
         }
+
+        codec_string = args[2];
+        width = atoi(argv[3]); height = atoi(argv[4]);
+    }
+
+    // health checks
+    if (codec_string == "xvid")
+        codec = gg::Target::File_XviD;
+    else if (codec_string == "h265")
+    {
+        codec = gg::Target::File_H265;
+        filetype = "mp4";
+    }
+    else
+    {
+        std::cerr << "Codec " << codec_string << " not recognised" << std::endl;
+        synopsis();
+        exit(-1);
     }
 }
 
