@@ -143,28 +143,23 @@ void init(int argc, char ** argv)
 std::string which_file()
 {
     std::string filename;
+    filename.append(std::to_string(duration))
+            .append("min_")
+            .append(codec_string);
     switch(test_mode)
     {
     case TestMode::Epiphan:
-        // TODO
-        break;
+        filename.append("_epiphan."); break;
     case TestMode::File:
-        filename.append(std::to_string(duration))
-                .append("min_")
-                .append(codec_string)
-                .append("_from_file.")
-                .append(filetype);
-        return filename;
+        filename.append("_from_file."); break;
     case TestMode::Chessboard:
-        filename.append("1min_")
-                .append(codec_string)
-                .append("_colour_chessboard.")
-                .append(filetype);
-        return filename;
+        filename.append("_colour_chessboard."); break;
     default:
         std::cerr << "Test mode not set" << std::endl;
         exit(-1);
     }
+    filename.append(filetype);
+    return filename;
 }
 
 void get_frame(VideoFrame_BGRA & frame)
