@@ -6,7 +6,6 @@ namespace gg
 
 VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
     _codec(NULL),
-    _codec_context(NULL),
     _file_handle(NULL),
     _codec_id(AV_CODEC_ID_NONE),
     _frame(NULL),
@@ -80,20 +79,19 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
     if (_frame == NULL)
     {
         // TODO - is _codec_context ever being modified after first frame?
-        _codec_context = _stream->codec;
-        _codec_context->codec_id = _codec_id;
+        _stream->codec->codec_id = _codec_id;
         // TODO do we need this after _codec_context almost unused ?
-        _codec_context->bit_rate = 400000;
-        _codec_context->width = frame.cols();
-        _codec_context->height = frame.rows();
+        _stream->codec->bit_rate = 400000;
+        _stream->codec->width = frame.cols();
+        _stream->codec->height = frame.rows();
     //    _codec_context->codec_id = _codec_id; // TODO Is this necessary? NO
         _stream->time_base = (AVRational){ 1, _framerate };
-        _codec_context->time_base = _stream->time_base;
-        _codec_context->gop_size      = 12; /* emit one intra frame every twelve frames at most */
-        _codec_context->pix_fmt = AV_PIX_FMT_YUV420P;
+        _stream->codec->time_base = _stream->time_base;
+        _stream->codec->gop_size      = 12; /* emit one intra frame every twelve frames at most */
+        _stream->codec->pix_fmt = AV_PIX_FMT_YUV420P;
         /* Some formats want stream headers to be separate. */
         if (_format_context->oformat->flags & AVFMT_GLOBALHEADER)
-            _codec_context->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
+            _stream->codec->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
 
         switch (_codec_id)
         {
@@ -106,7 +104,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
              * "fast" is a trade-off: visual quality looks similar
              * while file size is reasonable
              */
-            av_opt_set(_codec_context->priv_data, "preset", "fast", 0);
+            av_opt_set(_stream->codec->priv_data, "preset", "fast", 0);
             break;
         default:
             // nop
@@ -174,7 +172,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
 
         _sws_context = sws_getContext(
                     frame.cols(), frame.rows(), AV_PIX_FMT_BGRA,
-                    frame.cols(), frame.rows(), _codec_context->pix_fmt,
+                    frame.cols(), frame.rows(), _stream->codec->pix_fmt,
                     0, NULL, NULL, NULL);
         if (_sws_context == NULL)
             throw VideoTargetError("Could not allocate Sws context");
@@ -281,7 +279,6 @@ void VideoTargetFFmpeg::finalise()
 
     // default values, for next init
     _codec = NULL;
-    _codec_context = NULL;
     _file_handle = NULL;
     _codec_id = AV_CODEC_ID_NONE;
     _frame = NULL;

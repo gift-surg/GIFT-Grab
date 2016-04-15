@@ -28,11 +28,6 @@ protected:
     //!
     //! \brief
     //!
-    AVCodecContext * _codec_context;
-
-    //!
-    //! \brief
-    //!
     FILE * _file_handle;
 
     //!
