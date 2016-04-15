@@ -36,6 +36,7 @@ int num_frames = duration * 60 * fps;
 int i = 0;
 VideoFrame_BGRA frame;
 cv::Mat image(height * square_size, width * square_size, CV_8UC4);
+cv::VideoCapture cap;
 
 void parse_args(int argc, char ** argv)
 {
@@ -56,8 +57,26 @@ void parse_args(int argc, char ** argv)
 
     if (args[1]=="file")
     {
-        // TODO
-        return;
+        test_mode = TestMode::File;
+
+        if (argc < 4)
+        {
+            synopsis(); exit(-1);
+        }
+
+        cap.open(args[2]);
+        if (not cap.isOpened())
+        {
+            std::cerr << "File " << args[2]
+                      << " could not be opened"
+                      << std::endl;
+            exit(-1);
+        }
+
+        codec_string = args[3];
+        num_frames = cap.get(CV_CAP_PROP_FRAME_COUNT);
+        fps = cap.get(CV_CAP_PROP_FPS);
+        duration = (num_frames / fps) / 60;
     }
 
     if (args[1]=="chess")
@@ -97,8 +116,12 @@ std::string which_file()
         // TODO
         break;
     case TestMode::File:
-        // TODO
-        break;
+        filename.append(std::to_string(duration))
+                .append("min_")
+                .append(codec_string)
+                .append("_from_file.")
+                .append(filetype);
+        return filename;
     case TestMode::Chessboard:
         filename.append("1min_")
                 .append(codec_string)
@@ -145,7 +168,9 @@ void get_frame(VideoFrame_BGRA & frame)
         // TODO
         break;
     case TestMode::File:
-        // TODO
+        cap >> image;
+        cv::cvtColor(image, image, CV_BGR2BGRA);
+        frame.init_from_opencv_mat(image);
         break;
     default:
         std::cerr << "Test mode not set" << std::endl;
