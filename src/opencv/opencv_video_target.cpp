@@ -22,8 +22,7 @@ void VideoTargetOpenCV::init(const std::string filepath, const float framerate)
     if (framerate <= 0)
         throw VideoTargetError("Negative fps does not make sense");
 
-    if (filepath.length() <= 0)
-        throw VideoTargetError("File path cannot be an empty string");
+    check_filetype_support(filepath, "avi");
 
     _filepath = filepath;
     _framerate = framerate;
