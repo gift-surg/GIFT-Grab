@@ -62,7 +62,7 @@ sudo make install # CMAKE_INSTALL_PREFIX defaults to /usr/local
       1. `git checkout n3.0.1`
       1. `export PKG_CONFIG_PATH="/your/x265/installation/location/lib/pkgconfig:$PKG_CONFIG_PATH"`
       1. `mkdir ffmpeg-build` and `cd ffmpeg-build`
-      1. `../ffmpeg/configure --prefix=/your/ffmpeg/installation/location --enable-shared --enable-avresample --enable-libx265 --enable-gpl --enable-muxer=avi --enable-muxer=mp4`
+      1. `../ffmpeg/configure --prefix=/your/ffmpeg/installation/location --enable-shared --enable-avresample --enable-libx265 --enable-gpl --enable-muxer=mp4`
       1. `make -j` and `make install`
    1. Supply `-D FFmpeg_DIR=/your/ffmpeg/installation/location` when running CMake.
 
