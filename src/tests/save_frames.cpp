@@ -19,23 +19,23 @@ void synopsis()
               << std::endl;
 }
 
-int main(int argc, char ** argv)
-{
-    enum gg::Target codec = gg::Target::File_XviD;
-    std::string codec_string = "xvid", filetype = "avi";
-    /* following numbers purposefully odd,
-     * to test robustness when odd frame
-     * width and/or height provided, whereas
-     * H265 requires even
-     */
-    int width = 11, height = 7, square_size = 61;
+enum gg::Target codec = gg::Target::File_XviD;
+std::string codec_string = "xvid", filetype = "avi";
+/* following numbers purposefully odd,
+ * to test robustness when odd frame
+ * width and/or height provided, whereas
+ * H265 requires even
+ */
+int width = 11, height = 7, square_size = 61;
 
+void parse_args(int argc, char ** argv)
+{
     if (argc >= 2)
     {
         if (std::string(argv[1]) == "help")
         {
             synopsis();
-            return 0;
+            exit(0);
         }
         else
         {
@@ -65,6 +65,11 @@ int main(int argc, char ** argv)
             }
         }
     }
+}
+
+int main(int argc, char ** argv)
+{
+    parse_args(argc, argv);
 
     float fps = 20;
     int duration = 1; // min
