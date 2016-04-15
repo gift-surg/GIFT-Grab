@@ -226,15 +226,7 @@ void VideoTargetFFmpeg::finalise()
      * av_codec_close(). */
     av_write_trailer(_format_context);
 
-//    /* add sequence end code to have a real mpeg file */
-//    uint8_t endcode[] = { 0, 0, 1, 0xb7 };
-//    if (fwrite(endcode, 1, sizeof(endcode), _file_handle) < sizeof(endcode))
-//        throw VideoTargetError("Could not write sequence end");
-//    if (fclose(_file_handle) != 0)
-//        throw VideoTargetError("Could not close file");
-
     if (_stream->codec) avcodec_close(_stream->codec);
-    if (_stream->codec) av_free(_stream->codec); // TODO this is not in muxing
     if (_frame) av_frame_free(&_frame);
 //  av_freep(&_frame->data[0]); no need for this because _frame never manages its own data
     if (_sws_context) sws_freeContext(_sws_context);
@@ -242,10 +234,8 @@ void VideoTargetFFmpeg::finalise()
     if (!(_format_context->oformat->flags & AVFMT_NOFILE))
         /* Close the output file. */
         avio_closep(&_format_context->pb);
-//    avformat_free_context(_format_context);
-    /* TODO above line was causing
-     * "corrupted double-linked list: 0x0000000000e46e40 ***"
-     */
+    /* free the stream */
+    avformat_free_context(_format_context);
 
     // default values, for next init
     _codec = NULL;
@@ -254,12 +244,8 @@ void VideoTargetFFmpeg::finalise()
     _frame = NULL;
     _framerate = -1;
     _sws_context = NULL;
-
-    /* free the stream */
-//    avformat_free_context(_format_context);
-    // TODO - above was giving "double free or corruption (!prev): 0x0000000001a319c0"
-    _format_context = NULL; // TODO - risk of dangling
-    _stream = NULL; // TODO - risk of dangling
+    _format_context = NULL;
+    _stream = NULL;
     _frame_index = 0;
 }
 
