@@ -30,7 +30,7 @@ std::string codec_string = "xvid", filetype = "avi";
  * H265 requires even
  */
 int width = 11, height = 7, square_size = 61;
-float fps = 20;
+float fps = 60;
 int duration = 1; // min
 int num_frames = duration * 60 * fps;
 int i = 0;
