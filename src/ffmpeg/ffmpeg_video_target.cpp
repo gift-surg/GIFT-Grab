@@ -13,7 +13,6 @@ VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
     _framerate(-1),
     _sws_context(NULL),
     _format_context(NULL),
-    _output_format(NULL),
     _stream(NULL),
     _frame_index(0)
 {
@@ -27,7 +26,6 @@ VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
     }
     _codec_id = AV_CODEC_ID_HEVC;
 
-//    avcodec_register_all(); // TODO still need this?
     av_register_all();
 }
 
@@ -37,45 +35,23 @@ void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
         throw VideoTargetError("Negative fps does not make sense");
     if (framerate - (int) framerate > 0)
         throw VideoTargetError("Only integer framerates are supported");
-
     _framerate = (int) framerate;
 
-//    _file_handle = fopen(filepath.c_str(), "wb");
-//    if (not _file_handle)
-//    {
-//        std::string msg;
-//        msg.append("File ")
-//           .append(filepath)
-//           .append(" could not be opened");
-//        throw VideoTargetError(msg);
-//    }
+    if (filepath.empty())
+        throw VideoTargetError("Empty filepath specified");
     _filepath = filepath;
 
-    int ret;
     /* allocate the output media context */
-    avformat_alloc_output_context2(&_format_context, NULL, NULL, filepath.c_str());
-    if (!_format_context) {
-        printf("Could not deduce output format from file extension: using MP4.\n");
+    avformat_alloc_output_context2(&_format_context, NULL, NULL, _filepath.c_str());
+    if (_format_context == NULL)
+        // Use MP4 as default if context cannot be deduced from file extension
         avformat_alloc_output_context2(&_format_context, NULL, "mp4", NULL);
-    }
-    if (!_format_context)
+    if (_format_context == NULL)
         throw VideoTargetError("Could not allocate output media context");
-//        return 1;
 
-    _output_format = _format_context->oformat;
-    /* Add the audio and video streams using the default format codecs
-     * and initialize the codecs. */
-    /* find the mpeg1 video encoder */
     _codec = avcodec_find_encoder(_codec_id);
     if (not _codec)
         throw VideoTargetError("Codec not found");
-
-    /* TODO skip _codec_context stuff as allocated automatically
-     * as part of format context
-     */
-//    _codec_context = avcodec_alloc_context3(_codec);
-//    if (not _codec_context)
-//        throw VideoTargetError("Could not allocate video codec context");
 
     /* TODO: using default reduces filesize
      * but should we set it nonetheless?
@@ -85,31 +61,11 @@ void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
      * Why, because it's used that way in the sample
      * code? (Dzhoshkun Shakir)
      */
-//    _codec_context->width = frame.cols();
-//    _codec_context->height = frame.rows();
-//    _codec_context->time_base = (AVRational){1, _framerate};
-    /* TODO
-     * emit one intra frame every ten frames
-     * check frame pict_type before passing frame
-     * to encoder, if frame->pict_type is AV_PICTURE_TYPE_I
-     * then gop_size is ignored and the output of encoder
-     * will always be I frame irrespective to gop_size
-     *
-     * Not setting these, i.e. using defaults does not seem
-     * to have any negative consequences. (Dzhoshkun Shakir)
-     */
-//        _codec_context->gop_size = 10;
-//        _codec_context->max_b_frames = 1;
-//    _codec_context->pix_fmt = AV_PIX_FMT_YUV420P;
 
-    // TODO - after _codec initialised!
     _stream = avformat_new_stream(_format_context, _codec);
-    if (!_stream) {
-        fprintf(stderr, "Could not allocate stream\n");
-        exit(1);
-    }
+    if (_stream == NULL)
+        throw VideoTargetError("Could not allocate stream");
     _stream->id = _format_context->nb_streams-1; // TODO isn't this wrong?
-
 }
 
 void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
@@ -182,7 +138,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
         // TODO - only does avcodec_open2 basically
         av_dump_format(_format_context, 0, _filepath.c_str(), 1); // TODO - debug only
         /* open the output file, if needed */
-        if (!(_output_format->flags & AVFMT_NOFILE))
+        if (!(_format_context->oformat->flags & AVFMT_NOFILE))
         {
             ret = avio_open(&_format_context->pb, _filepath.c_str(), AVIO_FLAG_WRITE);
             if (ret < 0) {
@@ -315,7 +271,7 @@ void VideoTargetFFmpeg::finalise()
 //  av_freep(&_frame->data[0]); no need for this because _frame never manages its own data
     if (_sws_context) sws_freeContext(_sws_context);
 
-    if (!(_output_format->flags & AVFMT_NOFILE))
+    if (!(_format_context->oformat->flags & AVFMT_NOFILE))
         /* Close the output file. */
         avio_closep(&_format_context->pb);
 //    avformat_free_context(_format_context);
@@ -336,7 +292,6 @@ void VideoTargetFFmpeg::finalise()
 //    avformat_free_context(_format_context);
     // TODO - above was giving "double free or corruption (!prev): 0x0000000001a319c0"
     _format_context = NULL; // TODO - risk of dangling
-    _output_format = NULL; // TODO - risk of dangling
     _stream = NULL; // TODO - risk of dangling
     _frame_index = 0;
 }

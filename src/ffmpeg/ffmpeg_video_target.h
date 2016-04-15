@@ -58,11 +58,6 @@ protected:
     //!
     //! \brief
     //!
-    AVOutputFormat *_output_format;
-
-    //!
-    //! \brief
-    //!
     AVStream * _stream;
 
     std::string _filepath;
