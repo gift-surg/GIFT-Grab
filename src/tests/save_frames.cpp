@@ -7,13 +7,13 @@ void synopsis()
     std::cout << "save_frames"
               << "  [  "
               << std::endl << "                "
-              << " help " << " | "
+              << " help "
               << std::endl << "                "
-              << " epiphan [ xvid | h265 [ sdi | dvi ] ] " << " | "
+              << " epiphan   xvid | h265   sdi | dvi "
               << std::endl << "                "
-              << " file </file/path> [xvid | h265] " << " | "
+              << " file   </file/path>   xvid | h265 "
               << std::endl << "                "
-              << " chess xvid | h265   <width> <height> "
+              << " chess   xvid | h265   <width>   <height> "
               << std::endl << "            "
               << " ]"
               << std::endl;
@@ -112,7 +112,8 @@ std::string which_file()
 {
     std::string filename;
     switch(test_mode)
-    {case TestMode::Epiphan:
+    {
+    case TestMode::Epiphan:
         // TODO
         break;
     case TestMode::File:
