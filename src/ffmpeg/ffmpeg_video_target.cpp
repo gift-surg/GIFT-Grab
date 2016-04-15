@@ -253,7 +253,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
 
         /* Write the compressed frame to the media file. */
 //        packet.dts--;
-        _format_context->oformat->flags |= AVFMT_TS_NONSTRICT;
+//        _format_context->oformat->flags |= AVFMT_TS_NONSTRICT;
         int ret = av_interleaved_write_frame(_format_context, &packet);
         if (ret < 0)
             throw VideoTargetError("Could not interleaved write frame");
