@@ -9,7 +9,9 @@ void synopsis()
               << std::endl << "                "
               << " help "
               << std::endl << "                "
-              << " epiphan   xvid | h265   sdi | dvi "
+              << " epiphan   xvid | h265   sdi | dvi   "
+              << " [ <framerate>   [ <x> <y>  <width> <height> ]   ]"
+              << " # optimal: 20 600 185 678 688"
               << std::endl << "                "
               << " file   </file/path>   xvid | h265 "
               << std::endl << "                "
@@ -21,26 +23,22 @@ void synopsis()
 
 enum TestMode { Epiphan, File, Chessboard };
 
-enum TestMode test_mode = TestMode::Chessboard;
-enum gg::Target codec = gg::Target::File_XviD;
-std::string codec_string = "xvid", filetype = "avi";
-/* following numbers purposefully odd,
- * to test robustness when odd frame
- * width and/or height provided, whereas
- * H265 requires even
- */
-int width, height, square_size = 61;
-float fps = 60;
-int duration = 1; // min
-int num_frames = duration * 60 * fps;
+enum TestMode test_mode;
+enum gg::Target codec;
+std::string codec_string, filetype;
+int width, height, square_size;
+float fps;
+int duration; // min
+int num_frames;
 int i = 0;
 VideoFrame_BGRA frame;
 cv::Mat image;
 cv::VideoCapture cap;
-enum gg::Device port = gg::Device::DVI2PCIeDuo_DVI;
-std::string port_string = "dvi";
-int sleep_duration = 0;
+enum gg::Device port;
+std::string port_string;
+int sleep_duration;
 IVideoSource * epiphan = NULL;
+int roi_x, roi_y;
 
 void init(int argc, char ** argv)
 {
@@ -77,8 +75,24 @@ void init(int argc, char ** argv)
         }
 
         epiphan = gg::Factory::connect(port);
-        epiphan->set_sub_frame(600, 185, 678, 688); // optimal for Storz 27020 AA straight
+        fps = 60;
+        duration = 1; // min
 
+        // optimal for Storz 27020 AA straight
+        if (argc >= 5)
+        {
+            fps = atof(argv[4]);
+            if (argc >= 9)
+            {
+                roi_x = atoi(argv[5]);
+                roi_y = atoi(argv[6]);
+                width = atoi(argv[7]);
+                height = atoi(argv[8]);
+                epiphan->set_sub_frame(roi_x, roi_y, width, height);
+            }
+        }
+
+        num_frames = duration * 60 * fps;
         sleep_duration = (int)(1000/fps); // ms
     }
 
@@ -117,7 +131,17 @@ void init(int argc, char ** argv)
 
         codec_string = args[2];
         width = atoi(argv[3]); height = atoi(argv[4]);
+        /* square size purposefully odd,
+         * to test robustness when odd frame
+         * width and/or height provided, whereas
+         * H265 requires even
+         */
+        square_size = 61;
         image = cv::Mat(height * square_size, width * square_size, CV_8UC4);
+
+        fps = 60;
+        duration = 1; // min
+        num_frames = duration * 60 * fps;
     }
 
     else
@@ -127,7 +151,10 @@ void init(int argc, char ** argv)
 
     // health checks
     if (codec_string == "xvid")
+    {
         codec = gg::Target::File_XviD;
+        filetype = "avi";
+    }
     else if (codec_string == "h265")
     {
         codec = gg::Target::File_H265;
@@ -221,8 +248,9 @@ void time_left()
     }
 }
 
-void wait_for_next()
+void wait_for_next(const float elapsed = 0)
 {
+    float real_sleep_duration;
     switch(test_mode)
     {
     case TestMode::File:
@@ -230,7 +258,18 @@ void wait_for_next()
         // nop
         break;
     case TestMode::Epiphan:
-        std::this_thread::sleep_for(std::chrono::milliseconds(sleep_duration));
+        real_sleep_duration = sleep_duration - elapsed;
+        if (real_sleep_duration < 0)
+            std::cerr << std::endl
+                      << "Elapsed duration longer "
+                      << "than sleep duration by "
+                      << real_sleep_duration
+                      << " msec."
+                      << std::endl;
+        else
+            std::this_thread::sleep_for(
+                std::chrono::milliseconds(
+                    sleep_duration ));
         break;
     default:
         std::cerr << "Test mode not set" << std::endl;
@@ -270,10 +309,16 @@ int main(int argc, char ** argv)
         for (i = 0; i < num_frames; i++)
         {
             time_left();
+            auto current_start = std::chrono::steady_clock::now();
             get_frame(frame);
             file->append(frame);
-            wait_for_next();
+            float current_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+                        std::chrono::steady_clock::now() - current_start).count();
+            wait_for_next(current_elapsed);
         }
+        auto total = std::chrono::duration_cast<std::chrono::milliseconds>(
+                    std::chrono::steady_clock::now() - start).count();
+        std::cout << std::endl << "Total time was " << total << " msec." << std::endl;
 
         file->finalise();
 
