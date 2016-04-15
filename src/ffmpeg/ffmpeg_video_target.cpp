@@ -107,7 +107,7 @@ void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
         fprintf(stderr, "Could not allocate stream\n");
         exit(1);
     }
-    _stream->id = _format_context->nb_streams-1;
+    _stream->id = _format_context->nb_streams-1; // TODO isn't this wrong?
 
 }
 
@@ -122,17 +122,21 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
     // if first frame, initialise
     if (_frame == NULL)
     {
+        // TODO - is _codec_context ever being modified after first frame?
         _codec_context = _stream->codec;
-        _codec_context->pix_fmt = AV_PIX_FMT_YUV420P;
+        _codec_context->codec_id = _codec_id;
+        // TODO do we need this after _codec_context almost unused ?
+        _codec_context->bit_rate = 400000;
+        _codec_context->width = frame.cols();
+        _codec_context->height = frame.rows();
     //    _codec_context->codec_id = _codec_id; // TODO Is this necessary? NO
         _stream->time_base = (AVRational){ 1, _framerate };
         _codec_context->time_base = _stream->time_base;
+        _codec_context->gop_size      = 12; /* emit one intra frame every twelve frames at most */
+        _codec_context->pix_fmt = AV_PIX_FMT_YUV420P;
         /* Some formats want stream headers to be separate. */
         if (_format_context->oformat->flags & AVFMT_GLOBALHEADER)
             _codec_context->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
-        // TODO do we need this after _codec_context almost unused ?
-        _codec_context->width = frame.cols();
-        _codec_context->height = frame.rows();
 
         switch (_codec_id)
         {
@@ -153,8 +157,22 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
         }
 
         /* open it */
-        if (avcodec_open2(_codec_context, _codec, NULL) < 0)
+        if (avcodec_open2(_stream->codec, _codec, NULL) < 0)
             throw VideoTargetError("Could not open codec");
+
+        _frame = av_frame_alloc();
+        if (not _frame)
+            throw VideoTargetError("Could not allocate video frame");
+        _frame->format = _stream->codec->pix_fmt;
+        _frame->width  = _stream->codec->width;
+        _frame->height = _stream->codec->height;
+//        _frame->pts = 1; // i.e. only one frame
+        /* allocate the buffers for the frame data */
+        ret = av_frame_get_buffer(_frame, 32);
+        if (ret < 0) {
+            fprintf(stderr, "Could not allocate frame data.\n");
+            exit(1);
+        }
 
         /* Now that all the parameters are set, we can open the audio and
          * video codecs and allocate the necessary encode buffers. */
@@ -185,24 +203,17 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
     //                av_err2str(ret));
     //        return 1;
     //    }
-        _frame = av_frame_alloc();
-        if (not _frame)
-            throw VideoTargetError("Could not allocate video frame");
-        _frame->format = _codec_context->pix_fmt;
-        _frame->width  = _codec_context->width;
-        _frame->height = _codec_context->height;
-        _frame->pts = 1; // i.e. only one frame
 
         /* TODO - can we skip allocating this each time ?
          *
          * the image can be allocated by any means and av_image_alloc() is
          * just the most convenient way if av_malloc() is to be used */
         // TODO - vs alloc_picture ??
-        ret = av_image_alloc(_frame->data, _frame->linesize,
-                             _codec_context->width, _codec_context->height,
-                             _codec_context->pix_fmt, 32);
-        if (ret < 0)
-            throw VideoTargetError("Could not allocate raw picture buffer");
+//        ret = av_image_alloc(_frame->data, _frame->linesize,
+//                             _codec_context->width, _codec_context->height,
+//                             _codec_context->pix_fmt, 32);
+//        if (ret < 0)
+//            throw VideoTargetError("Could not allocate raw picture buffer");
 
         _sws_context = sws_getContext(
                     frame.cols(), frame.rows(), AV_PIX_FMT_BGRA,
