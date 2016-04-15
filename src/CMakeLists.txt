@@ -176,4 +176,9 @@ if(BUILD_TESTS)
     ADD_EXECUTABLE(${TEST_NAME}
         tests/save_from_file.cpp)
     TARGET_LINK_LIBRARIES(${TEST_NAME} ${NAME} ${LIBS})
+
+    SET(TEST_NAME save_frames)
+    ADD_EXECUTABLE(${TEST_NAME}
+        tests/save_frames.cpp)
+    TARGET_LINK_LIBRARIES(${TEST_NAME} ${NAME} ${LIBS})
 endif(BUILD_TESTS)
