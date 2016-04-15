@@ -185,44 +185,45 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
     av_init_packet(&packet);
     packet.data = NULL;    // packet data will be allocated by the encoder
     packet.size = 0;
+    encode_and_write(&packet, _frame, got_output);
+}
 
-    ret = avcodec_encode_video2(_stream->codec, &packet, _frame, &got_output);
+void VideoTargetFFmpeg::encode_and_write(
+        AVPacket * packet,
+        AVFrame * frame,
+        int & got_output)
+{
+    int ret;
+
+    ret = avcodec_encode_video2(_stream->codec, packet, frame, &got_output);
     if (ret < 0)
         throw VideoTargetError("Error encoding frame");
 
     if (got_output)
     {
         /* rescale output packet timestamp values from codec to stream timebase */
-        av_packet_rescale_ts(&packet, _stream->codec->time_base, _stream->time_base);
+        av_packet_rescale_ts(packet, _stream->codec->time_base, _stream->time_base);
         // TODO - above time bases are the same, or not?
-        packet.stream_index = _stream->index;
+        packet->stream_index = _stream->index;
 
         /* Write the compressed frame to the media file. */
-        int ret = av_interleaved_write_frame(_format_context, &packet);
+        int ret = av_interleaved_write_frame(_format_context, packet);
         if (ret < 0)
             throw VideoTargetError("Could not interleaved write frame");
 //        av_packet_unref(&packet); taken care of by av_interleaved_write_frame
     }
-
-    /* get the delayed frames */
-    /* TODO what about delayed frames ?
-    for (got_output = 1; got_output; ) {
-        ret = avcodec_encode_video2(_codec_context, &packet, NULL, &got_output);
-        if (ret < 0)
-            throw VideoTargetError("Error encoding frame");
-
-        if (got_output)
-        {
-            if (fwrite(packet.data, 1, packet.size, _file_handle) < packet.size)
-                throw VideoTargetError("Could not write packet data (delayed frames)");
-            av_packet_unref(&packet);
-        }
-    }
-    */
 }
 
 void VideoTargetFFmpeg::finalise()
 {
+    /* get the delayed frames */
+    AVPacket packet;
+    av_init_packet(&packet);
+    packet.data = NULL;    // packet data will be allocated by the encoder
+    packet.size = 0;
+    for (int got_output = 1; got_output; )
+        encode_and_write(&packet, NULL, got_output);
+
     /* Write the trailer, if any. The trailer must be written before you
      * close the CodecContexts open when you wrote the header; otherwise
      * av_write_trailer() may try to use memory that was freed on

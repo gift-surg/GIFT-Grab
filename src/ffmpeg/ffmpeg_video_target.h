@@ -75,6 +75,24 @@ public:
     void append(const VideoFrame_BGRA & frame);
 
     void finalise();
+
+protected:
+    //!
+    //! \brief Convenience function for code reuse when
+    //! writing delayed frames
+    //! \param packet
+    //! \param frame leave \c NULL if writing delayed
+    //! frames
+    //! \param got_output used as \c get_packet_ptr
+    //! parameter of \c avcodec_encode_video2() function
+    //! of FFmpeg
+    //! \throw VideoTargetError propagates any exception
+    //! to caller
+    //! \sa finalise
+    //!
+    void encode_and_write(AVPacket * packet,
+                          AVFrame * frame,
+                          int & got_output);
 };
 
 }
