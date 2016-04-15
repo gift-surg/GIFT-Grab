@@ -15,7 +15,7 @@ void synopsis()
 int main(int argc, char ** argv)
 {
     enum gg::Target codec = gg::Target::File_XviD;
-    std::string codec_string = "xvid";
+    std::string codec_string = "xvid", filetype = "avi";
     /* following numbers purposefully odd,
      * to test robustness when odd frame
      * width and/or height provided, whereas
@@ -36,7 +36,10 @@ int main(int argc, char ** argv)
             if (codec_string == "xvid")
                 codec = gg::Target::File_XviD;
             else if (codec_string == "h265")
+            {
                 codec = gg::Target::File_H265;
+                filetype = "mp4";
+            }
             else
             {
                 std::cerr << "Codec " << codec_string << " not recognised" << std::endl;
@@ -68,10 +71,10 @@ int main(int argc, char ** argv)
         std::string filename;
         filename.append("1min_")
                 .append(codec_string)
-                .append("_colour_chessboard")
-                .append(".mp4");
-        std::cout << "Saving to file " << filename << std::endl;
+                .append("_colour_chessboard.")
+                .append(filetype);
         file->init(filename, fps);
+        std::cout << "Saving to file " << filename << std::endl;
         for (int i = 0; i < num_frames; i++)
         {
             if (i % 5 == 0)
