@@ -211,28 +211,13 @@ float elapsed;
 void time_left()
 {
     if (i % 5 == 0)
-        std::cout << "Saving frame " << i+1 << " of " << num_frames;
-
-    int left;
-
-    switch(test_mode)
     {
-    case TestMode::Chessboard:
-        // nop
-        break;
-    case TestMode::File:
-    case TestMode::Epiphan:
+        std::cout << "Saving frame " << i+1 << " of " << num_frames;
         elapsed = std::chrono::duration_cast<std::chrono::seconds>(
                     std::chrono::steady_clock::now() - start).count();
-        left = ((float) num_frames - i + 1) * elapsed / (i+1);
-        std::cout << " (" << left << " sec. left)";
-        break;
-    default:
-        std::cerr << "Test mode not set" << std::endl;
-        exit(-1);
+        int left = ((float) num_frames - i + 1) * elapsed / (i+1);
+        std::cout << " (" << left << " sec. left)" << "\r";
     }
-
-    std::cout << "\r";
 }
 
 void wait_for_next()
