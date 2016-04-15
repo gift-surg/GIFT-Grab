@@ -22,7 +22,6 @@ void synopsis()
 enum TestMode { Epiphan, File, Chessboard };
 
 enum TestMode test_mode = TestMode::Chessboard;
-
 enum gg::Target codec = gg::Target::File_XviD;
 std::string codec_string = "xvid", filetype = "avi";
 /* following numbers purposefully odd,
@@ -31,6 +30,12 @@ std::string codec_string = "xvid", filetype = "avi";
  * H265 requires even
  */
 int width = 11, height = 7, square_size = 61;
+float fps = 20;
+int duration = 1; // min
+int num_frames = duration * 60 * fps;
+int i = 0;
+VideoFrame_BGRA frame;
+cv::Mat image(height * square_size, width * square_size, CV_8UC4);
 
 void parse_args(int argc, char ** argv)
 {
@@ -45,11 +50,13 @@ void parse_args(int argc, char ** argv)
 
     if (args[1]=="epiphan")
     {
+        // TODO
         return;
     }
 
     if (args[1]=="file")
     {
+        // TODO
         return;
     }
 
@@ -82,55 +89,91 @@ void parse_args(int argc, char ** argv)
     }
 }
 
-int main(int argc, char ** argv)
+std::string which_file()
 {
-    parse_args(argc, argv);
-
-    float fps = 20;
-    int duration = 1; // min
-    int num_frames = duration * 60 * fps;
-    VideoFrame_BGRA frame;
-    cv::Mat image(height * square_size, width * square_size, CV_8UC4);
-
-    try
-    {
-        gg::IVideoTarget * file = gg::Factory::create(codec);
-        std::string filename;
+    std::string filename;
+    switch(test_mode)
+    {case TestMode::Epiphan:
+        // TODO
+        break;
+    case TestMode::File:
+        // TODO
+        break;
+    case TestMode::Chessboard:
         filename.append("1min_")
                 .append(codec_string)
                 .append("_colour_chessboard.")
                 .append(filetype);
+        return filename;
+    default:
+        std::cerr << "Test mode not set" << std::endl;
+        exit(-1);
+    }
+}
+
+void get_frame(VideoFrame_BGRA & frame)
+{
+    // Chessboard params
+    float elapsed, remaining;
+    int red, green, blue, alpha, min_intensity;
+    switch(test_mode)
+    {
+    case TestMode::Chessboard:
+        elapsed = (((float) i) / num_frames);
+        remaining = 1 - elapsed;
+        red = 0, green = 0, blue = 0, alpha = 0;
+        min_intensity = 50; // don't want black
+        for (int row = 0; row < height; row++)
+        {
+            green = min_intensity + elapsed * (((float) row) / height) * (255 - min_intensity);
+            for (int col = 0; col < width; col++)
+            {
+                red = min_intensity + elapsed * (((float) col) / width) * (255 - min_intensity);
+                blue = min_intensity +
+                       remaining *
+                            sqrt( ((float)(row*row + col*col))
+                                  /
+                                  (height*height+width*width) ) * (255 - min_intensity);
+                cv::Mat square(square_size, square_size, CV_8UC4, cv::Scalar(blue, green, red, alpha));
+                square.copyTo(image(cv::Rect(col * square_size , row * square_size,
+                                             square.cols, square.rows)));
+            }
+        }
+        frame.init_from_opencv_mat(image);
+        break;
+    case TestMode::Epiphan:
+        // TODO
+        break;
+    case TestMode::File:
+        // TODO
+        break;
+    default:
+        std::cerr << "Test mode not set" << std::endl;
+        exit(-1);
+    }
+}
+
+void time_left()
+{
+    if (i % 5 == 0)
+        std::cout << "Saving frame " << i+1 << " of " << num_frames
+                  << "\r";
+}
+
+int main(int argc, char ** argv)
+{
+    parse_args(argc, argv);
+
+    try
+    {
+        gg::IVideoTarget * file = gg::Factory::create(codec);
+        std::string filename = which_file();
         file->init(filename, fps);
         std::cout << "Saving to file " << filename << std::endl;
-        for (int i = 0; i < num_frames; i++)
+        for (i = 0; i < num_frames; i++)
         {
-            if (i % 5 == 0)
-                std::cout << "Saving frame " << i+1 << " of " << num_frames
-                          << "\r";
-            float elapsed = (((float) i) / num_frames);
-            float remaining = 1 - elapsed;
-            int red = 0,
-                green = 0,
-                blue = 0,
-                alpha = 0;
-            int min_intensity = 50; // don't want black
-            for (int row = 0; row < height; row++)
-            {
-                green = min_intensity + elapsed * (((float) row) / height) * (255 - min_intensity);
-                for (int col = 0; col < width; col++)
-                {
-                    red = min_intensity + elapsed * (((float) col) / width) * (255 - min_intensity);
-                    blue = min_intensity +
-                           remaining *
-                                sqrt( ((float)(row*row + col*col))
-                                      /
-                                      (height*height+width*width) ) * (255 - min_intensity);
-                    cv::Mat square(square_size, square_size, CV_8UC4, cv::Scalar(blue, green, red, alpha));
-                    square.copyTo(image(cv::Rect(col * square_size , row * square_size,
-                                                 square.cols, square.rows)));
-                }
-            }
-            frame.init_from_opencv_mat(image);
+            time_left();
+            get_frame(frame);
             file->append(frame);
         }
         file->finalise();
