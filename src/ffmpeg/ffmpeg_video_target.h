@@ -18,6 +18,21 @@ protected:
     //!
     //! \brief
     //!
+    std::string _filepath;
+
+    //!
+    //! \brief
+    //!
+    AVFormatContext *_format_context;
+
+    //!
+    //! \brief
+    //!
+    AVStream * _stream;
+
+    //!
+    //! \brief
+    //!
     AVCodecID _codec_id;
 
     //!
@@ -33,27 +48,18 @@ protected:
     //!
     //! \brief
     //!
+    int64_t _frame_index;
+
+    //!
+    //! \brief
+    //!
     int _framerate;
 
     //!
-    //! \brief
+    //! \brief This is for converting pixel format
+    //! (e.g. from BGRA to YUV420p)
     //!
     SwsContext * _sws_context;
-
-    //!
-    //! \brief
-    //!
-    AVFormatContext *_format_context;
-
-    //!
-    //! \brief
-    //!
-    AVStream * _stream;
-
-    std::string _filepath;
-
-    int64_t _frame_index;
-
 
 public:
     //!
