@@ -52,15 +52,6 @@ void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
     if (not _codec)
         throw VideoTargetError("Codec not found");
 
-    /* TODO: using default reduces filesize
-     * but should we set it nonetheless?
-     */
-//        _codec_context->bit_rate = 400000;
-    /* TODO - resolution must be a multiple of two
-     * Why, because it's used that way in the sample
-     * code? (Dzhoshkun Shakir)
-     */
-
     _stream = avformat_new_stream(_format_context, _codec);
     if (_stream == NULL)
         throw VideoTargetError("Could not allocate stream");
@@ -80,14 +71,20 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
     {
         // TODO - is _codec_context ever being modified after first frame?
         _stream->codec->codec_id = _codec_id;
-        // TODO do we need this after _codec_context almost unused ?
-        _stream->codec->bit_rate = 400000;
+        /* TODO: using default reduces filesize
+         * but should we set it nonetheless?
+         */
+//        _stream->codec->bit_rate = 400000;
+        /* TODO - resolution must be a multiple of two
+         * Why, because it's used that way in the sample
+         * code? (Dzhoshkun Shakir)
+         */
         _stream->codec->width = frame.cols();
         _stream->codec->height = frame.rows();
-    //    _codec_context->codec_id = _codec_id; // TODO Is this necessary? NO
         _stream->time_base = (AVRational){ 1, _framerate };
         _stream->codec->time_base = _stream->time_base;
-        _stream->codec->gop_size      = 12; /* emit one intra frame every twelve frames at most */
+        _stream->codec->gop_size = 12;
+        /* TODO emit one intra frame every twelve frames at most */
         _stream->codec->pix_fmt = AV_PIX_FMT_YUV420P;
         /* Some formats want stream headers to be separate. */
         if (_format_context->oformat->flags & AVFMT_GLOBALHEADER)
@@ -121,55 +118,34 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
         _frame->format = _stream->codec->pix_fmt;
         _frame->width  = _stream->codec->width;
         _frame->height = _stream->codec->height;
-//        _frame->pts = 1; // i.e. only one frame
         /* allocate the buffers for the frame data */
         ret = av_frame_get_buffer(_frame, 32);
-        if (ret < 0) {
-            fprintf(stderr, "Could not allocate frame data.\n");
-            exit(1);
-        }
+        if (ret < 0)
+            throw VideoTargetError("Could not allocate frame data");
 
         /* Now that all the parameters are set, we can open the audio and
          * video codecs and allocate the necessary encode buffers. */
-    //    if (have_video)
-    //        open_video(oc, video_codec, &video_st, opt);
-        // TODO - only does avcodec_open2 basically
-        av_dump_format(_format_context, 0, _filepath.c_str(), 1); // TODO - debug only
+        av_dump_format(_format_context, 0, _filepath.c_str(), 1);
         /* open the output file, if needed */
         if (!(_format_context->oformat->flags & AVFMT_NOFILE))
         {
             ret = avio_open(&_format_context->pb, _filepath.c_str(), AVIO_FLAG_WRITE);
-            if (ret < 0) {
+            if (ret < 0)
+            {
                 std::string msg;
                 msg.append("File ")
                    .append(_filepath)
                    .append(" could not be opened");
                 throw VideoTargetError(msg);
-    //            fprintf(stderr, "Could not open '%s': %s\n", filename,
-    //                    av_err2str(ret));
-    //            return 1;
             }
         }
+
         /* Write the stream header, if any. */
         ret = avformat_write_header(_format_context, NULL);
-        if (ret < 0) // {
+        if (ret < 0)
             throw VideoTargetError("Could not write header to file");
-    //        fprintf(stderr, "Error occurred when opening output file: %s\n",
-    //                av_err2str(ret));
-    //        return 1;
-    //    }
 
-        /* TODO - can we skip allocating this each time ?
-         *
-         * the image can be allocated by any means and av_image_alloc() is
-         * just the most convenient way if av_malloc() is to be used */
-        // TODO - vs alloc_picture ??
-//        ret = av_image_alloc(_frame->data, _frame->linesize,
-//                             _codec_context->width, _codec_context->height,
-//                             _codec_context->pix_fmt, 32);
-//        if (ret < 0)
-//            throw VideoTargetError("Could not allocate raw picture buffer");
-
+        /* Open context for converting BGRA pixels to YUV420p */
         _sws_context = sws_getContext(
                     frame.cols(), frame.rows(), AV_PIX_FMT_BGRA,
                     frame.cols(), frame.rows(), _stream->codec->pix_fmt,
@@ -177,6 +153,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
         if (_sws_context == NULL)
             throw VideoTargetError("Could not allocate Sws context");
 
+        // To be incremented for each frame, used as pts
         _frame_index = 0;
     }
 
@@ -212,22 +189,15 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
 
     if (got_output)
     {
-        // from write_frame
         /* rescale output packet timestamp values from codec to stream timebase */
         av_packet_rescale_ts(&packet, _stream->codec->time_base, _stream->time_base);
         // TODO - above time bases are the same, or not?
         packet.stream_index = _stream->index;
 
         /* Write the compressed frame to the media file. */
-//        packet.dts--;
-//        _format_context->oformat->flags |= AVFMT_TS_NONSTRICT;
         int ret = av_interleaved_write_frame(_format_context, &packet);
         if (ret < 0)
             throw VideoTargetError("Could not interleaved write frame");
-
-        // TODO _file_handle no more needed
-//        if (fwrite(packet.data, 1, packet.size, _file_handle) < packet.size)
-//            throw VideoTargetError("Could not write packet data");
 //        av_packet_unref(&packet); taken care of by av_interleaved_write_frame
     }
 
