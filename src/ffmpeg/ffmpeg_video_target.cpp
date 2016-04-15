@@ -185,29 +185,26 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
     _frame->pts = _frame_index++;
 
     /* encode the image */
-    encode_and_write(&_packet, _frame, got_output);
+    encode_and_write(_frame, got_output);
 }
 
-void VideoTargetFFmpeg::encode_and_write(
-        AVPacket * packet,
-        AVFrame * frame,
-        int & got_output)
+void VideoTargetFFmpeg::encode_and_write(AVFrame * frame, int & got_output)
 {
     int ret;
 
-    ret = avcodec_encode_video2(_stream->codec, packet, frame, &got_output);
+    ret = avcodec_encode_video2(_stream->codec, &_packet, frame, &got_output);
     if (ret < 0)
         throw VideoTargetError("Error encoding frame");
 
     if (got_output)
     {
         /* rescale output packet timestamp values from codec to stream timebase */
-        av_packet_rescale_ts(packet, _stream->codec->time_base, _stream->time_base);
+        av_packet_rescale_ts(&_packet, _stream->codec->time_base, _stream->time_base);
         // TODO - above time bases are the same, or not?
-        packet->stream_index = _stream->index;
+        _packet.stream_index = _stream->index;
 
         /* Write the compressed frame to the media file. */
-        int ret = av_interleaved_write_frame(_format_context, packet);
+        int ret = av_interleaved_write_frame(_format_context, &_packet);
         if (ret < 0)
             throw VideoTargetError("Could not interleaved write frame");
 //        av_packet_unref(&packet); taken care of by av_interleaved_write_frame
@@ -218,7 +215,7 @@ void VideoTargetFFmpeg::finalise()
 {
     /* get the delayed frames */
     for (int got_output = 1; got_output; )
-        encode_and_write(&_packet, NULL, got_output);
+        encode_and_write(NULL, got_output);
 
     /* Write the trailer, if any. The trailer must be written before you
      * close the CodecContexts open when you wrote the header; otherwise
