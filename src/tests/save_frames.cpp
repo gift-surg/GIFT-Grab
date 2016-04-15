@@ -153,11 +153,33 @@ void get_frame(VideoFrame_BGRA & frame)
     }
 }
 
+auto start = std::chrono::steady_clock::now();
+float elapsed;
 void time_left()
 {
     if (i % 5 == 0)
-        std::cout << "Saving frame " << i+1 << " of " << num_frames
-                  << "\r";
+        std::cout << "Saving frame " << i+1 << " of " << num_frames;
+
+    int left;
+
+    switch(test_mode)
+    {
+    case TestMode::Chessboard:
+        // nop
+        break;
+    case TestMode::File:
+    case TestMode::Epiphan:
+        elapsed = std::chrono::duration_cast<std::chrono::seconds>(
+                    std::chrono::steady_clock::now() - start).count();
+        left = ((float) num_frames - i + 1) * elapsed / (i+1);
+        std::cout << " (" << left << " sec. left)";
+        break;
+    default:
+        std::cerr << "Test mode not set" << std::endl;
+        exit(-1);
+    }
+
+    std::cout << "\r";
 }
 
 int main(int argc, char ** argv)
@@ -170,6 +192,7 @@ int main(int argc, char ** argv)
         std::string filename = which_file();
         file->init(filename, fps);
         std::cout << "Saving to file " << filename << std::endl;
+        start = std::chrono::steady_clock::now();
         for (i = 0; i < num_frames; i++)
         {
             time_left();
