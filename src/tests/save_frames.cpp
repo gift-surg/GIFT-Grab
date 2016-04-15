@@ -172,21 +172,23 @@ std::string which_file()
 {
     std::string filename;
     filename.append(std::to_string(duration))
-            .append("min_")
-            .append(codec_string);
+            .append("min_");
     switch(test_mode)
     {
     case TestMode::Epiphan:
-        filename.append("_epiphan."); break;
+        filename.append("epiphan"); break;
     case TestMode::File:
-        filename.append("_from_file."); break;
+        filename.append("from_file"); break;
     case TestMode::Chessboard:
-        filename.append("_colour_chessboard."); break;
+        filename.append("colour_chessboard"); break;
     default:
         std::cerr << "Test mode not set" << std::endl;
         exit(-1);
     }
-    filename.append(filetype);
+    filename.append("_")
+            .append(codec_string)
+            .append(".")
+            .append(filetype);
     return filename;
 }
 
