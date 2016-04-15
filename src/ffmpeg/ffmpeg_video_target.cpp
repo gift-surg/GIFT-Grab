@@ -35,8 +35,22 @@ void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
         throw VideoTargetError("Only integer framerates are supported");
     _framerate = (int) framerate;
 
+    std::string filetype = "mp4";
     if (filepath.empty())
         throw VideoTargetError("Empty filepath specified");
+    else if (filepath.length() <= filetype.length()+1) // +1 for the dot, i.e. .mp4
+        throw VideoTargetError("Filepath not long enough to deduce output format");
+    else if (0 != filepath.compare(filepath.length() - filetype.length(), filetype.length(), filetype))
+    {
+        std::string msg;
+        msg.append("Filetype of ")
+           .append(filepath)
+           .append(" not supported, use *.")
+           .append(filetype)
+           .append(" instead");
+        throw VideoTargetError(msg);
+    }
+
     _filepath = filepath;
 
     /* allocate the output media context */
