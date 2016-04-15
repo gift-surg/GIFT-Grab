@@ -37,8 +37,12 @@ int i = 0;
 VideoFrame_BGRA frame;
 cv::Mat image(height * square_size, width * square_size, CV_8UC4);
 cv::VideoCapture cap;
+enum gg::Device port = gg::Device::DVI2PCIeDuo_DVI;
+std::string port_string = "dvi";
+int sleep_duration = 0;
+IVideoSource * epiphan = NULL;
 
-void parse_args(int argc, char ** argv)
+void init(int argc, char ** argv)
 {
     std::vector<std::string> args;
     for (int i = 0; i < argc; i++)
@@ -51,11 +55,34 @@ void parse_args(int argc, char ** argv)
 
     if (args[1]=="epiphan")
     {
-        // TODO
-        return;
+        test_mode = TestMode::Epiphan;
+
+        if (argc < 4)
+        {
+            synopsis(); exit(-1);
+        }
+
+        codec_string = args[2];
+        port_string = args[3];
+
+        if (port_string == "sdi")
+            port = gg::Device::DVI2PCIeDuo_SDI;
+        else if (port_string == "dvi")
+            port = gg::Device::DVI2PCIeDuo_DVI;
+        else
+        {
+            std::cerr << "Port " << port_string << " not recognised" << std::endl;
+            synopsis();
+            exit(-1);
+        }
+
+        epiphan = gg::Factory::connect(port);
+        epiphan->set_sub_frame(600, 185, 678, 688); // optimal for Storz 27020 AA straight
+
+        sleep_duration = (int)(1000/fps); // ms
     }
 
-    if (args[1]=="file")
+    else if (args[1]=="file")
     {
         test_mode = TestMode::File;
 
@@ -79,7 +106,7 @@ void parse_args(int argc, char ** argv)
         duration = (num_frames / fps) / 60;
     }
 
-    if (args[1]=="chess")
+    else if (args[1]=="chess")
     {
         test_mode = TestMode::Chessboard;
 
@@ -90,6 +117,11 @@ void parse_args(int argc, char ** argv)
 
         codec_string = args[2];
         width = atoi(argv[3]); height = atoi(argv[4]);
+    }
+
+    else
+    {
+        synopsis(); exit(-1);
     }
 
     // health checks
@@ -166,7 +198,7 @@ void get_frame(VideoFrame_BGRA & frame)
         frame.init_from_opencv_mat(image);
         break;
     case TestMode::Epiphan:
-        // TODO
+        epiphan->get_frame(frame);
         break;
     case TestMode::File:
         cap >> image;
@@ -208,26 +240,70 @@ void time_left()
     std::cout << "\r";
 }
 
+void wait_for_next()
+{
+    switch(test_mode)
+    {
+    case TestMode::File:
+    case TestMode::Chessboard:
+        // nop
+        break;
+    case TestMode::Epiphan:
+        std::this_thread::sleep_for(std::chrono::milliseconds(sleep_duration));
+        break;
+    default:
+        std::cerr << "Test mode not set" << std::endl;
+        exit(-1);
+    }
+}
+
+void finalise()
+{
+    switch(test_mode)
+    {
+    case TestMode::File:
+    case TestMode::Chessboard:
+        // nop
+        break;
+    case TestMode::Epiphan:
+        gg::Factory::disconnect(port);
+        break;
+    default:
+        std::cerr << "Test mode not set" << std::endl;
+        exit(-1);
+    }
+}
+
 int main(int argc, char ** argv)
 {
-    parse_args(argc, argv);
-
     try
     {
+        init(argc, argv);
+
         gg::IVideoTarget * file = gg::Factory::create(codec);
         std::string filename = which_file();
         file->init(filename, fps);
         std::cout << "Saving to file " << filename << std::endl;
+
         start = std::chrono::steady_clock::now();
         for (i = 0; i < num_frames; i++)
         {
             time_left();
             get_frame(frame);
             file->append(frame);
+            wait_for_next();
         }
+
         file->finalise();
+
+        finalise();
     }
     catch (gg::VideoTargetError & e)
+    {
+        std::cerr << e.what() << std::endl;
+        return -1;
+    }
+    catch (gg::DeviceOffline & e)
     {
         std::cerr << e.what() << std::endl;
         return -1;

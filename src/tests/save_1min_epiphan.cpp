@@ -85,6 +85,7 @@ int main(int argc, char ** argv)
             std::this_thread::sleep_for(std::chrono::milliseconds(sleep_duration));
         }
         file->finalise();
+        gg::Factory::disconnect(port);
     }
     catch (gg::VideoTargetError & e)
     {
