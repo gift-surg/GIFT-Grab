@@ -14,7 +14,8 @@ VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
     _sws_context(NULL),
     _format_context(NULL),
     _output_format(NULL),
-    _stream(NULL)
+    _stream(NULL),
+    _frame_index(0)
 {
     if (codec != "H265")
     {
@@ -221,7 +222,17 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
                     0, NULL, NULL, NULL);
         if (_sws_context == NULL)
             throw VideoTargetError("Could not allocate Sws context");
+
+        _frame_index = 0;
     }
+
+    /* when we pass a frame to the encoder, it may keep a reference to it
+     * internally;
+     * make sure we do not overwrite it here
+     */
+    ret = av_frame_make_writable(_frame);
+    if (ret < 0)
+        throw VideoTargetError("Could not make frame writeable");
 
     /* convert pixel format */
     const uint8_t * src_data_ptr[1] = { frame.data() }; // BGRA has one plane
@@ -232,6 +243,8 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
               _frame->data, _frame->linesize
               );
 
+    _frame->pts = _frame_index++;
+
     /* encode the image */
     // TODO - make packet member variable to avoid memory allocation / deallocation ?
     AVPacket packet;
@@ -239,7 +252,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
     packet.data = NULL;    // packet data will be allocated by the encoder
     packet.size = 0;
 
-    ret = avcodec_encode_video2(_codec_context, &packet, _frame, &got_output);
+    ret = avcodec_encode_video2(_stream->codec, &packet, _frame, &got_output);
     if (ret < 0)
         throw VideoTargetError("Error encoding frame");
 
@@ -247,7 +260,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
     {
         // from write_frame
         /* rescale output packet timestamp values from codec to stream timebase */
-        av_packet_rescale_ts(&packet, _codec_context->time_base, _stream->time_base);
+        av_packet_rescale_ts(&packet, _stream->codec->time_base, _stream->time_base);
         // TODO - above time bases are the same, or not?
         packet.stream_index = _stream->index;
 
@@ -283,6 +296,12 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
 
 void VideoTargetFFmpeg::finalise()
 {
+    /* Write the trailer, if any. The trailer must be written before you
+     * close the CodecContexts open when you wrote the header; otherwise
+     * av_write_trailer() may try to use memory that was freed on
+     * av_codec_close(). */
+    av_write_trailer(_format_context);
+
 //    /* add sequence end code to have a real mpeg file */
 //    uint8_t endcode[] = { 0, 0, 1, 0xb7 };
 //    if (fwrite(endcode, 1, sizeof(endcode), _file_handle) < sizeof(endcode))
@@ -290,11 +309,19 @@ void VideoTargetFFmpeg::finalise()
 //    if (fclose(_file_handle) != 0)
 //        throw VideoTargetError("Could not close file");
 
-    if (_codec_context) avcodec_close(_codec_context);
-    if (_codec_context) av_free(_codec_context);
-//  av_freep(&_frame->data[0]); no need for this because _frame never manages its own data
+    if (_stream->codec) avcodec_close(_stream->codec);
+    if (_stream->codec) av_free(_stream->codec); // TODO this is not in muxing
     if (_frame) av_frame_free(&_frame);
+//  av_freep(&_frame->data[0]); no need for this because _frame never manages its own data
     if (_sws_context) sws_freeContext(_sws_context);
+
+    if (!(_output_format->flags & AVFMT_NOFILE))
+        /* Close the output file. */
+        avio_closep(&_format_context->pb);
+//    avformat_free_context(_format_context);
+    /* TODO above line was causing
+     * "corrupted double-linked list: 0x0000000000e46e40 ***"
+     */
 
     // default values, for next init
     _codec = NULL;
@@ -305,21 +332,13 @@ void VideoTargetFFmpeg::finalise()
     _framerate = -1;
     _sws_context = NULL;
 
-    /* Write the trailer, if any. The trailer must be written before you
-     * close the CodecContexts open when you wrote the header; otherwise
-     * av_write_trailer() may try to use memory that was freed on
-     * av_codec_close(). */
-    av_write_trailer(_format_context);
-    if (!(_output_format->flags & AVFMT_NOFILE))
-        /* Close the output file. */
-        avio_closep(&_format_context->pb);
-
     /* free the stream */
 //    avformat_free_context(_format_context);
     // TODO - above was giving "double free or corruption (!prev): 0x0000000001a319c0"
     _format_context = NULL; // TODO - risk of dangling
     _output_format = NULL; // TODO - risk of dangling
     _stream = NULL; // TODO - risk of dangling
+    _frame_index = 0;
 }
 
 }

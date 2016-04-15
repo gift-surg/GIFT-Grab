@@ -67,6 +67,8 @@ protected:
 
     std::string _filepath;
 
+    int64_t _frame_index;
+
 
 public:
     //!
