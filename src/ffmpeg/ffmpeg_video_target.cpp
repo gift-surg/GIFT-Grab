@@ -6,7 +6,6 @@ namespace gg
 
 VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
     _codec(NULL),
-    _file_handle(NULL),
     _codec_id(AV_CODEC_ID_NONE),
     _frame(NULL),
     _framerate(-1),
@@ -239,7 +238,6 @@ void VideoTargetFFmpeg::finalise()
 
     // default values, for next init
     _codec = NULL;
-    _file_handle = NULL;
     _codec_id = AV_CODEC_ID_NONE;
     _frame = NULL;
     _framerate = -1;

@@ -28,11 +28,6 @@ protected:
     //!
     //! \brief
     //!
-    FILE * _file_handle;
-
-    //!
-    //! \brief
-    //!
     AVFrame * _frame;
 
     //!
