@@ -161,19 +161,9 @@ endif(BUILD_DOC)
 OPTION(BUILD_TESTS "Build tests" OFF)
 if(BUILD_TESTS)
     if(USE_EPIPHAN)
-        SET(TEST_NAME save_1min_epiphan)
+        SET(TEST_NAME save_frames)
         ADD_EXECUTABLE(${TEST_NAME}
-            tests/save_1min_epiphan.cpp)
+            tests/save_frames.cpp)
         TARGET_LINK_LIBRARIES(${TEST_NAME} ${NAME} ${LIBS})
     endif(USE_EPIPHAN)
-
-    SET(TEST_NAME save_1min_colour_chessboard)
-    ADD_EXECUTABLE(${TEST_NAME}
-        tests/save_1min_colour_chessboard.cpp)
-    TARGET_LINK_LIBRARIES(${TEST_NAME} ${NAME} ${LIBS})
-
-    SET(TEST_NAME save_from_file)
-    ADD_EXECUTABLE(${TEST_NAME}
-        tests/save_from_file.cpp)
-    TARGET_LINK_LIBRARIES(${TEST_NAME} ${NAME} ${LIBS})
 endif(BUILD_TESTS)

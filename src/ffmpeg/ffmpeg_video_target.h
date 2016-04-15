@@ -18,6 +18,21 @@ protected:
     //!
     //! \brief
     //!
+    std::string _filepath;
+
+    //!
+    //! \brief
+    //!
+    AVFormatContext *_format_context;
+
+    //!
+    //! \brief
+    //!
+    AVStream * _stream;
+
+    //!
+    //! \brief
+    //!
     AVCodecID _codec_id;
 
     //!
@@ -28,17 +43,12 @@ protected:
     //!
     //! \brief
     //!
-    AVCodecContext * _codec_context;
-
-    //!
-    //! \brief
-    //!
-    FILE * _file_handle;
-
-    //!
-    //! \brief
-    //!
     AVFrame * _frame;
+
+    //!
+    //! \brief
+    //!
+    int64_t _frame_index;
 
     //!
     //! \brief
@@ -46,7 +56,14 @@ protected:
     int _framerate;
 
     //!
-    //! \brief
+    //! \brief Packet for use when encoding and
+    //! subsequently writing frames
+    //!
+    AVPacket _packet;
+
+    //!
+    //! \brief This is for converting pixel format
+    //! (e.g. from BGRA to YUV420p)
     //!
     SwsContext * _sws_context;
 
@@ -64,6 +81,21 @@ public:
     void append(const VideoFrame_BGRA & frame);
 
     void finalise();
+
+protected:
+    //!
+    //! \brief Convenience function for code reuse when
+    //! writing delayed frames
+    //! \param frame leave \c NULL if writing delayed
+    //! frames
+    //! \param got_output used as \c got_packet_ptr
+    //! parameter of \c avcodec_encode_video2() function
+    //! of FFmpeg
+    //! \throw VideoTargetError propagates any exception
+    //! to caller
+    //! \sa finalise
+    //!
+    void encode_and_write(AVFrame * frame, int & got_output);
 };
 
 }
