@@ -16,7 +16,12 @@ int main(int argc, char ** argv)
 {
     enum gg::Target codec = gg::Target::File_XviD;
     std::string codec_string = "xvid";
-    int width = 10, height = 8, square_size = 60;
+    /* following numbers purposefully odd,
+     * to test robustness when odd frame
+     * width and/or height provided, whereas
+     * H265 requires even
+     */
+    int width = 11, height = 7, square_size = 61;
 
     if (argc >= 2)
     {

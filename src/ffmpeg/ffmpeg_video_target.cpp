@@ -74,10 +74,6 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
          * but should we set it nonetheless?
          */
 //        _stream->codec->bit_rate = 400000;
-        /* TODO - resolution must be a multiple of two
-         * Why, because it's used that way in the sample
-         * code? (Dzhoshkun Shakir)
-         */
         _stream->codec->width = frame.cols();
         _stream->codec->height = frame.rows();
         _stream->time_base = (AVRational){ 1, _framerate };
@@ -101,6 +97,14 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
              * while file size is reasonable
              */
             av_opt_set(_stream->codec->priv_data, "preset", "fast", 0);
+            /* Resolution must be a multiple of two, as required
+             * by H264 and H265. Introduce a one-pixel padding for
+             * non-complying dimension(s).
+             */
+            _stream->codec->width +=
+                    _stream->codec->width % 2 == 0 ? 0 : 1;
+            _stream->codec->height +=
+                    _stream->codec->height % 2 == 0 ? 0 : 1;
             break;
         default:
             // nop
