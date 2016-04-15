@@ -158,6 +158,11 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
 
         // To be incremented for each frame, used as pts
         _frame_index = 0;
+
+        // Packet to be used when writing frames
+        av_init_packet(&_packet);
+        _packet.data = NULL;    // packet data will be allocated by the encoder
+        _packet.size = 0;
     }
 
     /* when we pass a frame to the encoder, it may keep a reference to it
@@ -180,12 +185,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
     _frame->pts = _frame_index++;
 
     /* encode the image */
-    // TODO - make packet member variable to avoid memory allocation / deallocation ?
-    AVPacket packet;
-    av_init_packet(&packet);
-    packet.data = NULL;    // packet data will be allocated by the encoder
-    packet.size = 0;
-    encode_and_write(&packet, _frame, got_output);
+    encode_and_write(&_packet, _frame, got_output);
 }
 
 void VideoTargetFFmpeg::encode_and_write(
@@ -217,12 +217,8 @@ void VideoTargetFFmpeg::encode_and_write(
 void VideoTargetFFmpeg::finalise()
 {
     /* get the delayed frames */
-    AVPacket packet;
-    av_init_packet(&packet);
-    packet.data = NULL;    // packet data will be allocated by the encoder
-    packet.size = 0;
     for (int got_output = 1; got_output; )
-        encode_and_write(&packet, NULL, got_output);
+        encode_and_write(&_packet, NULL, got_output);
 
     /* Write the trailer, if any. The trailer must be written before you
      * close the CodecContexts open when you wrote the header; otherwise

@@ -56,6 +56,12 @@ protected:
     int _framerate;
 
     //!
+    //! \brief Packet for use when encoding and
+    //! subsequently writing frames
+    //!
+    AVPacket _packet;
+
+    //!
     //! \brief This is for converting pixel format
     //! (e.g. from BGRA to YUV420p)
     //!
