@@ -29,13 +29,13 @@ std::string codec_string = "xvid", filetype = "avi";
  * width and/or height provided, whereas
  * H265 requires even
  */
-int width = 11, height = 7, square_size = 61;
+int width, height, square_size = 61;
 float fps = 60;
 int duration = 1; // min
 int num_frames = duration * 60 * fps;
 int i = 0;
 VideoFrame_BGRA frame;
-cv::Mat image(height * square_size, width * square_size, CV_8UC4);
+cv::Mat image;
 cv::VideoCapture cap;
 enum gg::Device port = gg::Device::DVI2PCIeDuo_DVI;
 std::string port_string = "dvi";
@@ -117,6 +117,7 @@ void init(int argc, char ** argv)
 
         codec_string = args[2];
         width = atoi(argv[3]); height = atoi(argv[4]);
+        image = cv::Mat(height * square_size, width * square_size, CV_8UC4);
     }
 
     else
