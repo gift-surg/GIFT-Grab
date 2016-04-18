@@ -47,11 +47,17 @@ void timer_start(std::chrono::high_resolution_clock::time_point & start)
 }
 
 inline
-float timer_end(const std::chrono::high_resolution_clock::time_point & start)
+float timer_end(const std::chrono::high_resolution_clock::time_point & start,
+                bool in_seconds = false)
 {
-    return std::chrono::duration_cast<std::chrono::milliseconds>(
-                            std::chrono::high_resolution_clock::now() - start
-                                                                ).count();
+    if (in_seconds)
+        return std::chrono::duration_cast<std::chrono::seconds>(
+                                std::chrono::high_resolution_clock::now() - start
+                                                               ).count();
+    else
+        return std::chrono::duration_cast<std::chrono::milliseconds>(
+                                std::chrono::high_resolution_clock::now() - start
+                                                                    ).count();
 }
 
 void init(int argc, char ** argv)
@@ -258,7 +264,7 @@ void time_left()
     if (i % 5 == 0)
     {
         std::cerr << "Saving frame " << i+1 << " of " << num_frames;
-        elapsed = timer_end(start);
+        elapsed = timer_end(start, true);
         int left = ((float) num_frames - i + 1) * elapsed / (i+1);
         std::cerr << " (" << left << " sec. left)" << "\r";
     }
