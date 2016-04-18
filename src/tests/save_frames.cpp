@@ -256,10 +256,10 @@ void time_left()
 {
     if (i % 5 == 0)
     {
-        std::cout << "Saving frame " << i+1 << " of " << num_frames;
+        std::cerr << "Saving frame " << i+1 << " of " << num_frames;
         elapsed = timer_end(start);
         int left = ((float) num_frames - i + 1) * elapsed / (i+1);
-        std::cout << " (" << left << " sec. left)" << "\r";
+        std::cerr << " (" << left << " sec. left)" << "\r";
     }
 }
 
