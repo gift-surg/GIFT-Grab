@@ -40,6 +40,20 @@ int sleep_duration;
 IVideoSource * epiphan = NULL;
 int roi_x, roi_y;
 
+inline
+void timer_start(std::chrono::high_resolution_clock::time_point & start)
+{
+    start = std::chrono::high_resolution_clock::now();
+}
+
+inline
+float timer_end(const std::chrono::high_resolution_clock::time_point & start)
+{
+    return std::chrono::duration_cast<std::chrono::milliseconds>(
+                            std::chrono::high_resolution_clock::now() - start
+                                                                ).count();
+}
+
 void init(int argc, char ** argv)
 {
     std::vector<std::string> args;
@@ -236,15 +250,14 @@ void get_frame(VideoFrame_BGRA & frame)
     }
 }
 
-auto start = std::chrono::steady_clock::now();
+auto start = std::chrono::high_resolution_clock::now();
 float elapsed;
 void time_left()
 {
     if (i % 5 == 0)
     {
         std::cout << "Saving frame " << i+1 << " of " << num_frames;
-        elapsed = std::chrono::duration_cast<std::chrono::seconds>(
-                    std::chrono::steady_clock::now() - start).count();
+        elapsed = timer_end(start);
         int left = ((float) num_frames - i + 1) * elapsed / (i+1);
         std::cout << " (" << left << " sec. left)" << "\r";
     }
@@ -271,7 +284,7 @@ void wait_for_next(const float elapsed = 0)
         else
             std::this_thread::sleep_for(
                 std::chrono::milliseconds(
-                    sleep_duration ));
+                    (int)real_sleep_duration ));
         break;
     default:
         std::cerr << "Test mode not set" << std::endl;
@@ -307,19 +320,24 @@ int main(int argc, char ** argv)
         file->init(filename, fps);
         std::cout << "Saving to file " << filename << std::endl;
 
-        start = std::chrono::steady_clock::now();
+        timer_start(start);
+        std::chrono::high_resolution_clock::time_point current_start, analysis;
         for (i = 0; i < num_frames; i++)
         {
             time_left();
-            auto current_start = std::chrono::steady_clock::now();
+            timer_start(current_start);
             get_frame(frame);
+            std::cout << "Frame:\t"
+                      << timer_end(current_start) << "\tmsec." << "\t";
+            timer_start(analysis);
             file->append(frame);
-            float current_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
-                        std::chrono::steady_clock::now() - current_start).count();
+            std::cout << "Write:\t"
+                      << timer_end(analysis) << "\tmsec." << std::endl;
+
+            float current_elapsed = timer_end(current_start);
             wait_for_next(current_elapsed);
         }
-        auto total = std::chrono::duration_cast<std::chrono::milliseconds>(
-                    std::chrono::steady_clock::now() - start).count();
+        auto total = timer_end(start);
         std::cout << std::endl << "Total time was " << total << " msec." << std::endl;
 
         file->finalise();
