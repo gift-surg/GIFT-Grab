@@ -10,7 +10,9 @@ void synopsis()
               << " help "
               << std::endl << "                "
               << " epiphan   xvid | h265   sdi | dvi   "
-              << " [ <framerate>   [ <x> <y>  <width> <height> ]   ]"
+              << " [ <framerate>   "
+              << "[ <x> <y>  <width> <height>   [ <duration-in-min> ]   ]"
+              << "]"
               << " # optimal: 20 600 185 678 688"
               << std::endl << "                "
               << " file   </file/path>   xvid | h265   [ <x> <y>  <width> <height> ]"
@@ -109,6 +111,9 @@ void init(int argc, char ** argv)
                 width = atoi(argv[7]);
                 height = atoi(argv[8]);
                 epiphan->set_sub_frame(roi_x, roi_y, width, height);
+
+                if (argc >= 10)
+                    duration = atoi(argv[9]);
             }
         }
 
@@ -339,7 +344,7 @@ int main(int argc, char ** argv)
         gg::IVideoTarget * file = gg::Factory::create(codec);
         std::string filename = which_file();
         file->init(filename, fps);
-        std::cout << "Saving to file " << filename << std::endl;
+        std::cout << "Saving " << duration << " min. of data to file " << filename << std::endl;
 
         timer_start(start);
         std::chrono::high_resolution_clock::time_point current_start, analysis;
