@@ -44,20 +44,14 @@ else:
 
 	print str(num_frames) + '   ' + str(width) + ' x ' + str(height) + ' frames'
 
-# cap = cv2.VideoCapture()
+	for i in range(0, num_frames):
+		ret, frame_1 = video_1.read()
+		ret, frame_2 = video_2.read()
 
-# while(True):
-#     # Capture frame-by-frame
-#     ret, frame = cap.read()
+		cv2.imshow('1-2', cv2.absdiff(frame_1, frame_2))
+		if cv2.waitKey(1) & 0xFF == ord('q'):
+			break
 
-#     # Our operations on the frame come here
-#     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-#     # Display the resulting frame
-#     cv2.imshow('frame',gray)
-#     if cv2.waitKey(1) & 0xFF == ord('q'):
-#         break
-
-# # When everything done, release the capture
-# cap.release()
-# cv2.destroyAllWindows()
+	video_1.release()
+	video_2.release()
+	cv2.destroyAllWindows()
