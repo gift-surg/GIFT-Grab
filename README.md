@@ -1,6 +1,6 @@
 # Summary
 
-An umbrella library that provides an easy-to-use API to stream video using frame grabber hardware.
+An umbrella library that provides an easy-to-use API to stream and capture video using frame grabber hardware.
 
 # Supported hardware
 
@@ -16,19 +16,26 @@ There are bits and pieces in the current codebase pertaining to some of the foll
 * [BlackMagic DeckLink Quad](https://www.blackmagicdesign.com/uk/products/decklink/techspecs/W-DLK-02)
 * [Epiphan Pearl](http://www.epiphan.com/products/pearl/)
 
+# Supported formats and codecs for saving video streams
+
+* [XviD](https://www.xvid.com/)-encoded video saved in an [AVI](https://msdn.microsoft.com/en-us/library/windows/desktop/dd318189(v=vs.85).aspx) container
+* [HEVC/H.265](http://www.itu.int/ITU-T/recommendations/rec.aspx?rec=11885)-encoded video saved in an [MP4](http://www.iso.org/iso/catalogue_detail.htm?csnumber=38538) container
+
 # Pre-requisites
 
-Required:
+## Required
 
 1. Linux (tested on Ubuntu 14.04 LTS)
 1. CMake 3.2+
 1. C++11
 1. OpenCV (tested with 2.4.12)
 
-Optional:
+## Optional
+
+For HEVC/H.265 video-saving support:
 
 1. x265
-1. FFmpeg
+1. FFmpeg (__Make sure your OpenCV links against your custom-built FFmpeg -- see relevant information in advanced options below__)
 
 # Build
 
@@ -64,8 +71,7 @@ sudo make install # CMAKE_INSTALL_PREFIX defaults to /usr/local
       1. `mkdir ffmpeg-build` and `cd ffmpeg-build`
       1. `../ffmpeg/configure --prefix=/your/ffmpeg/installation/location --enable-shared --enable-avresample --enable-libx265 --enable-gpl --enable-muxer=mp4`
       1. `make -j` and `make install`
-   1. Supply `-D FFmpeg_DIR=/your/ffmpeg/installation/location` when running CMake.
-
+   1. Supply `-D FFmpeg_DIR=/your/ffmpeg/installation/location` to CMake.
 
 # Use
 1. Put `FIND_PACKAGE(GiftGrab CONFIG REQUIRED)` into your project's CMake file.
