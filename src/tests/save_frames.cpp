@@ -190,7 +190,8 @@ std::string which_file()
     switch(test_mode)
     {
     case TestMode::Epiphan:
-        filename.append("epiphan"); break;
+        filename.append("epiphan_")
+                .append(port_string); break;
     case TestMode::File:
         filename.append("from_file"); break;
     case TestMode::Chessboard:
