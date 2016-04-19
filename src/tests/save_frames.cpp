@@ -13,7 +13,7 @@ void synopsis()
               << " [ <framerate>   [ <x> <y>  <width> <height> ]   ]"
               << " # optimal: 20 600 185 678 688"
               << std::endl << "                "
-              << " file   </file/path>   xvid | h265 "
+              << " file   </file/path>   xvid | h265   [ <x> <y>  <width> <height> ]"
               << std::endl << "                "
               << " chess   xvid | h265   <width>   <height> "
               << std::endl << "            "
@@ -138,6 +138,18 @@ void init(int argc, char ** argv)
         num_frames = cap.get(CV_CAP_PROP_FRAME_COUNT);
         fps = cap.get(CV_CAP_PROP_FPS);
         duration = (num_frames / fps) / 60;
+
+        if (argc >= 8)
+        {
+            roi_x = atoi(argv[4]);
+            roi_y = atoi(argv[5]);
+            width = atoi(argv[6]);
+            height = atoi(argv[7]);
+        }
+        else
+        {
+            roi_x = roi_y = width = height = -1;
+        }
     }
 
     else if (args[1]=="chess")
@@ -248,6 +260,8 @@ void get_frame(VideoFrame_BGRA & frame)
         break;
     case TestMode::File:
         cap >> image;
+        if (roi_x > 0)
+            image(cv::Rect(roi_x, roi_y, width, height)).copyTo(image);
         cv::cvtColor(image, image, CV_BGR2BGRA);
         frame.init_from_opencv_mat(image);
         break;
