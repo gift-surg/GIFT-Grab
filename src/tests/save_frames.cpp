@@ -9,12 +9,14 @@ void synopsis()
               << std::endl << "                "
               << " help "
               << std::endl << "                "
+#ifdef USE_EPIPHAN
               << " epiphan   xvid | h265   sdi | dvi   "
               << " [ <framerate>   "
               << "[ <x> <y>  <width> <height>   [ <duration-in-min> ]   ]"
               << "]"
               << " # optimal: 20 600 185 678 688"
               << std::endl << "                "
+#endif
               << " file   </file/path>   xvid | h265   [ <x> <y>  <width> <height> ]"
               << std::endl << "                "
               << " chess   xvid | h265   <width>   <height> "
@@ -73,7 +75,8 @@ void init(int argc, char ** argv)
         synopsis(); exit(0);
     }
 
-    if (args[1]=="epiphan")
+#ifdef USE_EPIPHAN
+    else if (args[1]=="epiphan")
     {
         test_mode = TestMode::Epiphan;
 
@@ -120,6 +123,7 @@ void init(int argc, char ** argv)
         num_frames = duration * 60 * fps;
         sleep_duration = (int)(1000/fps); // ms
     }
+#endif
 
     else if (args[1]=="file")
     {

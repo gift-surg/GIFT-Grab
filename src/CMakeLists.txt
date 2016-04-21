@@ -65,6 +65,9 @@ SET(LIBS ${OpenCV_LIBS})
 # Video files
 if(USE_FILES OR USE_EPIPHAN)
     SET(USE_OPENCV ON CACHE BOOL "OFF ON" FORCE)
+    if(USE_EPIPHAN)
+        ADD_DEFINITIONS(-DUSE_EPIPHAN)
+    endif(USE_EPIPHAN)
 endif(USE_FILES OR USE_EPIPHAN)
 
 # BlackMagicSDK
@@ -160,10 +163,8 @@ endif(BUILD_DOC)
 
 OPTION(BUILD_TESTS "Build tests" OFF)
 if(BUILD_TESTS)
-    if(USE_EPIPHAN)
-        SET(TEST_NAME save_frames)
-        ADD_EXECUTABLE(${TEST_NAME}
-            tests/save_frames.cpp)
-        TARGET_LINK_LIBRARIES(${TEST_NAME} ${NAME} ${LIBS})
-    endif(USE_EPIPHAN)
+    SET(TEST_NAME save_frames)
+    ADD_EXECUTABLE(${TEST_NAME}
+        tests/save_frames.cpp)
+    TARGET_LINK_LIBRARIES(${TEST_NAME} ${NAME} ${LIBS})
 endif(BUILD_TESTS)
