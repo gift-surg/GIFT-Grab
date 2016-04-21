@@ -53,6 +53,7 @@ sudo make install # CMAKE_INSTALL_PREFIX defaults to /usr/local
 ## Advanced
 
 * `-D BUILD_DOC=ON` for building documentation.
+* `-D BUILD_TESTS=ON` for building the available test applications.
 * `-D USE_EPIPHAN=ON` for building support for [Epiphan DVI2PCIe Duo framegrabber](http://www.epiphan.com/products/dvi2pcie-duo) (currently at least this option or `USE_FILES` needs to be specified for the library to build properly). __Note when using this option:__
    1. `/dev/video0` and `/dev/video1` will be probed for connecting to the DVI and SDI ports respectively.
    1. Due to the use of the generic [OpenCV VideoCapture](http://docs.opencv.org/2.4/modules/highgui/doc/reading_and_writing_images_and_video.html#VideoCapture::VideoCapture%28int%20device%29) API for grabbing frames from Epiphan cards, it is currently not possible to distinguish Epiphan framegrabbers from others.
