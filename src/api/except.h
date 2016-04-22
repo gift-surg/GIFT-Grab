@@ -94,7 +94,7 @@ public:
     //! \brief ~VideoTargetError
     //! \sa BasicException::BasicException
     //!
-    virtual ~VideoTargetError();
+    virtual ~VideoTargetError() noexcept;
 };
 
 }
