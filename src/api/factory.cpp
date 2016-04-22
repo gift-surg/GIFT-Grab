@@ -93,7 +93,7 @@ void Factory::disconnect(enum Device type) {
     }
 }
 
-IVideoTarget * Factory::create(Target type)
+IVideoTarget * Factory::writer(Storage type)
 {
     switch (type)
     {

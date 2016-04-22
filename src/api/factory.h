@@ -17,7 +17,7 @@ enum Device {
 //!
 //! \brief Lists supported video saving options
 //!
-enum Target
+enum Storage
 {
     File_XviD,
     File_H265
@@ -66,7 +66,7 @@ public:
     //! message if creation of video target with
     //! specified \c type fails for some reason
     //!
-    static IVideoTarget * create(enum Target type);
+    static IVideoTarget * writer(enum Storage type);
 };
 
 }

@@ -28,7 +28,7 @@ void synopsis()
 enum TestMode { Epiphan, File, Chessboard };
 
 enum TestMode test_mode;
-enum gg::Target codec;
+enum gg::Storage codec;
 std::string codec_string, filetype;
 int width, height, square_size;
 float fps;
@@ -193,12 +193,12 @@ void init(int argc, char ** argv)
     // health checks
     if (codec_string == "xvid")
     {
-        codec = gg::Target::File_XviD;
+        codec = gg::Storage::File_XviD;
         filetype = "avi";
     }
     else if (codec_string == "h265")
     {
-        codec = gg::Target::File_H265;
+        codec = gg::Storage::File_H265;
         filetype = "mp4";
     }
     else
@@ -345,7 +345,7 @@ int main(int argc, char ** argv)
     {
         init(argc, argv);
 
-        gg::IVideoTarget * file = gg::Factory::create(codec);
+        gg::IVideoTarget * file = gg::Factory::writer(codec);
         std::string filename = which_file();
         file->init(filename, fps);
         std::cout << "Saving " << duration << " min. of data to file " << filename << std::endl;
