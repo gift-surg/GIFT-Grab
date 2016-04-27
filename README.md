@@ -1,6 +1,6 @@
 # Summary
 
-An umbrella library that provides an easy-to-use API to stream and capture video using frame grabber hardware.
+An umbrella library that provides an easy-to-use C++ (and optionally Python) API to stream and capture video using frame grabber hardware.
 
 # Supported hardware
 
@@ -32,10 +32,15 @@ There are bits and pieces in the current codebase pertaining to some of the foll
 
 ## Optional
 
-For HEVC/H.265 video-saving support:
+* For HEVC/H.265 video-saving support:
 
-1. x265
-1. FFmpeg (__Make sure your OpenCV links against your custom-built FFmpeg -- see relevant information in advanced options below__)
+  1. x265
+  1. FFmpeg (__Make sure your OpenCV links against your custom-built FFmpeg -- see relevant information in advanced options below__)
+
+* For Python API:
+
+  1. Python 2.7
+  1. Boost.Python
 
 # Build
 
@@ -73,6 +78,7 @@ sudo make install # CMAKE_INSTALL_PREFIX defaults to /usr/local
       1. `../ffmpeg/configure --prefix=/your/ffmpeg/installation/location --enable-shared --enable-avresample --enable-libx265 --enable-gpl --enable-muxer=mp4`
       1. `make -j` and `make install`
    1. Supply `-D FFmpeg_DIR=/your/ffmpeg/installation/location` to CMake.
+* `-D BUILD_PYTHON=ON` for building the Python API.
 
 # Use
 1. Put `FIND_PACKAGE(GiftGrab CONFIG REQUIRED)` into your project's CMake file.
