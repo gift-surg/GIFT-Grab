@@ -15,4 +15,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .value("DVI2PCIeDuo_SDI", gg::Device::DVI2PCIeDuo_SDI)
         .value("DVI2PCIeDuo_DVI", gg::Device::DVI2PCIeDuo_DVI)
     ;
+
+    class_<IVideoSource, boost::noncopyable>("IVideoSource", no_init)
+    ;
 }
