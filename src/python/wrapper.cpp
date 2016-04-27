@@ -10,4 +10,9 @@ BOOST_PYTHON_MODULE(pygiftgrab)
 {
     using namespace boost::python;
     def( "foo", foo );
+
+    enum_<gg::Device>("gg_device")
+            .value("DVI2PCIeDuo_SDI", gg::Device::DVI2PCIeDuo_SDI)
+            .value("DVI2PCIeDuo_DVI", gg::Device::DVI2PCIeDuo_DVI)
+            ;
 }
