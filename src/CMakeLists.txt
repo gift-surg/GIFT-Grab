@@ -1,6 +1,13 @@
 PROJECT(GiftGrab)
 CMAKE_MINIMUM_REQUIRED(VERSION 3.2.0)
 
+# Build types and default build type
+SET_PROPERTY(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release")
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    MESSAGE(STATUS "Setting build type to 'Release' as none was specified.")
+    SET(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+endif()
+
 # Unsupported platforms
 if(APPLE)
     MESSAGE(FATAL_ERROR "This library does not support Mac OS X yet.")
@@ -28,6 +35,7 @@ endif()
 OPTION(USE_FILES "Support for loading video from files" OFF)
 OPTION(USE_EPIPHAN "Support for streaming video using Epiphan framegrabbers" OFF)
 OPTION(USE_BLACKMAGIC "Support for streaming video using BlackMagic framegrabbers" OFF)
+OPTION(USE_FFMPEG "Support for saving video to files using FFmpeg" OFF)
 
 # OpenCV
 FIND_PACKAGE(OpenCV REQUIRED)
@@ -47,6 +55,7 @@ INCLUDE_DIRECTORIES(utils)
 # Variable for header and source files
 SET(HEADERS
     api/ivideosource.h
+    api/ivideotarget.h
     api/videoframe.h
     api/maskframe.h
     api/factory.h
@@ -63,6 +72,9 @@ SET(LIBS ${OpenCV_LIBS})
 # Video files
 if(USE_FILES OR USE_EPIPHAN)
     SET(USE_OPENCV ON CACHE BOOL "OFF ON" FORCE)
+    if(USE_EPIPHAN)
+        ADD_DEFINITIONS(-DUSE_EPIPHAN)
+    endif(USE_EPIPHAN)
 endif(USE_FILES OR USE_EPIPHAN)
 
 # BlackMagicSDK
@@ -88,8 +100,25 @@ SET(USE_LIBVLC OFF CACHE BOOL "ON OFF" FORCE)
 if(USE_OPENCV)
     INCLUDE_DIRECTORIES(opencv)
     LIST(APPEND HEADERS opencv/opencv_video_source.h)
+    LIST(APPEND HEADERS opencv/opencv_video_target.h)
     LIST(APPEND SOURCES opencv/opencv_video_source.cpp)
+    LIST(APPEND SOURCES opencv/opencv_video_target.cpp)
 endif(USE_OPENCV)
+
+# FFmpeg video encoder
+if(USE_FFMPEG)
+    ADD_DEFINITIONS(-DUSE_FFMPEG)
+    INCLUDE_DIRECTORIES(${FFmpeg_DIR}/include)
+    INCLUDE_DIRECTORIES(ffmpeg)
+    LIST(APPEND HEADERS ffmpeg/ffmpeg_video_target.h)
+    LIST(APPEND SOURCES ffmpeg/ffmpeg_video_target.cpp)
+    LIST(APPEND LIBS
+        ${FFmpeg_DIR}/lib/libavformat.so
+        ${FFmpeg_DIR}/lib/libavcodec.so
+        ${FFmpeg_DIR}/lib/libavutil.so
+        ${FFmpeg_DIR}/lib/libswscale.so
+    )
+endif(USE_FFMPEG)
 
 # libVLC
 if(USE_LIBVLC)
@@ -138,3 +167,11 @@ if(BUILD_DOC)
             COMMENT "Generating API documentation with Doxygen" VERBATIM)
     endif(DOXYGEN_FOUND)
 endif(BUILD_DOC)
+
+OPTION(BUILD_TESTS "Build tests" OFF)
+if(BUILD_TESTS)
+    SET(TEST_NAME save_frames)
+    ADD_EXECUTABLE(${TEST_NAME}
+        tests/save_frames.cpp)
+    TARGET_LINK_LIBRARIES(${TEST_NAME} ${NAME} ${LIBS})
+endif(BUILD_TESTS)

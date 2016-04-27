@@ -1,6 +1,6 @@
 # Summary
 
-An umbrella library that provides an easy-to-use API to stream video using frame grabber hardware.
+An umbrella library that provides an easy-to-use API to stream and capture video using frame grabber hardware.
 
 # Supported hardware
 
@@ -16,12 +16,26 @@ There are bits and pieces in the current codebase pertaining to some of the foll
 * [BlackMagic DeckLink Quad](https://www.blackmagicdesign.com/uk/products/decklink/techspecs/W-DLK-02)
 * [Epiphan Pearl](http://www.epiphan.com/products/pearl/)
 
+# Supported formats and codecs for saving video streams
+
+* [XviD](https://www.xvid.com/)-encoded video saved in an [AVI](https://msdn.microsoft.com/en-us/library/windows/desktop/dd318189(v=vs.85).aspx) container
+* [HEVC/H.265](http://www.itu.int/ITU-T/recommendations/rec.aspx?rec=11885)-encoded video saved in an [MP4](http://www.iso.org/iso/catalogue_detail.htm?csnumber=38538) container
+
 # Pre-requisites
+
+## Required
 
 1. Linux (tested on Ubuntu 14.04 LTS)
 1. CMake 3.2+
 1. C++11
 1. OpenCV (tested with 2.4.12)
+
+## Optional
+
+For HEVC/H.265 video-saving support:
+
+1. x265
+1. FFmpeg (__Make sure your OpenCV links against your custom-built FFmpeg -- see relevant information in advanced options below__)
 
 # Build
 
@@ -39,9 +53,26 @@ sudo make install # CMAKE_INSTALL_PREFIX defaults to /usr/local
 ## Advanced
 
 * `-D BUILD_DOC=ON` for building documentation.
-* `-D USE_EPIPHAN=ON` for building support for Epiphan framegrabbers (currently at least this option or `USE_FILES` needs to be specified for the library to build properly). __Note when using this option:__
-   1. `/dev/video0` to `/dev/video4` will be probed (in ascending order) to locate an Epiphan framegrabber, and the first one to be found active will be assumed to be the device.
+* `-D BUILD_TESTS=ON` for building the available test applications.
+* `-D USE_EPIPHAN=ON` for building support for [Epiphan DVI2PCIe Duo framegrabber](http://www.epiphan.com/products/dvi2pcie-duo) (currently at least this option or `USE_FILES` needs to be specified for the library to build properly). __Note when using this option:__
+   1. `/dev/video0` and `/dev/video1` will be probed for connecting to the DVI and SDI ports respectively.
    1. Due to the use of the generic [OpenCV VideoCapture](http://docs.opencv.org/2.4/modules/highgui/doc/reading_and_writing_images_and_video.html#VideoCapture::VideoCapture%28int%20device%29) API for grabbing frames from Epiphan cards, it is currently not possible to distinguish Epiphan framegrabbers from others.
+* `-D USE_FFMPEG=ON` for building support for saving frames as video files using [FFmpeg](https://www.ffmpeg.org/). __Note when using this option:__
+   1. Build and install [x265](http://x265.org/):
+      1. `hg clone https://bitbucket.org/multicoreware/x265`
+      1. `cd x265`
+      1. `hg checkout 1.9`
+      1. `cd ..` and `mkdir x265-build` and `cd x265-build`
+      1. `cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=/your/x265/installation/location -D ENABLE_SHARED:bool=on ../x265/source/`
+      1. `make -j` and `make install`
+   1. Build and install [FFmpeg](https://www.ffmpeg.org/):
+      1. `git clone https://github.com/FFmpeg/FFmpeg.git`
+      1. `git checkout n3.0.1`
+      1. `export PKG_CONFIG_PATH="/your/x265/installation/location/lib/pkgconfig:$PKG_CONFIG_PATH"`
+      1. `mkdir ffmpeg-build` and `cd ffmpeg-build`
+      1. `../ffmpeg/configure --prefix=/your/ffmpeg/installation/location --enable-shared --enable-avresample --enable-libx265 --enable-gpl --enable-muxer=mp4`
+      1. `make -j` and `make install`
+   1. Supply `-D FFmpeg_DIR=/your/ffmpeg/installation/location` to CMake.
 
 # Use
 1. Put `FIND_PACKAGE(GiftGrab CONFIG REQUIRED)` into your project's CMake file.
