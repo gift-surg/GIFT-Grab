@@ -1,6 +1,13 @@
 PROJECT(GiftGrab)
 CMAKE_MINIMUM_REQUIRED(VERSION 3.2.0)
 
+# Build types and default build type
+SET_PROPERTY(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release")
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    MESSAGE(STATUS "Setting build type to 'Release' as none was specified.")
+    SET(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+endif()
+
 # Unsupported platforms
 if(APPLE)
     MESSAGE(FATAL_ERROR "This library does not support Mac OS X yet.")
