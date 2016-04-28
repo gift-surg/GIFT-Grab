@@ -61,6 +61,11 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .value("DVI2PCIeDuo_DVI", gg::Device::DVI2PCIeDuo_DVI)
     ;
 
+    enum_<gg::Storage>("Storage")
+        .value("File_H265", gg::Storage::File_H265)
+        .value("File_XviD", gg::Storage::File_XviD)
+    ;
+
     class_<VideoFrame_BGRA>("VideoFrame_BGRA", init<bool>())
         .def("rows", &VideoFrame_BGRA::rows)
         .def("cols", &VideoFrame_BGRA::cols)

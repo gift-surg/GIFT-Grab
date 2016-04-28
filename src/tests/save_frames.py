@@ -9,6 +9,8 @@ num_frames = recording_duration * 60 * frame_rate
 
 print pygiftgrab.Device.DVI2PCIeDuo_SDI
 print pygiftgrab.Device.DVI2PCIeDuo_DVI
+print pygiftgrab.Storage.File_H265
+print pygiftgrab.Storage.File_XviD
 
 try:
     source_device = pygiftgrab.VideoSourceOpenCV(0)
