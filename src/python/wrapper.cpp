@@ -69,6 +69,8 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     ;
 
     class_<VideoFrame_BGRA>("VideoFrame_BGRA", init<bool>())
+        .def("rows", &VideoFrame_BGRA::rows)
+        .def("cols", &VideoFrame_BGRA::cols)
     ;
 
     class_<IVideoSource, boost::noncopyable>("IVideoSource", no_init)
@@ -84,5 +86,12 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .def("get_frame_dimensions", &VideoSourceOpenCV::get_frame_dimensions)
         .def("get_frame_rate", &VideoSourceOpenCV::get_frame_rate)
         .def("set_sub_frame", &VideoSourceOpenCV::set_sub_frame)
+    ;
+
+    class_<gg::Factory>("Factory", no_init)
+        .def("connect", &gg::Factory::connect, return_value_policy<reference_existing_object>())
+        .staticmethod("connect")
+        .def("disconnect", &gg::Factory::disconnect)
+        .staticmethod("disconnect")
     ;
 }

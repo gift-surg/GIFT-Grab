@@ -24,3 +24,18 @@ except (RuntimeError, IOError) as e:
     print e.message
 
 frame = pygiftgrab.VideoFrame_BGRA(False)  # to avoid "thin wrappers" required for default args
+try:
+    source = pygiftgrab.Factory.connect(pygiftgrab.Device.DVI2PCIeDuo_SDI)
+    # TODO
+    # target = pygiftgrab.gg_Factory.writer(pygiftgrab.gg_Storage.File_H265)
+    # target.init(file_path, frame_rate)
+    for i in range(1, num_frames+1):
+        source.get_frame(frame)
+        print 'Frame ' + str(i) + '/' + str(num_frames) + \
+              ' is ' + str(frame.cols()) + ' x ' + str(frame.rows())
+    #     target.append(frame)
+    #     sleep(inter_frame_msec)
+    # target.finalise()
+    pygiftgrab.Factory.disconnect(pygiftgrab.Device.DVI2PCIeDuo_SDI)
+except (RuntimeError, IOError) as e:
+    print e.message
