@@ -41,6 +41,9 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .value("DVI2PCIeDuo_DVI", gg::Device::DVI2PCIeDuo_DVI)
     ;
 
+    class_<VideoFrame_BGRA>("VideoFrame_BGRA", init<bool>())
+    ;
+
     class_<IVideoSource, boost::noncopyable>("IVideoSource", no_init)
         .def("get_frame_dimensions", pure_virtual(&IVideoSource::get_frame_dimensions))
         .def("get_frame", pure_virtual(&IVideoSource::get_frame))

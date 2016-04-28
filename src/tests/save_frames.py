@@ -16,3 +16,5 @@ print source_device.get_frame_rate()
 
 source_file = pygiftgrab.VideoSourceOpenCV("/home/dzhoshkun/data/mosaic/imageUndistorted_000001.mp4")
 print source_file.get_frame_rate()
+
+frame = pygiftgrab.VideoFrame_BGRA(False)  # to avoid "thin wrappers" required for default args
