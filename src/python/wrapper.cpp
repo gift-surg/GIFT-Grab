@@ -36,7 +36,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
 {
     def( "foo", foo );
 
-    enum_<gg::Device>("gg_Device")
+    enum_<gg::Device>("Device")
         .value("DVI2PCIeDuo_SDI", gg::Device::DVI2PCIeDuo_SDI)
         .value("DVI2PCIeDuo_DVI", gg::Device::DVI2PCIeDuo_DVI)
     ;
