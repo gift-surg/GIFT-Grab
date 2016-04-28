@@ -5,6 +5,7 @@ cd "$GiftGrab_BUILD_DIR"
 cmake -D CMAKE_INSTALL_PREFIX="$INSTALL_DIR" \
       -D USE_FILES=ON \
       -D BUILD_DOC=ON \
+      -D BUILD_PYTHON=ON \
       "$GiftGrab_SOURCE_DIR"
 make -j
 make install
