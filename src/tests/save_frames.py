@@ -11,10 +11,16 @@ print pygiftgrab.foo()
 print pygiftgrab.Device.DVI2PCIeDuo_SDI
 print pygiftgrab.Device.DVI2PCIeDuo_DVI
 
-source_device = pygiftgrab.VideoSourceOpenCV(0)
-print source_device.get_frame_rate()
+try:
+    source_device = pygiftgrab.VideoSourceOpenCV(0)
+    print source_device.get_frame_rate()
+except (RuntimeError, IOError) as e:
+    print e.message
 
-source_file = pygiftgrab.VideoSourceOpenCV("/home/dzhoshkun/data/mosaic/imageUndistorted_000001.mp4")
-print source_file.get_frame_rate()
+try:
+    source_file = pygiftgrab.VideoSourceOpenCV("/home/dzhoshkun/data/mosaic/imageUndistorted_000001.mp4")
+    print source_file.get_frame_rate()
+except (RuntimeError, IOError) as e:
+    print e.message
 
 frame = pygiftgrab.VideoFrame_BGRA(False)  # to avoid "thin wrappers" required for default args

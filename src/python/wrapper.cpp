@@ -1,6 +1,8 @@
 #include "factory.h"
+#include "except.h"
 #include <opencv_video_source.h>
 #include <boost/python.hpp>
+#include <boost/python/exception_translator.hpp>
 
 using namespace boost::python;
 
@@ -32,9 +34,34 @@ class IVideoSourceWrap : IVideoSource, wrapper<IVideoSource>
     }
 };
 
+void translate_DeviceNotFound(gg::DeviceNotFound const & e)
+{
+    std::string msg;
+    msg.append("DeviceNotFound: ").append(e.what());
+    PyErr_SetString(PyExc_IOError, msg.c_str());
+}
+
+void translate_DeviceOffline(gg::DeviceOffline const & e)
+{
+    std::string msg;
+    msg.append("DeviceOffline: ").append(e.what());
+    PyErr_SetString(PyExc_IOError, msg.c_str());
+}
+
+void translate_VideoTargetError(gg::VideoTargetError const & e)
+{
+    std::string msg;
+    msg.append("VideoTargetError: ").append(e.what());
+    PyErr_SetString(PyExc_RuntimeError, msg.c_str());
+}
+
 BOOST_PYTHON_MODULE(pygiftgrab)
 {
     def( "foo", foo );
+
+    register_exception_translator<gg::DeviceNotFound>(&translate_DeviceNotFound);
+    register_exception_translator<gg::DeviceOffline>(&translate_DeviceOffline);
+    register_exception_translator<gg::VideoTargetError>(&translate_VideoTargetError);
 
     enum_<gg::Device>("Device")
         .value("DVI2PCIeDuo_SDI", gg::Device::DVI2PCIeDuo_SDI)
