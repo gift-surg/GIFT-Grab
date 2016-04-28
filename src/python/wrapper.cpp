@@ -1,12 +1,12 @@
 #include "factory.h"
 #include "except.h"
-#include <opencv_video_source.h>
+#include "opencv_video_source.h"
 #include <boost/python.hpp>
 #include <boost/python/exception_translator.hpp>
 
 using namespace boost::python;
 
-class IVideoSourceWrap : IVideoSource, wrapper<IVideoSource>
+class IVideoSourceWrapper : IVideoSource, wrapper<IVideoSource>
 {
     bool get_frame_dimensions(int & width, int & height)
     {
