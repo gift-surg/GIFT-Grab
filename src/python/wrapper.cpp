@@ -1,4 +1,5 @@
 #include "factory.h"
+#include <opencv_video_source.h>
 #include <boost/python.hpp>
 
 using namespace boost::python;
@@ -45,5 +46,13 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .def("get_frame", pure_virtual(&IVideoSource::get_frame))
         .def("get_frame_rate", pure_virtual(&IVideoSource::get_frame_rate))
         .def("set_sub_frame", pure_virtual(&IVideoSource::set_sub_frame))
+    ;
+
+    class_<VideoSourceOpenCV, bases<IVideoSource>, boost::noncopyable>("VideoSourceOpenCV", init<int>())
+        .def(init<char *>())
+        .def("get_frame", &VideoSourceOpenCV::get_frame)
+        .def("get_frame_dimensions", &VideoSourceOpenCV::get_frame_dimensions)
+        .def("get_frame_rate", &VideoSourceOpenCV::get_frame_rate)
+        .def("set_sub_frame", &VideoSourceOpenCV::set_sub_frame)
     ;
 }
