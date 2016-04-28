@@ -1,6 +1,8 @@
 #include "factory.h"
 #include "except.h"
 #include "opencv_video_source.h"
+#include "ffmpeg_video_target.h"
+#include "opencv_video_target.h"
 #include <boost/python.hpp>
 #include <boost/python/exception_translator.hpp>
 
@@ -26,6 +28,24 @@ class IVideoSourceWrapper : IVideoSource, wrapper<IVideoSource>
     void set_sub_frame(int x, int y, int width, int height)
     {
         this->get_override("set_sub_frame")(x, y, width, height);
+    }
+};
+
+class IVideoTargetWrapper : gg::IVideoTarget, wrapper<gg::IVideoTarget>
+{
+    void init(const std::string filepath, const float framerate)
+    {
+        this->get_override("init")(filepath, framerate);
+    }
+
+    void append(const VideoFrame_BGRA & frame)
+    {
+        this->get_override("append")(frame);
+    }
+
+    void finalise()
+    {
+        this->get_override("finalise")();
     }
 };
 
@@ -86,10 +106,30 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .def("set_sub_frame", &VideoSourceOpenCV::set_sub_frame)
     ;
 
+    class_<gg::IVideoTarget, boost::noncopyable>("IVideoTarget", no_init)
+        .def("init", pure_virtual(&gg::IVideoTarget::init))
+        .def("append", pure_virtual(&gg::IVideoTarget::append))
+        .def("finalise", pure_virtual(&gg::IVideoTarget::finalise))
+    ;
+
+    class_<gg::VideoTargetFFmpeg, bases<gg::IVideoTarget>, boost::noncopyable>("VideoTargetFFmpeg", init<std::string>())
+        .def("init", &gg::VideoTargetFFmpeg::init)
+        .def("append", &gg::VideoTargetFFmpeg::append)
+        .def("finalise", &gg::VideoTargetFFmpeg::finalise)
+    ;
+
+    class_<gg::VideoTargetOpenCV, bases<gg::IVideoTarget>, boost::noncopyable>("VideoTargetOpenCV", init<std::string>())
+        .def("init", &gg::VideoTargetOpenCV::init)
+        .def("append", &gg::VideoTargetOpenCV::append)
+        .def("finalise", &gg::VideoTargetOpenCV::finalise)
+    ;
+
     class_<gg::Factory>("Factory", no_init)
         .def("connect", &gg::Factory::connect, return_value_policy<reference_existing_object>())
         .staticmethod("connect")
         .def("disconnect", &gg::Factory::disconnect)
         .staticmethod("disconnect")
+        .def("writer", &gg::Factory::writer, return_value_policy<manage_new_object>())
+        .staticmethod("writer")
     ;
 }
