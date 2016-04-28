@@ -7,7 +7,6 @@ frame_rate = 20
 recording_duration = 1  # min
 num_frames = recording_duration * 60 * frame_rate
 
-print pygiftgrab.foo()
 print pygiftgrab.Device.DVI2PCIeDuo_SDI
 print pygiftgrab.Device.DVI2PCIeDuo_DVI
 

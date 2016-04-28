@@ -6,11 +6,6 @@
 
 using namespace boost::python;
 
-void foo()
-{
-    std::cout << "This should print with a dot at the end." << std::endl;
-}
-
 class IVideoSourceWrap : IVideoSource, wrapper<IVideoSource>
 {
     bool get_frame_dimensions(int & width, int & height)
@@ -57,8 +52,6 @@ void translate_VideoTargetError(gg::VideoTargetError const & e)
 
 BOOST_PYTHON_MODULE(pygiftgrab)
 {
-    def( "foo", foo );
-
     register_exception_translator<gg::DeviceNotFound>(&translate_DeviceNotFound);
     register_exception_translator<gg::DeviceOffline>(&translate_DeviceOffline);
     register_exception_translator<gg::VideoTargetError>(&translate_VideoTargetError);
