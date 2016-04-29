@@ -1,6 +1,10 @@
 #include "ffmpeg_video_target.h"
 #include "except.h"
 
+#ifdef USE_BOOST_TIMER
+#include <boost/timer/timer.hpp>
+#endif
+
 namespace gg
 {
 
@@ -68,6 +72,14 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
     // if first frame, initialise
     if (_frame == NULL)
     {
+#ifdef USE_BOOST_TIMER
+#ifndef timer_format_str
+#define timer_format_str \
+        std::string(", %w, %u, %s, %t, %p" \
+                    ", wall (s), user (s), system (s), user+system (s), CPU (pc)\n")
+#endif
+        boost::timer::auto_cpu_timer t("_frame == NULL");
+#endif
         // TODO - is _codec_context ever being modified after first frame?
         _stream->codec->codec_id = _codec_id;
         /* TODO: using default reduces filesize
@@ -167,6 +179,11 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
         _packet.size = 0;
     }
 
+    {
+#ifdef USE_BOOST_TIMER
+    boost::timer::auto_cpu_timer t("a) av_frame_make_writable" + timer_format_str);
+#endif
+
     /* when we pass a frame to the encoder, it may keep a reference to it
      * internally;
      * make sure we do not overwrite it here
@@ -176,6 +193,12 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
     // TODO #25 av_buffer_is_writable(_frame) ?= 1, also why not only once?
     if (ret < 0)
         throw VideoTargetError("Could not make frame writeable");
+    }
+
+    {
+#ifdef USE_BOOST_TIMER
+    boost::timer::auto_cpu_timer t("a) sws_scale" + timer_format_str);
+#endif
 
     /* convert pixel format */
     // TODO #25 allocate once
@@ -190,28 +213,52 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
               );
 
     _frame->pts = _frame_index++;
+    }
+
+    {
+#ifdef USE_BOOST_TIMER
+    boost::timer::auto_cpu_timer t("a) encode_and_write" + timer_format_str);
+#endif
 
     /* encode the image */
     encode_and_write(_frame, got_output);
+    }
 }
 
 void VideoTargetFFmpeg::encode_and_write(AVFrame * frame, int & got_output)
 {
     int ret;
 
+    {
+#ifdef USE_BOOST_TIMER
+    boost::timer::auto_cpu_timer t("aa) avcodec_encode_video2" + timer_format_str);
+#endif
     ret = avcodec_encode_video2(_stream->codec, &_packet, frame, &got_output);
+    }
+
     if (ret < 0)
         throw VideoTargetError("Error encoding frame");
 
     if (got_output)
     {
+        {
+    #ifdef USE_BOOST_TIMER
+        boost::timer::auto_cpu_timer t("aa) av_packet_rescale_ts" + timer_format_str);
+    #endif
         /* rescale output packet timestamp values from codec to stream timebase */
         av_packet_rescale_ts(&_packet, _stream->codec->time_base, _stream->time_base);
         // TODO - above time bases are the same, or not?
         _packet.stream_index = _stream->index;
+        }
 
+        {
+    #ifdef USE_BOOST_TIMER
+        boost::timer::auto_cpu_timer t("aa) av_interleaved_write_frame" + timer_format_str);
+    #endif
         /* Write the compressed frame to the media file. */
         int ret = av_interleaved_write_frame(_format_context, &_packet);
+        }
+
         if (ret < 0)
             throw VideoTargetError("Could not interleaved write frame");
 //        av_packet_unref(&packet); taken care of by av_interleaved_write_frame
