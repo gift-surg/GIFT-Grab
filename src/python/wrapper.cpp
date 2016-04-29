@@ -1,7 +1,9 @@
 #include "factory.h"
 #include "except.h"
 #include "opencv_video_source.h"
+#ifdef USE_FFMPEG
 #include "ffmpeg_video_target.h"
+#endif
 #include "opencv_video_target.h"
 #include <boost/python.hpp>
 #include <boost/python/exception_translator.hpp>
@@ -112,11 +114,13 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .def("finalise", pure_virtual(&gg::IVideoTarget::finalise))
     ;
 
+#ifdef USE_FFMPEG
     class_<gg::VideoTargetFFmpeg, bases<gg::IVideoTarget>, boost::noncopyable>("VideoTargetFFmpeg", init<std::string>())
         .def("init", &gg::VideoTargetFFmpeg::init)
         .def("append", &gg::VideoTargetFFmpeg::append)
         .def("finalise", &gg::VideoTargetFFmpeg::finalise)
     ;
+#endif
 
     class_<gg::VideoTargetOpenCV, bases<gg::IVideoTarget>, boost::noncopyable>("VideoTargetOpenCV", init<std::string>())
         .def("init", &gg::VideoTargetOpenCV::init)
