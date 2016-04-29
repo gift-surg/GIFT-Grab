@@ -78,7 +78,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
         std::string(", %w, %u, %s, %t, %p" \
                     ", wall (s), user (s), system (s), user+system (s), CPU (pc)\n")
 #endif
-        boost::timer::auto_cpu_timer t("_frame == NULL");
+        boost::timer::auto_cpu_timer t("a) _frame == NULL" + timer_format_str);
 #endif
         // TODO - is _codec_context ever being modified after first frame?
         _stream->codec->codec_id = _codec_id;
