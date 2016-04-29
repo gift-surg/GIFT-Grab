@@ -96,7 +96,8 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     class_<IVideoSource, boost::noncopyable>("IVideoSource", no_init)
     ;
 
-    class_<VideoSourceOpenCV, bases<IVideoSource>, boost::noncopyable>("VideoSourceOpenCV", init<int>())
+    class_<VideoSourceOpenCV, bases<IVideoSource>, boost::noncopyable>(
+                "VideoSourceOpenCV", init<int>())
         .def(init<char *>())
         .def("get_frame", &VideoSourceOpenCV::get_frame)
         .def("get_frame_dimensions", &VideoSourceOpenCV::get_frame_dimensions)
@@ -108,25 +109,34 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     ;
 
 #ifdef USE_FFMPEG
-    class_<gg::VideoTargetFFmpeg, bases<gg::IVideoTarget>, boost::noncopyable>("VideoTargetFFmpeg", init<std::string>())
+    class_<gg::VideoTargetFFmpeg, bases<gg::IVideoTarget>, boost::noncopyable>(
+                "VideoTargetFFmpeg", init<std::string>())
         .def("init", &gg::VideoTargetFFmpeg::init)
         .def("append", &gg::VideoTargetFFmpeg::append)
         .def("finalise", &gg::VideoTargetFFmpeg::finalise)
     ;
 #endif
 
-    class_<gg::VideoTargetOpenCV, bases<gg::IVideoTarget>, boost::noncopyable>("VideoTargetOpenCV", init<std::string>())
+    class_<gg::VideoTargetOpenCV, bases<gg::IVideoTarget>, boost::noncopyable>(
+                "VideoTargetOpenCV", init<std::string>())
         .def("init", &gg::VideoTargetOpenCV::init)
         .def("append", &gg::VideoTargetOpenCV::append)
         .def("finalise", &gg::VideoTargetOpenCV::finalise)
     ;
 
     class_<gg::Factory>("Factory", no_init)
-        .def("connect", &gg::Factory::connect, return_value_policy<reference_existing_object>())
+        .def("connect", &gg::Factory::connect,
+             /* because client should never delete returned
+              * object on its own, but should rather call
+              * disconnect when done
+              */
+             return_value_policy<reference_existing_object>())
         .staticmethod("connect")
         .def("disconnect", &gg::Factory::disconnect)
         .staticmethod("disconnect")
-        .def("writer", &gg::Factory::writer, return_value_policy<manage_new_object>())
+        .def("writer", &gg::Factory::writer,
+             // because ownership is passed to client
+             return_value_policy<manage_new_object>())
         .staticmethod("writer")
     ;
 }
