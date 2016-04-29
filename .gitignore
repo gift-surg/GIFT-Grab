@@ -1,3 +1,7 @@
 CMakeLists.txt.user
 _CMakeLists.txt
 src/extern
+.idea
+src/tests/pygiftgrab.so
+*.mp4
+*.avi

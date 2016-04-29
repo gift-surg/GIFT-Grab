@@ -39,11 +39,15 @@ public:
     //!
     //! \brief Try to connect to specified device
     //! \param type
-    //! \return pointer to the device's framegrabber
+    //! \return pointer to the device's framegrabber.
+    //! Client should not delete this pointer on its
+    //! own, but should instead call \c disconnect
+    //! with the same \c type when finished
     //! \throw DeviceNotFound if connection attempt
     //! fails
     //! \throw DeviceOffline if connection attempt
     //! OK, but device offline (i.e. getting no frames)
+    //! \sa disconnect
     //!
     static IVideoSource * connect(enum Device type);
 
