@@ -179,7 +179,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
         _packet.size = 0;
     }
 
-    {
+    { // START auto_cpu_timer scope
 #ifdef USE_BOOST_TIMER
     boost::timer::auto_cpu_timer t("a) av_frame_make_writable" + timer_format_str);
 #endif
@@ -193,9 +193,10 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
     // TODO #25 av_buffer_is_writable(_frame) ?= 1, also why not only once?
     if (ret < 0)
         throw VideoTargetError("Could not make frame writeable");
-    }
 
-    {
+    } // END auto_cpu_timer scope
+
+    { // START auto_cpu_timer scope
 #ifdef USE_BOOST_TIMER
     boost::timer::auto_cpu_timer t("a) sws_scale" + timer_format_str);
 #endif
@@ -213,16 +214,18 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
               );
 
     _frame->pts = _frame_index++;
-    }
 
-    {
+    } // END auto_cpu_timer scope
+
+    { // START auto_cpu_timer scope
 #ifdef USE_BOOST_TIMER
     boost::timer::auto_cpu_timer t("a) encode_and_write" + timer_format_str);
 #endif
 
     /* encode the image */
     encode_and_write(_frame, got_output);
-    }
+
+    } // END auto_cpu_timer scope
 }
 
 void VideoTargetFFmpeg::encode_and_write(AVFrame * frame, int & got_output)
