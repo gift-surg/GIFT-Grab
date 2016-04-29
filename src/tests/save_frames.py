@@ -6,11 +6,8 @@ file_path = 'python-test-file.mp4'
 frame_rate = 20
 recording_duration = 0.1  # min
 num_frames = int(recording_duration * 60 * frame_rate)
-
-print pygiftgrab.Device.DVI2PCIeDuo_SDI
-print pygiftgrab.Device.DVI2PCIeDuo_DVI
-print pygiftgrab.Storage.File_H265
-print pygiftgrab.Storage.File_XviD
+device_type = pygiftgrab.Device.DVI2PCIeDuo_SDI
+storage_type = pygiftgrab.Storage.File_H265
 
 try:
     source_device = pygiftgrab.VideoSourceOpenCV(0)
@@ -26,8 +23,8 @@ except (RuntimeError, IOError) as e:
 
 frame = pygiftgrab.VideoFrame_BGRA(False)  # to avoid "thin wrappers" required for default args
 try:
-    source = pygiftgrab.Factory.connect(pygiftgrab.Device.DVI2PCIeDuo_SDI)
-    target = pygiftgrab.Factory.writer(pygiftgrab.Storage.File_H265)
+    source = pygiftgrab.Factory.connect(device_type)
+    target = pygiftgrab.Factory.writer(storage_type)
     target.init(file_path, frame_rate)
     for i in range(1, num_frames+1):
         source.get_frame(frame)
