@@ -122,6 +122,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
         _frame->width  = _stream->codec->width;
         _frame->height = _stream->codec->height;
         /* allocate the buffers for the frame data */
+        // TODO #25 what influence does 32 have on performance?
         ret = av_frame_get_buffer(_frame, 32);
         if (ret < 0)
             throw VideoTargetError("Could not allocate frame data");
@@ -161,6 +162,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
 
         // Packet to be used when writing frames
         av_init_packet(&_packet);
+        // TODO #25 data gets allocated each time?
         _packet.data = NULL;    // packet data will be allocated by the encoder
         _packet.size = 0;
     }
@@ -169,16 +171,21 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
      * internally;
      * make sure we do not overwrite it here
      */
+    // TODO #25 av_buffer_is_writable(_frame) ?= 1
     ret = av_frame_make_writable(_frame);
+    // TODO #25 av_buffer_is_writable(_frame) ?= 1, also why not only once?
     if (ret < 0)
         throw VideoTargetError("Could not make frame writeable");
 
     /* convert pixel format */
+    // TODO #25 allocate once
     const uint8_t * src_data_ptr[1] = { frame.data() }; // BGRA has one plane
+    // TODO #25 allocate once
     int bgra_stride[1] = { 4*frame.cols() };
     sws_scale(_sws_context,
               src_data_ptr, bgra_stride,
               0, frame.rows(),
+              // #25 TODO _frame->data getting allocated here?
               _frame->data, _frame->linesize
               );
 
