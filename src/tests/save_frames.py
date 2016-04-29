@@ -24,6 +24,7 @@ except (RuntimeError, IOError) as e:
 frame = pygiftgrab.VideoFrame_BGRA(False)  # to avoid "thin wrappers" required for default args
 try:
     source = pygiftgrab.Factory.connect(device_type)
+    source.set_sub_frame(660, 160, 678, 688)
     target = pygiftgrab.Factory.writer(storage_type)
     target.init(file_path, frame_rate)
     for i in range(1, num_frames+1):
