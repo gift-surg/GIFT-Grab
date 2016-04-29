@@ -94,10 +94,6 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     ;
 
     class_<IVideoSource, boost::noncopyable>("IVideoSource", no_init)
-        .def("get_frame_dimensions", pure_virtual(&IVideoSource::get_frame_dimensions))
-        .def("get_frame", pure_virtual(&IVideoSource::get_frame))
-        .def("get_frame_rate", pure_virtual(&IVideoSource::get_frame_rate))
-        .def("set_sub_frame", pure_virtual(&IVideoSource::set_sub_frame))
     ;
 
     class_<VideoSourceOpenCV, bases<IVideoSource>, boost::noncopyable>("VideoSourceOpenCV", init<int>())
@@ -109,9 +105,6 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     ;
 
     class_<gg::IVideoTarget, boost::noncopyable>("IVideoTarget", no_init)
-        .def("init", pure_virtual(&gg::IVideoTarget::init))
-        .def("append", pure_virtual(&gg::IVideoTarget::append))
-        .def("finalise", pure_virtual(&gg::IVideoTarget::finalise))
     ;
 
 #ifdef USE_FFMPEG
