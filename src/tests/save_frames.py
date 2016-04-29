@@ -2,12 +2,16 @@
 
 import pygiftgrab
 
-file_path = 'python-test-file.mp4'
 frame_rate = 20
 recording_duration = 0.1  # min
 num_frames = int(recording_duration * 60 * frame_rate)
 device_type = pygiftgrab.Device.DVI2PCIeDuo_SDI
 storage_type = pygiftgrab.Storage.File_H265
+if storage_type == pygiftgrab.Storage.File_H265:
+    extension = '.mp4'
+elif storage_type == pygiftgrab.Storage.File_XviD:
+    extension = '.avi'
+file_path = str(recording_duration) + '-min-python-recording-from-' + str(device_type) + extension
 
 try:
     source_device = pygiftgrab.VideoSourceOpenCV(0)
