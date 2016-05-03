@@ -106,6 +106,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
         case AV_CODEC_ID_HEVC:
 #ifdef FFMPEG_HWACCEL
             // nop
+            ret = 0;
 #else
             /* TODO will this work in real-time with a framegrabber ?
              * "slow" produces 2x larger file compared to "ultrafast",
@@ -114,7 +115,11 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
              * "fast" is a trade-off: visual quality looks similar
              * while file size is reasonable
              */
-            av_opt_set(_stream->codec->priv_data, "preset", "fast", 0);
+            ret = av_opt_set(_stream->codec->priv_data, "preset", "fast", 0);
+#endif
+            if (ret != 0)
+                throw VideoTargetError("Could not set codec-specific options");
+
             /* Resolution must be a multiple of two, as required
              * by H264 and H265. Introduce a one-pixel padding for
              * non-complying dimension(s).
@@ -123,8 +128,6 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
                     _stream->codec->width % 2 == 0 ? 0 : 1;
             _stream->codec->height +=
                     _stream->codec->height % 2 == 0 ? 0 : 1;
-#endif
-
             break;
         default:
             // nop
