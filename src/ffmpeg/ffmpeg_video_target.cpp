@@ -10,7 +10,7 @@ namespace gg
 
 VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
     _codec(NULL),
-    _codec_id(AV_CODEC_ID_NONE),
+    _codec_name(""),
     _frame(NULL),
     _framerate(-1),
     _sws_context(NULL),
@@ -26,7 +26,7 @@ VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
            .append(" not recognised");
         throw VideoTargetError(msg);
     }
-    _codec_id = AV_CODEC_ID_HEVC;
+    _codec_name = "libx265";
 
     av_register_all();
 }
@@ -51,7 +51,7 @@ void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
     if (_format_context == NULL)
         throw VideoTargetError("Could not allocate output media context");
 
-    _codec = avcodec_find_encoder(_codec_id);
+    _codec = avcodec_find_encoder_by_name(_codec_name.c_str());
     if (not _codec)
         throw VideoTargetError("Codec not found");
 
@@ -81,7 +81,6 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
         boost::timer::auto_cpu_timer t("a) _frame == NULL" + timer_format_str);
 #endif
         // TODO - is _codec_context ever being modified after first frame?
-        _stream->codec->codec_id = _codec_id;
         /* TODO: using default reduces filesize
          * but should we set it nonetheless?
          */
@@ -97,7 +96,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
         if (_format_context->oformat->flags & AVFMT_GLOBALHEADER)
             _stream->codec->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
 
-        switch (_codec_id)
+        switch (_stream->codec->codec_id)
         {
         case AV_CODEC_ID_H264:
         case AV_CODEC_ID_HEVC:
@@ -293,7 +292,7 @@ void VideoTargetFFmpeg::finalise()
 
     // default values, for next init
     _codec = NULL;
-    _codec_id = AV_CODEC_ID_NONE;
+    _codec_name = "";
     _frame = NULL;
     _framerate = -1;
     _sws_context = NULL;

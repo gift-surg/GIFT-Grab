@@ -33,7 +33,7 @@ protected:
     //!
     //! \brief
     //!
-    AVCodecID _codec_id;
+    std::string _codec_name;
 
     //!
     //! \brief
