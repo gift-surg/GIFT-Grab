@@ -108,6 +108,11 @@ endif(USE_OPENCV)
 # FFmpeg video encoder
 if(USE_FFMPEG)
     ADD_DEFINITIONS(-DUSE_FFMPEG)
+    OPTION(FFMPEG_HWACCEL
+        "NVIDIA GPU-based hardware-accelerated video encoding" OFF)
+    if(FFMPEG_HWACCEL)
+        ADD_DEFINITIONS(-DFFMPEG_HWACCEL)
+    endif(FFMPEG_HWACCEL)
     INCLUDE_DIRECTORIES(${FFmpeg_DIR}/include)
     INCLUDE_DIRECTORIES(ffmpeg)
     LIST(APPEND HEADERS ffmpeg/ffmpeg_video_target.h)

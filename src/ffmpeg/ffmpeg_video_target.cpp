@@ -26,7 +26,11 @@ VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
            .append(" not recognised");
         throw VideoTargetError(msg);
     }
+#ifdef FFMPEG_HWACCEL
+    _codec_name = "nvenc_hevc";
+#else
     _codec_name = "libx265";
+#endif
 
     av_register_all();
 }
@@ -100,6 +104,11 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
         {
         case AV_CODEC_ID_H264:
         case AV_CODEC_ID_HEVC:
+#ifdef FFMPEG_HWACCEL
+            // default/slow/fast
+            av_opt_set(_stream->codec->priv_data, "preset", "slow", 0);
+            av_opt_set(_stream->codec->priv_data, "tune", "zerolatency", 0);
+#else
             /* TODO will this work in real-time with a framegrabber ?
              * "slow" produces 2x larger file compared to "ultrafast",
              * but with a substantial visual quality degradation
@@ -116,6 +125,8 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
                     _stream->codec->width % 2 == 0 ? 0 : 1;
             _stream->codec->height +=
                     _stream->codec->height % 2 == 0 ? 0 : 1;
+#endif
+
             break;
         default:
             // nop
