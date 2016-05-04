@@ -240,32 +240,32 @@ void VideoTargetFFmpeg::encode_and_write(AVFrame * frame, int & got_output)
 {
     int ret;
 
-    {
+    { // START auto_cpu_timer scope
 #ifdef USE_BOOST_TIMER
     boost::timer::auto_cpu_timer t("aa) avcodec_encode_video2" + timer_format_str);
 #endif
     ret = avcodec_encode_video2(_stream->codec, &_packet, frame, &got_output);
-    }
+    } // END auto_cpu_timer scope
 
     if (ret < 0)
         throw VideoTargetError("Error encoding frame");
 
     if (got_output)
     {
-        {
-    #ifdef USE_BOOST_TIMER
+        { // START auto_cpu_timer scope
+#ifdef USE_BOOST_TIMER
         boost::timer::auto_cpu_timer t("aa) av_packet_rescale_ts" + timer_format_str);
-    #endif
+#endif
         /* rescale output packet timestamp values from codec to stream timebase */
         av_packet_rescale_ts(&_packet, _stream->codec->time_base, _stream->time_base);
         // TODO - above time bases are the same, or not?
         _packet.stream_index = _stream->index;
-        }
+        } // END auto_cpu_timer scope
 
-        {
-    #ifdef USE_BOOST_TIMER
+        { // START auto_cpu_timer scope
+#ifdef USE_BOOST_TIMER
         boost::timer::auto_cpu_timer t("aa) av_interleaved_write_frame" + timer_format_str);
-    #endif
+#endif
         /* Write the compressed frame to the media file. */
         int ret = av_interleaved_write_frame(_format_context, &_packet);
         }
