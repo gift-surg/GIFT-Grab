@@ -4,17 +4,44 @@
 import pygiftgrab
 import time
 from datetime import timedelta
+import argparse
+import sys
 
-# passed parameters
+
+def error(message):
+    sys.stderr.write("error: %s\n" % message)
+    sys.exit(1)
+
+# default parameters
 frame_rate = 60
 recording_duration = 1  # min
 num_frames = int(recording_duration * 60 * frame_rate)
 storage_type = pygiftgrab.Storage.File_H265
 lap = 30
 sub_frame = False
+x = 660
+y = 160
+width = 678
+height = 688
+
+# argument parser
+parser = argparse.ArgumentParser()
+parser.add_argument("--storage-type", type=str, help="xvid OR h265")
+parser.add_argument("--sub-frame", action="store_true",
+                    help=(str(x) + " " + str(y) + " " + str(width) + " " + str(height)))
+args = parser.parse_args()
+if args.storage_type:
+    if args.storage_type == "xvid":
+        storage_type = pygiftgrab.Storage.File_XviD
+    elif args.storage_type == "h265":
+        storage_type = pygiftgrab.Storage.File_H265
+    else:
+        error(args.storage_type + ' not recognised')
+sub_frame = args.sub_frame
+print sub_frame
 
 # report header
-print 'Recording video stream from Epiphan SDI + DVI ports to ' + str(pygiftgrab.Storage.File_H265)
+print 'Recording video stream from Epiphan SDI + DVI ports to ' + str(storage_type)
 
 # derived parameters
 if storage_type == pygiftgrab.Storage.File_H265:
@@ -40,10 +67,6 @@ try:
 
     # set sub frames
     if sub_frame:
-        x = 660
-        y = 160
-        width = 678
-        height = 688
         source_sdi.set_sub_frame(x, y, width, height)
         source_dvi.set_sub_frame(x, y, width, height)
 
