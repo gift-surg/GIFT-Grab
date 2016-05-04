@@ -1,7 +1,7 @@
 #include "ffmpeg_video_target.h"
 #include "except.h"
 
-#ifdef USE_BOOST_TIMER
+#ifdef GENERATE_PERFORMANCE_OUTPUT
 #include <boost/timer/timer.hpp>
 #endif
 
@@ -76,7 +76,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
     // if first frame, initialise
     if (_frame == NULL)
     {
-#ifdef USE_BOOST_TIMER
+#ifdef GENERATE_PERFORMANCE_OUTPUT
 #ifndef timer_format_str
 #define timer_format_str \
         std::string(", %w, %u, %s, %t, %p" \
@@ -193,7 +193,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
     }
 
     { // START auto_cpu_timer scope
-#ifdef USE_BOOST_TIMER
+#ifdef GENERATE_PERFORMANCE_OUTPUT
     boost::timer::auto_cpu_timer t("a) av_frame_make_writable" + timer_format_str);
 #endif
 
@@ -209,7 +209,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
     } // END auto_cpu_timer scope
 
     { // START auto_cpu_timer scope
-#ifdef USE_BOOST_TIMER
+#ifdef GENERATE_PERFORMANCE_OUTPUT
     boost::timer::auto_cpu_timer t("a) sws_scale" + timer_format_str);
 #endif
 
@@ -226,7 +226,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
     } // END auto_cpu_timer scope
 
     { // START auto_cpu_timer scope
-#ifdef USE_BOOST_TIMER
+#ifdef GENERATE_PERFORMANCE_OUTPUT
     boost::timer::auto_cpu_timer t("a) encode_and_write" + timer_format_str);
 #endif
 
@@ -241,7 +241,7 @@ void VideoTargetFFmpeg::encode_and_write(AVFrame * frame, int & got_output)
     int ret;
 
     { // START auto_cpu_timer scope
-#ifdef USE_BOOST_TIMER
+#ifdef GENERATE_PERFORMANCE_OUTPUT
     boost::timer::auto_cpu_timer t("aa) avcodec_encode_video2" + timer_format_str);
 #endif
     ret = avcodec_encode_video2(_stream->codec, &_packet, frame, &got_output);
@@ -253,7 +253,7 @@ void VideoTargetFFmpeg::encode_and_write(AVFrame * frame, int & got_output)
     if (got_output)
     {
         { // START auto_cpu_timer scope
-#ifdef USE_BOOST_TIMER
+#ifdef GENERATE_PERFORMANCE_OUTPUT
         boost::timer::auto_cpu_timer t("aa) av_packet_rescale_ts" + timer_format_str);
 #endif
         /* rescale output packet timestamp values from codec to stream timebase */
@@ -263,7 +263,7 @@ void VideoTargetFFmpeg::encode_and_write(AVFrame * frame, int & got_output)
         } // END auto_cpu_timer scope
 
         { // START auto_cpu_timer scope
-#ifdef USE_BOOST_TIMER
+#ifdef GENERATE_PERFORMANCE_OUTPUT
         boost::timer::auto_cpu_timer t("aa) av_interleaved_write_frame" + timer_format_str);
 #endif
         /* Write the compressed frame to the media file. */
