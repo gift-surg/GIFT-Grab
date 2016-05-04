@@ -11,6 +11,10 @@ recording_duration = 1  # min
 num_frames = int(recording_duration * 60 * frame_rate)
 storage_type = pygiftgrab.Storage.File_H265
 lap = 30
+sub_frame = False
+
+# report header
+print 'Recording video stream from Epiphan SDI + DVI ports to ' + str(pygiftgrab.Storage.File_H265)
 
 # derived parameters
 if storage_type == pygiftgrab.Storage.File_H265:
@@ -35,12 +39,13 @@ try:
     source_dvi = pygiftgrab.Factory.connect(pygiftgrab.Device.DVI2PCIeDuo_DVI)
 
     # set sub frames
-    x = 660
-    y = 160
-    width = 678
-    height = 688
-    source_sdi.set_sub_frame(x, y, width, height)
-    source_dvi.set_sub_frame(x, y, width, height)
+    if sub_frame:
+        x = 660
+        y = 160
+        width = 678
+        height = 688
+        source_sdi.set_sub_frame(x, y, width, height)
+        source_dvi.set_sub_frame(x, y, width, height)
 
     # initialise file writers
     target_sdi = pygiftgrab.Factory.writer(storage_type)
@@ -62,7 +67,7 @@ try:
         target_dvi.append(frame_dvi)
     elapsed = (time.time() - start)
 
-    # report
+    # report results
     total_num_frames = 2*num_frames
     real_frame_rate = num_frames / elapsed
     print 'TOTAL Epiphan frames, total time, total expected time, ' + \
