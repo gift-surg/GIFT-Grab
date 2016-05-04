@@ -15,7 +15,6 @@ def error(message):
 # default parameters
 frame_rate = 60
 recording_duration = 1  # min
-num_frames = int(recording_duration * 60 * frame_rate)
 storage_type = pygiftgrab.Storage.File_H265
 lap = 30
 sub_frame = False
@@ -23,8 +22,6 @@ x = 660
 y = 160
 width = 678
 height = 688
-file_path_prefix = str(recording_duration) + \
-                '-min-python-recording-from-'
 
 # argument parser
 parser = argparse.ArgumentParser()
@@ -32,6 +29,7 @@ parser.add_argument("--storage-type", type=str, help="xvid OR h265")
 parser.add_argument("--sub-frame", action="store_true",
                     help=(str(x) + " " + str(y) + " " + str(width) + " " + str(height)))
 parser.add_argument("--filepath-prefix", type=str, help="prefix to filepath where videostream is saved")
+parser.add_argument("--duration", type=float, help="how long to record (sec.)")
 args = parser.parse_args()
 if args.storage_type:
     if args.storage_type == "xvid":
@@ -41,6 +39,11 @@ if args.storage_type:
     else:
         error(args.storage_type + ' not recognised')
 sub_frame = args.sub_frame
+if args.duration:
+    recording_duration = args.duration / 60
+num_frames = int(recording_duration * 60 * frame_rate)
+file_path_prefix = str(format(recording_duration, '.2f')) + \
+                '-min-python-recording-from-'
 if args.filepath_prefix:
     file_path_prefix = args.filepath_prefix + '-' + file_path_prefix
 
