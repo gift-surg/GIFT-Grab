@@ -188,6 +188,8 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
         // TODO #25 data gets allocated each time?
         _packet.data = NULL;    // packet data will be allocated by the encoder
         _packet.size = 0;
+
+        _bgra_stride[0] = 4*frame.cols();
     }
 
     { // START auto_cpu_timer scope
@@ -213,14 +215,10 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
 #endif
 
     /* convert pixel format */
-    // TODO #25 allocate once
-    const uint8_t * src_data_ptr[1] = { frame.data() }; // BGRA has one plane
-    // TODO #25 allocate once
-    int bgra_stride[1] = { 4*frame.cols() };
+    _src_data_ptr[0] = frame.data();
     sws_scale(_sws_context,
-              src_data_ptr, bgra_stride,
+              _src_data_ptr, _bgra_stride, // BGRA has one plane
               0, frame.rows(),
-              // #25 TODO _frame->data getting allocated here?
               _frame->data, _frame->linesize
               );
 

@@ -67,6 +67,18 @@ protected:
     //!
     SwsContext * _sws_context;
 
+    //!
+    //! \brief
+    //! \sa _sws_context
+    //!
+    const uint8_t * _src_data_ptr[1];
+
+    //!
+    //! \brief
+    //! \sa _sws_context
+    //!
+    int _bgra_stride[1];
+
 public:
     //!
     //! \brief Constructor defining what \c codec to
