@@ -38,7 +38,7 @@ if args.storage_type:
     else:
         error(args.storage_type + ' not recognised')
 sub_frame = args.sub_frame
-print sub_frame
+print str(sys.argv) + ' ( ' + str(args) + ' )'
 
 # report header
 print 'Recording video stream from Epiphan SDI + DVI ports to ' + str(storage_type)
