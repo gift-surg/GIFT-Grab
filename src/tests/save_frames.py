@@ -31,7 +31,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--storage-type", type=str, help="xvid OR h265")
 parser.add_argument("--sub-frame", action="store_true",
                     help=(str(x) + " " + str(y) + " " + str(width) + " " + str(height)))
-parser.add_argument("--filepath-prefix", type=str, help="where to save video stream")
+parser.add_argument("--filepath-prefix", type=str, help="prefix to filepath where videostream is saved")
 args = parser.parse_args()
 if args.storage_type:
     if args.storage_type == "xvid":
