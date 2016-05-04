@@ -87,6 +87,7 @@ try:
             print 'Frame, ' + str(i) + ', ' + \
                   str(timedelta(seconds=elapsed)) + \
                   ', ' + str(num_frames)
+            sys.stdout.flush()
         target_sdi.append(frame_sdi)
         target_dvi.append(frame_dvi)
     elapsed = (time.time() - start)
