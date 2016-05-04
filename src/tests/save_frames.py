@@ -23,12 +23,15 @@ x = 660
 y = 160
 width = 678
 height = 688
+file_path_prefix = str(recording_duration) + \
+                '-min-python-recording-from-'
 
 # argument parser
 parser = argparse.ArgumentParser()
 parser.add_argument("--storage-type", type=str, help="xvid OR h265")
 parser.add_argument("--sub-frame", action="store_true",
                     help=(str(x) + " " + str(y) + " " + str(width) + " " + str(height)))
+parser.add_argument("--filepath-prefix", type=str, help="where to save video stream")
 args = parser.parse_args()
 if args.storage_type:
     if args.storage_type == "xvid":
@@ -38,6 +41,9 @@ if args.storage_type:
     else:
         error(args.storage_type + ' not recognised')
 sub_frame = args.sub_frame
+if args.filepath_prefix:
+    file_path_prefix = args.filepath_prefix + '-' + file_path_prefix
+
 print str(sys.argv) + ' ( ' + str(args) + ' )'
 
 # report header
@@ -48,14 +54,9 @@ if storage_type == pygiftgrab.Storage.File_H265:
     extension = '.mp4'
 elif storage_type == pygiftgrab.Storage.File_XviD:
     extension = '.avi'
-
-file_path_sdi = str(recording_duration) + \
-                '-min-python-recording-from-' + \
-                str(pygiftgrab.Device.DVI2PCIeDuo_SDI) + \
+file_path_sdi = file_path_prefix + str(pygiftgrab.Device.DVI2PCIeDuo_SDI) + \
                 extension
-file_path_dvi = str(recording_duration) + \
-                '-min-python-recording-from-' + \
-                str(pygiftgrab.Device.DVI2PCIeDuo_DVI) + \
+file_path_dvi = file_path_prefix + str(pygiftgrab.Device.DVI2PCIeDuo_DVI) + \
                 extension
 
 frame_sdi = pygiftgrab.VideoFrame_BGRA(False)  # to avoid "thin wrappers" required for default args
