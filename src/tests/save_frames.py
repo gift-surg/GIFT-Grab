@@ -15,18 +15,6 @@ elif storage_type == pygiftgrab.Storage.File_XviD:
     extension = '.avi'
 file_path = str(recording_duration) + '-min-python-recording-from-' + str(device_type) + extension
 
-try:
-    source_device = pygiftgrab.VideoSourceOpenCV(0)
-    print source_device.get_frame_rate()
-except (RuntimeError, IOError) as e:
-    print e.message
-
-try:
-    source_file = pygiftgrab.VideoSourceOpenCV("/home/dzhoshkun/data/mosaic/imageUndistorted_000001.mp4")
-    print source_file.get_frame_rate()
-except (RuntimeError, IOError) as e:
-    print e.message
-
 frame = pygiftgrab.VideoFrame_BGRA(False)  # to avoid "thin wrappers" required for default args
 try:
     source = pygiftgrab.Factory.connect(device_type)
@@ -36,13 +24,17 @@ try:
     start = time.time()
     for i in range(1, num_frames+1):
         source.get_frame(frame)
-        print 'Frame ' + str(i) + '/' + str(num_frames) + \
-              ' is ' + str(frame.cols()) + ' x ' + str(frame.rows())
+        if i % 30 == 0:
+            elapsed = (time.time() - start)
+            print 'Frame ' + str(i) + ', ' + \
+                  str(timedelta(seconds=elapsed)) + \
+                  ', ' + str(num_frames)
         target.append(frame)
-        # TODO
-        # sleep(inter_frame_msec)
     elapsed = (time.time() - start)
-    print "Total time for recording " + str(recording_duration) + " min. was " + str(timedelta(seconds=elapsed))
+    print 'TOTAL ' + \
+          str(num_frames) + ' @ ' + \
+          str(frame.cols()) + ' x ' + str(frame.rows()) + \
+          ' (Epiphan SDI), ' + str(timedelta(seconds=elapsed))
     target.finalise()
     pygiftgrab.Factory.disconnect(pygiftgrab.Device.DVI2PCIeDuo_SDI)
 except (RuntimeError, IOError) as e:
