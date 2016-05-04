@@ -77,6 +77,9 @@ try:
     target_dvi = pygiftgrab.Factory.writer(storage_type)
     target_dvi.init(file_path_dvi, frame_rate)
 
+    # report filepaths
+    print 'Video files for storage are: ' + file_path_sdi + ' and ' + file_path_dvi
+
     # actual work
     start = time.time()
     for i in range(1, num_frames+1):
