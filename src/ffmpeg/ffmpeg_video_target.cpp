@@ -201,9 +201,8 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
      * internally;
      * make sure we do not overwrite it here
      */
-    // TODO #25 av_buffer_is_writable(_frame) ?= 1
+    // TODO #25 why not only once?
     ret = av_frame_make_writable(_frame);
-    // TODO #25 av_buffer_is_writable(_frame) ?= 1, also why not only once?
     if (ret < 0)
         throw VideoTargetError("Could not make frame writeable");
 
