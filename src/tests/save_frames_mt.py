@@ -77,7 +77,8 @@ try:
           str(timedelta(minutes=recording_duration)) + ', ' + \
           str(real_frame_rate) + ', ' + \
           str(frame_rate) + ', ' + \
-          '(sub-frame)' if sub_frame else ''
+          ('(sub-frame)' if sub_frame else '')
+    sys.stdout.flush()
 
 except (RuntimeError, IOError) as e:
     print e.message
