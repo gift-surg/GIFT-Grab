@@ -5,3 +5,4 @@ src/extern
 src/tests/pygiftgrab.so
 *.mp4
 *.avi
+*.pyc
