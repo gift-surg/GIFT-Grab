@@ -1,6 +1,6 @@
 # Summary
 
-An umbrella library that provides an easy-to-use C++ (and optionally Python) API to stream and capture video using frame grabber hardware.
+An umbrella library that provides an easy-to-use C++ (and optionally Python) API to stream and capture video using frame grabber hardware. It also supports hardware-accelerated video encoding.
 
 # Supported hardware
 
@@ -34,7 +34,7 @@ There are bits and pieces in the current codebase pertaining to some of the foll
 
 * For HEVC/H.265 video-saving support:
 
-  1. x265
+  1. x265 or (for hardware acceleration) NVENC (in conj. with [a compatible graphics card](https://developer.nvidia.com/nvidia-video-codec-sdk))
   1. FFmpeg (__Make sure your OpenCV links against your custom-built FFmpeg -- see relevant information in advanced options below__)
 
 * For Python API:
@@ -62,20 +62,32 @@ sudo make install # CMAKE_INSTALL_PREFIX defaults to /usr/local
 * `-D USE_EPIPHAN=ON` for building support for [Epiphan DVI2PCIe Duo framegrabber](http://www.epiphan.com/products/dvi2pcie-duo) (currently at least this option or `USE_FILES` needs to be specified for the library to build properly). __Note when using this option:__
    1. `/dev/video0` and `/dev/video1` will be probed for connecting to the DVI and SDI ports respectively.
    1. Due to the use of the generic [OpenCV VideoCapture](http://docs.opencv.org/2.4/modules/highgui/doc/reading_and_writing_images_and_video.html#VideoCapture::VideoCapture%28int%20device%29) API for grabbing frames from Epiphan cards, it is currently not possible to distinguish Epiphan framegrabbers from others.
-* `-D USE_FFMPEG=ON` for building support for saving frames as video files using [FFmpeg](https://www.ffmpeg.org/). __Note when using this option:__
-   1. Build and install [x265](http://x265.org/):
-      1. `hg clone https://bitbucket.org/multicoreware/x265`
-      1. `cd x265`
-      1. `hg checkout 1.9`
-      1. `cd ..` and `mkdir x265-build` and `cd x265-build`
-      1. `cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=/your/x265/installation/location -D ENABLE_SHARED:bool=on ../x265/source/`
-      1. `make -j` and `make install`
+* `-D USE_FFMPEG=ON` for building support for saving frames as video files using [FFmpeg](https://www.ffmpeg.org/) (for hardware-accelerated video encoding, append `-D FFMPEG_HWACCEL=ON` as well). __Note when using this option:__
+   1. For video encoding, depending on whether hardware acceleration is desired:
+      * (No hardware acceleration) Build and install [x265](http://x265.org/):
+         1. `hg clone https://bitbucket.org/multicoreware/x265`
+         1. `cd x265`
+         1. `hg checkout 1.9`
+         1. `cd ..` and `mkdir x265-build` and `cd x265-build`
+         1. `cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=/your/x265/installation/location -D ENABLE_SHARED:bool=on ../x265/source/`
+         1. `make -j` and `make install`
+      * (GPU-based hardware acceleration) Install [NVENC SDK](https://developer.nvidia.com/nvidia-video-codec-sdk):
+         1. Download the [SDK](https://developer.nvidia.com/video-sdk-601)
+         1. Extract its contents and copy `nvidia_video_sdk_6.0.1/Samples/common/inc/nvEncodeAPI.h` to a standard system include folder (e.g. `/usr/local/include`)
    1. Build and install [FFmpeg](https://www.ffmpeg.org/):
       1. `git clone https://github.com/FFmpeg/FFmpeg.git`
       1. `git checkout n3.0.1`
-      1. `export PKG_CONFIG_PATH="/your/x265/installation/location/lib/pkgconfig:$PKG_CONFIG_PATH"`
       1. `mkdir ffmpeg-build` and `cd ffmpeg-build`
-      1. `../ffmpeg/configure --prefix=/your/ffmpeg/installation/location --enable-shared --enable-avresample --enable-libx265 --enable-gpl --enable-muxer=mp4`
+      1. Depending on hardware acceleration:
+         * No hardware acceleration:
+           ```
+           export PKG_CONFIG_PATH="/your/x265/installation/location/lib/pkgconfig:$PKG_CONFIG_PATH"
+           ../ffmpeg/configure --prefix=/your/ffmpeg/installation/location --enable-shared --enable-avresample --enable-libx265 --enable-gpl --enable-muxer=mp4
+           ```
+         * GPU-based hardware acceleration:
+           ```
+           ../ffmpeg/configure --prefix=/your/ffmpeg/installation/location --enable-shared --enable-avresample --enable-nvenc --enable-nonfree --enable-gpl --enable-muxer=mp4
+           ```
       1. `make -j` and `make install`
    1. Supply `-D FFmpeg_DIR=/your/ffmpeg/installation/location` to CMake.
 * `-D BUILD_PYTHON=ON` for building the Python API.

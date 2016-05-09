@@ -108,6 +108,11 @@ endif(USE_OPENCV)
 # FFmpeg video encoder
 if(USE_FFMPEG)
     ADD_DEFINITIONS(-DUSE_FFMPEG)
+    OPTION(FFMPEG_HWACCEL
+        "NVIDIA GPU-based hardware-accelerated video encoding" OFF)
+    if(FFMPEG_HWACCEL)
+        ADD_DEFINITIONS(-DFFMPEG_HWACCEL)
+    endif(FFMPEG_HWACCEL)
     INCLUDE_DIRECTORIES(${FFmpeg_DIR}/include)
     INCLUDE_DIRECTORIES(ffmpeg)
     LIST(APPEND HEADERS ffmpeg/ffmpeg_video_target.h)
@@ -135,6 +140,16 @@ if(USE_LIBVLC)
         MESSAGE(FATAL_ERROR "libVLC could not be found.")
     endif(LIBVLC_FOUND)
 endif(USE_LIBVLC)
+
+# Performance benchmarking
+OPTION(GENERATE_PERFORMANCE_OUTPUT
+    "Support for performance (timer) reports via Boost.Timer" OFF)
+MARK_AS_ADVANCED(GENERATE_PERFORMANCE_OUTPUT)
+if(GENERATE_PERFORMANCE_OUTPUT)
+    FIND_PACKAGE(Boost COMPONENTS timer REQUIRED)
+    ADD_DEFINITIONS(-DGENERATE_PERFORMANCE_OUTPUT)
+    LIST(APPEND LIBS ${Boost_LIBRARIES})
+endif(GENERATE_PERFORMANCE_OUTPUT)
 
 # Compile and link
 ADD_LIBRARY(${NAME} SHARED ${HEADERS} ${SOURCES})

@@ -33,7 +33,7 @@ protected:
     //!
     //! \brief
     //!
-    AVCodecID _codec_id;
+    std::string _codec_name;
 
     //!
     //! \brief
@@ -66,6 +66,18 @@ protected:
     //! (e.g. from BGRA to YUV420p)
     //!
     SwsContext * _sws_context;
+
+    //!
+    //! \brief
+    //! \sa _sws_context
+    //!
+    const uint8_t * _src_data_ptr[1];
+
+    //!
+    //! \brief
+    //! \sa _sws_context
+    //!
+    int _bgra_stride[1];
 
 public:
     //!

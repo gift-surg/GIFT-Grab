@@ -1,12 +1,16 @@
 #include "ffmpeg_video_target.h"
 #include "except.h"
 
+#ifdef GENERATE_PERFORMANCE_OUTPUT
+#include <boost/timer/timer.hpp>
+#endif
+
 namespace gg
 {
 
 VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
     _codec(NULL),
-    _codec_id(AV_CODEC_ID_NONE),
+    _codec_name(""),
     _frame(NULL),
     _framerate(-1),
     _sws_context(NULL),
@@ -22,7 +26,11 @@ VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
            .append(" not recognised");
         throw VideoTargetError(msg);
     }
-    _codec_id = AV_CODEC_ID_HEVC;
+#ifdef FFMPEG_HWACCEL
+    _codec_name = "nvenc_hevc";
+#else
+    _codec_name = "libx265";
+#endif
 
     av_register_all();
 }
@@ -47,7 +55,7 @@ void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
     if (_format_context == NULL)
         throw VideoTargetError("Could not allocate output media context");
 
-    _codec = avcodec_find_encoder(_codec_id);
+    _codec = avcodec_find_encoder_by_name(_codec_name.c_str());
     if (not _codec)
         throw VideoTargetError("Codec not found");
 
@@ -68,8 +76,18 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
     // if first frame, initialise
     if (_frame == NULL)
     {
+#ifdef GENERATE_PERFORMANCE_OUTPUT
+#ifndef timer_format_str
+#define timer_format_str \
+        std::string(", %w, %u, %s, %t, %p" \
+                    ", wall (s), user (s), system (s), user+system (s), CPU (\%)\n")
+#endif
+#ifndef this_class_str
+#define this_class_str std::string("VideoTargetFFmpeg-")
+#endif
+        boost::timer::auto_cpu_timer t(this_class_str + "first-frame" + timer_format_str);
+#endif
         // TODO - is _codec_context ever being modified after first frame?
-        _stream->codec->codec_id = _codec_id;
         /* TODO: using default reduces filesize
          * but should we set it nonetheless?
          */
@@ -85,10 +103,14 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
         if (_format_context->oformat->flags & AVFMT_GLOBALHEADER)
             _stream->codec->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
 
-        switch (_codec_id)
+        switch (_stream->codec->codec_id)
         {
         case AV_CODEC_ID_H264:
         case AV_CODEC_ID_HEVC:
+#ifdef FFMPEG_HWACCEL
+            // nop
+            ret = 0;
+#else
             /* TODO will this work in real-time with a framegrabber ?
              * "slow" produces 2x larger file compared to "ultrafast",
              * but with a substantial visual quality degradation
@@ -96,7 +118,11 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
              * "fast" is a trade-off: visual quality looks similar
              * while file size is reasonable
              */
-            av_opt_set(_stream->codec->priv_data, "preset", "fast", 0);
+            ret = av_opt_set(_stream->codec->priv_data, "preset", "fast", 0);
+#endif
+            if (ret != 0)
+                throw VideoTargetError("Could not set codec-specific options");
+
             /* Resolution must be a multiple of two, as required
              * by H264 and H265. Introduce a one-pixel padding for
              * non-complying dimension(s).
@@ -122,6 +148,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
         _frame->width  = _stream->codec->width;
         _frame->height = _stream->codec->height;
         /* allocate the buffers for the frame data */
+        // TODO #25 what influence does 32 have on performance?
         ret = av_frame_get_buffer(_frame, 32);
         if (ret < 0)
             throw VideoTargetError("Could not allocate frame data");
@@ -161,50 +188,91 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
 
         // Packet to be used when writing frames
         av_init_packet(&_packet);
+        // TODO #25 data gets allocated each time?
         _packet.data = NULL;    // packet data will be allocated by the encoder
         _packet.size = 0;
+
+        _bgra_stride[0] = 4*frame.cols();
     }
+
+    { // START auto_cpu_timer scope
+#ifdef GENERATE_PERFORMANCE_OUTPUT
+    boost::timer::auto_cpu_timer t(this_class_str + "1-av_frame_make_writable" + timer_format_str);
+#endif
 
     /* when we pass a frame to the encoder, it may keep a reference to it
      * internally;
      * make sure we do not overwrite it here
      */
+    // TODO #25 why not only once?
     ret = av_frame_make_writable(_frame);
     if (ret < 0)
         throw VideoTargetError("Could not make frame writeable");
 
+    } // END auto_cpu_timer scope
+
+    { // START auto_cpu_timer scope
+#ifdef GENERATE_PERFORMANCE_OUTPUT
+    boost::timer::auto_cpu_timer t(this_class_str + "1-sws_scale" + timer_format_str);
+#endif
+
     /* convert pixel format */
-    const uint8_t * src_data_ptr[1] = { frame.data() }; // BGRA has one plane
-    int bgra_stride[1] = { 4*frame.cols() };
+    _src_data_ptr[0] = frame.data();
     sws_scale(_sws_context,
-              src_data_ptr, bgra_stride,
+              _src_data_ptr, _bgra_stride, // BGRA has one plane
               0, frame.rows(),
               _frame->data, _frame->linesize
               );
 
     _frame->pts = _frame_index++;
 
+    } // END auto_cpu_timer scope
+
+    { // START auto_cpu_timer scope
+#ifdef GENERATE_PERFORMANCE_OUTPUT
+    boost::timer::auto_cpu_timer t(this_class_str + "1-encode_and_write" + timer_format_str);
+#endif
+
     /* encode the image */
     encode_and_write(_frame, got_output);
+
+    } // END auto_cpu_timer scope
 }
 
 void VideoTargetFFmpeg::encode_and_write(AVFrame * frame, int & got_output)
 {
     int ret;
 
+    { // START auto_cpu_timer scope
+#ifdef GENERATE_PERFORMANCE_OUTPUT
+    boost::timer::auto_cpu_timer t(this_class_str + "2-avcodec_encode_video2" + timer_format_str);
+#endif
     ret = avcodec_encode_video2(_stream->codec, &_packet, frame, &got_output);
+    } // END auto_cpu_timer scope
+
     if (ret < 0)
         throw VideoTargetError("Error encoding frame");
 
     if (got_output)
     {
+        { // START auto_cpu_timer scope
+#ifdef GENERATE_PERFORMANCE_OUTPUT
+        boost::timer::auto_cpu_timer t(this_class_str + "2-av_packet_rescale_ts" + timer_format_str);
+#endif
         /* rescale output packet timestamp values from codec to stream timebase */
         av_packet_rescale_ts(&_packet, _stream->codec->time_base, _stream->time_base);
         // TODO - above time bases are the same, or not?
         _packet.stream_index = _stream->index;
+        } // END auto_cpu_timer scope
 
+        { // START auto_cpu_timer scope
+#ifdef GENERATE_PERFORMANCE_OUTPUT
+        boost::timer::auto_cpu_timer t(this_class_str + "2-av_interleaved_write_frame" + timer_format_str);
+#endif
         /* Write the compressed frame to the media file. */
         int ret = av_interleaved_write_frame(_format_context, &_packet);
+        }
+
         if (ret < 0)
             throw VideoTargetError("Could not interleaved write frame");
 //        av_packet_unref(&packet); taken care of by av_interleaved_write_frame
@@ -236,7 +304,7 @@ void VideoTargetFFmpeg::finalise()
 
     // default values, for next init
     _codec = NULL;
-    _codec_id = AV_CODEC_ID_NONE;
+    _codec_name = "";
     _frame = NULL;
     _framerate = -1;
     _sws_context = NULL;
