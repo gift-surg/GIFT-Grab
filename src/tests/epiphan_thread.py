@@ -4,7 +4,7 @@ import pygiftgrab
 
 class EpiphanThread(threading.Thread):
     def __init__(self, device_type, sub_frame, frame_rate,
-                 recording_duration, storage_type, file_path_prefix):
+                 recording_duration, storage_type, file_path_prefix, lap=20):
         self.num_frames = int(recording_duration * 60 * frame_rate)
 
         self.device_type = device_type
@@ -24,6 +24,8 @@ class EpiphanThread(threading.Thread):
         print 'Video will be saved in: ' + file_path
         self.target.init(file_path, frame_rate)
 
+        self.lap = lap
+
         threading.Thread.__init__(self)
 
     def run(self):
@@ -31,8 +33,10 @@ class EpiphanThread(threading.Thread):
             frame = pygiftgrab.VideoFrame_BGRA(False)
 
             for i in range(1, self.num_frames + 1):
-                if i % 20 == 0:
-                    print str(self.device_type)
+                if i % self.lap == 0:
+                    print str(self.device_type) + \
+                          " frame # " + str(i) + \
+                          " / " + str(self.num_frames)
                 self.device.get_frame(frame)
                 self.target.append(frame)
 
