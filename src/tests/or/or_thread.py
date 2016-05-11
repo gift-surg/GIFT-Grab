@@ -35,7 +35,9 @@ class ORThread(Thread):
         while self.is_running:
             start = time()
             if self.is_recording:
+                # TODO - exception
                 device.get_frame(frame)
+                # TODO - exception
                 self.file.append(frame)
             sleep_duration = inter_frame_duration - (time() - start)
             if sleep_duration > 0:
@@ -46,13 +48,16 @@ class ORThread(Thread):
     def stop(self):
         self.pause_recording()
         self.is_running = False
+
+        # TODO - exception
         pygiftgrab.Factory.disconnect(self.port)
 
     def pause_recording(self):
-        # TODO - exception
         self.is_recording = False
         # sleep to allow for stop to be picked up
         sleep(2 * self.__inter_frame_duration())
+
+        # TODO - exception
         self.file.finalise()
         # write latency as well
         latency_file = open(self.__next_filename(increment_index=False) +
@@ -62,6 +67,7 @@ class ORThread(Thread):
 
     def resume_recording(self):
         filename = self.__next_filename()
+        # TODO - exception
         self.file.init(filename, self.frame_rate)
         self.is_recording = True
 
