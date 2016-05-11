@@ -2,11 +2,15 @@
 
 from threading import Thread
 from time import sleep, time
+import pygiftgrab
 
 
 class ORThread(Thread):
-    def __init__(self, frame_rate, file_path):
+    def __init__(self, port, frame_rate, file_path):
         print 'init'
+        self.port = port
+        # TODO - exception
+        self.file = pygiftgrab.Factory.writer(pygiftgrab.Storage.File_H265)
         # TODO - filename health checks
         self.file_path = file_path
         self.recording_index = 0
@@ -19,30 +23,41 @@ class ORThread(Thread):
     def run(self):
         self.is_recording = True
         inter_frame_duration = 1.0 / self.frame_rate # sec
-        print 'filename: ' + self.__next_filename()
+        filename = self.__next_filename()
+        print 'filename: ' + filename
+        # TODO - exception
+        device = pygiftgrab.Factory.connect(self.port)
+        frame = pygiftgrab.VideoFrame_BGRA(False)
+        self.file.init(filename, self.frame_rate)
         print 'inter-frame duration: ' + str(inter_frame_duration) + ' sec'
         while self.is_running:
             current_processing_start = time()
             # print 'run'
-            sleep(0.02)
             # TODO
             if self.is_recording:
                 # TODO
-                2 + 2
-            elapsed = time() - current_processing_start
-            # print 'elapsed ' + str(elapsed) + ' sec'
-            sleep(inter_frame_duration - elapsed)
+                device.get_frame(frame)
+                self.file.append(frame)
+            sleep_duration = inter_frame_duration - (time() - current_processing_start)
+            print 'sleeping ' + str(sleep_duration) + ' sec'
+            if sleep_duration > 0:
+                sleep(sleep_duration)
 
     def stop(self):
         print 'stop'
+        self.pause_recording()
         self.is_running = False
+        pygiftgrab.Factory.disconnect(self.port)
 
     def pause_recording(self):
-        # TODO finalise current file
+        # TODO - exception
+        self.file.finalise()
         self.is_recording = False
 
     def resume_recording(self):
-        print 'new filename: ' + self.__next_filename()
+        filename = self.__next_filename()
+        print 'new filename: ' + filename
+        self.file.init(filename, self.frame_rate)
         self.is_recording = True
 
     def __next_filename(self):
