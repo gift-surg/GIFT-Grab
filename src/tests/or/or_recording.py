@@ -3,7 +3,7 @@
 from or_thread import ORThread
 from time import sleep
 
-fetoscope_thread = ORThread()
+fetoscope_thread = ORThread(frame_rate=27)
 fetoscope_thread.start()
 sleep(5)
 fetoscope_thread.pause_recording()
