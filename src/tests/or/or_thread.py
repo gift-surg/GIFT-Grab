@@ -50,6 +50,8 @@ class ORThread(Thread):
                     try:
                         self.file.append(frame)
                     except RuntimeError as e:
+                        # TODO - this line is quick hack because of GiftGrab#37
+                        self.is_running = False
                         print e.message
             sleep_duration = inter_frame_duration - (time() - start)
             if sleep_duration > 0:
