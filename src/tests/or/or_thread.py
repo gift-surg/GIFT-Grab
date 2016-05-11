@@ -72,6 +72,10 @@ class ORThread(Thread):
             print e.message
 
     def pause_recording(self):
+        # TODO - this line is quick hack because of GiftGrab#37
+        if not self.is_running:
+            return
+
         if not self.is_recording:
             return
 
@@ -90,6 +94,10 @@ class ORThread(Thread):
         self.latency = 0.00
 
     def resume_recording(self):
+        # TODO - this line is quick hack because of GiftGrab#37
+        if not self.is_running:
+            return
+
         if self.is_recording:
             return
 
