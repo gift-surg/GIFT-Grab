@@ -7,7 +7,6 @@ import pygiftgrab
 
 class ORThread(Thread):
     def __init__(self, port, frame_rate, file_path):
-        print 'init'
         self.port = port
         # TODO - exception
         self.file = pygiftgrab.Factory.writer(pygiftgrab.Storage.File_H265)
@@ -24,27 +23,22 @@ class ORThread(Thread):
         self.is_recording = True
         inter_frame_duration = 1.0 / self.frame_rate # sec
         filename = self.__next_filename()
-        print 'filename: ' + filename
         # TODO - exception
         device = pygiftgrab.Factory.connect(self.port)
         frame = pygiftgrab.VideoFrame_BGRA(False)
         self.file.init(filename, self.frame_rate)
-        print 'inter-frame duration: ' + str(inter_frame_duration) + ' sec'
         while self.is_running:
             current_processing_start = time()
-            # print 'run'
             # TODO
             if self.is_recording:
                 # TODO
                 device.get_frame(frame)
                 self.file.append(frame)
             sleep_duration = inter_frame_duration - (time() - current_processing_start)
-            print 'sleeping ' + str(sleep_duration) + ' sec'
             if sleep_duration > 0:
                 sleep(sleep_duration)
 
     def stop(self):
-        print 'stop'
         self.pause_recording()
         self.is_running = False
         pygiftgrab.Factory.disconnect(self.port)
@@ -56,7 +50,6 @@ class ORThread(Thread):
 
     def resume_recording(self):
         filename = self.__next_filename()
-        print 'new filename: ' + filename
         self.file.init(filename, self.frame_rate)
         self.is_recording = True
 
