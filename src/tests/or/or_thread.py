@@ -38,12 +38,15 @@ class ORThread(Thread):
         while self.is_running:
             start = time()
             if self.is_recording:
-                # TODO - exception
-                device.get_frame(frame)
                 try:
-                    self.file.append(frame)
-                except RuntimeError as e:
+                    device.get_frame(frame)
+                except IOError as e:
                     print e.message
+                else:
+                    try:
+                        self.file.append(frame)
+                    except RuntimeError as e:
+                        print e.message
             sleep_duration = inter_frame_duration - (time() - start)
             if sleep_duration > 0:
                 sleep(sleep_duration)
