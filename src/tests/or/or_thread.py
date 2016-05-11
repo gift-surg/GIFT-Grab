@@ -19,13 +19,13 @@ class ORThread(Thread):
         Thread.__init__(self)
 
     def run(self):
-        self.is_recording = True
-        inter_frame_duration = 1.0 / self.frame_rate # sec
-        filename = self.__next_filename()
+        inter_frame_duration = self.__inter_frame_duration()
+
         # TODO - exception
         device = pygiftgrab.Factory.connect(self.port)
         frame = pygiftgrab.VideoFrame_BGRA(False)
-        self.file.init(filename, self.frame_rate)
+        self.resume_recording()  # i.e. start recording
+
         while self.is_running:
             start = time()
             if self.is_recording:
@@ -43,8 +43,10 @@ class ORThread(Thread):
 
     def pause_recording(self):
         # TODO - exception
-        self.file.finalise()
         self.is_recording = False
+        # sleep to allow for stop to be picked up
+        sleep(2 * self.__inter_frame_duration())
+        self.file.finalise()
 
     def resume_recording(self):
         filename = self.__next_filename()
@@ -54,5 +56,8 @@ class ORThread(Thread):
     def __next_filename(self):
         self.recording_index += 1
         return self.file_path + '-' + \
-               '{0:06d}'.format(self.recording_index) + \
-               '.mp4'
+            '{0:06d}'.format(self.recording_index) + \
+            '.mp4'
+
+    def __inter_frame_duration(self):
+        return 1.0 / self.frame_rate  # sec
