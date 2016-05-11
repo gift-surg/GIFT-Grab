@@ -1,12 +1,21 @@
 #!/usr/bin/env python
 
-import threading
+from threading import Thread
+from time import sleep
 
 
-class ORThread(threading.Thread):
+class ORThread(Thread):
     def __init__(self):
         print 'init'
-        threading.Thread.__init__(self)
+        self.is_running = True
+        Thread.__init__(self)
 
     def run(self):
-        print 'run'
+        while self.is_running:
+            print 'run'
+            sleep(0.5)
+            # TODO
+
+    def stop(self):
+        print 'stop'
+        self.is_running = False
