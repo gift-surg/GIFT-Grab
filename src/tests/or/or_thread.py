@@ -21,6 +21,8 @@ class ORThread(Thread):
             self.frame_rate = frame_rate
             self.is_recording = False
             self.latency = 0.0  # sec
+            self.sub_frame = None
+            self.device = None
         Thread.__init__(self)
 
     def run(self):
@@ -31,7 +33,7 @@ class ORThread(Thread):
         inter_frame_duration = self.__inter_frame_duration()
 
         try:
-            device = pygiftgrab.Factory.connect(self.port)
+            self.device = pygiftgrab.Factory.connect(self.port)
         except IOError as e:
             print e.message
             return
@@ -43,7 +45,7 @@ class ORThread(Thread):
             start = time()
             if self.is_recording:
                 try:
-                    device.get_frame(frame)
+                    self.device.get_frame(frame)
                 except IOError as e:
                     print e.message
                 else:
@@ -101,6 +103,11 @@ class ORThread(Thread):
         if self.is_recording:
             return
 
+        if self.sub_frame:
+            self.device.set_sub_frame(self.sub_frame[0], self.sub_frame[1],
+                                      self.sub_frame[2], self.sub_frame[3])
+        else:
+            self.device.get_full_frame()
         filename = self.__next_filename()
         try:
             self.file.init(filename, self.frame_rate)
@@ -109,6 +116,12 @@ class ORThread(Thread):
             self.is_recording = False
         else:
             self.is_recording = True
+
+    def set_sub_frame(self, x, y, width, height):
+        self.sub_frame = [x, y, width, height]
+
+    def set_full_frame(self):
+        self.sub_frame = None
 
     def __next_filename(self, increment_index=True):
         if increment_index:
