@@ -66,8 +66,10 @@ class ORThread(Thread):
         # sleep to allow for stop to be picked up
         sleep(2 * self.__inter_frame_duration())
 
-        # TODO - exception
-        self.file.finalise()
+        try:
+            self.file.finalise()
+        except RuntimeError as e:
+            print e.message
         # write latency as well
         latency_file = open(self.__next_filename(increment_index=False) +
                             '.latency.txt', 'w')
