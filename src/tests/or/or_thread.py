@@ -30,8 +30,12 @@ class ORThread(Thread):
 
         inter_frame_duration = self.__inter_frame_duration()
 
-        # TODO - exception
-        device = pygiftgrab.Factory.connect(self.port)
+        try:
+            device = pygiftgrab.Factory.connect(self.port)
+        except IOError as e:
+            print e.message
+            return
+
         frame = pygiftgrab.VideoFrame_BGRA(False)
         self.resume_recording()  # i.e. start recording
 
