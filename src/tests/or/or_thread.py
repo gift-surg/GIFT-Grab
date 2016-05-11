@@ -103,11 +103,14 @@ class ORThread(Thread):
         if self.is_recording:
             return
 
-        if self.sub_frame:
-            self.device.set_sub_frame(self.sub_frame[0], self.sub_frame[1],
-                                      self.sub_frame[2], self.sub_frame[3])
+        if self.device:
+            if self.sub_frame:
+                self.device.set_sub_frame(self.sub_frame[0], self.sub_frame[1],
+                                          self.sub_frame[2], self.sub_frame[3])
+            else:
+                self.device.get_full_frame()
         else:
-            self.device.get_full_frame()
+            return
         filename = self.__next_filename()
         try:
             self.file.init(filename, self.frame_rate)
