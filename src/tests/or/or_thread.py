@@ -21,6 +21,10 @@ class ORThread(Thread):
         Thread.__init__(self)
 
     def run(self):
+        # mitigate re-start risk
+        if not self.is_running:
+            return
+
         inter_frame_duration = self.__inter_frame_duration()
 
         # TODO - exception
