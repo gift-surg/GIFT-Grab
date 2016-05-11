@@ -57,8 +57,10 @@ class ORThread(Thread):
         self.pause_recording()
         self.is_running = False
 
-        # TODO - exception
-        pygiftgrab.Factory.disconnect(self.port)
+        try:
+            pygiftgrab.Factory.disconnect(self.port)
+        except IOError as e:
+            print e.message
 
     def pause_recording(self):
         if not self.is_recording:
