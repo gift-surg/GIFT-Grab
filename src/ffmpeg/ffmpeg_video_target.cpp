@@ -281,15 +281,22 @@ void VideoTargetFFmpeg::encode_and_write(AVFrame * frame, int & got_output)
 
 void VideoTargetFFmpeg::finalise()
 {
-    /* get the delayed frames */
-    for (int got_output = 1; got_output; )
-        encode_and_write(NULL, got_output);
+    /* This condition means that append
+     * has been called at least once
+     * successfully (see Issue#36)
+     */
+    if (_frame)
+    {
+        /* get the delayed frames */
+        for (int got_output = 1; got_output; )
+            encode_and_write(NULL, got_output);
 
-    /* Write the trailer, if any. The trailer must be written before you
-     * close the CodecContexts open when you wrote the header; otherwise
-     * av_write_trailer() may try to use memory that was freed on
-     * av_codec_close(). */
-    av_write_trailer(_format_context);
+        /* Write the trailer, if any. The trailer must be written before you
+         * close the CodecContexts open when you wrote the header; otherwise
+         * av_write_trailer() may try to use memory that was freed on
+         * av_codec_close(). */
+        av_write_trailer(_format_context);
+    }
 
     if (_stream->codec) avcodec_close(_stream->codec);
     if (_frame) av_frame_free(&_frame);
@@ -297,8 +304,9 @@ void VideoTargetFFmpeg::finalise()
     if (_sws_context) sws_freeContext(_sws_context);
 
     if (!(_format_context->oformat->flags & AVFMT_NOFILE))
-        /* Close the output file. */
-        avio_closep(&_format_context->pb);
+        if (_format_context->pb)
+            /* Close the output file. */
+            avio_closep(&_format_context->pb);
     /* free the stream */
     avformat_free_context(_format_context);
 
