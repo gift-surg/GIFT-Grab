@@ -31,6 +31,11 @@ class IVideoSourceWrapper : IVideoSource, wrapper<IVideoSource>
     {
         this->get_override("set_sub_frame")(x, y, width, height);
     }
+
+    void get_full_frame()
+    {
+        this->get_override("get_full_frame")();
+    }
 };
 
 class IVideoTargetWrapper : gg::IVideoTarget, wrapper<gg::IVideoTarget>
@@ -103,6 +108,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .def("get_frame_dimensions", &VideoSourceOpenCV::get_frame_dimensions)
         .def("get_frame_rate", &VideoSourceOpenCV::get_frame_rate)
         .def("set_sub_frame", &VideoSourceOpenCV::set_sub_frame)
+        .def("get_full_frame", &VideoSourceOpenCV::get_full_frame)
     ;
 
     class_<gg::IVideoTarget, boost::noncopyable>("IVideoTarget", no_init)
