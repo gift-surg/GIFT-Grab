@@ -10,7 +10,6 @@ class ORThread(Thread):
         self.port = port
         # TODO - exception
         self.file = pygiftgrab.Factory.writer(pygiftgrab.Storage.File_H265)
-        # TODO - filename health checks
         self.file_path = file_path
         self.recording_index = 0
         # TODO - frame_rate health checks
@@ -28,15 +27,14 @@ class ORThread(Thread):
         frame = pygiftgrab.VideoFrame_BGRA(False)
         self.file.init(filename, self.frame_rate)
         while self.is_running:
-            current_processing_start = time()
-            # TODO
+            start = time()
             if self.is_recording:
-                # TODO
                 device.get_frame(frame)
                 self.file.append(frame)
-            sleep_duration = inter_frame_duration - (time() - current_processing_start)
+            sleep_duration = inter_frame_duration - (time() - start)
             if sleep_duration > 0:
                 sleep(sleep_duration)
+            # TODO - add up all extra times
 
     def stop(self):
         self.pause_recording()
@@ -55,4 +53,6 @@ class ORThread(Thread):
 
     def __next_filename(self):
         self.recording_index += 1
-        return self.file_path + '-' + '{0:06d}'.format(self.recording_index) + '.mp4'
+        return self.file_path + '-' + \
+               '{0:06d}'.format(self.recording_index) + \
+               '.mp4'
