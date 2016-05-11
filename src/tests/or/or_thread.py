@@ -53,6 +53,9 @@ class ORThread(Thread):
         pygiftgrab.Factory.disconnect(self.port)
 
     def pause_recording(self):
+        if not self.is_recording:
+            return
+
         self.is_recording = False
         # sleep to allow for stop to be picked up
         sleep(2 * self.__inter_frame_duration())
@@ -66,6 +69,9 @@ class ORThread(Thread):
         self.latency = 0.00
 
     def resume_recording(self):
+        if self.is_recording:
+            return
+
         filename = self.__next_filename()
         # TODO - exception
         self.file.init(filename, self.frame_rate)
