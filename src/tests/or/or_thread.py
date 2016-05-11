@@ -46,6 +46,9 @@ class ORThread(Thread):
                 self.latency -= sleep_duration
 
     def stop(self):
+        if not self.is_running:
+            return
+
         self.pause_recording()
         self.is_running = False
 
