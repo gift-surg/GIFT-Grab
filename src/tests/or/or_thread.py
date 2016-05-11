@@ -9,15 +9,18 @@ import pygiftgrab
 class ORThread(Thread):
     def __init__(self, port, frame_rate, file_path):
         self.port = port
-        # TODO - exception
-        self.file = pygiftgrab.Factory.writer(pygiftgrab.Storage.File_H265)
-        self.file_path = file_path
-        self.recording_index = 0
-        # TODO - frame_rate health checks
-        self.frame_rate = frame_rate
-        self.is_running = True
-        self.is_recording = False
-        self.latency = 0.0  # sec
+        try:
+            self.file = pygiftgrab.Factory.writer(pygiftgrab.Storage.File_H265)
+        except RuntimeError as e:
+            print e.message
+            self.is_running = False
+        else:
+            self.is_running = True
+            self.file_path = file_path
+            self.recording_index = 0
+            self.frame_rate = frame_rate
+            self.is_recording = False
+            self.latency = 0.0  # sec
         Thread.__init__(self)
 
     def run(self):
@@ -76,9 +79,13 @@ class ORThread(Thread):
             return
 
         filename = self.__next_filename()
-        # TODO - exception
-        self.file.init(filename, self.frame_rate)
-        self.is_recording = True
+        try:
+            self.file.init(filename, self.frame_rate)
+        except RuntimeError as e:
+            print e.message
+            self.is_recording = False
+        else:
+            self.is_recording = True
 
     def __next_filename(self, increment_index=True):
         if increment_index:
