@@ -16,6 +16,7 @@ class ORThread(Thread):
         self.frame_rate = frame_rate
         self.is_running = True
         self.is_recording = False
+        self.latency = 0.0  # sec
         Thread.__init__(self)
 
     def run(self):
@@ -34,12 +35,14 @@ class ORThread(Thread):
             sleep_duration = inter_frame_duration - (time() - start)
             if sleep_duration > 0:
                 sleep(sleep_duration)
-            # TODO - add up all extra times
+            else:
+                self.latency -= sleep_duration
 
     def stop(self):
         self.pause_recording()
         self.is_running = False
         pygiftgrab.Factory.disconnect(self.port)
+        return self.latency
 
     def pause_recording(self):
         # TODO - exception
