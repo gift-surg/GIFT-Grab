@@ -6,3 +6,4 @@ src/extern
 *.mp4
 *.avi
 *.pyc
+*.latency.txt

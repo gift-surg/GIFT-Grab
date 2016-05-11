@@ -2,6 +2,7 @@
 
 from threading import Thread
 from time import sleep, time
+from datetime import timedelta
 import pygiftgrab
 
 
@@ -42,7 +43,6 @@ class ORThread(Thread):
         self.pause_recording()
         self.is_running = False
         pygiftgrab.Factory.disconnect(self.port)
-        return self.latency
 
     def pause_recording(self):
         # TODO - exception
@@ -50,14 +50,20 @@ class ORThread(Thread):
         # sleep to allow for stop to be picked up
         sleep(2 * self.__inter_frame_duration())
         self.file.finalise()
+        # write latency as well
+        latency_file = open(self.__next_filename(increment_index=False) +
+                            '.latency.txt', 'w')
+        latency_file.write(str(timedelta(seconds=self.latency)) + '\n')
+        self.latency = 0.00
 
     def resume_recording(self):
         filename = self.__next_filename()
         self.file.init(filename, self.frame_rate)
         self.is_recording = True
 
-    def __next_filename(self):
-        self.recording_index += 1
+    def __next_filename(self, increment_index=True):
+        if increment_index:
+            self.recording_index += 1
         return self.file_path + '-' + \
             '{0:06d}'.format(self.recording_index) + \
             '.mp4'
