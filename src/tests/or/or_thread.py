@@ -121,10 +121,12 @@ class ORThread(Thread):
             self.is_recording = True
 
     def set_sub_frame(self, x, y, width, height):
-        self.sub_frame = [x, y, width, height]
+        if not self.is_recording:
+            self.sub_frame = [x, y, width, height]
 
     def set_full_frame(self):
-        self.sub_frame = None
+        if not self.is_recording:
+            self.sub_frame = None
 
     def __next_filename(self, increment_index=True):
         if increment_index:
