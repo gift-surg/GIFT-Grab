@@ -31,14 +31,14 @@ class ORThread(Thread):
     def __init__(self, port, frame_rate, file_path):
         """Initialise thread with desired configuration.
 
-        :param port: ``pygiftgrab.Device.DVI2PCIeDuo_SDI`` or
+        @param port ``pygiftgrab.Device.DVI2PCIeDuo_SDI`` or
         ``pygiftgrab.Device.DVI2PCIeDuo_DVI``
-        :param frame_rate: Epiphan DVI2PCIe Duo supports up to 60 fps
+        @param frame_rate Epiphan DVI2PCIe Duo supports up to 60 fps
         at ``1920 x 1080``, when using a single port, and 37 fps when using
         both ports (when capturing in the RGB24 colour space)
-        :param file_path: any referenced directories must exist and be
+        @param file_path any referenced directories must exist and be
         writable by user
-        :return: thread will not run if file writer cannot be created
+        @return thread will not run if file writer cannot be created
         """
         self.port = port
         try:
@@ -60,7 +60,7 @@ class ORThread(Thread):
     def run(self):
         """Connect to specified ``port`` and start looping until `stop()`ped.
 
-        :return: Will simply not do anything ``if not self.is_running``
+        @return Will simply not do anything ``if not self.is_running``
         """
 
         # mitigate re-start risk
@@ -101,7 +101,7 @@ class ORThread(Thread):
     def stop(self):
         """Stop a ``start()``ed thread.
 
-        :return: Will simply not do anything ``if not self.is_running``
+        @return Will simply not do anything ``if not self.is_running``
         """
         if not self.is_running:
             return
@@ -119,7 +119,7 @@ class ORThread(Thread):
 
         This will finalise the current video file.
 
-        :return:
+        @return
         """
         # TODO - this line is quick hack because of GiftGrab#37
         if not self.is_running:
@@ -147,7 +147,7 @@ class ORThread(Thread):
 
         This will create and open a new video file.
 
-        :return:
+        @return
         """
         # TODO - this line is quick hack because of GiftGrab#37
         if not self.is_running:
@@ -180,11 +180,11 @@ class ORThread(Thread):
         a recording. Also no safety checks are made for the
         passed values.
 
-        :param x:
-        :param y:
-        :param width:
-        :param height:
-        :return:
+        @param x any
+        @param y
+        @param width
+        @param height
+        @return
         """
         if not self.is_recording:
             self.sub_frame = [x, y, width, height]
@@ -195,7 +195,7 @@ class ORThread(Thread):
         This will have no effect if called in the middle of
         a recording.
 
-        :return:
+        @return
         """
         if not self.is_recording:
             self.sub_frame = None
@@ -206,10 +206,10 @@ class ORThread(Thread):
         Automatically generate the full file path from
         ``file_path`` and ``recording_index``.
 
-        :param increment_index: if ``True``, then increments
+        @param increment_index if ``True``, then increments
         index as well, i.e. use ``False`` only when checking
         what video file currently recording to.
-        :return:
+        @return
         """
         if increment_index:
             self.recording_index += 1
@@ -220,6 +220,6 @@ class ORThread(Thread):
     def __inter_frame_duration(self):
         """Compute time needed between frames based on ``frame_rate``.
 
-        :return:
+        @return
         """
         return 1.0 / self.frame_rate  # sec
