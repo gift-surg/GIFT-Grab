@@ -99,6 +99,11 @@ class EpiphanRecorder(Thread):
             else:
                 self.latency -= sleep_duration
 
+        try:
+            pygiftgrab.Factory.disconnect(self.port)
+        except IOError as e:
+            print e.message
+
     def stop(self):
         """Tell a `run()`ning thread to stop.
 
@@ -109,11 +114,6 @@ class EpiphanRecorder(Thread):
 
         self.pause_recording()
         self.is_running = False
-
-        try:
-            pygiftgrab.Factory.disconnect(self.port)
-        except IOError as e:
-            print e.message
 
     def pause_recording(self):
         """Tell a `run()`ning thread to pause recording.
