@@ -6,7 +6,7 @@ from datetime import timedelta
 import pygiftgrab
 
 
-class ORThread(Thread):
+class EpiphanRecorder(Thread):
 
     """A video recording thread that can be started, paused, resumed, and stopped.
 

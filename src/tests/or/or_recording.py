@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 
-from or_thread import ORThread
+from or_thread import EpiphanRecorder
 from time import sleep
 import pygiftgrab
 
-fs = ORThread(port=pygiftgrab.Device.DVI2PCIeDuo_SDI, frame_rate=27, file_path='test-fetoscope')
-us = ORThread(port=pygiftgrab.Device.DVI2PCIeDuo_DVI, frame_rate=15, file_path='test-us')
+fs = EpiphanRecorder(port=pygiftgrab.Device.DVI2PCIeDuo_SDI,
+                     frame_rate=27, file_path='test-fetoscope')
+us = EpiphanRecorder(port=pygiftgrab.Device.DVI2PCIeDuo_DVI,
+                     frame_rate=15, file_path='test-us')
 fs.start()
 us.start()
 sleep(5)
