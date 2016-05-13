@@ -95,7 +95,9 @@ class EpiphanRecorder(Thread):
                     # TODO - consider pausing and resuming instead
                     print 'Appending frame failed with: ' + e.message +\
                           ', aborting recording from ' + str(self.port)
-                    break
+                    self.stop()
+                    continue
+
             sleep_duration = inter_frame_duration - (time() - start)
             if sleep_duration > 0:
                 sleep(sleep_duration)
