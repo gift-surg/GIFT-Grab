@@ -15,20 +15,20 @@ def session_folder():
     while attempts < 5:
         attempts += 1
         unique_suffix = ''.join(choice(ascii_uppercase) for _ in range(5))
-        folder = strftime('%Y-%m-%d-%H-%M-%S') + '-' +\
-                 unique_suffix + '/'
+        folder_name = strftime('%Y-%m-%d-%H-%M-%S') + '-' +\
+            unique_suffix + '/'
 
-        if not exists(folder):
-            makedirs(folder)
-            return True, folder
+        if not exists(folder_name):
+            makedirs(folder_name)
+            return True, folder_name
         else:
-            print 'Folder ' + folder + \
+            print 'Folder ' + folder_name + \
                   ' exists, will make a ' + \
                   str(attempts) + '. attempt'
     print 'Made ' + str(attempts) + \
           ' unsuccessful attempts to create ' + \
           'a uniquely-named folder'
-    return False, folder
+    return False, folder_name
 
 if __name__ == '__main__':
     ret, folder = session_folder()
