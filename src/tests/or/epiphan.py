@@ -58,6 +58,7 @@ class EpiphanRecorder(Thread):
         self.started_at = 0
         self.sub_frame = None
         self.device = None
+        self.black_frame = None
         if self.__create_video_writer():
             self.is_running = True
         Thread.__init__(self)
@@ -82,17 +83,19 @@ class EpiphanRecorder(Thread):
         while self.is_running:
             start = time()
             if self.is_recording:
+                got_frame = self.device.get_frame(frame)
+
                 try:
-                    self.device.get_frame(frame)
-                except IOError as e:
-                    print e.message
-                else:
-                    try:
+                    if got_frame:
                         self.file.append(frame)
-                    except RuntimeError as e:
-                        # TODO - this line is quick hack because of GiftGrab#37
-                        self.is_running = False
-                        print e.message
+                    else:
+                        print 'Could not read video stream, appending black frame'
+                        self.file.append(self.black_frame)
+                except RuntimeError as e:
+                    # TODO - consider pausing and resuming instead
+                    print 'Appending frame failed with: ' + e.message +\
+                          ', aborting recording from ' + str(self.port)
+                    break
             sleep_duration = inter_frame_duration - (time() - start)
             if sleep_duration > 0:
                 sleep(sleep_duration)
@@ -164,6 +167,11 @@ class EpiphanRecorder(Thread):
                                           self.sub_frame[2], self.sub_frame[3])
             else:
                 self.device.get_full_frame()
+
+            # TODO - following two lines because of GiftGrab#40
+            tmp_frame = pygiftgrab.VideoFrame_BGRA(False)
+            self.device.get_frame(tmp_frame)
+            self.black_frame = pygiftgrab.VideoFrame_BGRA(tmp_frame.rows(), tmp_frame.cols())
         else:
             return
         filename = self.__next_filename()
