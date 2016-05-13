@@ -176,15 +176,12 @@ class EpiphanRecorder(Thread):
             self.black_frame = pygiftgrab.VideoFrame_BGRA(tmp_frame.rows(), tmp_frame.cols())
         else:
             return
-        filename = self.__next_filename()
-        try:
-            self.file.init(filename, self.frame_rate)
-        except RuntimeError as e:
-            print e.message
-            self.is_recording = False
-        else:
+
+        if self.__init_video_writer():
             self.started_at = time()
             self.is_recording = True
+        else:
+            self.is_recording = False
 
     def set_sub_frame(self, x, y, width, height):
         """Set region of interest to record.
@@ -239,15 +236,33 @@ class EpiphanRecorder(Thread):
 
         @return: ``True`` if video writer created, ``False`` otherwise
         """
-        attempt = 0
-        while attempt < self.max_num_attempts:
-            attempt += 1
+        attempts = 0
+        while attempts < self.max_num_attempts:
+            attempts += 1
             try:
                 self.file = pygiftgrab.Factory.writer(pygiftgrab.Storage.File_H265)
             except RuntimeError as e:
-                print 'Attempt #' + str(attempt) + ' of ' + \
+                print 'Attempt #' + str(attempts) + ' of ' + \
                       str(self.max_num_attempts) + \
-                      ' to create video file failed with: ' + \
+                      ' to get a video writer failed with: ' + \
+                      e.message
+                sleep(self.inter_attempt_duration)
+                continue
+            else:
+                return True
+        return False
+
+    def __init_video_writer(self):
+        filename = self.__next_filename()
+        attempts = 0
+        while attempts < self.max_num_attempts:
+            attempts += 1
+            try:
+                self.file.init(filename, self.frame_rate)
+            except RuntimeError as e:
+                print 'Attempt #' + str(attempts) + ' of ' + \
+                      str(self.max_num_attempts) + \
+                      ' to initialise video writer failed with: ' + \
                       e.message
                 sleep(self.inter_attempt_duration)
                 continue
@@ -260,13 +275,13 @@ class EpiphanRecorder(Thread):
 
         @return: ``True`` if connected to `port`, ``False`` otherwise
         """
-        attempt = 0
-        while attempt < self.max_num_attempts:
-            attempt += 1
+        attempts = 0
+        while attempts < self.max_num_attempts:
+            attempts += 1
             try:
                 self.device = pygiftgrab.Factory.connect(self.port)
             except IOError as e:
-                print 'Attempt #' + str(attempt) + ' of ' +\
+                print 'Attempt #' + str(attempts) + ' of ' +\
                       str(self.max_num_attempts) +\
                       ' to connect to ' + str(self.port) +\
                       ' failed with: ' + e.message
@@ -281,13 +296,13 @@ class EpiphanRecorder(Thread):
 
         @return: ``True`` if disconnected from `port`, ``False`` otherwise
         """
-        attempt = 0
-        while attempt < self.max_num_attempts:
-            attempt += 1
+        attempts = 0
+        while attempts < self.max_num_attempts:
+            attempts += 1
             try:
                 pygiftgrab.Factory.disconnect(self.port)
             except IOError as e:
-                print 'Attempt #' + str(attempt) + ' of ' +\
+                print 'Attempt #' + str(attempts) + ' of ' +\
                       str(self.max_num_attempts) +\
                       ' to disconnect from ' + str(self.port) +\
                       ' failed with: ' + e.message
