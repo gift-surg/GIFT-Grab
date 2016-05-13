@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from yaml import load, dump, YAMLError
-from epiphan import EpiphanRecorder
 import pygiftgrab
 
 
@@ -9,8 +8,9 @@ def parse_config(file_path):
     """Attempt to parse YAML recording configuration file.
 
     @param file_path
-    @return an `EpiphanRecorder` parametrised in `file_path`
-    if parsing succeeds, ``None`` otherwise
+    @return ``port, frame_rate, file_path, timeout_limit``
+    of an `EpiphanRecorder` if parsing succeeds, ``None``
+    otherwise
     """
     with open(file_path, 'r') as stream:
         try:
@@ -28,11 +28,12 @@ def parse_config(file_path):
                 port = pygiftgrab.Device.DVI2PCIeDuo_SDI
             elif data['port'] == 'DVI':
                 port = pygiftgrab.Device.DVI2PCIeDuo_DVI
+            else:
+                print 'Port ' + data['port'] + ' not recognised.'
+                return None
 
-            return EpiphanRecorder(file_path=file_path,
-                                   frame_rate=frame_rate,
-                                   timeout_limit=timeout_limit,
-                                   port=port)
+            return port, frame_rate, file_path, timeout_limit
+
 
 def write_config(epiphan_thread, file_path):
     """Serialise `epiphan_thread`'s configuration to YAML file.
