@@ -50,6 +50,14 @@ public:
     VideoFrame_BGRA(unsigned char * data, size_t rows, size_t cols, bool manage_data=false);
 
     //!
+    //! \brief Allocates memory for specified dimensions, and
+    //! sets all pixels to black
+    //! \param rows
+    //! \param cols
+    //!
+    VideoFrame_BGRA(const size_t rows, const size_t cols);
+
+    //!
     //! \brief Initialise from passed \c data, based on the data
     //! management setting
     //! \param data
