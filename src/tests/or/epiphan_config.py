@@ -54,7 +54,7 @@ def write_config(epiphan_thread, file_path):
             data = dict(port=port,
                         frame_rate=epiphan_thread.frame_rate,
                         file_path=epiphan_thread.file_path,
-                        timeout_limit=10.0)
+                        timeout_limit=epiphan_thread.timeout_limit)
             stream.write(dump(data, default_flow_style=False))
             stream.close()
         except YAMLError as e:

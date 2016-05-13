@@ -42,11 +42,13 @@ class EpiphanRecorder(Thread):
         @param file_path any referenced directories must exist and be
         writable by user
         @param timeout_limit 5 attempts will be made for critical operations
-        within this number of seconds
+        within this number of seconds (thread will not start if this is
+        negative)
         """
 
+        self.timeout_limit = timeout_limit
         self.max_num_attempts = 5
-        self.inter_attempt_duration = timeout_limit / self.max_num_attempts  # sec
+        self.inter_attempt_duration = self.timeout_limit / self.max_num_attempts  # sec
         self.port = port
         self.file = None
         self.is_running = False
@@ -59,7 +61,7 @@ class EpiphanRecorder(Thread):
         self.sub_frame = None
         self.device = None
         self.black_frame = None
-        if self.__create_video_writer():
+        if self.__create_video_writer() and self.timeout_limit > 0:
             self.is_running = True
         Thread.__init__(self)
 

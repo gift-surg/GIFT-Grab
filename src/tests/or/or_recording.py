@@ -6,7 +6,7 @@ from os.path import exists
 from os import makedirs
 from random import choice
 from string import ascii_uppercase
-from epiphan_config import parse_config
+from epiphan_config import parse_config, write_config
 import pygiftgrab
 
 
@@ -35,14 +35,16 @@ if __name__ == '__main__':
     if not ret:
         exit(1)
 
+    fs_config_file_name = 'sdi.yml'
     fs_port, fs_frame_rate,\
-        fs_file_path, fs_timeout_limit = parse_config('sdi.yml')
+        fs_file_path, fs_timeout_limit = parse_config(fs_config_file_name)
     fs = EpiphanRecorder(port=fs_port,
                          frame_rate=fs_frame_rate,
                          file_path=folder+fs_file_path,
                          timeout_limit=fs_timeout_limit)
+    us_config_file_name = 'dvi.yml'
     us_port, us_frame_rate,\
-        us_file_path, us_timeout_limit = parse_config('dvi.yml')
+        us_file_path, us_timeout_limit = parse_config(us_config_file_name)
     us = EpiphanRecorder(port=us_port,
                          frame_rate=us_frame_rate,
                          file_path=folder+us_file_path,
@@ -68,3 +70,5 @@ if __name__ == '__main__':
     us.stop()
     fs.join()
     us.join()
+    write_config(fs, folder + fs_config_file_name)
+    write_config(us, folder + us_config_file_name)
