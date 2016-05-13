@@ -29,7 +29,7 @@ class EpiphanRecorder(Thread):
 
     """
 
-    def __init__(self, port, frame_rate, file_path):
+    def __init__(self, port, frame_rate, file_path, timeout_limit=10):
         """Initialise thread with desired configuration.
 
         Thread will not run if file writer cannot be created.
@@ -41,24 +41,25 @@ class EpiphanRecorder(Thread):
         both ports (when capturing in the RGB24 colour space)
         @param file_path any referenced directories must exist and be
         writable by user
+        @param timeout_limit 5 attempts will be made for critical operations
+        within this number of seconds
         """
 
+        self.max_num_attempts = 5
+        self.inter_attempt_duration = timeout_limit / self.max_num_attempts  # sec
         self.port = port
-        try:
-            self.file = pygiftgrab.Factory.writer(pygiftgrab.Storage.File_H265)
-        except RuntimeError as e:
-            print e.message
-            self.is_running = False
-        else:
+        self.file = None
+        self.is_running = False
+        self.file_path = file_path
+        self.recording_index = 0
+        self.frame_rate = frame_rate
+        self.is_recording = False
+        self.latency = 0.0  # sec
+        self.started_at = 0
+        self.sub_frame = None
+        self.device = None
+        if self.__create_video_writer():
             self.is_running = True
-            self.file_path = file_path
-            self.recording_index = 0
-            self.frame_rate = frame_rate
-            self.is_recording = False
-            self.latency = 0.0  # sec
-            self.started_at = 0
-            self.sub_frame = None
-            self.device = None
         Thread.__init__(self)
 
     def run(self):
@@ -71,14 +72,10 @@ class EpiphanRecorder(Thread):
         if not self.is_running:
             return
 
-        inter_frame_duration = self.__inter_frame_duration()
-
-        try:
-            self.device = pygiftgrab.Factory.connect(self.port)
-        except IOError as e:
-            print e.message
+        if not self.__connect_device():
             return
 
+        inter_frame_duration = self.__inter_frame_duration()
         frame = pygiftgrab.VideoFrame_BGRA(False)
         self.resume_recording()  # i.e. start recording
 
@@ -229,3 +226,45 @@ class EpiphanRecorder(Thread):
         @return
         """
         return 1.0 / self.frame_rate  # sec
+
+    def __create_video_writer(self):
+        """Attempt to create a writer for recording video files.
+
+        @return: ``True`` if video writer created, ``False`` otherwise
+        """
+        attempt = 0
+        while attempt < self.max_num_attempts:
+            attempt += 1
+            try:
+                self.file = pygiftgrab.Factory.writer(pygiftgrab.Storage.File_H265)
+            except RuntimeError as e:
+                print 'Attempt #' + str(attempt) + ' of ' + \
+                      str(self.max_num_attempts) + \
+                      ' to create video file failed with: ' + \
+                      e.message
+                sleep(self.inter_attempt_duration)
+                continue
+            else:
+                return True
+        return False
+
+    def __connect_device(self):
+        """Attempt to connect to device specified by `port`.
+
+        @return: ``True`` if connected to `port`, ``False`` otherwise
+        """
+        attempt = 0
+        while attempt < self.max_num_attempts:
+            attempt += 1
+            try:
+                self.device = pygiftgrab.Factory.connect(self.port)
+            except IOError as e:
+                print 'Attempt #' + str(attempt) + ' of ' +\
+                      str(self.max_num_attempts) +\
+                      ' to connect to ' + str(self.port) +\
+                      ' failed with: ' + e.message
+                sleep(self.inter_attempt_duration)
+                continue
+            else:
+                return True
+        return False
