@@ -7,3 +7,4 @@ src/extern
 *.avi
 *.pyc
 *.latency.txt
+*.timing.txt

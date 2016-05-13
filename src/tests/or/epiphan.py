@@ -53,6 +53,7 @@ class EpiphanRecorder(Thread):
             self.frame_rate = frame_rate
             self.is_recording = False
             self.latency = 0.0  # sec
+            self.started_at = 0
             self.sub_frame = None
             self.device = None
         Thread.__init__(self)
@@ -136,10 +137,15 @@ class EpiphanRecorder(Thread):
             self.file.finalise()
         except RuntimeError as e:
             print e.message
-        # write latency as well
-        latency_file = open(self.__next_filename(increment_index=False) +
-                            '.latency.txt', 'w')
-        latency_file.write(str(timedelta(seconds=self.latency)) + '\n')
+        # write timing report as well
+        report_file = open(self.__next_filename(increment_index=False) +
+                            '.timing.txt', 'w')
+        report_file.write('Total time: ' +
+                          str(timedelta(seconds=time() - self.started_at)) +
+                          '\n')
+        report_file.write('Latency: ' +
+                          str(timedelta(seconds=self.latency)) +
+                          '\n')
         self.latency = 0.00
 
     def resume_recording(self):
@@ -171,6 +177,7 @@ class EpiphanRecorder(Thread):
             print e.message
             self.is_recording = False
         else:
+            self.started_at = time()
             self.is_recording = True
 
     def set_sub_frame(self, x, y, width, height):
