@@ -3,6 +3,7 @@
 from threading import Thread
 from time import sleep, time
 from datetime import timedelta
+from yaml import dump
 import pygiftgrab
 
 
@@ -139,13 +140,12 @@ class EpiphanRecorder(Thread):
             print e.message
         # write timing report as well
         report_file = open(self.__next_filename(increment_index=False) +
-                            '.timing.txt', 'w')
-        report_file.write('Total time: ' +
-                          str(timedelta(seconds=time() - self.started_at)) +
-                          '\n')
-        report_file.write('Latency: ' +
-                          str(timedelta(seconds=self.latency)) +
-                          '\n')
+                           '.timing.yml', 'w')
+        timing_report = dict(elapsed=str(timedelta(seconds=time() - self.started_at)),
+                             latency=str(timedelta(seconds=self.latency)))
+        report_file.write(dump(timing_report, default_flow_style=False))
+        report_file.close()
+
         self.latency = 0.00
 
     def resume_recording(self):

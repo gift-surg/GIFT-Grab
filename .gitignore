@@ -8,3 +8,4 @@ src/extern
 *.pyc
 *.latency.txt
 *.timing.txt
+*.timing.yml
