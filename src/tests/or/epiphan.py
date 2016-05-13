@@ -99,10 +99,7 @@ class EpiphanRecorder(Thread):
             else:
                 self.latency -= sleep_duration
 
-        try:
-            pygiftgrab.Factory.disconnect(self.port)
-        except IOError as e:
-            print e.message
+        self.__disconnect_device()
 
     def stop(self):
         """Tell a `run()`ning thread to stop.
@@ -262,6 +259,27 @@ class EpiphanRecorder(Thread):
                 print 'Attempt #' + str(attempt) + ' of ' +\
                       str(self.max_num_attempts) +\
                       ' to connect to ' + str(self.port) +\
+                      ' failed with: ' + e.message
+                sleep(self.inter_attempt_duration)
+                continue
+            else:
+                return True
+        return False
+
+    def __disconnect_device(self):
+        """Attempt to disconnect from device specified by `port`.
+
+        @return: ``True`` if disconnected from `port`, ``False`` otherwise
+        """
+        attempt = 0
+        while attempt < self.max_num_attempts:
+            attempt += 1
+            try:
+                pygiftgrab.Factory.disconnect(self.port)
+            except IOError as e:
+                print 'Attempt #' + str(attempt) + ' of ' +\
+                      str(self.max_num_attempts) +\
+                      ' to disconnect from ' + str(self.port) +\
                       ' failed with: ' + e.message
                 sleep(self.inter_attempt_duration)
                 continue
