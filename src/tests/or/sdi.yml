@@ -1,0 +1,4 @@
+port: SDI
+frame_rate: 28.0
+file_path: test-yml-fs
+timeout_limit: 10.0

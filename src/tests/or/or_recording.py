@@ -6,6 +6,7 @@ from os.path import exists
 from os import makedirs
 from random import choice
 from string import ascii_uppercase
+import config
 import pygiftgrab
 
 
@@ -34,10 +35,18 @@ if __name__ == '__main__':
     if not ret:
         exit(1)
 
-    fs = EpiphanRecorder(port=pygiftgrab.Device.DVI2PCIeDuo_SDI,
-                         frame_rate=27, file_path=folder+'test-fetoscope')
-    us = EpiphanRecorder(port=pygiftgrab.Device.DVI2PCIeDuo_DVI,
-                         frame_rate=15, file_path=folder+'test-us')
+    fs_port, fs_frame_rate,\
+        fs_file_path, fs_timeout_limit = config.parse_config('sdi.yml')
+    fs = EpiphanRecorder(port=fs_port,
+                         frame_rate=fs_frame_rate,
+                         file_path=folder+fs_file_path,
+                         timeout_limit=fs_timeout_limit)
+    us_port, us_frame_rate,\
+        us_file_path, us_timeout_limit = config.parse_config('dvi.yml')
+    us = EpiphanRecorder(port=us_port,
+                         frame_rate=us_frame_rate,
+                         file_path=folder+us_file_path,
+                         timeout_limit=us_timeout_limit)
     fs.start()
     us.start()
     sleep(5)
