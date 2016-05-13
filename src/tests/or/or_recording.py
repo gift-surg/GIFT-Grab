@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from or_thread import EpiphanRecorder
+from epiphan import EpiphanRecorder
 from time import sleep
 import pygiftgrab
 
