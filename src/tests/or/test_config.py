@@ -4,7 +4,7 @@ import config
 from time import sleep
 
 if __name__ == '__main__':
-    from_file_path = '/opt/installers/giftgrab/src/src/tests/or/from.yml'
+    from_file_path = 'from.yml'
     to_file_path = 'to.yml'
     et = config.parse_config(file_path=from_file_path)
     # et.start()

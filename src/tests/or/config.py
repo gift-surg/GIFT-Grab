@@ -16,7 +16,7 @@ def parse_config(file_path):
         try:
             data = load(stream)
         except YAMLError as e:
-            print 'Loading file ' + file_path +\
+            print 'Parsing file ' + file_path +\
                   ' failed with: ' + e.message
             return None
         else:
@@ -41,4 +41,24 @@ def write_config(epiphan_thread, file_path):
     @param file_path
     @return ``True`` if writing succeeds, ``False`` otherwise
     """
-    print 'write_config'
+    with open(file_path, 'w') as stream:
+        try:
+            if epiphan_thread.port == pygiftgrab.Device.DVI2PCIeDuo_SDI:
+                port = 'SDI'
+            elif epiphan_thread.port == pygiftgrab.Device.DVI2PCIeDuo_DVI:
+                port = 'DVI'
+            else:
+                print 'Port ' + str(epiphan_thread.port) + ' unknown'
+                return False
+            data = dict(port=port,
+                        frame_rate=epiphan_thread.frame_rate,
+                        file_path=epiphan_thread.file_path,
+                        timeout_limit=10.0)
+            stream.write(dump(data, default_flow_style=False))
+            stream.close()
+        except YAMLError as e:
+            print 'Dumping thread configuration to file ' +\
+                  file_path + ' failed with: ' + e.message
+            return False
+        else:
+            return True
