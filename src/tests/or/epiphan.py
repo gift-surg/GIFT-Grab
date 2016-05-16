@@ -3,7 +3,7 @@
 from threading import Thread
 from time import sleep, time
 from datetime import timedelta
-from yaml import dump
+import yaml
 import pygiftgrab
 
 
@@ -146,7 +146,7 @@ class Recorder(Thread):
                            '.timing.yml', 'w')
         timing_report = dict(elapsed=str(timedelta(seconds=time() - self.started_at)),
                              latency=str(timedelta(seconds=self.latency)))
-        report_file.write(dump(timing_report, default_flow_style=False))
+        report_file.write(yaml.dump(timing_report, default_flow_style=False))
         report_file.close()
 
         self.latency = 0.00
@@ -313,3 +313,39 @@ class Recorder(Thread):
             else:
                 return True
         return False
+
+
+def parse(file_path):
+    """Parse `Recorder` configuration from given YAML file.
+
+    @param file_path
+    @return a ready-to-start `Recorder` thread on success
+    @throw YAMLError on failure
+    @throw IOError if `file_path` cannot be opened for
+    reading
+    """
+    print 'parse'
+
+
+def dump(recorder, file_path):
+    """Dump given `recorder`'s configuration to YAML file.
+
+    @param recorder
+    @param file_path
+    @sa parse
+    @throw IOError if `file_path` cannot be opened for
+    writing
+    """
+    print 'dump'
+
+
+def report(recorder, file_path):
+    """Write a report from `recorder` to given YAML file.
+
+    @param recorder
+    @param file_path
+    @throw IOError if `file_path` cannot be opened for
+    writing
+    @throw RuntimeError if `recorder` still recording
+    """
+    print 'report'
