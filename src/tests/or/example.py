@@ -16,7 +16,7 @@ if __name__ == '__main__':
     try:
         fs = parse(fs_config)
         us = parse(us_config)
-    except (yaml.YAMLError, IOError, ValueError) as e:
+    except (yaml.YAMLError, IOError, ValueError, OSError) as e:
         logging.error(
             'Parsing configuration files failed with: ' +
             e.message
