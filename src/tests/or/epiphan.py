@@ -149,12 +149,19 @@ class Recorder(Thread):
             self.file.finalise()
         except RuntimeError as e:
             logging.error(e.message)
+
         # write timing report as well
-        report_file = open(self.__video_filename() + '.timing.yml', 'w')
-        timing_report = dict(elapsed=str(timedelta(seconds=time() - self.started_at)),
-                             latency=str(timedelta(seconds=self.latency)))
-        report_file.write(yaml.dump(timing_report, default_flow_style=False))
-        report_file.close()
+        try:
+            report_file = open(self.__video_filename() + '.timing.yml', 'w')
+            timing_report = dict(elapsed=str(timedelta(seconds=time() - self.started_at)),
+                                 latency=str(timedelta(seconds=self.latency)))
+            report_file.write(yaml.dump(timing_report, default_flow_style=False))
+            report_file.close()
+        except (IOError, yaml.YAMLError) as e:
+            logging.error(
+                'Intermediate report generation failed with: ' +
+                e.message
+            )
 
         self.latency = 0.00
 
@@ -259,6 +266,10 @@ class Recorder(Thread):
         return False
 
     def __init_video_writer(self):
+        """Attempt to initialise video writer with a new filename.
+
+        @return ``True`` upon success, ``False`` otherwise
+        """
         self.recording_index += 1
         filename = self.__video_filename()
         attempts = 0
