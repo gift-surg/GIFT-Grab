@@ -146,8 +146,7 @@ class Recorder(Thread):
         except RuntimeError as e:
             print e.message
         # write timing report as well
-        report_file = open(self.__next_filename(increment_index=False) +
-                           '.timing.yml', 'w')
+        report_file = open(self.__video_filename() + '.timing.yml', 'w')
         timing_report = dict(elapsed=str(timedelta(seconds=time() - self.started_at)),
                              latency=str(timedelta(seconds=self.latency)))
         report_file.write(yaml.dump(timing_report, default_flow_style=False))
@@ -213,19 +212,14 @@ class Recorder(Thread):
         if not self.is_recording:
             self.sub_frame = None
 
-    def __next_filename(self, increment_index=True):
+    def __video_filename(self):
         """Report what video file to record to.
 
         Automatically generate the full file path from
         `file_path` and `recording_index`.
 
-        @param increment_index if ``True``, then increments
-        index as well, i.e. use ``False`` only when checking
-        what video file currently recording to.
         @return e.g. ``file_path-000003.mp4``
         """
-        if increment_index:
-            self.recording_index += 1
         return self.file_path + '-' + \
             '{0:06d}'.format(self.recording_index) + \
             '.mp4'
@@ -259,7 +253,8 @@ class Recorder(Thread):
         return False
 
     def __init_video_writer(self):
-        filename = self.__next_filename()
+        self.recording_index += 1
+        filename = self.__video_filename()
         attempts = 0
         while attempts < self.max_num_attempts:
             attempts += 1
