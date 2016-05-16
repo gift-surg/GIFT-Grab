@@ -7,8 +7,8 @@ import yaml
 
 if __name__ == '__main__':
     # create sessions
-    fs_config = 'sdi.yml'
-    us_config = 'dvi.yml'
+    fs_config = 'config/sdi.yml'
+    us_config = 'config/dvi.yml'
 
     try:
         fs = parse(fs_config)
