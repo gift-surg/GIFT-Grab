@@ -81,44 +81,48 @@ class Recorder(Thread):
         Will simply do nothing if not `is_running`.
         """
 
-        # mitigate re-start risk
-        if not self.is_running:
-            return
+        try:
+            # mitigate re-start risk
+            if not self.is_running:
+                return
 
-        if not self.__connect_device():
-            return
+            if not self.__connect_device():
+                return
 
-        inter_frame_duration = self.__inter_frame_duration()
-        frame = pygiftgrab.VideoFrame_BGRA(False)
-        self.resume_recording()  # i.e. start recording
+            inter_frame_duration = self.__inter_frame_duration()
+            frame = pygiftgrab.VideoFrame_BGRA(False)
+            self.resume_recording()  # i.e. start recording
 
-        while self.is_running:
-            start = time()
-            if self.is_recording:
-                got_frame = self.device.get_frame(frame)
+            while self.is_running:
+                start = time()
+                if self.is_recording:
+                    got_frame = self.device.get_frame(frame)
 
-                try:
-                    if got_frame:
-                        self.file.append(frame)
-                    else:
-                        logging.error('Could not read video stream, appending black frame')
-                        self.file.append(self.black_frame)
-                except RuntimeError as e:
-                    # TODO - consider pausing and resuming instead
-                    logging.error(
-                        'Appending frame failed with: ' + e.message +
-                        ', aborting recording from ' + str(self.port)
-                    )
-                    self.stop()
-                    continue
+                    try:
+                        if got_frame:
+                            self.file.append(frame)
+                        else:
+                            logging.error('Could not read video stream, appending black frame')
+                            self.file.append(self.black_frame)
+                    except RuntimeError as e:
+                        # TODO - consider pausing and resuming instead
+                        logging.error(
+                            'Appending frame failed with: ' + e.message +
+                            ', aborting recording from ' + str(self.port)
+                        )
+                        self.stop()
+                        continue
 
-            sleep_duration = inter_frame_duration - (time() - start)
-            if sleep_duration > 0:
-                sleep(sleep_duration)
-            else:
-                self.latency -= sleep_duration
+                sleep_duration = inter_frame_duration - (time() - start)
+                if sleep_duration > 0:
+                    sleep(sleep_duration)
+                else:
+                    self.latency -= sleep_duration
 
-        self.__disconnect_device()
+            self.__disconnect_device()
+        except BaseException as e:
+            logging.error('Unspecific exception: ' + e.message +
+                          ', aborting recording.')
 
     def stop(self):
         """Tell a `run()`ning thread to stop.
