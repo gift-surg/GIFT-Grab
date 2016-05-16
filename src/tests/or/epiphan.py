@@ -184,21 +184,22 @@ class Recorder(Thread):
             return
 
         if self.device:
+            # TODO - rows and cols setting because of GiftGrab#40
             if self.sub_frame:
                 self.device.set_sub_frame(self.sub_frame[0], self.sub_frame[1],
                                           self.sub_frame[2], self.sub_frame[3])
+                cols = self.sub_frame[2]
+                rows = self.sub_frame[3]
             else:
                 self.device.get_full_frame()
+                cols = MAX_X
+                rows = MAX_Y
 
-            # TODO - following two lines because of GiftGrab#40
             tmp_frame = pygiftgrab.VideoFrame_BGRA(False)
             got_frame = self.device.get_frame(tmp_frame)
             if got_frame:
                 cols = tmp_frame.cols()
                 rows = tmp_frame.rows()
-            else:
-                cols = MAX_X
-                rows = MAX_Y
             self.black_frame = pygiftgrab.VideoFrame_BGRA(rows, cols)
         else:
             return

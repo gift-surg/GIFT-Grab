@@ -33,6 +33,10 @@ if __name__ == '__main__':
             fs.set_sub_frame(426, -40, 1067, 1040)
         except ValueError as e:
             logging.error(e.message)
+        try:
+            us.set_sub_frame(426, 40, 1067, 1040)
+        except ValueError as e:
+            logging.error(e.message)
         fs.resume_recording()
         us.resume_recording()
         sleep(5)
