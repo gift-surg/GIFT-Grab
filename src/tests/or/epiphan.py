@@ -12,6 +12,10 @@ import logging
 import pygiftgrab
 
 
+MAX_X = 1920
+MAX_Y = 1080
+
+
 class Recorder(Thread):
 
     """A video recording thread that can be started, paused, resumed, and stopped.
@@ -188,8 +192,14 @@ class Recorder(Thread):
 
             # TODO - following two lines because of GiftGrab#40
             tmp_frame = pygiftgrab.VideoFrame_BGRA(False)
-            self.device.get_frame(tmp_frame)
-            self.black_frame = pygiftgrab.VideoFrame_BGRA(tmp_frame.rows(), tmp_frame.cols())
+            got_frame = self.device.get_frame(tmp_frame)
+            if got_frame:
+                cols = tmp_frame.cols()
+                rows = tmp_frame.rows()
+            else:
+                cols = MAX_X
+                rows = MAX_Y
+            self.black_frame = pygiftgrab.VideoFrame_BGRA(rows, cols)
         else:
             return
 
@@ -214,12 +224,10 @@ class Recorder(Thread):
         only up to ``1920 x 1080`` supported)
         """
         # TODO - hard-coded because of GiftGrab#42
-        max_x = 1920
-        max_y = 1080
         if not self.is_recording:
-            if 0 <= x <= max_x and 0 <= y <= max_y and \
-               0 < width <= max_x and 0 < height <= max_y and \
-               x + width <= max_x and y + height <= max_y:
+            if 0 <= x <= MAX_X and 0 <= y <= MAX_Y and \
+               0 < width <= MAX_X and 0 < height <= MAX_Y and \
+               x + width <= MAX_X and y + height <= MAX_Y:
                 self.sub_frame = [x, y, width, height]
             else:
                 raise ValueError('ROI ' + str(x) + ', ' + str(y) +
