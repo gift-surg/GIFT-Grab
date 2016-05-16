@@ -203,16 +203,28 @@ class Recorder(Thread):
         """Set region of interest to record.
 
         This will have no effect if called in the middle of
-        a recording. Also no safety checks are made for the
-        boundaries.
+        a recording.
 
         @param x upper-left corner coordinate
         @param y upper-left corner coordinate
         @param width
         @param height
+        @throw ValueError if requested ROI values invalid,
+        either due to negativity, or ouf-of-bounds (currently
+        only up to ``1920 x 1080`` supported)
         """
+        # TODO - hard-coded because of GiftGrab#42
+        max_x = 1920
+        max_y = 1080
         if not self.is_recording:
-            self.sub_frame = [x, y, width, height]
+            if 0 <= x <= max_x and 0 <= y <= max_y and \
+               0 < width <= max_x and 0 < height <= max_y and \
+               x + width <= max_x and y + height <= max_y:
+                self.sub_frame = [x, y, width, height]
+            else:
+                raise ValueError('ROI ' + str(x) + ', ' + str(y) +
+                                 ', ' + str(width) + ', ' + str(height) +
+                                 ' invalid')
 
     def set_full_frame(self):
         """Tell thread to use full resolution frames.
