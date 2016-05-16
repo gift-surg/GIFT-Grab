@@ -17,8 +17,10 @@ if __name__ == '__main__':
         fs = parse(fs_config)
         us = parse(us_config)
     except (yaml.YAMLError, IOError, ValueError) as e:
-        print 'Parsing configuration files failed with: ' + \
-              e.message
+        logging.error(
+            'Parsing configuration files failed with: ' +
+            e.message
+        )
     else:
         # do actual work
         fs.start()
@@ -46,15 +48,17 @@ if __name__ == '__main__':
         # join threads
         fs.join(timeout=fs.timeout_limit)
         if fs.isAlive():
-            print 'Fetoscope thread could not be stopped'
+            logging.error('Fetoscope thread could not be stopped')
         us.join(timeout=us.timeout_limit)
         if us.isAlive():
-            print 'Ultrasound thread could not be stopped'
+            logging.error('Ultrasound thread could not be stopped')
 
         # dump configuration
         try:
             dump(fs)
             dump(us)
         except (yaml.YAMLError, IOError) as e:
-            print 'Dumping configuration failed with: ' + \
-                  e.message
+            logging.error(
+                'Dumping configuration failed with: ' +
+                e.message
+            )
