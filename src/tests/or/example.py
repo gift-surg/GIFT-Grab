@@ -3,12 +3,15 @@
 from epiphan import parse, dump
 from time import sleep
 import yaml
+import logging
 
 
 if __name__ == '__main__':
     # create sessions
     fs_config = 'config/sdi.yml'
     us_config = 'config/dvi.yml'
+    logging.basicConfig(format='%(threadName)s -- %(asctime)s -- %(message)s',
+                        datefmt='%m/%d/%Y %H:%M:%S')
 
     try:
         fs = parse(fs_config)

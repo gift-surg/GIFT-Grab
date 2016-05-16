@@ -6,8 +6,9 @@ from datetime import timedelta
 import yaml
 from os.path import join, split, dirname
 from os import makedirs
-from random import choice
+from random import choice, randint
 from string import ascii_uppercase
+import logging
 import pygiftgrab
 
 
@@ -50,10 +51,12 @@ class Recorder(Thread):
         negative)
         """
 
+        Thread.__init__(self)
         self.timeout_limit = timeout_limit
         self.max_num_attempts = 5
         self.inter_attempt_duration = self.timeout_limit / self.max_num_attempts  # sec
         self.port = port
+        self.name = str(self.port)
         self.file = None
         self.is_running = False
         self.file_path = file_path
@@ -67,7 +70,6 @@ class Recorder(Thread):
         self.black_frame = None
         if self.__create_video_writer() and self.timeout_limit > 0:
             self.is_running = True
-        Thread.__init__(self)
 
     def run(self):
         """Connect to specified `port` and start looping until `stop()`ped.
@@ -95,12 +97,14 @@ class Recorder(Thread):
                     if got_frame:
                         self.file.append(frame)
                     else:
-                        print 'Could not read video stream, appending black frame'
+                        logging.error('Could not read video stream, appending black frame')
                         self.file.append(self.black_frame)
                 except RuntimeError as e:
                     # TODO - consider pausing and resuming instead
-                    print 'Appending frame failed with: ' + e.message +\
-                          ', aborting recording from ' + str(self.port)
+                    logging.error(
+                        'Appending frame failed with: ' + e.message +
+                        ', aborting recording from ' + str(self.port)
+                    )
                     self.stop()
                     continue
 
@@ -144,7 +148,7 @@ class Recorder(Thread):
         try:
             self.file.finalise()
         except RuntimeError as e:
-            print e.message
+            logging.error(e.message)
         # write timing report as well
         report_file = open(self.__video_filename() + '.timing.yml', 'w')
         timing_report = dict(elapsed=str(timedelta(seconds=time() - self.started_at)),
@@ -242,10 +246,12 @@ class Recorder(Thread):
             try:
                 self.file = pygiftgrab.Factory.writer(pygiftgrab.Storage.File_H265)
             except RuntimeError as e:
-                print 'Attempt #' + str(attempts) + ' of ' + \
-                      str(self.max_num_attempts) + \
-                      ' to get a video writer failed with: ' + \
-                      e.message
+                logging.error(
+                    'Attempt #' + str(attempts) + ' of ' +
+                    str(self.max_num_attempts) +
+                    ' to get a video writer failed with: ' +
+                    e.message
+                )
                 sleep(self.inter_attempt_duration)
                 continue
             else:
@@ -261,10 +267,12 @@ class Recorder(Thread):
             try:
                 self.file.init(filename, self.frame_rate)
             except RuntimeError as e:
-                print 'Attempt #' + str(attempts) + ' of ' + \
-                      str(self.max_num_attempts) + \
-                      ' to initialise video writer failed with: ' + \
-                      e.message
+                logging.error(
+                    'Attempt #' + str(attempts) + ' of ' +
+                    str(self.max_num_attempts) +
+                    ' to initialise video writer failed with: ' +
+                    e.message
+                )
                 sleep(self.inter_attempt_duration)
                 continue
             else:
@@ -282,10 +290,12 @@ class Recorder(Thread):
             try:
                 self.device = pygiftgrab.Factory.connect(self.port)
             except IOError as e:
-                print 'Attempt #' + str(attempts) + ' of ' +\
-                      str(self.max_num_attempts) +\
-                      ' to connect to ' + str(self.port) +\
-                      ' failed with: ' + e.message
+                logging.error(
+                    'Attempt #' + str(attempts) + ' of ' +
+                    str(self.max_num_attempts) +
+                    ' to connect to ' + str(self.port) +
+                    ' failed with: ' + e.message
+                )
                 sleep(self.inter_attempt_duration)
                 continue
             else:
@@ -303,10 +313,12 @@ class Recorder(Thread):
             try:
                 pygiftgrab.Factory.disconnect(self.port)
             except IOError as e:
-                print 'Attempt #' + str(attempts) + ' of ' +\
-                      str(self.max_num_attempts) +\
-                      ' to disconnect from ' + str(self.port) +\
-                      ' failed with: ' + e.message
+                logging.error(
+                    'Attempt #' + str(attempts) + ' of ' +
+                    str(self.max_num_attempts) +
+                    ' to disconnect from ' + str(self.port) +
+                    ' failed with: ' + e.message
+                )
                 sleep(self.inter_attempt_duration)
                 continue
             else:
@@ -388,7 +400,7 @@ def parse(file_path):
                 if attempt >= max_attempts:
                     raise e
                 else:
-                    print e.message
+                    logging.error(e.message)
             else:
                 break
 
