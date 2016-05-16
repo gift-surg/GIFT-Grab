@@ -9,7 +9,7 @@ def parse_config(file_path):
 
     @param file_path
     @return ``port, frame_rate, file_path, timeout_limit``
-    of an `EpiphanRecorder` if parsing succeeds, ``None``
+    of an `Recorder` if parsing succeeds, ``None``
     otherwise
     """
     with open(file_path, 'r') as stream:

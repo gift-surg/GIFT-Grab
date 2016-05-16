@@ -7,7 +7,7 @@ from yaml import dump
 import pygiftgrab
 
 
-class EpiphanRecorder(Thread):
+class Recorder(Thread):
 
     """A video recording thread that can be started, paused, resumed, and stopped.
 

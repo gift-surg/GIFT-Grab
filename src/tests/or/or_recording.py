@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from epiphan import EpiphanRecorder
+from epiphan import Recorder
 from time import sleep, strftime
 from os.path import exists, join, split, dirname
 from os import makedirs
@@ -50,10 +50,10 @@ if __name__ == '__main__':
     fs_config_file_name_out = join(dirname(file_path), fs_config_file_name)
     if not ret:
         exit(1)
-    fs = EpiphanRecorder(port=fs_port,
-                         frame_rate=fs_frame_rate,
-                         file_path=file_path,
-                         timeout_limit=fs_timeout_limit)
+    fs = Recorder(port=fs_port,
+                  frame_rate=fs_frame_rate,
+                  file_path=file_path,
+                  timeout_limit=fs_timeout_limit)
 
     us_config_file_name = 'dvi.yml'
     us_port, us_frame_rate,\
@@ -62,10 +62,10 @@ if __name__ == '__main__':
     us_config_file_name_out = join(dirname(file_path), us_config_file_name)
     if not ret:
         exit(1)
-    us = EpiphanRecorder(port=us_port,
-                         frame_rate=us_frame_rate,
-                         file_path=file_path,
-                         timeout_limit=us_timeout_limit)
+    us = Recorder(port=us_port,
+                  frame_rate=us_frame_rate,
+                  file_path=file_path,
+                  timeout_limit=us_timeout_limit)
 
     fs.start()
     us.start()
