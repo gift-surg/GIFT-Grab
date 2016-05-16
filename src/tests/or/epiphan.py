@@ -1,13 +1,18 @@
 #!/usr/bin/env python
 
 from threading import Thread
-from time import sleep, time
+from time import sleep, time, strftime
 from datetime import timedelta
-from yaml import dump
+import yaml
+from os.path import join, split, dirname
+from os import makedirs
+from random import choice, randint
+from string import ascii_uppercase
+import logging
 import pygiftgrab
 
 
-class EpiphanRecorder(Thread):
+class Recorder(Thread):
 
     """A video recording thread that can be started, paused, resumed, and stopped.
 
@@ -46,10 +51,12 @@ class EpiphanRecorder(Thread):
         negative)
         """
 
+        Thread.__init__(self)
         self.timeout_limit = timeout_limit
         self.max_num_attempts = 5
         self.inter_attempt_duration = self.timeout_limit / self.max_num_attempts  # sec
         self.port = port
+        self.name = str(self.port)
         self.file = None
         self.is_running = False
         self.file_path = file_path
@@ -63,7 +70,6 @@ class EpiphanRecorder(Thread):
         self.black_frame = None
         if self.__create_video_writer() and self.timeout_limit > 0:
             self.is_running = True
-        Thread.__init__(self)
 
     def run(self):
         """Connect to specified `port` and start looping until `stop()`ped.
@@ -91,12 +97,14 @@ class EpiphanRecorder(Thread):
                     if got_frame:
                         self.file.append(frame)
                     else:
-                        print 'Could not read video stream, appending black frame'
+                        logging.error('Could not read video stream, appending black frame')
                         self.file.append(self.black_frame)
                 except RuntimeError as e:
                     # TODO - consider pausing and resuming instead
-                    print 'Appending frame failed with: ' + e.message +\
-                          ', aborting recording from ' + str(self.port)
+                    logging.error(
+                        'Appending frame failed with: ' + e.message +
+                        ', aborting recording from ' + str(self.port)
+                    )
                     self.stop()
                     continue
 
@@ -140,13 +148,12 @@ class EpiphanRecorder(Thread):
         try:
             self.file.finalise()
         except RuntimeError as e:
-            print e.message
+            logging.error(e.message)
         # write timing report as well
-        report_file = open(self.__next_filename(increment_index=False) +
-                           '.timing.yml', 'w')
+        report_file = open(self.__video_filename() + '.timing.yml', 'w')
         timing_report = dict(elapsed=str(timedelta(seconds=time() - self.started_at)),
                              latency=str(timedelta(seconds=self.latency)))
-        report_file.write(dump(timing_report, default_flow_style=False))
+        report_file.write(yaml.dump(timing_report, default_flow_style=False))
         report_file.close()
 
         self.latency = 0.00
@@ -209,19 +216,14 @@ class EpiphanRecorder(Thread):
         if not self.is_recording:
             self.sub_frame = None
 
-    def __next_filename(self, increment_index=True):
+    def __video_filename(self):
         """Report what video file to record to.
 
         Automatically generate the full file path from
         `file_path` and `recording_index`.
 
-        @param increment_index if ``True``, then increments
-        index as well, i.e. use ``False`` only when checking
-        what video file currently recording to.
         @return e.g. ``file_path-000003.mp4``
         """
-        if increment_index:
-            self.recording_index += 1
         return self.file_path + '-' + \
             '{0:06d}'.format(self.recording_index) + \
             '.mp4'
@@ -244,10 +246,12 @@ class EpiphanRecorder(Thread):
             try:
                 self.file = pygiftgrab.Factory.writer(pygiftgrab.Storage.File_H265)
             except RuntimeError as e:
-                print 'Attempt #' + str(attempts) + ' of ' + \
-                      str(self.max_num_attempts) + \
-                      ' to get a video writer failed with: ' + \
-                      e.message
+                logging.error(
+                    'Attempt #' + str(attempts) + ' of ' +
+                    str(self.max_num_attempts) +
+                    ' to get a video writer failed with: ' +
+                    e.message
+                )
                 sleep(self.inter_attempt_duration)
                 continue
             else:
@@ -255,17 +259,20 @@ class EpiphanRecorder(Thread):
         return False
 
     def __init_video_writer(self):
-        filename = self.__next_filename()
+        self.recording_index += 1
+        filename = self.__video_filename()
         attempts = 0
         while attempts < self.max_num_attempts:
             attempts += 1
             try:
                 self.file.init(filename, self.frame_rate)
             except RuntimeError as e:
-                print 'Attempt #' + str(attempts) + ' of ' + \
-                      str(self.max_num_attempts) + \
-                      ' to initialise video writer failed with: ' + \
-                      e.message
+                logging.error(
+                    'Attempt #' + str(attempts) + ' of ' +
+                    str(self.max_num_attempts) +
+                    ' to initialise video writer failed with: ' +
+                    e.message
+                )
                 sleep(self.inter_attempt_duration)
                 continue
             else:
@@ -283,10 +290,12 @@ class EpiphanRecorder(Thread):
             try:
                 self.device = pygiftgrab.Factory.connect(self.port)
             except IOError as e:
-                print 'Attempt #' + str(attempts) + ' of ' +\
-                      str(self.max_num_attempts) +\
-                      ' to connect to ' + str(self.port) +\
-                      ' failed with: ' + e.message
+                logging.error(
+                    'Attempt #' + str(attempts) + ' of ' +
+                    str(self.max_num_attempts) +
+                    ' to connect to ' + str(self.port) +
+                    ' failed with: ' + e.message
+                )
                 sleep(self.inter_attempt_duration)
                 continue
             else:
@@ -304,12 +313,136 @@ class EpiphanRecorder(Thread):
             try:
                 pygiftgrab.Factory.disconnect(self.port)
             except IOError as e:
-                print 'Attempt #' + str(attempts) + ' of ' +\
-                      str(self.max_num_attempts) +\
-                      ' to disconnect from ' + str(self.port) +\
-                      ' failed with: ' + e.message
+                logging.error(
+                    'Attempt #' + str(attempts) + ' of ' +
+                    str(self.max_num_attempts) +
+                    ' to disconnect from ' + str(self.port) +
+                    ' failed with: ' + e.message
+                )
                 sleep(self.inter_attempt_duration)
                 continue
             else:
                 return True
         return False
+
+
+def __port_to_str(epiphan_port):
+    """Get string representation of given `epiphan_port`.
+
+    @param epiphan_port
+    @return
+    @throw ValueError if invalid value given
+    """
+    if epiphan_port == pygiftgrab.Device.DVI2PCIeDuo_SDI:
+        return 'SDI'
+    elif epiphan_port == pygiftgrab.Device.DVI2PCIeDuo_DVI:
+        return 'DVI'
+    else:
+        raise ValueError('Could not recognise port ' + epiphan_port)
+
+
+def __str_to_port(epiphan_port):
+    """Get actual port value from given `epiphan_port` string.
+
+    @param epiphan_port
+    @return
+    @throw ValueError if invalid string given
+    """
+    if epiphan_port == 'SDI':
+        return pygiftgrab.Device.DVI2PCIeDuo_SDI
+    elif epiphan_port == 'DVI':
+        return pygiftgrab.Device.DVI2PCIeDuo_DVI
+    else:
+        raise ValueError('Could not recognise port ' + epiphan_port)
+
+
+def parse(file_path):
+    """Parse `Recorder` configuration from given YAML file.
+
+    Also create a session folder for this `Recorder`, using
+    corresponding tag of given YAML file.
+
+    @param file_path
+    @return a ready-to-start `Recorder` thread on success
+    @throw YAMLError if YAML file cannot be parsed
+    @throw IOError if `file_path` cannot be opened for
+    reading
+    @throw ValueError if YAML file contains invalid values
+    @throw OSError if unique session folder cannot be
+    created
+    """
+    with open(file_path, 'r') as stream:
+        # parse YAML file
+        data = yaml.load(stream)
+
+        # check everything specified properly
+        if not data['file_path'] or not data['frame_rate'] \
+           or not data['timeout_limit'] or not data['port']:
+            raise yaml.YAMLError('Could not parse ' + file_path)
+        frame_rate = data['frame_rate']
+        if not 0 < frame_rate <= 29:
+            raise ValueError('Supporting only up to 29 fps currently ' +
+                             '(' + str(frame_rate) + ' given)')
+        timeout_limit = data['timeout_limit']
+        if not 0 < timeout_limit <= 20:
+            raise ValueError('Timeout should be positive, ' +
+                             'and up to 20 sec.')
+        port = __str_to_port(data['port'])
+        file_path = data['file_path']
+        unique_file_path = None
+        max_attempts = 5
+        attempt = 0
+        while True:
+            attempt += 1
+            try:
+                unique_file_path = __session_folder(path_prefix=file_path)
+            except OSError as e:
+                if attempt >= max_attempts:
+                    raise e
+                else:
+                    logging.error(e.message)
+            else:
+                break
+
+        # create and return thread
+        return Recorder(port=port, frame_rate=frame_rate,
+                        file_path=unique_file_path, timeout_limit=timeout_limit)
+
+
+def dump(recorder):
+    """Dump given `recorder`'s configuration to a YAML file.
+
+    The file is deduced from `recorder` configuration.
+
+    @param recorder
+    @sa parse as same format is used
+    @throw YAMLError if dumping fails
+    @throw IOError if `file_path` cannot be opened for
+    writing
+    """
+    file_path = join(dirname(recorder.file_path), 'config.yml')
+    with open(file_path, 'w') as stream:
+        port = __port_to_str(recorder.port)
+        data = dict(port=port,
+                    frame_rate=recorder.frame_rate,
+                    file_path=recorder.file_path,
+                    timeout_limit=recorder.timeout_limit)
+        stream.write(yaml.dump(data, default_flow_style=False))
+        stream.close()
+
+
+def __session_folder(path_prefix):
+    """Attempt to create a session folder with a unique name.
+
+    @param path_prefix last element treated as a file prefix,
+    e.g. ``/my/dir/file``
+    @return updated `path_prefix` after folder created
+    @throw OSError if the attempt fails
+    """
+    path_prefix_folder, path_prefix_filename = split(path_prefix)
+    unique_suffix = ''.join(choice(ascii_uppercase) for _ in range(5))
+    attempted_folder = join(path_prefix_folder,
+                            strftime('%Y-%m-%d-%H-%M-%S') +
+                            '-' + unique_suffix)
+    makedirs(attempted_folder)
+    return join(attempted_folder, path_prefix_filename)
