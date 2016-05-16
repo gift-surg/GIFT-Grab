@@ -6,7 +6,7 @@ from datetime import timedelta
 import yaml
 from os.path import join, split, dirname
 from os import makedirs
-from random import choice, randint
+from random import choice
 from string import ascii_uppercase
 import logging
 import pygiftgrab
