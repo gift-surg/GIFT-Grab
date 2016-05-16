@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 
 from threading import Thread
-from time import sleep, time
+from time import sleep, time, strftime
 from datetime import timedelta
 import yaml
+from os.path import join, split, dirname
+from os import makedirs
+from random import choice
+from string import ascii_uppercase
 import pygiftgrab
 
 
@@ -315,37 +319,100 @@ class Recorder(Thread):
         return False
 
 
+def __port_to_str(epiphan_port):
+    """Get string representation of given `epiphan_port`.
+
+    @param epiphan_port
+    @return
+    @throw ValueError if invalid value given
+    """
+    if epiphan_port == pygiftgrab.Device.DVI2PCIeDuo_SDI:
+        return 'SDI'
+    elif epiphan_port == pygiftgrab.Device.DVI2PCIeDuo_DVI:
+        return 'DVI'
+    else:
+        raise ValueError('Could not recognise port ' + epiphan_port)
+
+
+def __str_to_port(epiphan_port):
+    """Get actual port value from given `epiphan_port` string.
+
+    @param epiphan_port
+    @return
+    @throw ValueError if invalid string given
+    """
+    if epiphan_port == 'SDI':
+        return pygiftgrab.Device.DVI2PCIeDuo_SDI
+    elif epiphan_port == 'DVI':
+        return pygiftgrab.Device.DVI2PCIeDuo_DVI
+    else:
+        raise ValueError('Could not recognise port ' + epiphan_port)
+
+
 def parse(file_path):
     """Parse `Recorder` configuration from given YAML file.
 
+    Also create a session folder for this `Recorder`, using
+    corresponding tag of given YAML file.
+
     @param file_path
     @return a ready-to-start `Recorder` thread on success
-    @throw YAMLError on failure
+    @throw YAMLError if YAML file cannot be parsed
     @throw IOError if `file_path` cannot be opened for
     reading
+    @throw ValueError if YAML file contains invalid values
     """
-    print 'parse'
+    with open(file_path, 'r') as stream:
+        data = yaml.load(stream)
+
+        if not data['file_path'] or not data['frame_rate'] \
+           or not data['timeout_limit'] or not data['port']:
+            raise yaml.YAMLError('Could not parse ' + file_path)
+
+        file_path = data['file_path']
+        frame_rate = data['frame_rate']
+        timeout_limit = data['timeout_limit']
+        port = __str_to_port(data['port'])
+
+        unique_file_path = __session_folder(path_prefix=file_path)
+        return Recorder(port=port, frame_rate=frame_rate,
+                        file_path=unique_file_path, timeout_limit=timeout_limit)
 
 
-def dump(recorder, file_path):
-    """Dump given `recorder`'s configuration to YAML file.
+def dump(recorder):
+    """Dump given `recorder`'s configuration to a YAML file.
+
+    The file is deduced from `recorder` configuration.
 
     @param recorder
-    @param file_path
-    @sa parse
+    @sa parse as same format is used
+    @throw YAMLError if dumping fails
     @throw IOError if `file_path` cannot be opened for
     writing
     """
-    print 'dump'
+    file_path = join(dirname(recorder.file_path), 'config.yml')
+    with open(file_path, 'w') as stream:
+        port = __port_to_str(recorder.port)
+        data = dict(port=port,
+                    frame_rate=recorder.frame_rate,
+                    file_path=recorder.file_path,
+                    timeout_limit=recorder.timeout_limit)
+        stream.write(yaml.dump(data, default_flow_style=False))
+        stream.close()
 
 
-def report(recorder, file_path):
-    """Write a report from `recorder` to given YAML file.
+def __session_folder(path_prefix):
+    """Attempt to create a session folder with a unique name.
 
-    @param recorder
-    @param file_path
-    @throw IOError if `file_path` cannot be opened for
-    writing
-    @throw RuntimeError if `recorder` still recording
+    @param path_prefix last element treated as a file prefix,
+    e.g. ``/my/dir/file``
+    @return updated `path_prefix` after folder created
+    @throw OSError if the attempt fails
     """
-    print 'report'
+    path_prefix_folder, path_prefix_filename = split(path_prefix)
+    unique_suffix = ''.join(choice(ascii_uppercase) for _ in range(5))
+    attempted_folder = join(path_prefix_folder,
+                            strftime('%Y-%m-%d-%H-%M-%S') +
+                            '-' + unique_suffix)
+    makedirs(attempted_folder)
+    return join(attempted_folder, path_prefix_filename)
