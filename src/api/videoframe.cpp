@@ -22,6 +22,12 @@ VideoFrame_BGRA::VideoFrame_BGRA(unsigned char * data, size_t rows, size_t cols,
    init_from_pointer(data, rows, cols);
 }
 
+VideoFrame_BGRA::VideoFrame_BGRA(const size_t rows, const size_t cols)
+    : _manage_data(true)
+{
+    init_from_opencv_mat(cv::Mat::zeros(rows, cols, CV_8UC4));
+}
+
 
 
 void VideoFrame_BGRA::init_from_pointer(unsigned char * data, size_t rows, size_t cols)

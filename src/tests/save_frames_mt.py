@@ -14,10 +14,10 @@ def error(message):
     sys.exit(1)
 
 # default parameters
-frame_rate = 60
+frame_rate = 300
 recording_duration = 1  # min
 storage_type = pygiftgrab.Storage.File_H265
-lap = 30
+lap = 60
 sub_frame = False
 
 # argument parser
@@ -28,6 +28,7 @@ parser.add_argument("--sub-frame", action="store_true",
 parser.add_argument("--filepath-prefix", type=str,
                     help="prefix to filepath where videostream is saved")
 parser.add_argument("--duration", type=float, help="how long to record (sec.)")
+parser.add_argument("--frame-rate", type=float, help="framerate for recording")
 args = parser.parse_args()
 if args.storage_type:
     if args.storage_type == "xvid":
@@ -42,6 +43,8 @@ if args.duration:
 file_path_prefix = ''
 if args.filepath_prefix:
     file_path_prefix = args.filepath_prefix + '-'
+if args.frame_rate:
+    frame_rate = args.frame_rate
 
 # report header
 print str(sys.argv) + ' ( ' + str(args) + ' )'
@@ -54,12 +57,12 @@ try:
                                sub_frame=sub_frame, frame_rate=frame_rate,
                                recording_duration=recording_duration,
                                storage_type=storage_type,
-                               file_path_prefix=file_path_prefix)
+                               file_path_prefix=file_path_prefix, lap=lap)
     dvi_thread = EpiphanThread(device_type=pygiftgrab.Device.DVI2PCIeDuo_DVI,
                                sub_frame=sub_frame, frame_rate=frame_rate,
                                recording_duration=recording_duration,
                                storage_type=storage_type,
-                               file_path_prefix=file_path_prefix)
+                               file_path_prefix=file_path_prefix, lap=lap)
     sdi_thread.start()
     dvi_thread.start()
     sdi_thread.join()

@@ -312,7 +312,6 @@ void VideoTargetFFmpeg::finalise()
 
     // default values, for next init
     _codec = NULL;
-    _codec_name = "";
     _frame = NULL;
     _framerate = -1;
     _sws_context = NULL;
