@@ -361,20 +361,43 @@ def parse(file_path):
     @throw IOError if `file_path` cannot be opened for
     reading
     @throw ValueError if YAML file contains invalid values
+    @throw OSError if unique session folder cannot be
+    created
     """
     with open(file_path, 'r') as stream:
+        # parse YAML file
         data = yaml.load(stream)
 
+        # check everything specified properly
         if not data['file_path'] or not data['frame_rate'] \
            or not data['timeout_limit'] or not data['port']:
             raise yaml.YAMLError('Could not parse ' + file_path)
-
-        file_path = data['file_path']
         frame_rate = data['frame_rate']
+        if not 0 < frame_rate <= 29:
+            raise ValueError('Supporting only up to 29 fps currently ' +
+                             '(' + str(frame_rate) + ' given)')
         timeout_limit = data['timeout_limit']
+        if not 0 < timeout_limit <= 20:
+            raise ValueError('Timeout should be positive, ' +
+                             'and up to 20 sec.')
         port = __str_to_port(data['port'])
+        file_path = data['file_path']
+        unique_file_path = None
+        max_attempts = 5
+        attempt = 0
+        while True:
+            attempt += 1
+            try:
+                unique_file_path = __session_folder(path_prefix=file_path)
+            except OSError as e:
+                if attempt >= max_attempts:
+                    raise e
+                else:
+                    print e.message
+            else:
+                break
 
-        unique_file_path = __session_folder(path_prefix=file_path)
+        # create and return thread
         return Recorder(port=port, frame_rate=frame_rate,
                         file_path=unique_file_path, timeout_limit=timeout_limit)
 

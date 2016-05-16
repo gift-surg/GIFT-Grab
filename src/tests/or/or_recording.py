@@ -41,10 +41,10 @@ if __name__ == '__main__':
         us.stop()
 
         # join threads
-        fs.join(timeout=10)
+        fs.join(timeout=fs.timeout_limit)
         if fs.isAlive():
             print 'Fetoscope thread could not be stopped'
-        us.join(timeout=10)
+        us.join(timeout=us.timeout_limit)
         if us.isAlive():
             print 'Ultrasound thread could not be stopped'
 
