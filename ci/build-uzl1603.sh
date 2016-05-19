@@ -1,4 +1,5 @@
 #!/bin/bash
+export GIT_SSL_NO_VERIFY=1
 rm -rf "$GiftGrab_BUILD_DIR"
 mkdir -p "$GiftGrab_BUILD_DIR"
 cd "$GiftGrab_BUILD_DIR"
