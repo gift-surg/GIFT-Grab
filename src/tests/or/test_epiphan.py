@@ -3,6 +3,7 @@
 from epiphan import parse
 from pytest import raises
 import yaml
+import pygiftgrab
 
 
 def test_epiphan_parse():
@@ -29,3 +30,9 @@ def test_frame_grabbing():
     us = parse('config/dvi.yml')
     assert fs is not None
     assert us is not None
+    assert fs.frame_rate == 28.0 and \
+        fs.port == pygiftgrab.Device.DVI2PCIeDuo_SDI and \
+        fs.timeout_limit == 20.0
+    assert us.frame_rate == 14.0 and \
+        us.port == pygiftgrab.Device.DVI2PCIeDuo_DVI and \
+        us.timeout_limit == 15.0
