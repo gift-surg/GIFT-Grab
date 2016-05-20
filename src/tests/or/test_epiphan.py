@@ -3,9 +3,120 @@
 from time import sleep
 from pytest import raises
 import yaml
-from os.path import isdir, dirname
+from subprocess import check_output
+from os.path import isdir, dirname, isfile
 from epiphan import parse
 import pygiftgrab
+
+
+def frame_rate(file_path):
+    """Use ``ffprobe`` to inspect frame rate of video file
+
+    @param file_path
+    @return
+    @throw OSError if `file_path` does not exist, or if
+    ``ffprobe`` cannot be run (e.g. not installed)
+    @throw ValueError if frame rate cannot be inferred from
+    ``ffprobe`` output
+    """
+    ffprobe_output = check_output(['ffprobe',
+                                   '-v', 'error',
+                                   '-of', 'flat=s=_',
+                                   '-show_entries', 'stream=r_frame_rate',
+                                   file_path])
+    frame_rate_str = ffprobe_output.split('=')[1].strip()[1:-1].split('/')
+    fr = -1
+    if len(frame_rate_str) == 1:
+        fr = float(frame_rate_str[0])
+    elif len(frame_rate_str) == 2:
+        fr = float(frame_rate_str[0])/float(frame_rate_str[1])
+    else:
+        raise ValueError('Frame rate cannot be inferred from ffprobe output')
+
+    return fr
+
+
+def duration(file_path):
+    """Use ``ffprobe`` to inspect duration of video file
+
+    @param file_path
+    @return
+    @throw OSError if `file_path` does not exist, or if
+    ``ffprobe`` cannot be run (e.g. not installed)
+    @throw ValueError if duration cannot be inferred from
+    ``ffprobe`` output
+    """
+    ffprobe_output = check_output(['ffprobe',
+                                   '-v', 'error',
+                                   '-of', 'flat=s=_',
+                                   '-show_entries', 'stream=duration',
+                                   file_path])
+    duration_str = ffprobe_output.split('=')[1].strip()[1:-1]
+    dur = -1
+    if duration_str is not None:
+        dur = float(duration_str)
+    else:
+        raise ValueError('Duration cannot be inferred from ffprobe output')
+
+    return dur
+
+
+def resolution(file_path):
+    """Use ``ffprobe`` to inspect resolution of video file
+
+    @param file_path
+    @return width, height
+    @throw OSError if `file_path` does not exist, or if
+    ``ffprobe`` cannot be run (e.g. not installed)
+    @throw ValueError if resolution cannot be inferred from
+    ``ffprobe`` output
+    """
+    width = -1
+    height = -1
+    ffprobe_commands = [ ['ffprobe',
+                          '-v', 'error',
+                          '-of', 'flat=s=_',
+                          '-show_entries', 'stream=width',
+                          file_path],
+                         ['ffprobe',
+                          '-v', 'error',
+                          '-of', 'flat=s=_',
+                          '-show_entries', 'stream=height',
+                          file_path] ]
+    res = []
+    for ffprobe_command in ffprobe_commands:
+        ffprobe_output = check_output(ffprobe_command)
+        resolution_str = ffprobe_output.split('=')[1].strip()
+        if resolution_str is not None:
+            res.append(float(resolution_str))
+        else:
+            raise ValueError('Resolution cannot be inferred from ffprobe output')
+    width = res[0]
+    height = res[1]
+
+    return width, height
+
+
+def codec(file_path):
+    """Use ``ffprobe`` to inspect codec of video file
+
+    @param file_path
+    @return width, height
+    @throw OSError if `file_path` does not exist, or if
+    ``ffprobe`` cannot be run (e.g. not installed)
+    @throw ValueError if codec cannot be inferred from
+    ``ffprobe`` output
+    """
+    ffprobe_output = check_output(['ffprobe',
+                                   '-v', 'error',
+                                   '-of', 'flat=s=_',
+                                   '-show_entries', 'stream=codec_name',
+                                   file_path])
+    codec_str = ffprobe_output.split('=')[1].strip().strip('"')
+    if codec_str is not None:
+        return codec_str
+    else:
+        raise ValueError('Codec cannot be inferred from ffprobe output')
 
 
 def test_epiphan_parse():
@@ -42,12 +153,29 @@ def test_frame_grabbing():
     # test actual output now
     fs.start()
     us.start()
-    sleep(5)
+    recording_duration = 5
+    sleep(recording_duration)
     fs.pause_recording()
     us.pause_recording()
     sleep(4)
+
+    # has output directory been created?
     assert isdir(dirname(fs.file_path))
     assert isdir(dirname(us.file_path))
+
+    # have videos been recorded?
+    fs_file_path = fs.file_path + '-000001.mp4'
+    assert isfile(fs_file_path)
+    us_file_path = us.file_path + '-000001.mp4'
+    assert isfile(us_file_path)
+    assert frame_rate(fs_file_path) == fs.frame_rate
+    assert frame_rate(us_file_path) == us.frame_rate
+    assert duration(fs_file_path) >= recording_duration
+    assert duration(us_file_path) >= recording_duration
+    assert resolution(fs_file_path) == (1920, 1080)
+    assert resolution(us_file_path) == (1920, 1080)
+    assert codec(fs_file_path) == 'hevc'
+    assert codec(us_file_path) == 'hevc'
 
     # finish session
     fs.stop()
