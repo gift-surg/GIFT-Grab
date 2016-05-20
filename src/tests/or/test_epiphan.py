@@ -183,6 +183,53 @@ def test_frame_grabbing():
     assert codec(fs_file_path) == 'hevc'
     assert codec(us_file_path) == 'hevc'
 
+    # another recording
+    roi = [426, 40, 1068, 1040]
+    with pytest.raises(ValueError):
+        fs.set_sub_frame(roi[0], -roi[1], roi[2], roi[3])
+    us.set_sub_frame(roi[0], roi[1], roi[2], roi[3])
+    recording_duration = 10
+    fs.resume_recording()
+    us.resume_recording()
+    sleep(recording_duration)
+    fs.pause_recording()
+    us.pause_recording()
+    sleep(4)
+    fs_file_path = fs.file_path + '-000002.mp4'
+    assert isfile(fs_file_path)
+    us_file_path = us.file_path + '-000002.mp4'
+    assert isfile(us_file_path)
+    assert frame_rate(fs_file_path) == fs.frame_rate
+    assert frame_rate(us_file_path) == us.frame_rate
+    assert duration(fs_file_path) >= recording_duration
+    assert duration(us_file_path) >= recording_duration
+    assert resolution(fs_file_path) == (1920, 1080)
+    assert resolution(us_file_path) == (roi[2], roi[3])
+    assert codec(fs_file_path) == 'hevc'
+    assert codec(us_file_path) == 'hevc'
+
+    # yet another recording
+    recording_duration = 25
+    fs.resume_recording()
+    us.resume_recording()
+    sleep(recording_duration)
+    us.set_full_frame()
+    fs.pause_recording()
+    us.pause_recording()
+    sleep(4)
+    fs_file_path = fs.file_path + '-000003.mp4'
+    assert isfile(fs_file_path)
+    us_file_path = us.file_path + '-000003.mp4'
+    assert isfile(us_file_path)
+    assert frame_rate(fs_file_path) == fs.frame_rate
+    assert frame_rate(us_file_path) == us.frame_rate
+    assert duration(fs_file_path) >= recording_duration
+    assert duration(us_file_path) >= recording_duration
+    assert resolution(fs_file_path) == (1920, 1080)
+    assert resolution(us_file_path) == (1920, 1080)
+    assert codec(fs_file_path) == 'hevc'
+    assert codec(us_file_path) == 'hevc'
+
     # finish session
     fs.stop()
     us.stop()
