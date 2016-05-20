@@ -6,10 +6,11 @@ if [ $num_lines -gt 0 ]; then
   exit 1
 else
   cd "$GiftGrab_BUILD_DIR"
-  cp "$GiftGrab_SOURCE_DIR/tests/or/epiphan.py" ./
-  cp "$GiftGrab_SOURCE_DIR/tests/or/test_epiphan.py" ./
-  cp --recursive "$GiftGrab_SOURCE_DIR/tests/or/config" ./
+  cp "$GiftGrab_SOURCE_DIR/python/modules/epiphan.py" ./
+  cp "$GiftGrab_SOURCE_DIR/tests/epiphan/dvi2pcieduo.py" ./
+  cp --recursive "$GiftGrab_SOURCE_DIR/tests/epiphan/config" ./
+  cp "$GiftGrab_SOURCE_DIR/python/modules/example_epiphan/"* ./config
 
-  py.test test_epiphan.py
+  py.test dvi2pcieduo.py
 fi
 

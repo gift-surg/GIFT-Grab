@@ -9,8 +9,8 @@ import logging
 if __name__ == '__main__':
     try:
         # create sessions
-        fs_config = 'config/sdi.yml'
-        us_config = 'config/dvi.yml'
+        fs_config = 'example_epiphan/sdi.yml'
+        us_config = 'example_epiphan/dvi.yml'
         logging.basicConfig(format='%(threadName)s -- %(asctime)s -- %(message)s',
                             datefmt='%m/%d/%Y %H:%M:%S')
 
