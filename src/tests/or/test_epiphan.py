@@ -148,7 +148,7 @@ def timing_report(file_path):
     return True
 
 
-def test_epiphan_parse():
+def test_parse():
     # not existing config file
     with pytest.raises(IOError):
         _ = parse('/this/file/should/never/exist.yml')
