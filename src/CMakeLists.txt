@@ -207,8 +207,11 @@ endif(BUILD_DOC)
 OPTION(BUILD_TESTS "Build tests" OFF)
 if(BUILD_TESTS)
     SET(TEST_NAME save_frames)
-    ADD_EXECUTABLE(${TEST_NAME}
-        tests/save_frames.cpp)
+    ADD_EXECUTABLE(${TEST_NAME} tests/save_frames.cpp)
+    TARGET_LINK_LIBRARIES(${TEST_NAME} ${NAME} ${LIBS})
+
+    SET(TEST_NAME dvi2pcieduo)
+    ADD_EXECUTABLE(${TEST_NAME} tests/epiphan/dvi2pcieduo.cpp)
     TARGET_LINK_LIBRARIES(${TEST_NAME} ${NAME} ${LIBS})
 endif(BUILD_TESTS)
 
