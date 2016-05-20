@@ -4,9 +4,9 @@ from time import sleep, strptime
 import pytest
 import yaml
 from subprocess import check_output
-from os.path import isdir, dirname, isfile
+from os.path import isdir, dirname, isfile, join
 from shutil import rmtree
-from epiphan import parse
+from epiphan import parse, dump
 import pygiftgrab
 
 
@@ -275,6 +275,20 @@ def test_frame_grabbing():
     assert not fs.isAlive()
     us.join(timeout=us.timeout_limit)
     assert not us.isAlive()
+
+    # test dumped Recorder configuration
+    dump(fs)
+    dumped_fs = parse(join(dirname(fs_file_path), 'config.yml'))
+    assert dirname(dirname(dumped_fs.file_path)) == dirname(fs.file_path)
+    assert dumped_fs.frame_rate == fs.frame_rate
+    assert dumped_fs.port == fs.port
+    assert dumped_fs.timeout_limit == fs.timeout_limit
+    dump(us)
+    dumped_us = parse(join(dirname(us_file_path), 'config.yml'))
+    assert dirname(dirname(dumped_us.file_path)) == dirname(us.file_path)
+    assert dumped_us.frame_rate == us.frame_rate
+    assert dumped_us.port == us.port
+    assert dumped_us.timeout_limit == us.timeout_limit
 
 
 @pytest.yield_fixture(autouse=True)
