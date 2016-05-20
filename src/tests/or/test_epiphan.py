@@ -160,7 +160,7 @@ def test_frame_grabbing():
     fs.start()
     us.start()
     recording_duration = 5
-    sleep(recording_duration)
+    sleep(recording_duration+2)
     fs.pause_recording()
     us.pause_recording()
     sleep(4)
@@ -191,7 +191,7 @@ def test_frame_grabbing():
     recording_duration = 10
     fs.resume_recording()
     us.resume_recording()
-    sleep(recording_duration)
+    sleep(recording_duration+2)
     fs.pause_recording()
     us.pause_recording()
     sleep(4)
@@ -212,8 +212,8 @@ def test_frame_grabbing():
     recording_duration = 25
     fs.resume_recording()
     us.resume_recording()
-    sleep(recording_duration)
     us.set_full_frame()
+    sleep(recording_duration+2)
     fs.pause_recording()
     us.pause_recording()
     sleep(4)
