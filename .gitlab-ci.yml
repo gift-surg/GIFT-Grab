@@ -32,3 +32,5 @@ or-recording-compatibility:
     - "$CI_SCRIPTS_DIR/test-uzl1603.sh"
   tags:
     - uzl1603
+  only:
+    - 31-i420-colour-space-on-epiphan
