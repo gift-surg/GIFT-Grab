@@ -187,6 +187,7 @@ def test_frame_grabbing():
     roi = [426, 40, 1068, 1040]
     with pytest.raises(ValueError):
         fs.set_sub_frame(roi[0], -roi[1], roi[2], roi[3])
+    fs.set_sub_frame(roi[0], roi[1], roi[2], roi[3])
     us.set_sub_frame(roi[0], roi[1], roi[2], roi[3])
     recording_duration = 10
     fs.resume_recording()
@@ -203,16 +204,17 @@ def test_frame_grabbing():
     assert frame_rate(us_file_path) == us.frame_rate
     assert duration(fs_file_path) >= recording_duration
     assert duration(us_file_path) >= recording_duration
-    assert resolution(fs_file_path) == (1920, 1080)
+    assert resolution(fs_file_path) == (roi[2], roi[3])
     assert resolution(us_file_path) == (roi[2], roi[3])
     assert codec(fs_file_path) == 'hevc'
     assert codec(us_file_path) == 'hevc'
 
     # yet another recording
     recording_duration = 25
+    fs.set_full_frame()
     fs.resume_recording()
     us.resume_recording()
-    us.set_full_frame()
+    us.set_full_frame()  # should have no effect
     sleep(recording_duration+2)
     fs.pause_recording()
     us.pause_recording()
@@ -226,7 +228,7 @@ def test_frame_grabbing():
     assert duration(fs_file_path) >= recording_duration
     assert duration(us_file_path) >= recording_duration
     assert resolution(fs_file_path) == (1920, 1080)
-    assert resolution(us_file_path) == (1920, 1080)
+    assert resolution(us_file_path) == (roi[2], roi[3])
     assert codec(fs_file_path) == 'hevc'
     assert codec(us_file_path) == 'hevc'
 
