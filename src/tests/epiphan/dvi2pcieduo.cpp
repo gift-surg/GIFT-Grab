@@ -14,8 +14,7 @@ int main()
     {
         source->get_frame(frame);
         std::cout << ++i << ". frame: "
-                     // TODO
-//                  << frame.cols() << " x " << frame.rows()
+                  << frame.cols() << " x " << frame.rows()
                   << std::endl;
     }
     float elapsed_seconds = std::chrono::duration_cast<std::chrono::seconds>(
