@@ -43,7 +43,7 @@ public:
     //! \param frame
     //! \return
     //!
-    virtual bool get_frame(VideoFrame_I420 & frame)
+    virtual bool get_frame(gg::VideoFrame_I420 & frame)
     {
         throw gg::VideoSourceError("By default, get_frame(VideoFrame_I420 & frame) not implemented");
     }
