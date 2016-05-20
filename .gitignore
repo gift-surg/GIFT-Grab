@@ -9,3 +9,4 @@ src/extern
 *.latency.txt
 *.timing.txt
 *.timing.yml
+.cache
