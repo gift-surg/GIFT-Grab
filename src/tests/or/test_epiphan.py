@@ -5,6 +5,7 @@ import pytest
 import yaml
 from subprocess import check_output
 from os.path import isdir, dirname, isfile
+from shutil import rmtree
 from epiphan import parse
 import pygiftgrab
 
@@ -207,6 +208,9 @@ def cleanup():
     for recorder in recorders:
         recorder.join(timeout=recorder.timeout_limit)
     sleep(5)
+
+    for recorder in recorders:
+        rmtree(dirname(recorder.file_path))
 
     for recorder in recorders:
         assert not recorder.isAlive()
