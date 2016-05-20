@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 
 from time import sleep
-from pytest import raises
+import pytest
 import yaml
 from subprocess import check_output
 from os.path import isdir, dirname, isfile
 from epiphan import parse
 import pygiftgrab
+
+
+recorders = []
 
 
 def frame_rate(file_path):
@@ -121,19 +124,19 @@ def codec(file_path):
 
 def test_epiphan_parse():
     # not existing config file
-    with raises(IOError):
+    with pytest.raises(IOError):
         _ = parse('/this/file/should/never/exist.yml')
 
     # non-parseable file
-    with raises(yaml.YAMLError):
+    with pytest.raises(yaml.YAMLError):
         _ = parse('config/yamlerror.yml')
 
     # file with invalid value
-    with raises(ValueError):
+    with pytest.raises(ValueError):
         _ = parse('config/valueerror.yml')
 
     # folder that can't be created
-    with raises(OSError):
+    with pytest.raises(OSError):
         _ = parse('config/oserror.yml')
 
 
@@ -142,7 +145,9 @@ def test_frame_grabbing():
     fs = parse('config/sdi.yml')
     us = parse('config/dvi.yml')
     assert fs is not None
+    recorders.append(fs)
     assert us is not None
+    recorders.append(us)
     assert fs.frame_rate == 28.0 and \
         fs.port == pygiftgrab.Device.DVI2PCIeDuo_SDI and \
         fs.timeout_limit == 20.0
@@ -186,3 +191,22 @@ def test_frame_grabbing():
     assert not fs.isAlive()
     us.join(timeout=us.timeout_limit)
     assert not us.isAlive()
+
+
+@pytest.yield_fixture(autouse=True)
+def cleanup():
+    # This section runs before each test
+
+    # Run test
+    yield
+    # This section runs after each test
+    for recorder in recorders:
+        recorder.stop()
+    sleep(5)
+
+    for recorder in recorders:
+        recorder.join(timeout=recorder.timeout_limit)
+    sleep(5)
+
+    for recorder in recorders:
+        assert not recorder.isAlive()
