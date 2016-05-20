@@ -157,9 +157,11 @@ def test_parse():
     with pytest.raises(yaml.YAMLError):
         _ = parse('config/yamlerror.yml')
 
-    # file with invalid value
+    # files with invalid values
     with pytest.raises(ValueError):
-        _ = parse('config/valueerror.yml')
+        _ = parse('config/valueerror1.yml')
+    with pytest.raises(ValueError):
+        _ = parse('config/valueerror2.yml')
 
     # folder that can't be created
     with pytest.raises(OSError):
