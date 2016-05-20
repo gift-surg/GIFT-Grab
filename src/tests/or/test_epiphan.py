@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from time import sleep
+from time import sleep, strptime
 import pytest
 import yaml
 from subprocess import check_output
@@ -123,6 +123,31 @@ def codec(file_path):
         raise ValueError('Codec cannot be inferred from ffprobe output')
 
 
+def timing_report(file_path):
+    """Check whether `file_path` is a valid YAML timing report file
+
+    @param file_path
+    @return ``True`` if valid, ``False`` otherwise
+    @throw IOError if `file_path` cannot be opened for reading
+    @throw YAMLError if `file_path` cannot be parsed as a YAML file
+    """
+    with open(file_path, 'r') as stream:
+        data = yaml.load(stream)
+        if data['elapsed'] is None:
+            return False
+        try:
+            strptime(data['elapsed'], '%H:%M:%S.%f')
+        except ValueError:
+            return False
+        if data['latency'] is None:
+            return False
+        try:
+            strptime(data['latency'], '%H:%M:%S.%f')
+        except ValueError:
+            return False
+    return True
+
+
 def test_epiphan_parse():
     # not existing config file
     with pytest.raises(IOError):
@@ -173,8 +198,10 @@ def test_frame_grabbing():
 
     # have videos been recorded?
     fs_file_path = fs.file_path + '-000001.mp4'
+    assert timing_report(fs_file_path + '.timing.yml')
     assert isfile(fs_file_path)
     us_file_path = us.file_path + '-000001.mp4'
+    assert timing_report(us_file_path + '.timing.yml')
     assert isfile(us_file_path)
     assert frame_rate(fs_file_path) == fs.frame_rate
     assert frame_rate(us_file_path) == us.frame_rate
@@ -198,9 +225,11 @@ def test_frame_grabbing():
     us.pause_recording()
     sleep(4)
     fs_file_path = fs.file_path + '-000002.mp4'
+    assert timing_report(fs_file_path + '.timing.yml')
     assert isfile(fs_file_path)
     us_file_path = us.file_path + '-000002.mp4'
     assert isfile(us_file_path)
+    assert timing_report(us_file_path + '.timing.yml')
     assert frame_rate(fs_file_path) == fs.frame_rate
     assert frame_rate(us_file_path) == us.frame_rate
     assert duration(fs_file_path) >= recording_duration
@@ -221,8 +250,10 @@ def test_frame_grabbing():
     us.pause_recording()
     sleep(4)
     fs_file_path = fs.file_path + '-000003.mp4'
+    assert timing_report(fs_file_path + '.timing.yml')
     assert isfile(fs_file_path)
     us_file_path = us.file_path + '-000003.mp4'
+    assert timing_report(us_file_path + '.timing.yml')
     assert isfile(us_file_path)
     assert frame_rate(fs_file_path) == fs.frame_rate
     assert frame_rate(us_file_path) == us.frame_rate
