@@ -40,6 +40,11 @@ public:
     VideoSourceEpiphanSDK(const std::string device_id,
                           V2U_INT32 colour_space);
 
+    //!
+    //! \brief Release all allocated resources
+    //!
+    virtual ~VideoSourceEpiphanSDK();
+
 public:
     bool get_frame_dimensions(int & width, int & height);
 

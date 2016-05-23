@@ -29,6 +29,13 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
     _flags |= colour_space;
 }
 
+VideoSourceEpiphanSDK::~VideoSourceEpiphanSDK()
+{
+    if (_frame_grabber)
+        FrmGrab_Close(_frame_grabber);
+    FrmGrab_Deinit();
+}
+
 bool VideoSourceEpiphanSDK::get_frame_dimensions(int & width, int & height)
 {
     // TODO
