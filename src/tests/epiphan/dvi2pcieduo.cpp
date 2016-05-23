@@ -22,8 +22,9 @@ int main()
         float elapsed_seconds = std::chrono::duration_cast<std::chrono::seconds>(
                         std::chrono::high_resolution_clock::now() - started_at
                     ).count();
+        float frame_rate = num_frames/elapsed_seconds;
         std::cout << num_frames << " frames grabbed in " << elapsed_seconds << " sec: "
-                  << (num_frames/elapsed_seconds) << " fps"
+                  << frame_rate << " fps"
                   << std::endl;
         gg::Factory::disconnect(device);
         return EXIT_SUCCESS;
@@ -34,6 +35,7 @@ int main()
         return EXIT_FAILURE;
     }
 #else
-    return EXIT_SUCCESS;
+    std::cerr << "Not using I420 colour space, exiting." << std::endl;
+    return EXIT_FAILURE;
 #endif
 }
