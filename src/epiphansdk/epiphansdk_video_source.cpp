@@ -32,7 +32,10 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
 VideoSourceEpiphanSDK::~VideoSourceEpiphanSDK()
 {
     if (_frame_grabber)
+    {
+        FrmGrab_Release(_frame_grabber, _buffer);
         FrmGrab_Close(_frame_grabber);
+    }
     FrmGrab_Deinit();
 }
 
@@ -50,8 +53,18 @@ bool VideoSourceEpiphanSDK::get_frame(VideoFrame_BGRA & frame)
 
 bool VideoSourceEpiphanSDK::get_frame(VideoFrame_I420 & frame)
 {
-    // TODO
-    return false;
+    _buffer = FrmGrab_Frame(_frame_grabber, _flags, _roi);
+    if (_buffer)
+    {
+        frame = VideoFrame_I420(
+                    static_cast<unsigned char*>(_buffer->pixbuf), _buffer->imagelen,
+                    _buffer->crop.width, _buffer->crop.height,
+                    false
+                    );
+        return true;
+    }
+    else
+        return false;
 }
 
 double VideoSourceEpiphanSDK::get_frame_rate()

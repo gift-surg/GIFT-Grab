@@ -25,6 +25,12 @@ protected:
     //!
     V2URect * _roi;
 
+    //!
+    //! \brief Buffer for acquiring frame data
+    //! \sa _frame_grabber
+    //!
+    V2U_GrabFrame2 * _buffer;
+
 public:
     //!
     //! \brief Connects to specified port of an Epiphan
