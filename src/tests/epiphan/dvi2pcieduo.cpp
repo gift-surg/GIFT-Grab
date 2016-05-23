@@ -3,7 +3,8 @@
 #include <chrono>
 
 void grab(const enum gg::Device device,
-          const size_t num_frames,
+          const size_t num_frames_to_grab,
+          size_t & num_frames_grabbed,
           float & duration)
 {
     std::string device_str = "";
@@ -22,13 +23,15 @@ void grab(const enum gg::Device device,
     gg::VideoFrame_I420 frame;
     IVideoSource * source = gg::Factory::connect(device);
     auto started_at = std::chrono::high_resolution_clock::now();
-    for (int i = 0; i < num_frames; )
+    num_frames_grabbed = 0;
+    for (int i = 0; i < num_frames_to_grab; i++)
     {
-        source->get_frame(frame);
-        std::cout << device_str << ": "
-                  << ++i << ". frame: "
-                  << frame.cols() << " x " << frame.rows()
-                  << std::endl;
+        if (source->get_frame(frame)) ++num_frames_grabbed;
+        if (i % 30 == 0)
+            std::cout << device_str << ": "
+                      << i << ". frame: "
+                      << frame.cols() << " x " << frame.rows()
+                      << std::endl;
     }
     duration = std::chrono::duration_cast<std::chrono::seconds>(
                     std::chrono::high_resolution_clock::now() - started_at
@@ -36,18 +39,46 @@ void grab(const enum gg::Device device,
     gg::Factory::disconnect(device);
 }
 
+struct grab_args
+{
+    enum gg::Device device;
+    size_t num_frames_to_grab;
+    size_t num_frames_grabbed;
+    float duration;
+};
+
+void * grab_thread(void * args)
+{
+    struct grab_args * g_args = (struct grab_args *) args;
+    grab(g_args->device, g_args->num_frames_to_grab,
+         g_args->num_frames_grabbed, g_args->duration);
+}
+
 int main()
 {
 #ifdef USE_COLOUR_SPACE_I420
     try
     {
-        const size_t num_frames = 180;
-        float duration_sdi = 0;
-        grab(gg::Device::DVI2PCIeDuo_SDI, num_frames, duration_sdi);
-        float frame_rate_sdi = num_frames/duration_sdi;
-        std::cout << num_frames << " frames grabbed in "
-                  << duration_sdi << " sec: "
+        pthread_t sdi, dvi;
+        struct grab_args sdi_args, dvi_args;
+        sdi_args.device = gg::Device::DVI2PCIeDuo_SDI;
+        dvi_args.device = gg::Device::DVI2PCIeDuo_DVI;
+        sdi_args.num_frames_to_grab = dvi_args.num_frames_to_grab = 180;
+        pthread_create(&sdi, nullptr, &grab_thread, &sdi_args);
+        pthread_create(&dvi, nullptr, &grab_thread, &dvi_args);
+        pthread_join(sdi, nullptr);
+        pthread_join(dvi, nullptr);
+        float frame_rate_sdi = sdi_args.num_frames_to_grab/sdi_args.duration;
+        float frame_rate_dvi = dvi_args.num_frames_to_grab/dvi_args.duration;
+        std::cout << "SDI grabbed " << sdi_args.num_frames_grabbed
+                  << " frames in "
+                  << sdi_args.duration << " sec: "
                   << frame_rate_sdi << " fps"
+                  << std::endl;
+        std::cout << "DVI grabbed "  << dvi_args.num_frames_grabbed
+                  << " frames in "
+                  << dvi_args.duration << " sec: "
+                  << frame_rate_dvi << " fps"
                   << std::endl;
         return EXIT_SUCCESS;
     }
