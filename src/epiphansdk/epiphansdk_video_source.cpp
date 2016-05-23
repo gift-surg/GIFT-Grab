@@ -37,6 +37,7 @@ VideoSourceEpiphanSDK::~VideoSourceEpiphanSDK()
         FrmGrab_Close(_frame_grabber);
     }
     FrmGrab_Deinit();
+    delete _roi;
 }
 
 bool VideoSourceEpiphanSDK::get_frame_dimensions(int & width, int & height)
