@@ -66,8 +66,7 @@ public:
     //!
     size_t rows() const
     {
-        // TODO
-        return -1;
+        return _rows;
     }
 
     //!
@@ -76,8 +75,7 @@ public:
     //!
     size_t cols() const
     {
-        // TODO
-        return -1;
+        return _cols;
     }
 
 protected:
