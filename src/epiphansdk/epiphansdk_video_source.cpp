@@ -78,8 +78,22 @@ bool VideoSourceEpiphanSDK::get_frame(VideoFrame_I420 & frame)
 
 double VideoSourceEpiphanSDK::get_frame_rate()
 {
-    // TODO - EpiphanSDK_SDI_MAX_FRAME_RATE, EpiphanSDK_DVI_MAX_FRAME_RATE, EpiphanSDK_DUAL_MAX_FRAME_RATE
-    return -1;
+    if (_frame_grabber)
+    {
+#if defined(EpiphanSDK_DVI) and \
+    defined(EpiphanSDK_SDI) and \
+    defined(EpiphanSDK_DVI_MAX_FRAME_RATE) and \
+    defined(EpiphanSDK_SDI_MAX_FRAME_RATE)
+        std::string port_id = FrmGrab_GetId(_frame_grabber);
+        if (port_id == EpiphanSDK_DVI)
+            return EpiphanSDK_DVI_MAX_FRAME_RATE;
+        else if (port_id == EpiphanSDK_SDI)
+            return EpiphanSDK_SDI_MAX_FRAME_RATE;
+#endif
+    }
+
+    // TODO - exception GiftGrab#42
+    return 0;
 }
 
 void VideoSourceEpiphanSDK::set_sub_frame(int x, int y, int width, int height)
