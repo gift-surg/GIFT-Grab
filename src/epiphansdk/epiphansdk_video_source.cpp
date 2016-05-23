@@ -56,7 +56,7 @@ bool VideoSourceEpiphanSDK::get_frame_dimensions(int & width, int & height)
 
 bool VideoSourceEpiphanSDK::get_frame(VideoFrame_BGRA & frame)
 {
-    // TODO
+    // TODO - exception GiftGrab#42
     return false;
 }
 
