@@ -5,7 +5,7 @@ namespace gg
 
 VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
     const std::string device_id, V2U_INT32 colour_space)
-    :
+    : IVideoSource(),
       _frame_grabber(nullptr),
       _flags(0),
       _roi(nullptr)
