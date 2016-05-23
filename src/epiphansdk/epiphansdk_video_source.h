@@ -1,5 +1,5 @@
 #pragma once
-#include "v2u_defs.h"
+#include "frmgrab.h"
 #include "dvi2pcieduo_defs.h"
 #include "ivideosource.h"
 #include "macros.h"
@@ -9,6 +9,22 @@ namespace gg
 
 class VideoSourceEpiphanSDK : public IVideoSource
 {
+protected:
+    //!
+    //! \brief
+    //!
+    FrmGrabber * _frame_grabber;
+
+    //!
+    //! \brief Currently only colour space
+    //!
+    V2U_UINT32 _flags;
+
+    //!
+    //! \brief Region of interest, i.e. sub-frame
+    //!
+    V2URect * _roi;
+
 public:
     //!
     //! \brief Connects to specified port of an Epiphan

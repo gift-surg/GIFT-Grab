@@ -5,8 +5,28 @@ namespace gg
 
 VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
     const std::string device_id, V2U_INT32 colour_space)
+    :
+      _frame_grabber(nullptr),
+      _flags(0),
+      _roi(nullptr)
 {
-    // TODO
+    FrmGrab_Init();
+
+    _frame_grabber = FrmGrabLocal_OpenSN(device_id.c_str());
+    if (not _frame_grabber)
+    {
+        // TODO - exception GiftGrab#42
+        std::cerr << "Could not open " << device_id << std::endl;
+        return;
+    }
+
+    if (colour_space != V2U_GRABFRAME_FORMAT_I420 and colour_space != V2U_GRABFRAME_FORMAT_BGR24)
+    {
+        // TODO - exception GiftGrab#42
+        std::cerr << "Colour space " << colour_space << " not supported" << std::endl;
+        return;
+    }
+    _flags |= colour_space;
 }
 
 bool VideoSourceEpiphanSDK::get_frame_dimensions(int & width, int & height)
