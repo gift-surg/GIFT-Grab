@@ -7,9 +7,7 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
     const std::string device_id, V2U_INT32 colour_space)
     : IVideoSource(),
       _frame_grabber(nullptr),
-      _flags(0),
-      _roi(nullptr),
-      _full(nullptr)
+      _flags(0)
 {
     FrmGrab_Init();
 
@@ -32,14 +30,10 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
     VideoFrame_I420 frame;
     // TODO - exception GiftGrab#42
     if (not get_frame(frame)) return;
-    _full = new V2URect;
-    _full->x = 0;
-    _full->y = 0;
-    _full->width = frame.cols();
-    _full->height = frame.rows();
-
-    _roi = new V2URect;
-
+    _full.x = 0;
+    _full.y = 0;
+    _full.width = frame.cols();
+    _full.height = frame.rows();
     get_full_frame();
 }
 
@@ -51,14 +45,12 @@ VideoSourceEpiphanSDK::~VideoSourceEpiphanSDK()
         FrmGrab_Close(_frame_grabber);
     }
     FrmGrab_Deinit();
-    delete _roi;
-    delete _full;
 }
 
 bool VideoSourceEpiphanSDK::get_frame_dimensions(int & width, int & height)
 {
-    width = _roi->width;
-    height = _roi->height;
+    width = _roi.width;
+    height = _roi.height;
     return true;
 }
 
@@ -70,7 +62,7 @@ bool VideoSourceEpiphanSDK::get_frame(VideoFrame_BGRA & frame)
 
 bool VideoSourceEpiphanSDK::get_frame(VideoFrame_I420 & frame)
 {
-    _buffer = FrmGrab_Frame(_frame_grabber, _flags, _roi);
+    _buffer = FrmGrab_Frame(_frame_grabber, _flags, &_roi);
     if (_buffer)
     {
         frame = VideoFrame_I420(
@@ -92,13 +84,13 @@ double VideoSourceEpiphanSDK::get_frame_rate()
 
 void VideoSourceEpiphanSDK::set_sub_frame(int x, int y, int width, int height)
 {
-    if (x >= _full->x and x + width <= _full->x + _full->width and
-        y >= _full->y and y + height <= _full->y + _full->height)
+    if (x >= _full.x and x + width <= _full.x + _full.width and
+        y >= _full.y and y + height <= _full.y + _full.height)
     {
-        _roi->x = x;
-        _roi->y = y;
-        _roi->width = width;
-        _roi->height = height;
+        _roi.x = x;
+        _roi.y = y;
+        _roi.width = width;
+        _roi.height = height;
     }
     // TODO - exception GiftGrab#42
 //    else
@@ -111,10 +103,10 @@ void VideoSourceEpiphanSDK::set_sub_frame(int x, int y, int width, int height)
 
 void VideoSourceEpiphanSDK::get_full_frame()
 {
-    _roi->x = _full->x;
-    _roi->y = _full->y;
-    _roi->width = _full->width;
-    _roi->height = _full->height;
+    _roi.x = _full.x;
+    _roi.y = _full.y;
+    _roi.width = _full.width;
+    _roi.height = _full.height;
 }
 
 }
