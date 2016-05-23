@@ -20,7 +20,12 @@ void grab(const enum gg::Device device,
         throw gg::BasicException("Device not set");
     }
 
+#ifdef USE_COLOUR_SPACE_I420
     gg::VideoFrame_I420 frame;
+#else
+    VideoFrame_BGRA frame;
+#endif
+
     IVideoSource * source = gg::Factory::connect(device);
     auto started_at = std::chrono::high_resolution_clock::now();
     num_frames_grabbed = 0;
@@ -56,7 +61,6 @@ void * grab_thread(void * args)
 
 int main()
 {
-#ifdef USE_COLOUR_SPACE_I420
     try
     {
         pthread_t sdi, dvi;
@@ -87,8 +91,4 @@ int main()
         std::cerr << e.what() << std::endl;
         return EXIT_FAILURE;
     }
-#else
-    std::cerr << "Not using I420 colour space, exiting." << std::endl;
-    return EXIT_FAILURE;
-#endif
 }
