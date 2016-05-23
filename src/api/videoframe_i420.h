@@ -79,6 +79,19 @@ public:
         // TODO
         return -1;
     }
+
+protected:
+    //!
+    //! \brief Convenience method to initialise object from
+    //! passed \c data
+    //! \param data
+    //! \param length
+    //! \param cols
+    //! \param rows
+    //! \sa _manage_data
+    //!
+    void init_from_pointer(unsigned char * data, size_t length,
+                           size_t cols, size_t rows);
 };
 
 }
