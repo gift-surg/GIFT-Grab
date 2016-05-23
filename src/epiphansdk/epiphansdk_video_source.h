@@ -21,7 +21,13 @@ protected:
     V2U_UINT32 _flags;
 
     //!
+    //! \brief Full frame dimensions
+    //!
+    V2URect * _full;
+
+    //!
     //! \brief Region of interest, i.e. sub-frame
+    //! \sa _full
     //!
     V2URect * _roi;
 

@@ -8,7 +8,8 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
     : IVideoSource(),
       _frame_grabber(nullptr),
       _flags(0),
-      _roi(nullptr)
+      _roi(nullptr),
+      _full(nullptr)
 {
     FrmGrab_Init();
 
@@ -27,6 +28,19 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
         return;
     }
     _flags |= colour_space;
+
+    VideoFrame_I420 frame;
+    // TODO - exception GiftGrab#42
+    if (not get_frame(frame)) return;
+    _full = new V2URect;
+    _full->x = 0;
+    _full->y = 0;
+    _full->width = frame.cols();
+    _full->height = frame.rows();
+
+    _roi = new V2URect;
+
+    get_full_frame();
 }
 
 VideoSourceEpiphanSDK::~VideoSourceEpiphanSDK()
@@ -38,20 +52,11 @@ VideoSourceEpiphanSDK::~VideoSourceEpiphanSDK()
     }
     FrmGrab_Deinit();
     delete _roi;
+    delete _full;
 }
 
 bool VideoSourceEpiphanSDK::get_frame_dimensions(int & width, int & height)
 {
-    if (not _roi)
-    {
-        VideoFrame_I420 frame;
-        if (not get_frame(frame)) return false;
-        _roi = new V2URect;
-        _roi->x = 0;
-        _roi->y = 0;
-        _roi->width = frame.cols();
-        _roi->height = frame.rows();
-    }
     width = _roi->width;
     height = _roi->height;
     return true;
@@ -81,18 +86,35 @@ bool VideoSourceEpiphanSDK::get_frame(VideoFrame_I420 & frame)
 
 double VideoSourceEpiphanSDK::get_frame_rate()
 {
-    // TODO
+    // TODO - EpiphanSDK_SDI_MAX_FRAME_RATE, EpiphanSDK_DVI_MAX_FRAME_RATE, EpiphanSDK_DUAL_MAX_FRAME_RATE
     return -1;
 }
 
 void VideoSourceEpiphanSDK::set_sub_frame(int x, int y, int width, int height)
 {
-    // TODO
+    if (x >= _full->x and x + width <= _full->x + _full->width and
+        y >= _full->y and y + height <= _full->y + _full->height)
+    {
+        _roi->x = x;
+        _roi->y = y;
+        _roi->width = width;
+        _roi->height = height;
+    }
+    // TODO - exception GiftGrab#42
+//    else
+//        throw VideoSourceError("ROI " + std::to_string(x) + ", " +
+//                               std::to_string(y) + ", " +
+//                               std::to_string(width) + ", " +
+//                               std::to_string(height) + ", " +
+//                               "not within full frame");
 }
 
 void VideoSourceEpiphanSDK::get_full_frame()
 {
-    // TODO
+    _roi->x = _full->x;
+    _roi->y = _full->y;
+    _roi->width = _full->width;
+    _roi->height = _full->height;
 }
 
 }
