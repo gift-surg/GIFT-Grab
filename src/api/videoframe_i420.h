@@ -41,7 +41,10 @@ public:
     VideoFrame_I420(bool manage_data = false);
 
     //!
-    //! \brief Initialise a frame from passed \c data
+    //! \brief Initialise a frame from passed \c data.
+    //! No checks are performed to ensure integrity of
+    //! \c length in conjunction with \c cols and \c
+    //! rows
     //! \param data
     //! \param length \c data length
     //! \param cols frame width
