@@ -38,9 +38,9 @@ void grab(const enum gg::Device device,
                       << frame.cols() << " x " << frame.rows()
                       << std::endl;
     }
-    duration = std::chrono::duration_cast<std::chrono::seconds>(
+    duration = std::chrono::duration_cast<std::chrono::milliseconds>(
                     std::chrono::high_resolution_clock::now() - started_at
-                ).count();
+                ).count() / 1000.0; // because chrono::seconds truncates decimal part
     gg::Factory::disconnect(device);
 }
 
