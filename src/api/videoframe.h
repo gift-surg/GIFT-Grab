@@ -8,9 +8,6 @@
 
 #include <memory>
 #include "maskframe.h"
-#ifdef USE_COLOUR_SPACE_I420
-#include "videoframe_i420.h"
-#endif
 
 //!
 //! \brief A class to represent a video frame
