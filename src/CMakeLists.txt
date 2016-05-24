@@ -143,7 +143,7 @@ endif(USE_LIBVLC)
 
 # Support for I420 (YUV420p) colour space
 OPTION(USE_COLOUR_SPACE_I420
-    "Support from grabbing frames in I420 colour space instead of BGR24" OFF)
+    "Support for grabbing frames in I420 colour space instead of BGR24" OFF)
 if(USE_COLOUR_SPACE_I420)
     SET(USE_EPIPHANSDK ON)
     ADD_DEFINITIONS(-DUSE_COLOUR_SPACE_I420)
