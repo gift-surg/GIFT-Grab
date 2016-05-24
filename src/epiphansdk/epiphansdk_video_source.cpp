@@ -28,13 +28,17 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
     _flags |= colour_space;
 
     VideoFrame_I420 frame;
-    // TODO - exception GiftGrab#42
-    if (not get_frame(frame)) return;
     _full.x = 0;
     _full.y = 0;
-    _full.width = frame.cols();
-    _full.height = frame.rows();
+    /* TODO - e.g. EpiphanSDK_MAX_RES_X and
+     * EpiphanSDK_MAX_RES_Y after
+     * EpiphanSDK#6
+     */
+    _full.width = 1920;
+    _full.height = 1080;
     get_full_frame();
+    // TODO - exception GiftGrab#42
+    if (not get_frame(frame)) return;
 }
 
 VideoSourceEpiphanSDK::~VideoSourceEpiphanSDK()
@@ -66,8 +70,9 @@ bool VideoSourceEpiphanSDK::get_frame(VideoFrame_I420 & frame)
     if (_buffer)
     {
         frame = VideoFrame_I420(
-                    static_cast<unsigned char*>(_buffer->pixbuf), _buffer->imagelen,
-                    _buffer->crop.width, _buffer->crop.height,
+                    static_cast<unsigned char*>(_buffer->pixbuf),
+                    _buffer->imagelen,
+                    _roi.width, _roi.height,
                     false
                     );
         return true;
