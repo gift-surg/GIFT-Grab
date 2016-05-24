@@ -1,6 +1,9 @@
 #include "factory.h"
 #include "except.h"
 #include "opencv_video_source.h"
+#ifdef USE_COLOUR_SPACE_I420
+#include "epiphansdk_video_source.h"
+#endif
 #ifdef USE_FFMPEG
 #include "ffmpeg_video_target.h"
 #endif
@@ -21,6 +24,13 @@ class IVideoSourceWrapper : IVideoSource, wrapper<IVideoSource>
     {
         return this->get_override("get_frame")(frame);
     }
+
+#ifdef USE_COLOUR_SPACE_I420
+    bool get_frame(gg::VideoFrame_I420 & frame)
+    {
+        return this->get_override("get_frame")(frame);
+    }
+#endif
 
     double get_frame_rate()
     {
@@ -102,15 +112,32 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     class_<IVideoSource, boost::noncopyable>("IVideoSource", no_init)
     ;
 
+    bool (VideoSourceOpenCV::*opencv_get_frame_bgra)(VideoFrame_BGRA &) = &VideoSourceOpenCV::get_frame;
     class_<VideoSourceOpenCV, bases<IVideoSource>, boost::noncopyable>(
                 "VideoSourceOpenCV", init<int>())
         .def(init<char *>())
-        .def("get_frame", &VideoSourceOpenCV::get_frame)
+        .def("get_frame", opencv_get_frame_bgra)
         .def("get_frame_dimensions", &VideoSourceOpenCV::get_frame_dimensions)
         .def("get_frame_rate", &VideoSourceOpenCV::get_frame_rate)
         .def("set_sub_frame", &VideoSourceOpenCV::set_sub_frame)
         .def("get_full_frame", &VideoSourceOpenCV::get_full_frame)
     ;
+
+#ifdef USE_COLOUR_SPACE_I420
+    class_<gg::VideoFrame_I420>("VideoFrame_I420", init<bool>())
+        .def("rows", &gg::VideoFrame_I420::rows)
+        .def("cols", &gg::VideoFrame_I420::cols)
+    ;
+    bool (gg::VideoSourceEpiphanSDK::*epiphansdk_get_frame_i420)(gg::VideoFrame_I420 &) = &gg::VideoSourceEpiphanSDK::get_frame;
+    class_<gg::VideoSourceEpiphanSDK, bases<IVideoSource>, boost::noncopyable>(
+                "VideoSourceEpiphanSDK", init<const std::string, const V2U_INT32>())
+        .def("get_frame", epiphansdk_get_frame_i420)
+        .def("get_frame_dimensions", &gg::VideoSourceEpiphanSDK::get_frame_dimensions)
+        .def("get_frame_rate", &gg::VideoSourceEpiphanSDK::get_frame_rate)
+        .def("set_sub_frame", &gg::VideoSourceEpiphanSDK::set_sub_frame)
+        .def("get_full_frame", &gg::VideoSourceEpiphanSDK::get_full_frame)
+    ;
+#endif
 
     class_<gg::IVideoTarget, boost::noncopyable>("IVideoTarget", no_init)
     ;
