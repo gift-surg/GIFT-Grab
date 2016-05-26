@@ -19,27 +19,6 @@ void VideoFrame::operator =(const VideoFrame & rhs)
     clone(rhs);
 }
 
-VideoFrame::VideoFrame(unsigned char * data, size_t rows, size_t cols, bool manage_data)
-  : _manage_data(manage_data)
-{
-   init_from_pointer(data, rows, cols);
-}
-
-void VideoFrame::init_from_pointer(unsigned char * data, size_t rows, size_t cols)
-{
-    _rows = rows;
-    _cols = cols;
-
-    if( _manage_data ){
-        const size_t num_pixels = _rows * _cols * 4;
-        _data = new unsigned char[num_pixels];
-        memcpy(_data, data, num_pixels);
-    }
-    else{
-        _data = data;
-    }
-}
-
 std::unique_ptr<MaskFrame> VideoFrame::compute_image_mask(int x, int y,
                                                                int width, int height)
 {
@@ -177,6 +156,12 @@ VideoFrame_BGRA::VideoFrame_BGRA(const cv::Mat & mat, bool manage_data)
     init_from_opencv_mat(mat);
 }
 
+VideoFrame_BGRA::VideoFrame_BGRA(unsigned char * data, size_t rows, size_t cols, bool manage_data)
+  : VideoFrame(manage_data)
+{
+   init_from_pointer(data, rows, cols);
+}
+
 void VideoFrame_BGRA::init_from_opencv_mat(const cv::Mat &mat)
 {
     assert(mat.channels() == 4);
@@ -196,5 +181,20 @@ void VideoFrame_BGRA::init_from_opencv_mat(const cv::Mat &mat)
     // Just copy the pointer address
     else {
         _data = mat.data;
+    }
+}
+
+void VideoFrame_BGRA::init_from_pointer(unsigned char * data, size_t rows, size_t cols)
+{
+    _rows = rows;
+    _cols = cols;
+
+    if( _manage_data ){
+        const size_t num_pixels = _rows * _cols * 4;
+        _data = new unsigned char[num_pixels];
+        memcpy(_data, data, num_pixels);
+    }
+    else{
+        _data = data;
     }
 }

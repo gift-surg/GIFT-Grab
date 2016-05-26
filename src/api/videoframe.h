@@ -30,27 +30,6 @@ public:
     VideoFrame(bool manage_data=false);
 
     //!
-    //! \brief Constructor with full data and parameter specs
-    //! \param data if \c manage_data is set, all data in this
-    //! will be copied; otherwise this \c data will be used (i.e.
-    //! pointer will be copied)
-    //! \param rows
-    //! \param cols
-    //! \param manage_data
-    //!
-    VideoFrame(unsigned char * data, size_t rows, size_t cols, bool manage_data=false);
-
-    //!
-    //! \brief Initialise from passed \c data, based on the data
-    //! management setting
-    //! \param data
-    //! \param rows
-    //! \param cols
-    //! \sa manages_own_data
-    //!
-    void init_from_pointer(unsigned char * data, size_t rows, size_t cols);
-
-    //!
     //! \brief Compute an elliptical mask for this image
     //! \param x
     //! \param y
@@ -201,6 +180,17 @@ public:
     //!
     VideoFrame_BGRA(const cv::Mat & mat, bool manage_data=false);
 
+    //!
+    //! \brief Constructor with full data and parameter specs
+    //! \param data if \c manage_data is set, all data in this
+    //! will be copied; otherwise this \c data will be used (i.e.
+    //! pointer will be copied)
+    //! \param rows
+    //! \param cols
+    //! \param manage_data
+    //!
+    VideoFrame_BGRA(unsigned char * data, size_t rows, size_t cols, bool manage_data=false);
+
 public:
     //!
     //! \brief Initialise from passed OpenCV \c mat, based on the
@@ -209,6 +199,16 @@ public:
     //! \sa manages_own_data
     //!
     void init_from_opencv_mat(const cv::Mat & mat);
+
+    //!
+    //! \brief Initialise from passed \c data, based on the data
+    //! management setting
+    //! \param data
+    //! \param rows
+    //! \param cols
+    //! \sa manages_own_data
+    //!
+    void init_from_pointer(unsigned char * data, size_t rows, size_t cols);
 };
 
 #endif
