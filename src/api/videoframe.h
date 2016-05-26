@@ -48,20 +48,6 @@ public:
     virtual ~VideoFrame();
 
     //!
-    //! \brief Copy data from \c rhs, also setting data management
-    //! \param rhs
-    //! \sa manages_own_data
-    //!
-    VideoFrame(const VideoFrame & rhs);
-
-    //!
-    //! \brief operator =
-    //! \param rhs
-    //! \sa VideoFrame(const VideoFrame & rhs)
-    //!
-    void operator=(const VideoFrame & rhs);
-
-    //!
     //! \brief Get number of rows (y-axis, i.e. height)
     //! \return
     //!
@@ -131,14 +117,7 @@ protected:
     //!
     bool            _manage_data;
 
-private:
-    //!
-    //! \brief
-    //! \param rhs
-    //! \sa VideoFrame(const VideoFrame & rhs)
-    //!
-    void clone(const VideoFrame &rhs);
-
+protected:
     //!
     //! \brief Free all managed data
     //! \sa ~VideoFrame
@@ -191,7 +170,21 @@ public:
     //!
     VideoFrame_BGRA(unsigned char * data, size_t rows, size_t cols, bool manage_data=false);
 
+    //!
+    //! \brief Copy data from \c rhs, also setting data management
+    //! \param rhs
+    //! \sa manages_own_data
+    //!
+    VideoFrame_BGRA(const VideoFrame_BGRA & rhs);
+
 public:
+    //!
+    //! \brief operator =
+    //! \param rhs
+    //! \sa VideoFrame(const VideoFrame & rhs)
+    //!
+    void operator=(const VideoFrame_BGRA & rhs);
+
     //!
     //! \brief Initialise from passed OpenCV \c mat, based on the
     //! data management setting
@@ -209,6 +202,14 @@ public:
     //! \sa manages_own_data
     //!
     void init_from_pointer(unsigned char * data, size_t rows, size_t cols);
+
+private:
+    //!
+    //! \brief
+    //! \param rhs
+    //! \sa VideoFrame(const VideoFrame & rhs)
+    //!
+    void clone(const VideoFrame_BGRA &rhs);
 };
 
 #endif

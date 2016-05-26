@@ -9,16 +9,6 @@ VideoFrame::VideoFrame(bool manage_data)
     _manage_data = manage_data;
 }
 
-VideoFrame::VideoFrame(const VideoFrame & rhs)
-{
-    clone(rhs);
-}
-
-void VideoFrame::operator =(const VideoFrame & rhs)
-{
-    clone(rhs);
-}
-
 std::unique_ptr<MaskFrame> VideoFrame::compute_image_mask(int x, int y,
                                                                int width, int height)
 {
@@ -125,17 +115,6 @@ void VideoFrame::clear()
     }
 }
 
-void VideoFrame::clone(const VideoFrame & rhs)
-{
-    clear();
-    _manage_data = true;
-    _rows = rhs.rows();
-    _cols = rhs.cols();
-    const size_t num_pixels = _rows * _cols * 4;
-    _data = new unsigned char[num_pixels];
-    memcpy(_data, rhs._data, num_pixels);
-}
-
 }
 
 VideoFrame_BGRA::VideoFrame_BGRA(bool manage_data)
@@ -160,6 +139,16 @@ VideoFrame_BGRA::VideoFrame_BGRA(unsigned char * data, size_t rows, size_t cols,
   : VideoFrame(manage_data)
 {
    init_from_pointer(data, rows, cols);
+}
+
+VideoFrame_BGRA::VideoFrame_BGRA(const VideoFrame_BGRA & rhs)
+{
+    clone(rhs);
+}
+
+void VideoFrame_BGRA::operator =(const VideoFrame_BGRA & rhs)
+{
+    clone(rhs);
 }
 
 void VideoFrame_BGRA::init_from_opencv_mat(const cv::Mat &mat)
@@ -197,4 +186,15 @@ void VideoFrame_BGRA::init_from_pointer(unsigned char * data, size_t rows, size_
     else{
         _data = data;
     }
+}
+
+void VideoFrame_BGRA::clone(const VideoFrame_BGRA & rhs)
+{
+    clear();
+    _manage_data = true;
+    _rows = rhs.rows();
+    _cols = rhs.cols();
+    const size_t num_pixels = _rows * _cols * 4;
+    _data = new unsigned char[num_pixels];
+    memcpy(_data, rhs._data, num_pixels);
 }
