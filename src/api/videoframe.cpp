@@ -25,14 +25,6 @@ VideoFrame::VideoFrame(unsigned char * data, size_t rows, size_t cols, bool mana
    init_from_pointer(data, rows, cols);
 }
 
-VideoFrame::VideoFrame(const size_t rows, const size_t cols)
-    : _manage_data(true)
-{
-    init_from_opencv_mat(cv::Mat::zeros(rows, cols, CV_8UC4));
-}
-
-
-
 void VideoFrame::init_from_pointer(unsigned char * data, size_t rows, size_t cols)
 {
     _rows = rows;
@@ -45,28 +37,6 @@ void VideoFrame::init_from_pointer(unsigned char * data, size_t rows, size_t col
     }
     else{
         _data = data;
-    }
-}
-
-void VideoFrame::init_from_opencv_mat(const cv::Mat &mat)
-{
-    assert(mat.channels() == 4);
-    _rows = mat.rows;
-    _cols = mat.cols;
-    const size_t num_pixels = _rows * _cols * 4;
-
-    // OpenCV stores images top to bottom while OpenGL is bottom to top.
-    // The caller is supposed to setup the client visualization to have
-    // origin at upper left corner
-    //cv::flip(mat, mat, 0);
-
-    if (_manage_data) {
-        _data = new unsigned char[num_pixels];
-        memcpy(_data, mat.data, num_pixels);
-    }
-    // Just copy the pointer address
-    else {
-        _data = mat.data;
     }
 }
 
@@ -196,13 +166,35 @@ VideoFrame_BGRA::VideoFrame_BGRA(bool manage_data)
 }
 
 VideoFrame_BGRA::VideoFrame_BGRA(const size_t rows, const size_t cols)
-    : VideoFrame(rows, cols)
+    : gg::VideoFrame(true)
 {
-
+    init_from_opencv_mat(cv::Mat::zeros(rows, cols, CV_8UC4));
 }
 
 VideoFrame_BGRA::VideoFrame_BGRA(const cv::Mat & mat, bool manage_data)
 {
     _manage_data = manage_data;
     init_from_opencv_mat(mat);
+}
+
+void VideoFrame_BGRA::init_from_opencv_mat(const cv::Mat &mat)
+{
+    assert(mat.channels() == 4);
+    _rows = mat.rows;
+    _cols = mat.cols;
+    const size_t num_pixels = _rows * _cols * 4;
+
+    // OpenCV stores images top to bottom while OpenGL is bottom to top.
+    // The caller is supposed to setup the client visualization to have
+    // origin at upper left corner
+    //cv::flip(mat, mat, 0);
+
+    if (_manage_data) {
+        _data = new unsigned char[num_pixels];
+        memcpy(_data, mat.data, num_pixels);
+    }
+    // Just copy the pointer address
+    else {
+        _data = mat.data;
+    }
 }

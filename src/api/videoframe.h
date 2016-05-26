@@ -41,14 +41,6 @@ public:
     VideoFrame(unsigned char * data, size_t rows, size_t cols, bool manage_data=false);
 
     //!
-    //! \brief Allocates memory for specified dimensions, and
-    //! sets all pixels to black
-    //! \param rows
-    //! \param cols
-    //!
-    VideoFrame(const size_t rows, const size_t cols);
-
-    //!
     //! \brief Initialise from passed \c data, based on the data
     //! management setting
     //! \param data
@@ -57,14 +49,6 @@ public:
     //! \sa manages_own_data
     //!
     void init_from_pointer(unsigned char * data, size_t rows, size_t cols);
-
-    //!
-    //! \brief Initialise from passed OpenCV \c mat, based on the
-    //! data management setting
-    //! \param mat
-    //! \sa manages_own_data
-    //!
-    void init_from_opencv_mat(const cv::Mat & mat);
 
     //!
     //! \brief Compute an elliptical mask for this image
@@ -216,6 +200,15 @@ public:
     //! \param manage_data
     //!
     VideoFrame_BGRA(const cv::Mat & mat, bool manage_data=false);
+
+public:
+    //!
+    //! \brief Initialise from passed OpenCV \c mat, based on the
+    //! data management setting
+    //! \param mat
+    //! \sa manages_own_data
+    //!
+    void init_from_opencv_mat(const cv::Mat & mat);
 };
 
 #endif
