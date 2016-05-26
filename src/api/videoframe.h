@@ -30,13 +30,6 @@ public:
     VideoFrame(bool manage_data=false);
 
     //!
-    //! \brief OpenCV based constructor
-    //! \param mat
-    //! \param manage_data
-    //!
-    VideoFrame(const cv::Mat & mat, bool manage_data=false);
-
-    //!
     //! \brief Constructor with full data and parameter specs
     //! \param data if \c manage_data is set, all data in this
     //! will be copied; otherwise this \c data will be used (i.e.
@@ -151,7 +144,7 @@ public:
         return _data;
     }
 
-private:
+protected:
     //!
     //! \brief Frame data
     //!
@@ -175,6 +168,7 @@ private:
     //!
     bool            _manage_data;
 
+private:
     //!
     //! \brief
     //! \param rhs
@@ -215,6 +209,13 @@ public:
     //! \param cols
     //!
     VideoFrame_BGRA(const size_t rows, const size_t cols);
+
+    //!
+    //! \brief OpenCV based constructor
+    //! \param mat
+    //! \param manage_data
+    //!
+    VideoFrame_BGRA(const cv::Mat & mat, bool manage_data=false);
 };
 
 #endif

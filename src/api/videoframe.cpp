@@ -48,12 +48,6 @@ void VideoFrame::init_from_pointer(unsigned char * data, size_t rows, size_t col
     }
 }
 
-VideoFrame::VideoFrame(const cv::Mat & mat, bool manage_data)
-{
-    _manage_data = manage_data;
-    init_from_opencv_mat(mat);
-}
-
 void VideoFrame::init_from_opencv_mat(const cv::Mat &mat)
 {
     assert(mat.channels() == 4);
@@ -205,4 +199,10 @@ VideoFrame_BGRA::VideoFrame_BGRA(const size_t rows, const size_t cols)
     : VideoFrame(rows, cols)
 {
 
+}
+
+VideoFrame_BGRA::VideoFrame_BGRA(const cv::Mat & mat, bool manage_data)
+{
+    _manage_data = manage_data;
+    init_from_opencv_mat(mat);
 }
