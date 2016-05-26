@@ -86,7 +86,7 @@ public:
     //! management is set
     //! \sa manages_own_data
     //!
-    ~VideoFrame();
+    virtual ~VideoFrame();
 
     //!
     //! \brief Copy data from \c rhs, also setting data management
