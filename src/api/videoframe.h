@@ -66,15 +66,6 @@ public:
     }
 
     //!
-    //! \brief Get number of channels, i.e. 4 in BGRA
-    //! \return
-    //!
-    size_t channels() const
-    {
-        return 4;
-    }
-
-    //!
     //! \brief Get whether data is managed by this object
     //! or externally
     //! \return
@@ -202,6 +193,15 @@ public:
     //! \sa manages_own_data
     //!
     void init_from_pointer(unsigned char * data, size_t rows, size_t cols);
+
+    //!
+    //! \brief Get number of channels, i.e. 4 in BGRA
+    //! \return
+    //!
+    size_t channels() const
+    {
+        return 4;
+    }
 
 private:
     //!
