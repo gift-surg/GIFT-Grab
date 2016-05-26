@@ -9,6 +9,9 @@
 #include <memory>
 #include "maskframe.h"
 
+namespace gg
+{
+
 //!
 //! \brief A class to represent a video frame
 //!
@@ -186,6 +189,8 @@ private:
     void clear();
 };
 
+}
+
 //!
 //! \brief A class to represent a video frame with BGRA pixels
 //!
@@ -193,7 +198,7 @@ private:
 //! most GPUs in the wild and should be faster to load than traditional
 //! RGB (due to 4 byte alignment) and RGBA due to less reordering
 //! on the GPU but this is all probably hardware dependent.
-class VideoFrame_BGRA : public VideoFrame
+class VideoFrame_BGRA : public gg::VideoFrame
 {
 public:
     //!

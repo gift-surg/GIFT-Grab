@@ -1,6 +1,9 @@
 #include "videoframe.h"
 #include <algorithm>
 
+namespace gg
+{
+
 VideoFrame::VideoFrame(bool manage_data)
 {
     _manage_data = manage_data;
@@ -188,6 +191,8 @@ void VideoFrame::clone(const VideoFrame & rhs)
     const size_t num_pixels = _rows * _cols * 4;
     _data = new unsigned char[num_pixels];
     memcpy(_data, rhs._data, num_pixels);
+}
+
 }
 
 VideoFrame_BGRA::VideoFrame_BGRA(bool manage_data)
