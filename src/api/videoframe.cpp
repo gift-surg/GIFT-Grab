@@ -156,7 +156,7 @@ void VideoFrame_BGRA::init_from_opencv_mat(const cv::Mat &mat)
     assert(mat.channels() == 4);
     _rows = mat.rows;
     _cols = mat.cols;
-    const size_t num_pixels = _rows * _cols * 4;
+    _data_length = _rows * _cols * 4;
 
     // OpenCV stores images top to bottom while OpenGL is bottom to top.
     // The caller is supposed to setup the client visualization to have
@@ -164,8 +164,8 @@ void VideoFrame_BGRA::init_from_opencv_mat(const cv::Mat &mat)
     //cv::flip(mat, mat, 0);
 
     if (_manage_data) {
-        _data = new unsigned char[num_pixels];
-        memcpy(_data, mat.data, num_pixels);
+        _data = new unsigned char[_data_length];
+        memcpy(_data, mat.data, _data_length * sizeof(unsigned char));
     }
     // Just copy the pointer address
     else {
@@ -178,10 +178,10 @@ void VideoFrame_BGRA::init_from_pointer(unsigned char * data, size_t rows, size_
     _rows = rows;
     _cols = cols;
 
+    _data_length = _rows * _cols * 4;
     if( _manage_data ){
-        const size_t num_pixels = _rows * _cols * 4;
-        _data = new unsigned char[num_pixels];
-        memcpy(_data, data, num_pixels);
+        _data = new unsigned char[_data_length];
+        memcpy(_data, data, _data_length * sizeof(unsigned char));
     }
     else{
         _data = data;
@@ -194,7 +194,7 @@ void VideoFrame_BGRA::clone(const VideoFrame_BGRA & rhs)
     _manage_data = true;
     _rows = rhs.rows();
     _cols = rhs.cols();
-    const size_t num_pixels = _rows * _cols * 4;
-    _data = new unsigned char[num_pixels];
-    memcpy(_data, rhs._data, num_pixels);
+    _data_length = _rows * _cols * 4;
+    _data = new unsigned char[_data_length];
+    memcpy(_data, rhs._data, _data_length * sizeof(unsigned char));
 }

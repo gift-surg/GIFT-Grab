@@ -7,12 +7,6 @@ namespace gg
 
 class VideoFrame_I420 : public VideoFrame
 {
-protected:
-    //!
-    //! \brief
-    //!
-    size_t _data_length;
-
 public:
     //!
     //! \brief Constructor that uses externally

@@ -6,7 +6,6 @@ namespace gg
 
 VideoFrame_I420::VideoFrame_I420(bool manage_data)
     : VideoFrame(manage_data),
-      _data_length(0)
 {
 
 }
