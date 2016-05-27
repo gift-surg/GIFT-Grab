@@ -12,6 +12,7 @@ VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
     _codec(NULL),
     _codec_name(""),
     _frame(NULL),
+    _first_frame(true),
     _framerate(-1),
     _sws_context(NULL),
     _format_context(NULL),
@@ -63,6 +64,12 @@ void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
     if (_stream == NULL)
         throw VideoTargetError("Could not allocate stream");
     _stream->id = _format_context->nb_streams-1; // TODO isn't this wrong?
+
+    // allocate FFmpeg frame
+    _frame = av_frame_alloc();
+    if (not _frame)
+        throw VideoTargetError("Could not allocate video frame");
+    _first_frame = true;
 }
 
 void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
@@ -99,7 +106,7 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char *data,
     int ret;
 
     // if first frame, initialise
-    if (frame == NULL)
+    if (_first_frame)
     {
 #ifdef GENERATE_PERFORMANCE_OUTPUT
 #ifndef timer_format_str
@@ -166,9 +173,6 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char *data,
         if (avcodec_open2(_stream->codec, _codec, NULL) < 0)
             throw VideoTargetError("Could not open codec");
 
-        frame = av_frame_alloc();
-        if (not frame)
-            throw VideoTargetError("Could not allocate video frame");
         frame->format = _stream->codec->pix_fmt;
         frame->width  = _stream->codec->width;
         frame->height = _stream->codec->height;
@@ -227,7 +231,12 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char *data,
         _packet.size = 0;
 
         _bgra_stride[0] = 4*width;
+
+        _first_frame = false;
     }
+
+    if (not frame)
+        throw VideoTargetError("FFmpeg frame not initialised");
 
     { // START auto_cpu_timer scope
 #ifdef GENERATE_PERFORMANCE_OUTPUT

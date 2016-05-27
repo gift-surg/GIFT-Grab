@@ -46,6 +46,13 @@ protected:
     AVFrame * _frame;
 
     //!
+    //! \brief Flag indicating first frame being
+    //! appended, i.e. to infer the frame params
+    //! like width and height automatically
+    //!
+    bool _first_frame;
+
+    //!
     //! \brief
     //!
     int64_t _frame_index;
