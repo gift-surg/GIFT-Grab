@@ -75,7 +75,7 @@ void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
 void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
 {
     ffmpeg_frame(frame.data(),
-                 frame.channels() * frame.cols() * frame.rows(),
+                 frame.data_length(),
                  frame.cols(), frame.rows(),
                  AV_PIX_FMT_BGRA, _frame);
 
