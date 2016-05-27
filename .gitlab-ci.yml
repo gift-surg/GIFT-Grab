@@ -35,3 +35,4 @@ or-recording-compatibility:
   only:
     - 31-i420-colour-space-on-epiphan
     - 31-i420-colour-space-on-epiphan-clean-start
+    - 48-i420-frame-support-in-video-targets
