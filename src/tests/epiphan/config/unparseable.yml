@@ -1,4 +1,5 @@
 port SDI
+colour_space BGR24
 frame_rate 28.0
 file_path /tmp/giftgrab/test-data-fetoscope
 timeout_limit 20.0
