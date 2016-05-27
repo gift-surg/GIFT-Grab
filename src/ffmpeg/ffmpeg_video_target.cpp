@@ -239,6 +239,11 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
     } // END auto_cpu_timer scope
 }
 
+void VideoTargetFFmpeg::append(const VideoFrame_I420 & frame)
+{
+    // TODO
+}
+
 void VideoTargetFFmpeg::encode_and_write(AVFrame * frame, int & got_output)
 {
     int ret;

@@ -92,6 +92,8 @@ public:
 
     void append(const VideoFrame_BGRA & frame);
 
+    void append(const VideoFrame_I420 & frame);
+
     void finalise();
 
 protected:

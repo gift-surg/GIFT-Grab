@@ -143,10 +143,18 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     ;
 
 #ifdef USE_FFMPEG
+    void (gg::VideoTargetFFmpeg::*ffmpeg_append_bgra)(const VideoFrame_BGRA &) = &gg::VideoTargetFFmpeg::append;
+#ifdef USE_COLOUR_SPACE_I420
+    void (gg::VideoTargetFFmpeg::*ffmpeg_append_i420)(const gg::VideoFrame_I420 &) = &gg::VideoTargetFFmpeg::append;
+#endif
+
     class_<gg::VideoTargetFFmpeg, bases<gg::IVideoTarget>, boost::noncopyable>(
                 "VideoTargetFFmpeg", init<std::string>())
         .def("init", &gg::VideoTargetFFmpeg::init)
-        .def("append", &gg::VideoTargetFFmpeg::append)
+        .def("append", ffmpeg_append_bgra)
+#ifdef USE_COLOUR_SPACE_I420
+        .def("append", ffmpeg_append_i420)
+#endif
         .def("finalise", &gg::VideoTargetFFmpeg::finalise)
     ;
 #endif
