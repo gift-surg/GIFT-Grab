@@ -5,8 +5,13 @@ namespace gg
 {
 
 VideoFrame::VideoFrame(bool manage_data)
+  : _manage_data(manage_data),
+    _data(nullptr),
+    _data_length(0),
+    _rows(0),
+    _cols(0)
 {
-    _manage_data = manage_data;
+
 }
 
 std::unique_ptr<MaskFrame> VideoFrame::compute_image_mask(int x, int y,
@@ -112,6 +117,9 @@ void VideoFrame::clear()
     if (_manage_data) {
         delete [] _data;
         _data = 0;
+        _data_length = 0;
+        _rows = 0;
+        _cols = 0;
     }
 }
 
@@ -138,7 +146,7 @@ VideoFrame_BGRA::VideoFrame_BGRA(const cv::Mat & mat, bool manage_data)
 VideoFrame_BGRA::VideoFrame_BGRA(unsigned char * data, size_t rows, size_t cols, bool manage_data)
   : VideoFrame(manage_data)
 {
-   init_from_pointer(data, rows, cols);
+    init_from_pointer(data, rows, cols);
 }
 
 VideoFrame_BGRA::VideoFrame_BGRA(const VideoFrame_BGRA & rhs)
