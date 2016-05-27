@@ -214,8 +214,9 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
          * this check, but selective code compilation might make
          * code faster, due to not having the conditional checks
          */
-        if (colour_space == AV_PIX_FMT_BGRA)
+        switch(colour_space)
         {
+        case AV_PIX_FMT_BGRA:
             /* Open context for converting BGRA pixels to YUV420p */
             _sws_context = sws_getContext(
                         width, height, AV_PIX_FMT_BGRA,
@@ -223,9 +224,12 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
                         0, NULL, NULL, NULL);
             if (_sws_context == NULL)
                 throw VideoTargetError("Could not allocate Sws context");
-        }
-        else if (colour_space != AV_PIX_FMT_YUV420P)
+            break;
+        case AV_PIX_FMT_YUV420P:
+            break;
+        default:
             throw VideoTargetError("Colour space not supported");
+        }
 
         // To be incremented for each frame, used as pts
         _frame_index = 0;
