@@ -244,6 +244,14 @@ void VideoTargetFFmpeg::append(const VideoFrame_I420 & frame)
     // TODO
 }
 
+void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char *data,
+                                     const int width, const int height,
+                                     const AVPixelFormat colour_space,
+                                     AVFrame *frame)
+{
+    // TODO
+}
+
 void VideoTargetFFmpeg::encode_and_write(AVFrame * frame, int & got_output)
 {
     int ret;

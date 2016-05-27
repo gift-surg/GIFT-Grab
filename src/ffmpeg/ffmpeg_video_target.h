@@ -98,6 +98,22 @@ public:
 
 protected:
     //!
+    //! \brief Prepare frame data for encoding
+    //! \param data
+    //! \param width
+    //! \param height
+    //! \param colour_space
+    //! \param frame
+    //! \sa encode_and_write
+    //! \throw VideoTargetError with a detailed
+    //! message on failure in any step
+    //!
+    void ffmpeg_frame(const unsigned char * data,
+                      const int width, const int height,
+                      const AVPixelFormat colour_space,
+                      AVFrame * frame);
+
+    //!
     //! \brief Convenience function for code reuse when
     //! writing delayed frames
     //! \param frame leave \c NULL if writing delayed
