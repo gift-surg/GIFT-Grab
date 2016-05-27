@@ -93,7 +93,11 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
 
 void VideoTargetFFmpeg::append(const VideoFrame_I420 & frame)
 {
-    // TODO
+    ffmpeg_frame(frame.data(), frame.data_length(),
+                 frame.cols(), frame.rows(),
+                 AV_PIX_FMT_YUV420P, _frame);
+    int got_output;
+    encode_and_write(_frame, got_output);
 }
 
 void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
@@ -107,6 +111,8 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
 
     if (not frame)
         throw VideoTargetError("FFmpeg frame not initialised");
+    if (not frame->data[0])
+        throw VideoTargetError("FFmpeg data buffer not initialised");
 
     // return value buffers
     int ret;
@@ -226,6 +232,7 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
                 throw VideoTargetError("Could not allocate Sws context");
             break;
         case AV_PIX_FMT_YUV420P:
+            frame->data[0] = static_cast<uint8_t *>(malloc(data_length * sizeof(unsigned char)));
             break;
         default:
             throw VideoTargetError("Colour space not supported");
@@ -282,7 +289,7 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
                   );
         break;
     case AV_PIX_FMT_YUV420P:
-        // TODO, in first frame?
+        memcpy(frame->data[0], data, data_length * sizeof(unsigned char));
         break;
     default:
         throw VideoTargetError("Colour space not supported");
