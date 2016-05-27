@@ -16,6 +16,14 @@ public:
     VideoFrame_I420(bool manage_data = false);
 
     //!
+    //! \brief Allocates memory for specified dimensions, and
+    //! sets all pixels to black
+    //! \param cols
+    //! \param rows
+    //!
+    VideoFrame_I420(const size_t cols, const size_t rows);
+
+    //!
     //! \brief Initialise a frame from passed \c data.
     //! No checks are performed to ensure integrity of
     //! \c length in conjunction with \c cols and \c

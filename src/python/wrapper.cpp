@@ -125,6 +125,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
 
 #ifdef USE_COLOUR_SPACE_I420
     class_<gg::VideoFrame_I420>("VideoFrame_I420", init<bool>())
+        .def(init<const size_t, const size_t>())
         .def("rows", &gg::VideoFrame_I420::rows)
         .def("cols", &gg::VideoFrame_I420::cols)
     ;

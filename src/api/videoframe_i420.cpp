@@ -10,6 +10,14 @@ VideoFrame_I420::VideoFrame_I420(bool manage_data)
 
 }
 
+VideoFrame_I420::VideoFrame_I420(const size_t cols, const size_t rows)
+    : gg::VideoFrame(true)
+{
+    cv::Mat buffer = cv::Mat::zeros(rows, cols, CV_8UC4);
+    cv::cvtColor(buffer, buffer, CV_BGRA2YUV_I420);
+    init_from_pointer(buffer.data, buffer.total(), cols, rows);
+}
+
 VideoFrame_I420::VideoFrame_I420(unsigned char * data, const size_t length,
                                  const size_t cols, const size_t rows,
                                  bool manage_data)
