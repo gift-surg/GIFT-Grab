@@ -74,7 +74,9 @@ void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
 
 void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
 {
-    ffmpeg_frame(frame.data(), frame.cols(), frame.rows(),
+    ffmpeg_frame(frame.data(),
+                 frame.channels() * frame.cols() * frame.rows(),
+                 frame.cols(), frame.rows(),
                  AV_PIX_FMT_BGRA, _frame);
 
     { // START auto_cpu_timer scope
@@ -94,10 +96,11 @@ void VideoTargetFFmpeg::append(const VideoFrame_I420 & frame)
     // TODO
 }
 
-void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char *data,
+void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
+                                     const size_t data_length,
                                      const int width, const int height,
                                      const AVPixelFormat colour_space,
-                                     AVFrame *frame)
+                                     AVFrame * frame)
 {
     if (_framerate <= 0)
         throw VideoTargetError("Video target not initialised");
@@ -259,22 +262,27 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char *data,
     boost::timer::auto_cpu_timer t(this_class_str + "1-sws_scale" + timer_format_str);
 #endif
 
+    _src_data_ptr[0] = data;
     /* TODO USE_COLOUR_SPACE_I420 also implicitly provides
      * this check, but selective code compilation might make
      * code faster, due to not having the conditional checks
      */
-    if (colour_space == AV_PIX_FMT_BGRA)
+    switch(colour_space)
     {
+    case AV_PIX_FMT_BGRA:
         /* convert pixel format */
-        _src_data_ptr[0] = data;
         sws_scale(_sws_context,
                   _src_data_ptr, _bgra_stride, // BGRA has one plane
                   0, height,
                   frame->data, frame->linesize
                   );
-    }
-    else if (colour_space != AV_PIX_FMT_YUV420P)
+        break;
+    case AV_PIX_FMT_YUV420P:
+        // TODO, in first frame?
+        break;
+    default:
         throw VideoTargetError("Colour space not supported");
+    }
 
     frame->pts = _frame_index++;
 

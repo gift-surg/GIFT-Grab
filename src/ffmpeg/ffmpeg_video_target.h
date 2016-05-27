@@ -107,6 +107,7 @@ protected:
     //!
     //! \brief Prepare frame data for encoding
     //! \param data
+    //! \param data_length
     //! \param width
     //! \param height
     //! \param colour_space
@@ -116,6 +117,7 @@ protected:
     //! message on failure in any step
     //!
     void ffmpeg_frame(const unsigned char * data,
+                      const size_t data_length,
                       const int width, const int height,
                       const AVPixelFormat colour_space,
                       AVFrame * frame);
