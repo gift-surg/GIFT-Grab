@@ -34,3 +34,4 @@ or-recording-compatibility:
     - uzl1603
   only:
     - 31-i420-colour-space-on-epiphan
+    - 31-i420-colour-space-on-epiphan-clean-start

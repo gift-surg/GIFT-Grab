@@ -5,10 +5,8 @@ namespace gg
 {
 
 VideoFrame_I420::VideoFrame_I420(bool manage_data)
-    :
-      _data(nullptr),
-      _manage_data(manage_data),
-      _data_length(0), _cols(0), _rows(0)
+    : VideoFrame(manage_data),
+      _data_length(0)
 {
 
 }
@@ -16,9 +14,7 @@ VideoFrame_I420::VideoFrame_I420(bool manage_data)
 VideoFrame_I420::VideoFrame_I420(unsigned char * data, const size_t length,
                                  const size_t cols, const size_t rows,
                                  bool manage_data)
-    :
-      _data(nullptr),
-      _manage_data(manage_data)
+    : VideoFrame(manage_data)
 {
     init_from_pointer(data, length, cols, rows);
 }
