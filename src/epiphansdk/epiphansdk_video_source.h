@@ -45,7 +45,7 @@ public:
     //! \brief Connects to specified port of an Epiphan
     //! frame grabber
     //! \param device_id defines port of frame grabber,
-    //! as \c #define'd in Epiphan device properties
+    //! as \c \#define'd in Epiphan device properties
     //! header
     //! \param colour_space \c V2U_GRABFRAME_FORMAT_I420
     //! or \c V2U_GRABFRAME_FORMAT_BGR24
