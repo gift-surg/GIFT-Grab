@@ -270,7 +270,7 @@ void VideoTargetFFmpeg::encode_and_write(AVFrame * frame, int & got_output)
         boost::timer::auto_cpu_timer t(this_class_str + "2-av_interleaved_write_frame" + timer_format_str);
 #endif
         /* Write the compressed frame to the media file. */
-        int ret = av_interleaved_write_frame(_format_context, &_packet);
+        ret = av_interleaved_write_frame(_format_context, &_packet);
         }
 
         if (ret < 0)
