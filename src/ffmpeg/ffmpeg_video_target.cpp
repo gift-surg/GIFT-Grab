@@ -105,6 +105,9 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
     if (_framerate <= 0)
         throw VideoTargetError("Video target not initialised");
 
+    if (not frame)
+        throw VideoTargetError("FFmpeg frame not initialised");
+
     // return value buffers
     int ret;
 
@@ -237,9 +240,6 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
 
         _first_frame = false;
     }
-
-    if (not frame)
-        throw VideoTargetError("FFmpeg frame not initialised");
 
     { // START auto_cpu_timer scope
 #ifdef GENERATE_PERFORMANCE_OUTPUT
