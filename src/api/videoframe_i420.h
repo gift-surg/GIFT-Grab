@@ -1,36 +1,17 @@
 #pragma once
 #include <stdlib.h>
+#include "videoframe.h"
 
 namespace gg
 {
 
-class VideoFrame_I420
+class VideoFrame_I420 : public VideoFrame
 {
 protected:
     //!
     //! \brief
     //!
-    unsigned char * _data;
-
-    //!
-    //! \brief
-    //!
     size_t _data_length;
-
-    //!
-    //! \brief
-    //!
-    size_t _cols;
-
-    //!
-    //! \brief
-    //!
-    size_t _rows;
-
-    //!
-    //! \brief
-    //!
-    bool _manage_data;
 
 public:
     //!
@@ -62,24 +43,6 @@ public:
     //! \param rhs
     //!
     void operator=(const VideoFrame_I420 & rhs);
-
-    //!
-    //! \brief Get number of rows (y-axis, i.e. height)
-    //! \return
-    //!
-    size_t rows() const
-    {
-        return _rows;
-    }
-
-    //!
-    //! \brief Get number of columns (x-axis, i.e. width)
-    //! \return
-    //!
-    size_t cols() const
-    {
-        return _cols;
-    }
 
 protected:
     //!
