@@ -12,6 +12,6 @@ else
   cp --recursive "$GiftGrab_SOURCE_DIR/tests/epiphan/config" ./
   cp "$GiftGrab_SOURCE_DIR/python/modules/example_epiphan/"* ./config
 
-  py.test dvi2pcieduo.py
+  py.test --bgr24 dvi2pcieduo.py
 fi
 
