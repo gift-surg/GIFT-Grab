@@ -230,9 +230,7 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
                 throw VideoTargetError("Could not allocate Sws context");
             break;
         case AV_PIX_FMT_YUV420P:
-            frame->data[0] = static_cast<uint8_t *>(malloc(data_length * sizeof(unsigned char)));
-            if (not frame->data[0])
-                throw VideoTargetError("FFmpeg data buffer could not be initialised");
+            // nop
             break;
         default:
             throw VideoTargetError("Colour space not supported");
@@ -289,9 +287,10 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
                   );
         break;
     case AV_PIX_FMT_YUV420P:
-        if (not frame->data[0])
-            throw VideoTargetError("FFmpeg data buffer not initialised");
-        memcpy(frame->data[0], data, data_length * sizeof(unsigned char));
+        // TODO #25 what influence does 32 have on performance?
+        av_image_fill_arrays(frame->data, frame->linesize,
+                             data, (AVPixelFormat) frame->format,
+                             frame->width, frame->height, 32);
         break;
     default:
         throw VideoTargetError("Colour space not supported");
