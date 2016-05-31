@@ -183,7 +183,7 @@ def test_frame_grabbing():
     assert us.frame_rate == 14.0 and \
         us.port == pygiftgrab.Device.DVI2PCIeDuo_DVI and \
         us.timeout_limit == 15.0 and \
-        us.colour_space == I420
+        us.colour_space == BGR24
 
     # test actual output now
     roi = [426, 40, 1068, 1040]
