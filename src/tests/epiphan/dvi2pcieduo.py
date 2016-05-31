@@ -148,7 +148,7 @@ def timing_report(file_path):
     return True
 
 
-def test_parse():
+def test_parse(colour_space):
     # not existing config file
     with pytest.raises(IOError):
         _ = parse('/this/file/should/never/exist.yml')
@@ -160,8 +160,12 @@ def test_parse():
     # files with invalid values
     with pytest.raises(ValueError):
         _ = parse('config/valueerror1.yml')
-    with pytest.raises(ValueError):
-        _ = parse('config/valueerror2.yml')
+    if colour_space == BGR24:
+        with pytest.raises(ValueError):
+            _ = parse('config/valueerror2.yml')
+    elif colour_space == I420:
+        with pytest.raises(ValueError):
+            _ = parse('config/valueerror3.yml')
 
     # folder that can't be created
     with pytest.raises(OSError):
