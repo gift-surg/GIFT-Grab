@@ -20,13 +20,18 @@ void grab(const enum gg::Device device,
         throw gg::BasicException("Device not set");
     }
 
+    float frame_rate = 0;
 #ifdef USE_COLOUR_SPACE_I420
     gg::VideoFrame_I420 frame;
+    frame_rate = 59;
 #else
     VideoFrame_BGRA frame;
+    frame_rate = 29;
 #endif
 
     IVideoSource * source = gg::Factory::connect(device);
+    gg::IVideoTarget * target = gg::Factory::writer(gg::Storage::File_H265);
+    target->init("test.mp4", frame_rate);
     auto started_at = std::chrono::high_resolution_clock::now();
     num_frames_grabbed = 0;
     for (int i = 0; i < num_frames_to_grab; i++)
@@ -37,11 +42,13 @@ void grab(const enum gg::Device device,
                       << i << ". frame: "
                       << frame.cols() << " x " << frame.rows()
                       << std::endl;
+        target->append(frame);
     }
     duration = std::chrono::duration_cast<std::chrono::milliseconds>(
                     std::chrono::high_resolution_clock::now() - started_at
                 ).count() / 1000.0; // because chrono::seconds truncates decimal part
     gg::Factory::disconnect(device);
+    target->finalise();
 }
 
 struct grab_args
