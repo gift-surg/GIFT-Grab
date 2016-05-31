@@ -168,22 +168,31 @@ def test_parse():
         _ = parse('config/oserror.yml')
 
 
-def test_frame_grabbing():
+def test_frame_grabbing(colour_space):
+    # test-input & data
+    if colour_space == BGR24:
+        fs_config_file = 'config/sdi.yml'
+        us_config_file = 'config/dvi.yml'
+        fs_frame_rate = 28.0
+        us_frame_rate = 14.0
+    else:
+        pytest.fail('Colour space not set')
+
     # create actual threads
-    fs = parse('config/sdi.yml')
-    us = parse('config/dvi.yml')
+    fs = parse(fs_config_file)
+    us = parse(us_config_file)
     assert fs is not None
     recorders.append(fs)
     assert us is not None
     recorders.append(us)
-    assert fs.frame_rate == 28.0 and \
+    assert fs.frame_rate == fs_frame_rate and \
         fs.port == pygiftgrab.Device.DVI2PCIeDuo_SDI and \
         fs.timeout_limit == 20.0 and \
-        fs.colour_space == BGR24
-    assert us.frame_rate == 14.0 and \
+        fs.colour_space == colour_space
+    assert us.frame_rate == us_frame_rate and \
         us.port == pygiftgrab.Device.DVI2PCIeDuo_DVI and \
         us.timeout_limit == 15.0 and \
-        us.colour_space == BGR24
+        us.colour_space == colour_space
 
     # test actual output now
     roi = [426, 40, 1068, 1040]
