@@ -14,4 +14,4 @@ def pytest_generate_tests(metafunc):
             colour_space = I420
         else:
             colour_space = BGR24  # default
-        metafunc.parametrize('colour_space', colour_space)
+        metafunc.parametrize('colour_space', [colour_space])
