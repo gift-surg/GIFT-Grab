@@ -13,5 +13,6 @@ def pytest_generate_tests(metafunc):
         elif metafunc.config.option.colour_space == 'I420':
             colour_space = I420
         else:
-            colour_space = BGR24  # default
+            raise RuntimeError('Could not recognise colour space ' +
+                               metafunc.config.option.colour_space)
         metafunc.parametrize('colour_space', [colour_space])
