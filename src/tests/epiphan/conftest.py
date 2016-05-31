@@ -2,15 +2,15 @@ from epiphan import BGR24, I420
 
 
 def pytest_addoption(parser):
-    parser.addoption('--colour-space', action='store',
+    parser.addoption('--colourspace', action='store',
                      help='Colour space specification (BGR24 or I420)')
 
 
 def pytest_generate_tests(metafunc):
     if 'colour_space' in metafunc.fixturenames:
-        if metafunc.config.option.colour_space == 'BGR24':
+        if metafunc.config.option.colourspace == 'BGR24':
             colour_space = BGR24
-        elif metafunc.config.option.colour_space == 'I420':
+        elif metafunc.config.option.colourspace == 'I420':
             colour_space = I420
         else:
             colour_space = BGR24  # default
