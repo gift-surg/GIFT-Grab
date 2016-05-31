@@ -4,6 +4,7 @@
 
 void grab(const enum gg::Device device,
           const size_t num_frames_to_grab,
+          const size_t num_recordings,
           size_t & num_frames_grabbed,
           float & duration)
 {
@@ -31,30 +32,41 @@ void grab(const enum gg::Device device,
 
     IVideoSource * source = gg::Factory::connect(device);
     gg::IVideoTarget * target = gg::Factory::writer(gg::Storage::File_H265);
-    target->init("test.mp4", frame_rate);
     auto started_at = std::chrono::high_resolution_clock::now();
     num_frames_grabbed = 0;
-    for (int i = 0; i < num_frames_to_grab; i++)
+    for (int recording = 0; recording < num_recordings; recording++)
     {
-        if (source->get_frame(frame)) ++num_frames_grabbed;
-        if (i % 30 == 0)
-            std::cout << device_str << ": "
-                      << i << ". frame: "
-                      << frame.cols() << " x " << frame.rows()
-                      << std::endl;
-        target->append(frame);
+        std::string filename;
+        filename.append("test-")
+                .append(device_str)
+                .append("-")
+                .append(std::to_string(recording))
+                .append(".mp4");
+        target->init(filename, frame_rate);
+        int num_frames_to_grab_in_recording = num_frames_to_grab / num_recordings;
+        for (int i = 0; i < num_frames_to_grab_in_recording; i++)
+        {
+            if (source->get_frame(frame)) ++num_frames_grabbed;
+            if (i % 30 == 0)
+                std::cout << device_str << ": "
+                          << i << ". frame: "
+                          << frame.cols() << " x " << frame.rows()
+                          << std::endl;
+            target->append(frame);
+        }
+        target->finalise();
     }
     duration = std::chrono::duration_cast<std::chrono::milliseconds>(
                     std::chrono::high_resolution_clock::now() - started_at
                 ).count() / 1000.0; // because chrono::seconds truncates decimal part
     gg::Factory::disconnect(device);
-    target->finalise();
 }
 
 struct grab_args
 {
     enum gg::Device device;
     size_t num_frames_to_grab;
+    size_t num_recordings;
     size_t num_frames_grabbed;
     float duration;
 };
@@ -63,6 +75,7 @@ void * grab_thread(void * args)
 {
     struct grab_args * g_args = (struct grab_args *) args;
     grab(g_args->device, g_args->num_frames_to_grab,
+         g_args->num_recordings,
          g_args->num_frames_grabbed, g_args->duration);
 }
 
@@ -75,6 +88,7 @@ int main()
         sdi_args.device = gg::Device::DVI2PCIeDuo_SDI;
         dvi_args.device = gg::Device::DVI2PCIeDuo_DVI;
         sdi_args.num_frames_to_grab = dvi_args.num_frames_to_grab = 180;
+        sdi_args.num_recordings = dvi_args.num_recordings = 3;
         pthread_create(&sdi, nullptr, &grab_thread, &sdi_args);
         pthread_create(&dvi, nullptr, &grab_thread, &dvi_args);
         pthread_join(sdi, nullptr);
