@@ -111,8 +111,6 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
 
     if (not frame)
         throw VideoTargetError("FFmpeg frame not initialised");
-    if (not frame->data[0])
-        throw VideoTargetError("FFmpeg data buffer not initialised");
 
     // return value buffers
     int ret;
@@ -233,6 +231,8 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
             break;
         case AV_PIX_FMT_YUV420P:
             frame->data[0] = static_cast<uint8_t *>(malloc(data_length * sizeof(unsigned char)));
+            if (not frame->data[0])
+                throw VideoTargetError("FFmpeg data buffer could not be initialised");
             break;
         default:
             throw VideoTargetError("Colour space not supported");
@@ -289,6 +289,8 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
                   );
         break;
     case AV_PIX_FMT_YUV420P:
+        if (not frame->data[0])
+            throw VideoTargetError("FFmpeg data buffer not initialised");
         memcpy(frame->data[0], data, data_length * sizeof(unsigned char));
         break;
     default:
