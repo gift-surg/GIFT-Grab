@@ -7,6 +7,6 @@ if [ $num_lines -gt 0 ]; then
 else
   cd "$GiftGrab_BUILD_DIR"
 
-  py.test --colourspace="I420" dvi2pcieduo.py
+  py.test --colourspace=I420 dvi2pcieduo.py
 fi
 
