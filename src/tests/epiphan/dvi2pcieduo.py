@@ -6,7 +6,7 @@ import yaml
 from subprocess import check_output
 from os.path import isdir, dirname, isfile, join
 from shutil import rmtree
-from epiphan import parse, dump
+from epiphan import parse, dump, BGR24, I420
 import pygiftgrab
 
 
@@ -178,10 +178,12 @@ def test_frame_grabbing():
     recorders.append(us)
     assert fs.frame_rate == 28.0 and \
         fs.port == pygiftgrab.Device.DVI2PCIeDuo_SDI and \
-        fs.timeout_limit == 20.0
+        fs.timeout_limit == 20.0 and \
+        fs.colour_space == BGR24
     assert us.frame_rate == 14.0 and \
         us.port == pygiftgrab.Device.DVI2PCIeDuo_DVI and \
-        us.timeout_limit == 15.0
+        us.timeout_limit == 15.0 and \
+        us.colour_space == I420
 
     # test actual output now
     roi = [426, 40, 1068, 1040]
