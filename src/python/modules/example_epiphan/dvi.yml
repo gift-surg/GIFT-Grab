@@ -1,5 +1,5 @@
 port: DVI
 colour_space: BGR24
 frame_rate: 14.0
-file_path: /tmp/giftgrab/test-data-fetoscope
+file_path: /tmp/giftgrab/test-data-ultrasound
 timeout_limit: 15.0
