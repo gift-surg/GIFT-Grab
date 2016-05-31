@@ -30,6 +30,8 @@ or-recording-compatibility:
   script:
     - "$CI_SCRIPTS_DIR/build-uzl1603.sh"
     - "$CI_SCRIPTS_DIR/test-uzl1603.sh"
+    - "$CI_SCRIPTS_DIR/build-uzl1603-i420.sh"
+    - "$CI_SCRIPTS_DIR/test-uzl1603-i420.sh"
   tags:
     - uzl1603
   only:

@@ -175,6 +175,11 @@ def test_frame_grabbing(colour_space):
         us_config_file = 'config/dvi.yml'
         fs_frame_rate = 28.0
         us_frame_rate = 14.0
+    elif colour_space == I420:
+        fs_config_file = 'config/sdi-i420.yml'
+        us_config_file = 'config/dvi-i420.yml'
+        fs_frame_rate = 56.0
+        us_frame_rate = 28.0
     else:
         pytest.fail('Colour space not set')
 
