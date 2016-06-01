@@ -2,6 +2,18 @@
 #include <iostream>
 #include <chrono>
 
+#ifdef GENERATE_PERFORMANCE_OUTPUT
+#include <boost/timer/timer.hpp>
+#ifndef dvi2pcieduo_timer_format_s
+#define dvi2pcieduo_timer_format \
+        std::string(", %w, %u, %s, %t, %p" \
+                    ", wall (s), user (s), system (s), user+system (s), CPU (\%)\n")
+#endif
+#ifndef dvi2pcieduo_app_name
+#define dvi2pcieduo_app_name std::string("dvi2pcieduo-")
+#endif
+#endif
+
 void grab(const enum gg::Device device,
           const size_t num_frames_to_grab,
           const size_t num_recordings,
@@ -42,19 +54,45 @@ void grab(const enum gg::Device device,
                 .append("-")
                 .append(std::to_string(recording))
                 .append(".mp4");
+        { // START auto_cpu_timer scope
+        #ifdef GENERATE_PERFORMANCE_OUTPUT
+        boost::timer::auto_cpu_timer t(dvi2pcieduo_app_name + "grab-init" + dvi2pcieduo_timer_format);
+        #endif
+
         target->init(filename, frame_rate);
+        } // END auto_cpu_timer scope
+
         int num_frames_to_grab_in_recording = num_frames_to_grab / num_recordings;
         for (int i = 0; i < num_frames_to_grab_in_recording; i++)
         {
+            { // START auto_cpu_timer scope
+            #ifdef GENERATE_PERFORMANCE_OUTPUT
+            boost::timer::auto_cpu_timer t(dvi2pcieduo_app_name + "grab-get_frame" + dvi2pcieduo_timer_format);
+            #endif
+
             if (source->get_frame(frame)) ++num_frames_grabbed;
             if (i % 30 == 0)
                 std::cout << device_str << ": "
                           << i << ". frame: "
                           << frame.cols() << " x " << frame.rows()
                           << std::endl;
+            } // END auto_cpu_timer scope
+
+            { // START auto_cpu_timer scope
+            #ifdef GENERATE_PERFORMANCE_OUTPUT
+            boost::timer::auto_cpu_timer t(dvi2pcieduo_app_name + "grab-append" + dvi2pcieduo_timer_format);
+            #endif
+
             target->append(frame);
+            } // END auto_cpu_timer scope
         }
+        { // START auto_cpu_timer scope
+        #ifdef GENERATE_PERFORMANCE_OUTPUT
+        boost::timer::auto_cpu_timer t(dvi2pcieduo_app_name + "grab-finalise" + dvi2pcieduo_timer_format);
+        #endif
+
         target->finalise();
+        } // END auto_cpu_timer scope
     }
     duration = std::chrono::duration_cast<std::chrono::milliseconds>(
                     std::chrono::high_resolution_clock::now() - started_at
