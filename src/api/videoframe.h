@@ -9,6 +9,9 @@
 #include <memory>
 #include "maskframe.h"
 
+namespace gg
+{
+
 //!
 //! \brief A class to represent a video frame
 //!
@@ -16,12 +19,7 @@
 //! In that case, the user is responsible for ensuring the data
 //! pointer is valid duing the lifetime of this object.
 //!
-//! We set the format to BGRA, simply because this is native to
-//! most GPUs in the wild and should be faster to load than traditional
-//! RGB (due to 4 byte alignment) and RGBA due to less reordering
-//! on the GPU but this is all probably hardware dependent.
-//!
-class VideoFrame_BGRA
+class VideoFrame
 {
 public:
     //!
@@ -29,51 +27,7 @@ public:
     //! managed frame data
     //! \param manage_data
     //!
-    VideoFrame_BGRA(bool manage_data=false);
-
-    //!
-    //! \brief OpenCV based constructor
-    //! \param mat
-    //! \param manage_data
-    //!
-    VideoFrame_BGRA(const cv::Mat & mat, bool manage_data=false);
-
-    //!
-    //! \brief Constructor with full data and parameter specs
-    //! \param data if \c manage_data is set, all data in this
-    //! will be copied; otherwise this \c data will be used (i.e.
-    //! pointer will be copied)
-    //! \param rows
-    //! \param cols
-    //! \param manage_data
-    //!
-    VideoFrame_BGRA(unsigned char * data, size_t rows, size_t cols, bool manage_data=false);
-
-    //!
-    //! \brief Allocates memory for specified dimensions, and
-    //! sets all pixels to black
-    //! \param rows
-    //! \param cols
-    //!
-    VideoFrame_BGRA(const size_t rows, const size_t cols);
-
-    //!
-    //! \brief Initialise from passed \c data, based on the data
-    //! management setting
-    //! \param data
-    //! \param rows
-    //! \param cols
-    //! \sa manages_own_data
-    //!
-    void init_from_pointer(unsigned char * data, size_t rows, size_t cols);
-
-    //!
-    //! \brief Initialise from passed OpenCV \c mat, based on the
-    //! data management setting
-    //! \param mat
-    //! \sa manages_own_data
-    //!
-    void init_from_opencv_mat(const cv::Mat & mat);
+    VideoFrame(bool manage_data=false);
 
     //!
     //! \brief Compute an elliptical mask for this image
@@ -91,21 +45,16 @@ public:
     //! management is set
     //! \sa manages_own_data
     //!
-    ~VideoFrame_BGRA();
+    virtual ~VideoFrame();
 
     //!
-    //! \brief Copy data from \c rhs, also setting data management
-    //! \param rhs
-    //! \sa manages_own_data
+    //! \brief Get length of data buffer
+    //! \return
     //!
-    VideoFrame_BGRA(const VideoFrame_BGRA & rhs);
-
-    //!
-    //! \brief operator =
-    //! \param rhs
-    //! \sa VideoFrame_BGRA(const VideoFrame_BGRA & rhs)
-    //!
-    void operator=(const VideoFrame_BGRA & rhs);
+    const size_t data_length() const
+    {
+        return _data_length;
+    }
 
     //!
     //! \brief Get number of rows (y-axis, i.e. height)
@@ -123,15 +72,6 @@ public:
     size_t cols() const
     {
         return _cols;
-    }
-
-    //!
-    //! \brief Get number of channels, i.e. 4 in BGRA
-    //! \return
-    //!
-    size_t channels() const
-    {
-        return 4;
     }
 
     //!
@@ -153,11 +93,16 @@ public:
         return _data;
     }
 
-private:
+protected:
     //!
     //! \brief Frame data
     //!
     unsigned char*  _data;
+
+    //!
+    //! \brief Frame data length
+    //!
+    size_t _data_length;
 
     //!
     //! \brief
@@ -177,18 +122,108 @@ private:
     //!
     bool            _manage_data;
 
+protected:
+    //!
+    //! \brief Free all managed data
+    //! \sa ~VideoFrame
+    //!
+    void clear();
+};
+
+}
+
+//!
+//! \brief A class to represent a video frame with BGRA pixels
+//!
+//! We set the format to BGRA, simply because this is native to
+//! most GPUs in the wild and should be faster to load than traditional
+//! RGB (due to 4 byte alignment) and RGBA due to less reordering
+//! on the GPU but this is all probably hardware dependent.
+class VideoFrame_BGRA : public gg::VideoFrame
+{
+public:
+    //!
+    //! \brief Constructor that by default will use externally
+    //! managed frame data
+    //! \param manage_data
+    //!
+    VideoFrame_BGRA(bool manage_data=false);
+
+    //!
+    //! \brief Allocates memory for specified dimensions, and
+    //! sets all pixels to black
+    //! \param rows
+    //! \param cols
+    //!
+    VideoFrame_BGRA(const size_t rows, const size_t cols);
+
+    //!
+    //! \brief OpenCV based constructor
+    //! \param mat
+    //! \param manage_data
+    //!
+    VideoFrame_BGRA(const cv::Mat & mat, bool manage_data=false);
+
+    //!
+    //! \brief Constructor with full data and parameter specs
+    //! \param data if \c manage_data is set, all data in this
+    //! will be copied; otherwise this \c data will be used (i.e.
+    //! pointer will be copied)
+    //! \param rows
+    //! \param cols
+    //! \param manage_data
+    //!
+    VideoFrame_BGRA(unsigned char * data, size_t rows, size_t cols, bool manage_data=false);
+
+    //!
+    //! \brief Copy data from \c rhs, also setting data management
+    //! \param rhs
+    //! \sa manages_own_data
+    //!
+    VideoFrame_BGRA(const VideoFrame_BGRA & rhs);
+
+public:
+    //!
+    //! \brief operator =
+    //! \param rhs
+    //! \sa VideoFrame(const VideoFrame & rhs)
+    //!
+    void operator=(const VideoFrame_BGRA & rhs);
+
+    //!
+    //! \brief Initialise from passed OpenCV \c mat, based on the
+    //! data management setting
+    //! \param mat
+    //! \sa manages_own_data
+    //!
+    void init_from_opencv_mat(const cv::Mat & mat);
+
+    //!
+    //! \brief Initialise from passed \c data, based on the data
+    //! management setting
+    //! \param data
+    //! \param rows
+    //! \param cols
+    //! \sa manages_own_data
+    //!
+    void init_from_pointer(unsigned char * data, size_t rows, size_t cols);
+
+    //!
+    //! \brief Get number of channels, i.e. 4 in BGRA
+    //! \return
+    //!
+    size_t channels() const
+    {
+        return 4;
+    }
+
+private:
     //!
     //! \brief
     //! \param rhs
-    //! \sa VideoFrame_BGRA(const VideoFrame_BGRA & rhs)
+    //! \sa VideoFrame(const VideoFrame & rhs)
     //!
     void clone(const VideoFrame_BGRA &rhs);
-
-    //!
-    //! \brief Free all managed data
-    //! \sa ~VideoFrame_BGRA
-    //!
-    void clear();
 };
 
 #endif

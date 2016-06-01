@@ -42,6 +42,8 @@ There are bits and pieces in the current codebase pertaining to some of the foll
   1. Python 2.7
   1. Boost.Python
 
+* For acquiring videos at up to 60 fps using both Epiphan DVI2PCIe Duo ports simultaneously, EpiphanSDK
+
 # Build
 
 ## Basic
@@ -62,6 +64,9 @@ sudo make install # CMAKE_INSTALL_PREFIX defaults to /usr/local
 * `-D USE_EPIPHAN=ON` for building support for [Epiphan DVI2PCIe Duo framegrabber](http://www.epiphan.com/products/dvi2pcie-duo) (currently at least this option or `USE_FILES` needs to be specified for the library to build properly). __Note when using this option:__
    1. `/dev/video0` and `/dev/video1` will be probed for connecting to the DVI and SDI ports respectively.
    1. Due to the use of the generic [OpenCV VideoCapture](http://docs.opencv.org/2.4/modules/highgui/doc/reading_and_writing_images_and_video.html#VideoCapture::VideoCapture%28int%20device%29) API for grabbing frames from Epiphan cards, it is currently not possible to distinguish Epiphan framegrabbers from others.
+* `-D USE_COLOUR_SPACE_I420=ON` for acquiring 60 fps using both Epiphan DVI2PCIe Duo ports. __Note when using this option:__
+   * EpiphanSDK is needed. Specify `-D EpiphanSDK_DIR=/your/epiphansdk/installation/location`
+   * Frames will be acquired in the [I420 colour space](https://wiki.videolan.org/YUV#I420) instead of BGR24.
 * `-D USE_FFMPEG=ON` for building support for saving frames as video files using [FFmpeg](https://www.ffmpeg.org/) (for hardware-accelerated video encoding, append `-D FFMPEG_HWACCEL=ON` as well). __Note when using this option:__
    1. For video encoding, depending on whether hardware acceleration is desired:
       * (No hardware acceleration) Build and install [x265](http://x265.org/):

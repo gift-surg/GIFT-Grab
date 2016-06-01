@@ -141,12 +141,32 @@ if(USE_LIBVLC)
     endif(LIBVLC_FOUND)
 endif(USE_LIBVLC)
 
+# Support for I420 (YUV420p) colour space
+OPTION(USE_COLOUR_SPACE_I420
+    "Support for grabbing frames in I420 colour space instead of BGR24" OFF)
+if(USE_COLOUR_SPACE_I420)
+    SET(USE_EPIPHANSDK ON)
+    ADD_DEFINITIONS(-DUSE_COLOUR_SPACE_I420)
+    LIST(APPEND HEADERS api/videoframe_i420.h)
+    LIST(APPEND SOURCES api/videoframe_i420.cpp)
+endif(USE_COLOUR_SPACE_I420)
+
+# Epiphan SDK video source
+if(USE_EPIPHANSDK)
+    FIND_PACKAGE(EpiphanSDK CONFIG REQUIRED)
+    INCLUDE_DIRECTORIES(${EpiphanSDK_INCLUDE_DIR})
+    INCLUDE_DIRECTORIES(epiphansdk)
+    LIST(APPEND LIBS ${EpiphanSDK_LIBS})
+    LIST(APPEND HEADERS epiphansdk/epiphansdk_video_source.h)
+    LIST(APPEND SOURCES epiphansdk/epiphansdk_video_source.cpp)
+endif(USE_EPIPHANSDK)
+
 # Performance benchmarking
 OPTION(GENERATE_PERFORMANCE_OUTPUT
     "Support for performance (timer) reports via Boost.Timer" OFF)
 MARK_AS_ADVANCED(GENERATE_PERFORMANCE_OUTPUT)
 if(GENERATE_PERFORMANCE_OUTPUT)
-    FIND_PACKAGE(Boost COMPONENTS timer REQUIRED)
+    FIND_PACKAGE(Boost COMPONENTS timer system REQUIRED)
     ADD_DEFINITIONS(-DGENERATE_PERFORMANCE_OUTPUT)
     LIST(APPEND LIBS ${Boost_LIBRARIES})
 endif(GENERATE_PERFORMANCE_OUTPUT)
@@ -187,8 +207,11 @@ endif(BUILD_DOC)
 OPTION(BUILD_TESTS "Build tests" OFF)
 if(BUILD_TESTS)
     SET(TEST_NAME save_frames)
-    ADD_EXECUTABLE(${TEST_NAME}
-        tests/save_frames.cpp)
+    ADD_EXECUTABLE(${TEST_NAME} tests/save_frames.cpp)
+    TARGET_LINK_LIBRARIES(${TEST_NAME} ${NAME} ${LIBS})
+
+    SET(TEST_NAME dvi2pcieduo)
+    ADD_EXECUTABLE(${TEST_NAME} tests/epiphan/dvi2pcieduo.cpp)
     TARGET_LINK_LIBRARIES(${TEST_NAME} ${NAME} ${LIBS})
 endif(BUILD_TESTS)
 

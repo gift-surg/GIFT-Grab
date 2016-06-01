@@ -51,4 +51,15 @@ VideoTargetError::~VideoTargetError() noexcept
 
 }
 
+VideoSourceError::VideoSourceError(const std::string & detail) :
+    BasicException(detail)
+{
+
+}
+
+VideoSourceError::~VideoSourceError() noexcept
+{
+
+}
+
 }

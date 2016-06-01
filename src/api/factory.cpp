@@ -4,20 +4,43 @@
 #ifdef USE_FFMPEG
 #include "ffmpeg_video_target.h"
 #endif
+#ifdef USE_COLOUR_SPACE_I420
+#include "epiphansdk_video_source.h"
+#endif
 
 namespace gg {
 
 IVideoSource * Factory::_sources[2] = { NULL, NULL };
 
 IVideoSource * Factory::connect(enum Device type) {
+#ifdef USE_COLOUR_SPACE_I420
+    std::string device_id = "";
+#else
     int device_id = -1; // default value makes no sense
+#endif
 
     switch (type) {
     case DVI2PCIeDuo_DVI:
+#ifdef USE_COLOUR_SPACE_I420
+#ifdef EpiphanSDK_DVI
+        device_id = EpiphanSDK_DVI;
+#else
+        throw DeviceNotFound("EpiphanSDK_DVI macro not defined");
+#endif
+#else
         device_id = 0; // always /dev/video0
+#endif
         break;
     case DVI2PCIeDuo_SDI:
+#ifdef USE_COLOUR_SPACE_I420
+#ifdef EpiphanSDK_SDI
+        device_id = EpiphanSDK_SDI;
+#else
+        throw DeviceNotFound("EpiphanSDK_SDI macro not defined");
+#endif
+#else
         device_id = 1; // always /dev/video1
+#endif
         break;
     default:
         std::string msg;
@@ -29,7 +52,20 @@ IVideoSource * Factory::connect(enum Device type) {
 
     if (_sources[(int) type] == NULL)
     {
+#ifdef USE_COLOUR_SPACE_I420
+        IVideoSource * src = nullptr;
+        try
+        {
+            src = new VideoSourceEpiphanSDK(device_id,
+                                            V2U_GRABFRAME_FORMAT_I420);
+        }
+        catch (VideoSourceError & e)
+        {
+            throw DeviceNotFound(e.what());
+        }
+#else
         IVideoSource * src = new VideoSourceOpenCV(device_id);
+#endif
 
         // check querying frame dimensions
         int width = -1, height = -1;
@@ -37,7 +73,11 @@ IVideoSource * Factory::connect(enum Device type) {
         {
             std::string error;
             error.append("Device ")
+#ifdef USE_COLOUR_SPACE_I420
+                 .append(device_id)
+#else
                  .append(std::to_string(device_id))
+#endif
                  .append(" connected, but ")
                  .append(" does not return frame dimensions.");
             throw DeviceOffline(error);
@@ -48,19 +88,31 @@ IVideoSource * Factory::connect(enum Device type) {
         {
             std::string error;
             error.append("Device ")
+#ifdef USE_COLOUR_SPACE_I420
+                 .append(device_id)
+#else
                  .append(std::to_string(device_id))
+#endif
                  .append(" connected, but ")
                  .append(" returns meaningless frame dimensions.");
             throw DeviceOffline(error);
         }
 
         // check querying frames
+#ifdef USE_COLOUR_SPACE_I420
+        VideoFrame_I420 frame;
+#else
         VideoFrame_BGRA frame;
+#endif
         if (not src->get_frame(frame))
         {
             std::string error;
             error.append("Device ")
+#ifdef USE_COLOUR_SPACE_I420
+                 .append(device_id)
+#else
                  .append(std::to_string(device_id))
+#endif
                  .append(" connected, but ")
                  .append(" does not return frames.");
             throw DeviceOffline(error);

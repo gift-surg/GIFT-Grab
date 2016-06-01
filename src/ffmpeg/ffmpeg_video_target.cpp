@@ -3,6 +3,14 @@
 
 #ifdef GENERATE_PERFORMANCE_OUTPUT
 #include <boost/timer/timer.hpp>
+#ifndef timer_format_str
+#define timer_format_str \
+        std::string(", %w, %u, %s, %t, %p" \
+                    ", wall (s), user (s), system (s), user+system (s), CPU (\%)\n")
+#endif
+#ifndef this_class_str
+#define this_class_str std::string("VideoTargetFFmpeg-")
+#endif
 #endif
 
 namespace gg
@@ -12,6 +20,8 @@ VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
     _codec(NULL),
     _codec_name(""),
     _frame(NULL),
+    _pixel_depth(0),
+    _first_frame(true),
     _framerate(-1),
     _sws_context(NULL),
     _format_context(NULL),
@@ -63,37 +73,89 @@ void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
     if (_stream == NULL)
         throw VideoTargetError("Could not allocate stream");
     _stream->id = _format_context->nb_streams-1; // TODO isn't this wrong?
+
+    // allocate FFmpeg frame
+    _frame = av_frame_alloc();
+    if (not _frame)
+        throw VideoTargetError("Could not allocate video frame");
+    _first_frame = true;
 }
 
 void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
 {
+    { // START auto_cpu_timer scope
+#ifdef GENERATE_PERFORMANCE_OUTPUT
+    boost::timer::auto_cpu_timer t(this_class_str + "1-ffmpeg_frame" + timer_format_str);
+#endif
+
+    ffmpeg_frame(frame.data(),
+                 frame.data_length(),
+                 frame.cols(), frame.rows(),
+                 AV_PIX_FMT_BGRA, _frame);
+    } // END auto_cpu_timer scope
+
+    { // START auto_cpu_timer scope
+#ifdef GENERATE_PERFORMANCE_OUTPUT
+    boost::timer::auto_cpu_timer t(this_class_str + "1-encode_and_write" + timer_format_str);
+#endif
+
+    /* encode the image */
+    int got_output;
+    encode_and_write(_frame, got_output);
+
+    } // END auto_cpu_timer scope
+}
+
+void VideoTargetFFmpeg::append(const VideoFrame_I420 & frame)
+{
+    { // START auto_cpu_timer scope
+#ifdef GENERATE_PERFORMANCE_OUTPUT
+    boost::timer::auto_cpu_timer t(this_class_str + "1-ffmpeg_frame" + timer_format_str);
+#endif
+
+    ffmpeg_frame(frame.data(), frame.data_length(),
+                 frame.cols(), frame.rows(),
+                 AV_PIX_FMT_YUV420P, _frame);
+    } // END auto_cpu_timer scope
+
+    { // START auto_cpu_timer scope
+#ifdef GENERATE_PERFORMANCE_OUTPUT
+    boost::timer::auto_cpu_timer t(this_class_str + "1-encode_and_write" + timer_format_str);
+#endif
+
+    int got_output;
+    encode_and_write(_frame, got_output);
+    } // END auto_cpu_timer scope
+}
+
+void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
+                                     const size_t data_length,
+                                     const int width, const int height,
+                                     const AVPixelFormat colour_space,
+                                     AVFrame * frame)
+{
     if (_framerate <= 0)
         throw VideoTargetError("Video target not initialised");
 
+    if (not frame)
+        throw VideoTargetError("FFmpeg frame not initialised");
+
     // return value buffers
-    int ret, got_output;
+    int ret;
 
     // if first frame, initialise
-    if (_frame == NULL)
+    if (_first_frame)
     {
 #ifdef GENERATE_PERFORMANCE_OUTPUT
-#ifndef timer_format_str
-#define timer_format_str \
-        std::string(", %w, %u, %s, %t, %p" \
-                    ", wall (s), user (s), system (s), user+system (s), CPU (\%)\n")
-#endif
-#ifndef this_class_str
-#define this_class_str std::string("VideoTargetFFmpeg-")
-#endif
-        boost::timer::auto_cpu_timer t(this_class_str + "first-frame" + timer_format_str);
+        boost::timer::auto_cpu_timer t(this_class_str + "2-first-frame" + timer_format_str);
 #endif
         // TODO - is _codec_context ever being modified after first frame?
         /* TODO: using default reduces filesize
          * but should we set it nonetheless?
          */
 //        _stream->codec->bit_rate = 400000;
-        _stream->codec->width = frame.cols();
-        _stream->codec->height = frame.rows();
+        _stream->codec->width = width;
+        _stream->codec->height = height;
         _stream->time_base = (AVRational){ 1, _framerate };
         _stream->codec->time_base = _stream->time_base;
         _stream->codec->gop_size = 12;
@@ -141,15 +203,31 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
         if (avcodec_open2(_stream->codec, _codec, NULL) < 0)
             throw VideoTargetError("Could not open codec");
 
-        _frame = av_frame_alloc();
-        if (not _frame)
-            throw VideoTargetError("Could not allocate video frame");
-        _frame->format = _stream->codec->pix_fmt;
-        _frame->width  = _stream->codec->width;
-        _frame->height = _stream->codec->height;
+        frame->format = _stream->codec->pix_fmt;
+        frame->width  = _stream->codec->width;
+        frame->height = _stream->codec->height;
         /* allocate the buffers for the frame data */
-        // TODO #25 what influence does 32 have on performance?
-        ret = av_frame_get_buffer(_frame, 32);
+        switch(colour_space)
+        {
+        case AV_PIX_FMT_BGRA:
+            _pixel_depth = 32; // bits-per-pixel
+            break;
+        case AV_PIX_FMT_YUV420P:
+            _pixel_depth = 12; // bits-per-pixel
+            /* TODO #54 - alignment by _pixel_depth causes problems
+             * due to buffer size mismatches between EpiphanSDK and
+             * FFmpeg, hence manually filling in linesizes (based on
+             * debugging measurements), in conj. with
+             * av_image_fill_pointers below
+             */
+            frame->linesize[0] = frame->width;
+            frame->linesize[1] = frame->width / 2;
+            frame->linesize[2] = frame->width / 2;
+            break;
+        default:
+            throw VideoTargetError("Colour space not supported");
+        }
+        ret = av_frame_get_buffer(frame, _pixel_depth);
         if (ret < 0)
             throw VideoTargetError("Could not allocate frame data");
 
@@ -175,13 +253,27 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
         if (ret < 0)
             throw VideoTargetError("Could not write header to file");
 
-        /* Open context for converting BGRA pixels to YUV420p */
-        _sws_context = sws_getContext(
-                    frame.cols(), frame.rows(), AV_PIX_FMT_BGRA,
-                    frame.cols(), frame.rows(), _stream->codec->pix_fmt,
-                    0, NULL, NULL, NULL);
-        if (_sws_context == NULL)
-            throw VideoTargetError("Could not allocate Sws context");
+        /* TODO USE_COLOUR_SPACE_I420 also implicitly provides
+         * this check, but selective code compilation might make
+         * code faster, due to not having the conditional checks
+         */
+        switch(colour_space)
+        {
+        case AV_PIX_FMT_BGRA:
+            /* Open context for converting BGRA pixels to YUV420p */
+            _sws_context = sws_getContext(
+                        width, height, AV_PIX_FMT_BGRA,
+                        width, height, _stream->codec->pix_fmt,
+                        0, NULL, NULL, NULL);
+            if (_sws_context == NULL)
+                throw VideoTargetError("Could not allocate Sws context");
+            break;
+        case AV_PIX_FMT_YUV420P:
+            // nop
+            break;
+        default:
+            throw VideoTargetError("Colour space not supported");
+        }
 
         // To be incremented for each frame, used as pts
         _frame_index = 0;
@@ -192,12 +284,14 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
         _packet.data = NULL;    // packet data will be allocated by the encoder
         _packet.size = 0;
 
-        _bgra_stride[0] = 4*frame.cols();
+        _bgra_stride[0] = 4*width;
+
+        _first_frame = false;
     }
 
     { // START auto_cpu_timer scope
 #ifdef GENERATE_PERFORMANCE_OUTPUT
-    boost::timer::auto_cpu_timer t(this_class_str + "1-av_frame_make_writable" + timer_format_str);
+    boost::timer::auto_cpu_timer t(this_class_str + "2-av_frame_make_writable" + timer_format_str);
 #endif
 
     /* when we pass a frame to the encoder, it may keep a reference to it
@@ -205,7 +299,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
      * make sure we do not overwrite it here
      */
     // TODO #25 why not only once?
-    ret = av_frame_make_writable(_frame);
+    ret = av_frame_make_writable(frame);
     if (ret < 0)
         throw VideoTargetError("Could not make frame writeable");
 
@@ -213,28 +307,41 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
 
     { // START auto_cpu_timer scope
 #ifdef GENERATE_PERFORMANCE_OUTPUT
-    boost::timer::auto_cpu_timer t(this_class_str + "1-sws_scale" + timer_format_str);
+    boost::timer::auto_cpu_timer t(this_class_str + "2-sws_scale" + timer_format_str);
 #endif
 
-    /* convert pixel format */
-    _src_data_ptr[0] = frame.data();
-    sws_scale(_sws_context,
-              _src_data_ptr, _bgra_stride, // BGRA has one plane
-              0, frame.rows(),
-              _frame->data, _frame->linesize
-              );
+    /* TODO USE_COLOUR_SPACE_I420 also implicitly provides
+     * this check, but selective code compilation might make
+     * code faster, due to not having the conditional checks
+     */
+    switch(colour_space)
+    {
+    case AV_PIX_FMT_BGRA:
+        _src_data_ptr[0] = data;
+        /* convert pixel format */
+        sws_scale(_sws_context,
+                  _src_data_ptr, _bgra_stride, // BGRA has one plane
+                  0, height,
+                  frame->data, frame->linesize
+                  );
+        break;
+    case AV_PIX_FMT_YUV420P:
+        /* TODO #54 - alignment by _pixel_depth causes problems
+         * due to buffer size mismatches between EpiphanSDK and
+         * FFmpeg, hence using this instead of commented out
+         * code below
+         */
+        av_image_fill_pointers(frame->data, (AVPixelFormat) frame->format,
+                               frame->height, const_cast<uint8_t *>(data), frame->linesize);
+//        av_image_fill_arrays(frame->data, frame->linesize,
+//                             data, (AVPixelFormat) frame->format,
+//                             frame->width, frame->height, _pixel_depth);
+        break;
+    default:
+        throw VideoTargetError("Colour space not supported");
+    }
 
-    _frame->pts = _frame_index++;
-
-    } // END auto_cpu_timer scope
-
-    { // START auto_cpu_timer scope
-#ifdef GENERATE_PERFORMANCE_OUTPUT
-    boost::timer::auto_cpu_timer t(this_class_str + "1-encode_and_write" + timer_format_str);
-#endif
-
-    /* encode the image */
-    encode_and_write(_frame, got_output);
+    frame->pts = _frame_index++;
 
     } // END auto_cpu_timer scope
 }
@@ -270,7 +377,7 @@ void VideoTargetFFmpeg::encode_and_write(AVFrame * frame, int & got_output)
         boost::timer::auto_cpu_timer t(this_class_str + "2-av_interleaved_write_frame" + timer_format_str);
 #endif
         /* Write the compressed frame to the media file. */
-        int ret = av_interleaved_write_frame(_format_context, &_packet);
+        ret = av_interleaved_write_frame(_format_context, &_packet);
         }
 
         if (ret < 0)
@@ -313,6 +420,8 @@ void VideoTargetFFmpeg::finalise()
     // default values, for next init
     _codec = NULL;
     _frame = NULL;
+    _pixel_depth = 0;
+    _first_frame = true;
     _framerate = -1;
     _sws_context = NULL;
     _format_context = NULL;

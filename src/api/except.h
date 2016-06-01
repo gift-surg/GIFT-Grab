@@ -97,4 +97,23 @@ public:
     virtual ~VideoTargetError() noexcept;
 };
 
+//!
+//! \brief Thrown in case of errors related to
+//! video sources
+//!
+class VideoSourceError : public BasicException
+{
+public:
+    //!
+    //! \brief
+    //! \param detail
+    //!
+    VideoSourceError(const std::string & detail);
+
+    //!
+    //! \brief ~VideoTargetError
+    //! \sa BasicException::BasicException
+    //!
+    virtual ~VideoSourceError() noexcept;
+};
 }
