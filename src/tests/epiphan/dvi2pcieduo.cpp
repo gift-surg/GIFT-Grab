@@ -136,7 +136,7 @@ struct grab_args
     size_t num_frames_grabbed;
     float duration;
 #ifdef GENERATE_PERFORMANCE_OUTPUT
-    bool exclude_io_times;
+    bool exclude_periop_times;
 #endif
 };
 
@@ -147,14 +147,14 @@ void * grab_thread(void * args)
          g_args->num_recordings,
          g_args->num_frames_grabbed, g_args->duration
 #ifdef GENERATE_PERFORMANCE_OUTPUT
-         , g_args->exclude_io_times
+         , g_args->exclude_periop_times
 #endif
          );
 }
 
 int main(int argc, char ** args)
 {
-    bool multi_threaded = false, exclude_io = false;
+    bool multi_threaded = false, exclude_periops = false;
     for (int i = 0; i < argc; i++)
     {
         std::string arg(args[i]);
@@ -162,7 +162,7 @@ int main(int argc, char ** args)
             multi_threaded = true;
 #ifdef GENERATE_PERFORMANCE_OUTPUT
         else if (arg == "--exclude-io")
-            exclude_io = true;
+            exclude_periops = true;
 #endif
     }
 
@@ -175,7 +175,7 @@ int main(int argc, char ** args)
         sdi_args.num_frames_to_grab = dvi_args.num_frames_to_grab = 180;
         sdi_args.num_recordings = dvi_args.num_recordings = 3;
 #ifdef GENERATE_PERFORMANCE_OUTPUT
-        sdi_args.exclude_io_times = dvi_args.exclude_io_times = exclude_io;
+        sdi_args.exclude_periop_times = dvi_args.exclude_periop_times = exclude_periops;
 #endif
         if (multi_threaded)
         {
@@ -190,14 +190,14 @@ int main(int argc, char ** args)
                  sdi_args.num_recordings, sdi_args.num_frames_grabbed,
                  sdi_args.duration
 #ifdef GENERATE_PERFORMANCE_OUTPUT
-                 , sdi_args.exclude_io_times
+                 , sdi_args.exclude_periop_times
 #endif
                  );
             grab(dvi_args.device, dvi_args.num_frames_to_grab,
                  dvi_args.num_recordings, dvi_args.num_frames_grabbed,
                  dvi_args.duration
 #ifdef GENERATE_PERFORMANCE_OUTPUT
-                 , dvi_args.exclude_io_times
+                 , dvi_args.exclude_periop_times
 #endif
                  );
         }
@@ -215,7 +215,7 @@ int main(int argc, char ** args)
                   << std::endl;
         std::cout << (multi_threaded ? "(multi-threaded)" : "(sequential)")
 #ifdef GENERATE_PERFORMANCE_OUTPUT
-                  << (exclude_io ? " and (excluded IO)" : "")
+                  << (exclude_periops ? " and (excluded init/finalise times)" : "")
 #endif
                   << std::endl << std::endl;
         return EXIT_SUCCESS;
