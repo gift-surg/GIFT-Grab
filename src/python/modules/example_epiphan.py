@@ -9,8 +9,8 @@ import logging
 if __name__ == '__main__':
     try:
         # create sessions
-        fs_config = 'example_epiphan/sdi.yml'
-        us_config = 'example_epiphan/dvi.yml'
+        fs_config = 'example_epiphan/sdi-i420.yml'
+        us_config = 'example_epiphan/dvi-i420.yml'
         logging.basicConfig(format='%(threadName)s -- %(asctime)s -- %(message)s',
                             datefmt='%m/%d/%Y %H:%M:%S')
 
@@ -26,28 +26,28 @@ if __name__ == '__main__':
             # do actual work
             fs.start()
             us.start()
-            sleep(5)
+            sleep(10 * 60)
             fs.pause_recording()
             us.pause_recording()
             sleep(4)
             try:
-                fs.set_sub_frame(426, -40, 1067, 1040)
+                fs.set_sub_frame(426, -40, 1064, 1040)
             except ValueError as e:
                 logging.error(e.message)
             try:
-                us.set_sub_frame(426, 40, 1067, 1040)
+                us.set_sub_frame(426, 40, 1064, 1040)
             except ValueError as e:
                 logging.error(e.message)
             fs.resume_recording()
             us.resume_recording()
-            sleep(5)
+            sleep(20 * 60)
             fs.pause_recording()
             us.pause_recording()
             sleep(4)
             fs.set_full_frame()
             fs.resume_recording()
             us.resume_recording()
-            sleep(5)
+            sleep(5 * 60)
 
             # finish session
             fs.stop()
