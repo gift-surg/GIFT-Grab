@@ -195,6 +195,15 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
             break;
         case AV_PIX_FMT_YUV420P:
             _pixel_depth = 12; // bits-per-pixel
+            /* TODO #54 - alignment by _pixel_depth causes problems
+             * due to buffer size mismatches between EpiphanSDK and
+             * FFmpeg, hence manually filling in linesizes (based on
+             * debugging measurements), in conj. with
+             * av_image_fill_pointers below
+             */
+            frame->linesize[0] = frame->width;
+            frame->linesize[1] = frame->width / 2;
+            frame->linesize[2] = frame->width / 2;
             break;
         default:
             throw VideoTargetError("Colour space not supported");
@@ -298,9 +307,16 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
                   );
         break;
     case AV_PIX_FMT_YUV420P:
-        av_image_fill_arrays(frame->data, frame->linesize,
-                             data, (AVPixelFormat) frame->format,
-                             frame->width, frame->height, _pixel_depth);
+        /* TODO #54 - alignment by _pixel_depth causes problems
+         * due to buffer size mismatches between EpiphanSDK and
+         * FFmpeg, hence using this instead of commented out
+         * code below
+         */
+        av_image_fill_pointers(frame->data, (AVPixelFormat) frame->format,
+                               frame->height, const_cast<uint8_t *>(data), frame->linesize);
+//        av_image_fill_arrays(frame->data, frame->linesize,
+//                             data, (AVPixelFormat) frame->format,
+//                             frame->width, frame->height, _pixel_depth);
         break;
     default:
         throw VideoTargetError("Colour space not supported");
