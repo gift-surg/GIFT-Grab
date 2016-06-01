@@ -6,7 +6,7 @@ import yaml
 from subprocess import check_output
 from os.path import isdir, dirname, isfile, join
 from shutil import rmtree
-from epiphan import parse, dump
+from epiphan import parse, dump, BGR24, I420
 import pygiftgrab
 
 
@@ -148,7 +148,7 @@ def timing_report(file_path):
     return True
 
 
-def test_parse():
+def test_parse(colour_space):
     # not existing config file
     with pytest.raises(IOError):
         _ = parse('/this/file/should/never/exist.yml')
@@ -160,28 +160,50 @@ def test_parse():
     # files with invalid values
     with pytest.raises(ValueError):
         _ = parse('config/valueerror1.yml')
-    with pytest.raises(ValueError):
-        _ = parse('config/valueerror2.yml')
+    if colour_space == BGR24:
+        with pytest.raises(ValueError):
+            _ = parse('config/valueerror2.yml')
+    elif colour_space == I420:
+        with pytest.raises(ValueError):
+            _ = parse('config/valueerror3.yml')
+    else:
+        pytest.fail('Colour space not configured properly')
 
     # folder that can't be created
     with pytest.raises(OSError):
         _ = parse('config/oserror.yml')
 
 
-def test_frame_grabbing():
+def test_frame_grabbing(colour_space):
+    # test-input & data
+    if colour_space == BGR24:
+        fs_config_file = 'config/sdi.yml'
+        us_config_file = 'config/dvi.yml'
+        fs_frame_rate = 28.0
+        us_frame_rate = 14.0
+    elif colour_space == I420:
+        fs_config_file = 'config/sdi-i420.yml'
+        us_config_file = 'config/dvi-i420.yml'
+        fs_frame_rate = 56.0
+        us_frame_rate = 28.0
+    else:
+        pytest.fail('Colour space not configured properly')
+
     # create actual threads
-    fs = parse('config/sdi.yml')
-    us = parse('config/dvi.yml')
+    fs = parse(fs_config_file)
+    us = parse(us_config_file)
     assert fs is not None
     recorders.append(fs)
     assert us is not None
     recorders.append(us)
-    assert fs.frame_rate == 28.0 and \
+    assert fs.frame_rate == fs_frame_rate and \
         fs.port == pygiftgrab.Device.DVI2PCIeDuo_SDI and \
-        fs.timeout_limit == 20.0
-    assert us.frame_rate == 14.0 and \
+        fs.timeout_limit == 20.0 and \
+        fs.colour_space == colour_space
+    assert us.frame_rate == us_frame_rate and \
         us.port == pygiftgrab.Device.DVI2PCIeDuo_DVI and \
-        us.timeout_limit == 15.0
+        us.timeout_limit == 15.0 and \
+        us.colour_space == colour_space
 
     # test actual output now
     roi = [426, 40, 1068, 1040]

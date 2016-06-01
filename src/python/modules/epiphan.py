@@ -14,6 +14,8 @@ import pygiftgrab
 
 MAX_X = 1920
 MAX_Y = 1080
+BGR24 = 86224  # 8 => B, 6 => G, 2 => R :)
+I420 = 1420  # 1 => I :)
 
 
 class Recorder(Thread):
@@ -38,13 +40,14 @@ class Recorder(Thread):
 
     """
 
-    def __init__(self, port, frame_rate, file_path, timeout_limit=10):
+    def __init__(self, port, colour_space, frame_rate, file_path, timeout_limit=10):
         """Initialise thread with desired configuration.
 
         Thread will not run if file writer cannot be created.
 
         @param port `pygiftgrab.Device.DVI2PCIeDuo_SDI` or
         `pygiftgrab.Device.DVI2PCIeDuo_DVI`
+        @param colour_space `BGR24` or `I420`
         @param frame_rate Epiphan DVI2PCIe Duo supports up to 60 fps
         at ``1920 x 1080``, when using a single port, and 37 fps when using
         both ports (when capturing in the RGB24 colour space)
@@ -60,6 +63,7 @@ class Recorder(Thread):
         self.max_num_attempts = 5
         self.inter_attempt_duration = self.timeout_limit / self.max_num_attempts  # sec
         self.port = port
+        self.colour_space = colour_space
         self.name = str(self.port)
         self.file = None
         self.is_running = False
@@ -72,7 +76,8 @@ class Recorder(Thread):
         self.sub_frame = None
         self.device = None
         self.black_frame = None
-        if self.__create_video_writer() and self.timeout_limit > 0:
+        if self.__create_video_writer() and self.timeout_limit > 0 \
+           and (self.colour_space == BGR24 or self.colour_space == I420):
             self.is_running = True
 
     def run(self):
@@ -90,7 +95,10 @@ class Recorder(Thread):
                 return
 
             inter_frame_duration = self.__inter_frame_duration()
-            frame = pygiftgrab.VideoFrame_BGRA(False)
+            if self.colour_space == BGR24:
+                frame = pygiftgrab.VideoFrame_BGRA(False)
+            elif self.colour_space == I420:
+                frame = pygiftgrab.VideoFrame_I420(False)
             self.resume_recording()  # i.e. start recording
 
             while self.is_running:
@@ -199,12 +207,18 @@ class Recorder(Thread):
                 cols = MAX_X
                 rows = MAX_Y
 
-            tmp_frame = pygiftgrab.VideoFrame_BGRA(False)
+            if self.colour_space == BGR24:
+                tmp_frame = pygiftgrab.VideoFrame_BGRA(False)
+            elif self.colour_space == I420:
+                tmp_frame = pygiftgrab.VideoFrame_I420(False)
             got_frame = self.device.get_frame(tmp_frame)
             if got_frame:
                 cols = tmp_frame.cols()
                 rows = tmp_frame.rows()
-            self.black_frame = pygiftgrab.VideoFrame_BGRA(rows, cols)
+            if self.colour_space == BGR24:
+                self.black_frame = pygiftgrab.VideoFrame_BGRA(rows, cols)
+            elif self.colour_space == I420:
+                self.black_frame = pygiftgrab.VideoFrame_I420(cols, rows)
         else:
             return
 
@@ -392,6 +406,38 @@ def __str_to_port(epiphan_port):
         raise ValueError('Could not recognise port ' + epiphan_port)
 
 
+def __colour_space_to_str(epiphan_colour_space):
+    """Get string representation of given `epiphan_colour_space`.
+
+    @param epiphan_colour_space
+    @return
+    @throw ValueError if invalid value given
+    """
+    if epiphan_colour_space == BGR24:
+        return 'BGR24'
+    elif epiphan_colour_space == I420:
+        return 'I420'
+    else:
+        raise ValueError('Could not recognise colour space ' +
+                         str(epiphan_colour_space))
+
+
+def __str_to_colour_space(epiphan_colour_space):
+    """Get actual colour space value from given `epiphan_colour_space` string.
+
+    @param epiphan_colour_space
+    @return
+    @throw ValueError if invalid string given
+    """
+    if epiphan_colour_space == 'BGR24':
+        return BGR24
+    elif epiphan_colour_space == 'I420':
+        return I420
+    else:
+        raise ValueError('Could not recognise colour space ' +
+                         epiphan_colour_space)
+
+
 def parse(file_path):
     """Parse `Recorder` configuration from given YAML file.
 
@@ -413,12 +459,19 @@ def parse(file_path):
 
         # check everything specified properly
         if not data['file_path'] or not data['frame_rate'] \
-           or not data['timeout_limit'] or not data['port']:
+           or not data['timeout_limit'] or not data['port'] \
+           or not data['colour_space']:
             raise yaml.YAMLError('Could not parse ' + file_path)
+        colour_space = __str_to_colour_space(data['colour_space'])
         frame_rate = data['frame_rate']
-        if not 0 < frame_rate <= 29:
-            raise ValueError('Supporting only up to 29 fps currently ' +
-                             '(' + str(frame_rate) + ' given)')
+        if colour_space == BGR24:
+            max_frame_rate = 29
+        elif colour_space == I420:
+            max_frame_rate = 59
+        if not 0 < frame_rate <= max_frame_rate:
+            raise ValueError('Supporting only up to ' + str(max_frame_rate) +
+                             ' fps when using colour space ' +
+                             data['colour_space'] + ' (' + str(frame_rate) + ' given)')
         timeout_limit = data['timeout_limit']
         if not 0 < timeout_limit <= 20:
             raise ValueError('Timeout should be positive, ' +
@@ -441,7 +494,7 @@ def parse(file_path):
                 break
 
         # create and return thread
-        return Recorder(port=port, frame_rate=frame_rate,
+        return Recorder(port=port, colour_space=colour_space, frame_rate=frame_rate,
                         file_path=unique_file_path, timeout_limit=timeout_limit)
 
 
@@ -459,7 +512,9 @@ def dump(recorder):
     file_path = join(dirname(recorder.file_path), 'config.yml')
     with open(file_path, 'w') as stream:
         port = __port_to_str(recorder.port)
+        colour_space = __colour_space_to_str(recorder.colour_space)
         data = dict(port=port,
+                    colour_space=colour_space,
                     frame_rate=recorder.frame_rate,
                     file_path=recorder.file_path,
                     timeout_limit=recorder.timeout_limit)

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "videoframe.h"
+#include "videoframe_i420.h"
 #include "except.h"
 
 namespace gg
@@ -32,6 +33,20 @@ public:
     //! appended to output for some reason
     //!
     virtual void append(const VideoFrame_BGRA & frame) = 0;
+
+#ifdef USE_COLOUR_SPACE_I420
+    //!
+    //! \brief Append I420 \c frame to output
+    //! \param frame
+    //! \sa append
+    //! \throw VideoTargetError by default. Sub-classes
+    //! accepting I420 frames must override this function.
+    //!
+    virtual void append(const VideoFrame_I420 & frame)
+    {
+        throw VideoTargetError("By default, append(VideoFrame_I420 & frame) not implemented");
+    }
+#endif
 
     //!
     //! \brief Finalise writer, e.g. close file

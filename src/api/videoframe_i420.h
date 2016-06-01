@@ -7,12 +7,6 @@ namespace gg
 
 class VideoFrame_I420 : public VideoFrame
 {
-protected:
-    //!
-    //! \brief
-    //!
-    size_t _data_length;
-
 public:
     //!
     //! \brief Constructor that uses externally
@@ -20,6 +14,14 @@ public:
     //! \param manage_data
     //!
     VideoFrame_I420(bool manage_data = false);
+
+    //!
+    //! \brief Allocates memory for specified dimensions, and
+    //! sets all pixels to black
+    //! \param cols
+    //! \param rows
+    //!
+    VideoFrame_I420(const size_t cols, const size_t rows);
 
     //!
     //! \brief Initialise a frame from passed \c data.

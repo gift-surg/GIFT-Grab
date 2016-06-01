@@ -46,6 +46,18 @@ protected:
     AVFrame * _frame;
 
     //!
+    //! \brief Pixel depth (bits-per-pixel)
+    //!
+    int _pixel_depth;
+
+    //!
+    //! \brief Flag indicating first frame being
+    //! appended, i.e. to infer the frame params
+    //! like width and height automatically
+    //!
+    bool _first_frame;
+
+    //!
     //! \brief
     //!
     int64_t _frame_index;
@@ -92,9 +104,29 @@ public:
 
     void append(const VideoFrame_BGRA & frame);
 
+    void append(const VideoFrame_I420 & frame);
+
     void finalise();
 
 protected:
+    //!
+    //! \brief Prepare frame data for encoding
+    //! \param data
+    //! \param data_length
+    //! \param width
+    //! \param height
+    //! \param colour_space
+    //! \param frame
+    //! \sa encode_and_write
+    //! \throw VideoTargetError with a detailed
+    //! message on failure in any step
+    //!
+    void ffmpeg_frame(const unsigned char * data,
+                      const size_t data_length,
+                      const int width, const int height,
+                      const AVPixelFormat colour_space,
+                      AVFrame * frame);
+
     //!
     //! \brief Convenience function for code reuse when
     //! writing delayed frames

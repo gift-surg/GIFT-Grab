@@ -72,7 +72,13 @@ bool VideoSourceEpiphanSDK::get_frame(VideoFrame_I420 & frame)
         frame = VideoFrame_I420(
                     static_cast<unsigned char*>(_buffer->pixbuf),
                     _buffer->imagelen,
-                    _roi.width, _roi.height,
+                    /* TODO #54 specified _roi not always
+                     * respected by FrmGrab_Frame, hence
+                     * constructing with _buffer->crop
+                     * instead of _roi to avoid alignment
+                     * problems when saving to video files
+                     */
+                    _buffer->crop.width, _buffer->crop.height,
                     false
                     );
         return true;

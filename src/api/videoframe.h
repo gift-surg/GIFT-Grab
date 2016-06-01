@@ -48,6 +48,15 @@ public:
     virtual ~VideoFrame();
 
     //!
+    //! \brief Get length of data buffer
+    //! \return
+    //!
+    const size_t data_length() const
+    {
+        return _data_length;
+    }
+
+    //!
     //! \brief Get number of rows (y-axis, i.e. height)
     //! \return
     //!
@@ -89,6 +98,11 @@ protected:
     //! \brief Frame data
     //!
     unsigned char*  _data;
+
+    //!
+    //! \brief Frame data length
+    //!
+    size_t _data_length;
 
     //!
     //! \brief
