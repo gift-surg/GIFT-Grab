@@ -45,7 +45,7 @@ VideoSourceEpiphanSDK::~VideoSourceEpiphanSDK()
 {
     if (_frame_grabber)
     {
-        FrmGrab_Release(_frame_grabber, _buffer);
+        if (_buffer) FrmGrab_Release(_frame_grabber, _buffer);
         FrmGrab_Close(_frame_grabber);
     }
     FrmGrab_Deinit();
@@ -81,6 +81,7 @@ bool VideoSourceEpiphanSDK::get_frame(VideoFrame_I420 & frame)
                     _buffer->crop.width, _buffer->crop.height,
                     false
                     );
+        FrmGrab_Release(_frame_grabber, _buffer);
         return true;
     }
     else
