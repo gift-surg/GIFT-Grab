@@ -46,6 +46,11 @@ protected:
     AVFrame * _frame;
 
     //!
+    //! \brief Pixel depth (bits-per-pixel)
+    //!
+    int _pixel_depth;
+
+    //!
     //! \brief Flag indicating first frame being
     //! appended, i.e. to infer the frame params
     //! like width and height automatically

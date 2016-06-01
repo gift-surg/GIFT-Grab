@@ -12,6 +12,7 @@ VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
     _codec(NULL),
     _codec_name(""),
     _frame(NULL),
+    _pixel_depth(0),
     _first_frame(true),
     _framerate(-1),
     _sws_context(NULL),
@@ -187,8 +188,18 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
         frame->width  = _stream->codec->width;
         frame->height = _stream->codec->height;
         /* allocate the buffers for the frame data */
-        // TODO #25 what influence does 32 have on performance?
-        ret = av_frame_get_buffer(frame, 32);
+        switch(colour_space)
+        {
+        case AV_PIX_FMT_BGRA:
+            _pixel_depth = 32; // bits-per-pixel
+            break;
+        case AV_PIX_FMT_YUV420P:
+            _pixel_depth = 12; // bits-per-pixel
+            break;
+        default:
+            throw VideoTargetError("Colour space not supported");
+        }
+        ret = av_frame_get_buffer(frame, _pixel_depth);
         if (ret < 0)
             throw VideoTargetError("Could not allocate frame data");
 
@@ -287,10 +298,9 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
                   );
         break;
     case AV_PIX_FMT_YUV420P:
-        // TODO #25 what influence does 32 have on performance?
         av_image_fill_arrays(frame->data, frame->linesize,
                              data, (AVPixelFormat) frame->format,
-                             frame->width, frame->height, 32);
+                             frame->width, frame->height, _pixel_depth);
         break;
     default:
         throw VideoTargetError("Colour space not supported");
@@ -375,6 +385,7 @@ void VideoTargetFFmpeg::finalise()
     // default values, for next init
     _codec = NULL;
     _frame = NULL;
+    _pixel_depth = 0;
     _first_frame = true;
     _framerate = -1;
     _sws_context = NULL;
