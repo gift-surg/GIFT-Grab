@@ -79,8 +79,12 @@ void * grab_thread(void * args)
          g_args->num_frames_grabbed, g_args->duration);
 }
 
-int main()
+int main(int argc, char ** args)
 {
+    bool multi_threaded = false;
+    if (argc > 1)
+        multi_threaded = (std::string(args[1]) == "--multi-threaded");
+
     try
     {
         pthread_t sdi, dvi;
@@ -89,10 +93,22 @@ int main()
         dvi_args.device = gg::Device::DVI2PCIeDuo_DVI;
         sdi_args.num_frames_to_grab = dvi_args.num_frames_to_grab = 180;
         sdi_args.num_recordings = dvi_args.num_recordings = 3;
-        pthread_create(&sdi, nullptr, &grab_thread, &sdi_args);
-        pthread_create(&dvi, nullptr, &grab_thread, &dvi_args);
-        pthread_join(sdi, nullptr);
-        pthread_join(dvi, nullptr);
+        if (multi_threaded)
+        {
+            pthread_create(&sdi, nullptr, &grab_thread, &sdi_args);
+            pthread_create(&dvi, nullptr, &grab_thread, &dvi_args);
+            pthread_join(sdi, nullptr);
+            pthread_join(dvi, nullptr);
+        }
+        else
+        {
+            grab(sdi_args.device, sdi_args.num_frames_to_grab,
+                 sdi_args.num_recordings, sdi_args.num_frames_grabbed,
+                 sdi_args.duration);
+            grab(dvi_args.device, dvi_args.num_frames_to_grab,
+                 dvi_args.num_recordings, dvi_args.num_frames_grabbed,
+                 dvi_args.duration);
+        }
         float frame_rate_sdi = sdi_args.num_frames_to_grab/sdi_args.duration;
         float frame_rate_dvi = dvi_args.num_frames_to_grab/dvi_args.duration;
         std::cout << "SDI grabbed " << sdi_args.num_frames_grabbed
@@ -105,6 +121,8 @@ int main()
                   << dvi_args.duration << " sec: "
                   << frame_rate_dvi << " fps"
                   << std::endl;
+        std::cout << (multi_threaded ? "(multi-threaded)" : "(sequential)")
+                  << std::endl << std::endl;
         return EXIT_SUCCESS;
     }
     catch (std::exception & e)
