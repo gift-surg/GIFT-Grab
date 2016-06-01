@@ -83,10 +83,16 @@ void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
 
 void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
 {
+    { // START auto_cpu_timer scope
+#ifdef GENERATE_PERFORMANCE_OUTPUT
+    boost::timer::auto_cpu_timer t(this_class_str + "1-ffmpeg_frame" + timer_format_str);
+#endif
+
     ffmpeg_frame(frame.data(),
                  frame.data_length(),
                  frame.cols(), frame.rows(),
                  AV_PIX_FMT_BGRA, _frame);
+    } // END auto_cpu_timer scope
 
     { // START auto_cpu_timer scope
 #ifdef GENERATE_PERFORMANCE_OUTPUT
@@ -102,9 +108,15 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
 
 void VideoTargetFFmpeg::append(const VideoFrame_I420 & frame)
 {
+    { // START auto_cpu_timer scope
+#ifdef GENERATE_PERFORMANCE_OUTPUT
+    boost::timer::auto_cpu_timer t(this_class_str + "1-ffmpeg_frame" + timer_format_str);
+#endif
+
     ffmpeg_frame(frame.data(), frame.data_length(),
                  frame.cols(), frame.rows(),
                  AV_PIX_FMT_YUV420P, _frame);
+    } // END auto_cpu_timer scope
 
     { // START auto_cpu_timer scope
 #ifdef GENERATE_PERFORMANCE_OUTPUT
@@ -113,7 +125,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_I420 & frame)
 
     int got_output;
     encode_and_write(_frame, got_output);
-    }
+    } // END auto_cpu_timer scope
 }
 
 void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
