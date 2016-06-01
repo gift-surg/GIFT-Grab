@@ -3,6 +3,14 @@
 
 #ifdef GENERATE_PERFORMANCE_OUTPUT
 #include <boost/timer/timer.hpp>
+#ifndef timer_format_str
+#define timer_format_str \
+        std::string(", %w, %u, %s, %t, %p" \
+                    ", wall (s), user (s), system (s), user+system (s), CPU (\%)\n")
+#endif
+#ifndef this_class_str
+#define this_class_str std::string("VideoTargetFFmpeg-")
+#endif
 #endif
 
 namespace gg
@@ -97,8 +105,15 @@ void VideoTargetFFmpeg::append(const VideoFrame_I420 & frame)
     ffmpeg_frame(frame.data(), frame.data_length(),
                  frame.cols(), frame.rows(),
                  AV_PIX_FMT_YUV420P, _frame);
+
+    { // START auto_cpu_timer scope
+#ifdef GENERATE_PERFORMANCE_OUTPUT
+    boost::timer::auto_cpu_timer t(this_class_str + "1-encode_and_write" + timer_format_str);
+#endif
+
     int got_output;
     encode_and_write(_frame, got_output);
+    }
 }
 
 void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
@@ -120,15 +135,7 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
     if (_first_frame)
     {
 #ifdef GENERATE_PERFORMANCE_OUTPUT
-#ifndef timer_format_str
-#define timer_format_str \
-        std::string(", %w, %u, %s, %t, %p" \
-                    ", wall (s), user (s), system (s), user+system (s), CPU (\%)\n")
-#endif
-#ifndef this_class_str
-#define this_class_str std::string("VideoTargetFFmpeg-")
-#endif
-        boost::timer::auto_cpu_timer t(this_class_str + "first-frame" + timer_format_str);
+        boost::timer::auto_cpu_timer t(this_class_str + "2-first-frame" + timer_format_str);
 #endif
         // TODO - is _codec_context ever being modified after first frame?
         /* TODO: using default reduces filesize
@@ -272,7 +279,7 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
 
     { // START auto_cpu_timer scope
 #ifdef GENERATE_PERFORMANCE_OUTPUT
-    boost::timer::auto_cpu_timer t(this_class_str + "1-av_frame_make_writable" + timer_format_str);
+    boost::timer::auto_cpu_timer t(this_class_str + "2-av_frame_make_writable" + timer_format_str);
 #endif
 
     /* when we pass a frame to the encoder, it may keep a reference to it
@@ -288,7 +295,7 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
 
     { // START auto_cpu_timer scope
 #ifdef GENERATE_PERFORMANCE_OUTPUT
-    boost::timer::auto_cpu_timer t(this_class_str + "1-sws_scale" + timer_format_str);
+    boost::timer::auto_cpu_timer t(this_class_str + "2-sws_scale" + timer_format_str);
 #endif
 
     _src_data_ptr[0] = data;
