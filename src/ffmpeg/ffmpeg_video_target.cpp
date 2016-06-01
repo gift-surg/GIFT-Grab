@@ -310,7 +310,6 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
     boost::timer::auto_cpu_timer t(this_class_str + "2-sws_scale" + timer_format_str);
 #endif
 
-    _src_data_ptr[0] = data;
     /* TODO USE_COLOUR_SPACE_I420 also implicitly provides
      * this check, but selective code compilation might make
      * code faster, due to not having the conditional checks
@@ -318,6 +317,7 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
     switch(colour_space)
     {
     case AV_PIX_FMT_BGRA:
+        _src_data_ptr[0] = data;
         /* convert pixel format */
         sws_scale(_sws_context,
                   _src_data_ptr, _bgra_stride, // BGRA has one plane
