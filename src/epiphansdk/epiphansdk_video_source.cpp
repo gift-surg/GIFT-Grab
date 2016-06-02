@@ -43,11 +43,7 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
 
 VideoSourceEpiphanSDK::~VideoSourceEpiphanSDK()
 {
-    if (_frame_grabber)
-    {
-        if (_buffer) FrmGrab_Release(_frame_grabber, _buffer);
-        FrmGrab_Close(_frame_grabber);
-    }
+    if (_frame_grabber) FrmGrab_Close(_frame_grabber);
     FrmGrab_Deinit();
 }
 
