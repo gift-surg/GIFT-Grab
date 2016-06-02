@@ -26,7 +26,7 @@ if __name__ == '__main__':
             # do actual work
             fs.start()
             us.start()
-            sleep(5)
+            sleep(10 * 60)
             fs.pause_recording()
             us.pause_recording()
             sleep(4)
@@ -40,14 +40,14 @@ if __name__ == '__main__':
                 logging.error(e.message)
             fs.resume_recording()
             us.resume_recording()
-            sleep(5)
+            sleep(20 * 60)
             fs.pause_recording()
             us.pause_recording()
             sleep(4)
             fs.set_full_frame()
             fs.resume_recording()
             us.resume_recording()
-            sleep(5)
+            sleep(5 * 60)
 
             # finish session
             fs.stop()
