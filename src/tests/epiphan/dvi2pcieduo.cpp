@@ -126,6 +126,7 @@ void grab(const enum gg::Device device,
     }
 #endif
     gg::Factory::disconnect(device);
+    delete target;
 }
 
 struct grab_args
