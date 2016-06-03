@@ -95,7 +95,9 @@ sudo make install # CMAKE_INSTALL_PREFIX defaults to /usr/local
            ```
       1. `make -j` and `make install`
    1. Supply `-D FFmpeg_DIR=/your/ffmpeg/installation/location` to CMake.
-* `-D BUILD_PYTHON=ON` for building the Python API.
+* `-D BUILD_PYTHON=ON` for building the Python API. __Note when using this option,__ Python-related items (modules and libraries) will be installed in `$CMAKE_INSTALL_PREFIX/lib/giftgrab`, so:
+   1. To be able to import the Python modules, [`PYTHONPATH`](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONPATH) must include this directory.
+   1. A (one-liner) `/etc/ld.so.conf.d/giftgrab.conf` file must be created that includes this directory. Once this is done `ldconfig` must be run.
 
 # Use
 1. Put `FIND_PACKAGE(GiftGrab CONFIG REQUIRED)` into your project's CMake file.
