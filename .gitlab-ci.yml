@@ -40,3 +40,4 @@ or-recording-compatibility:
     - 48-i420-frame-support-in-video-targets
     - 48-i420-frame-support-in-video-targets-extend-test-suite-to-i420
     - 43-test-long-duration-recordings
+    - 60-videoframe_i420-header-not-protected-by-i420-macro
