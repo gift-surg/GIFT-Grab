@@ -106,6 +106,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
     } // END auto_cpu_timer scope
 }
 
+#ifdef USE_COLOUR_SPACE_I420
 void VideoTargetFFmpeg::append(const VideoFrame_I420 & frame)
 {
     { // START auto_cpu_timer scope
@@ -127,6 +128,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_I420 & frame)
     encode_and_write(_frame, got_output);
     } // END auto_cpu_timer scope
 }
+#endif
 
 void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
                                      const size_t data_length,
