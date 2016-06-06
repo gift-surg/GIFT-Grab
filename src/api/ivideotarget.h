@@ -1,7 +1,9 @@
 #pragma once
 
 #include "videoframe.h"
+#ifdef USE_COLOUR_SPACE_I420
 #include "videoframe_i420.h"
+#endif
 #include "except.h"
 
 namespace gg
