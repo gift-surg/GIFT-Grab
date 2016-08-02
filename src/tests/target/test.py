@@ -91,8 +91,13 @@ def test_num_frames(codec):
 
 
 def test_can_reuse_target(codec):
-    # TODO
-    fail(msg='not implemented')
+    for j in range(3):
+        file_name = '%scan_reuse_target_%d.%s'\
+                    % (tmp_file_prefix, j, __file_ext(codec))
+        target.init(file_name, frame_rate)
+        for i in range(frame_rate):
+            target.append(frame)
+        target.finalise()
 
 
 def test_filetype_checked(codec):
