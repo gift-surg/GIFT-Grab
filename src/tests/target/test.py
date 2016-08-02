@@ -1,4 +1,6 @@
 from pytest import fail, yield_fixture
+from subprocess import check_call
+from os import devnull
 from pygiftgrab import Storage, Factory
 
 
@@ -16,11 +18,22 @@ def peri_test(codec):
     writer = Factory.writer(codec)
     if writer is None:
         raise RuntimeError('No ' + __storage2str(codec) + ' writer returned')
-    else:
-        # Run test
-        yield
+
+    try:
+        file_null = open(devnull, 'w')
+        check_call(['ffprobe', '--help'],
+                   stdout=file_null, stderr=file_null)
+    except BaseException:
+        raise RuntimeError(
+            'FFmpeg does not appear to be installed on your system,\n'
+            'GiftGrab tests need FFmpeg.')
+
+    # Run test
+    yield
 
     # This section runs after each test
+
+    # TODO: remove created files
 
 
 def test_frame_rate(codec):
