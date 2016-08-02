@@ -1,7 +1,8 @@
 from pytest import fail, yield_fixture
-from pygiftgrab import Factory
+from pygiftgrab import Factory, VideoFrame_BGRA
 
 source = None
+frame = None
 
 
 @yield_fixture(autouse=True)
@@ -16,6 +17,9 @@ def peri_test(port):
                            e.message)
     assert source is not None
 
+    global frame
+    frame = VideoFrame_BGRA(False)
+
     # Run test
     yield
 
@@ -29,9 +33,10 @@ def peri_test(port):
     assert source is None
 
 
-def test_get_frame(port):
-    # TODO
-    fail(msg='not implemented')
+def test_get_frame():
+    assert source.get_frame(frame)
+    assert frame.rows() > 0
+    assert frame.cols() > 0
 
 
 def test_sub_frame(port):
