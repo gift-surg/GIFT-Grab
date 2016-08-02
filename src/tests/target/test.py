@@ -1,7 +1,11 @@
 from pytest import fail, yield_fixture
 from subprocess import check_call
-from os import devnull
+from os import devnull, remove, listdir
 from pygiftgrab import Storage, Factory
+
+
+# for easily removing created files when done
+tmp_file_prefix = 'tmp_GiftGrab_test_'
 
 
 def __storage2str(codec):
@@ -33,7 +37,9 @@ def peri_test(codec):
 
     # This section runs after each test
 
-    # TODO: remove created files
+    for f in listdir('.'):
+        if str(f).startswith(tmp_file_prefix):
+            remove(f)
 
 
 def test_frame_rate(codec):
