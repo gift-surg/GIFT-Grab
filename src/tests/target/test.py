@@ -6,7 +6,7 @@ def peri_test():
     # This section runs before each test
 
     # TODO
-    print('TODO: check factory returns target for H265')
+    print('TODO: check factory returns target')
 
     # Run test
     yield
@@ -14,26 +14,26 @@ def peri_test():
     # This section runs after each test
 
 
-def test_frame_rate():
+def test_frame_rate(codec):
     # TODO
     fail(msg='not implemented')
 
 
-def test_resolution():
+def test_resolution(codec):
     # TODO
     fail(msg='not implemented')
 
 
-def test_num_frames():
+def test_num_frames(codec):
     # TODO
     fail(msg='not implemented')
 
 
-def test_can_reuse_target():
+def test_can_reuse_target(codec):
     # TODO
     fail(msg='not implemented')
 
 
-def test_filetype_checked():
+def test_filetype_checked(codec):
     # TODO
     fail(msg='not implemented')
