@@ -1,15 +1,24 @@
 from pytest import fail, yield_fixture
+from pygiftgrab import Storage, Factory
+
+
+def __storage2str(codec):
+    if codec == Storage.File_H265:
+        return 'H265'
+    elif codec == Storage.File_XviD:
+        return 'Xvid'
 
 
 @yield_fixture(autouse=True)
 def peri_test(codec):
     # This section runs before each test
 
-    # TODO
-    print('TODO: check factory returns target')
-
-    # Run test
-    yield
+    writer = Factory.writer(codec)
+    if writer is None:
+        raise RuntimeError('No ' + __storage2str(codec) + ' writer returned')
+    else:
+        # Run test
+        yield
 
     # This section runs after each test
 
