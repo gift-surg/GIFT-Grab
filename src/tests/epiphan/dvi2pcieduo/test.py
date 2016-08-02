@@ -74,7 +74,3 @@ def test_full_frame(port):
     assert frame.cols() == width
     assert frame.rows() == height
 
-
-def test_frame_dimensions(port):
-    # TODO
-    fail(msg='not implemented')
