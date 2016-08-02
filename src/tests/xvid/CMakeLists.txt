@@ -1,6 +1,7 @@
 FILE(COPY
     ${CMAKE_SOURCE_DIR}/tests/target/test.py
     ${CMAKE_SOURCE_DIR}/tests/target/conftest.py
+    ${CMAKE_SOURCE_DIR}/tests/utils/inspection.py
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
 )
 

@@ -1,11 +1,21 @@
 from pytest import fail, yield_fixture
 from subprocess import check_call
 from os import devnull, remove, listdir
-from pygiftgrab import Storage, Factory
+from pygiftgrab import Storage, Factory, VideoFrame_BGRA
+import inspection
 
 
 # for easily removing created files when done
 tmp_file_prefix = 'tmp_GiftGrab_test_'
+target = None
+frame = None
+
+
+def __file_ext(codec):
+    if codec == Storage.File_H265:
+        return 'mp4'
+    elif codec == Storage.File_XviD:
+        return 'avi'
 
 
 def __storage2str(codec):
@@ -19,8 +29,10 @@ def __storage2str(codec):
 def peri_test(codec):
     # This section runs before each test
 
-    writer = Factory.writer(codec)
-    if writer is None:
+    global target, frame
+    frame = VideoFrame_BGRA(640, 400)
+    target = Factory.writer(codec)
+    if target is None:
         raise RuntimeError('No ' + __storage2str(codec) + ' writer returned')
 
     try:
@@ -43,8 +55,14 @@ def peri_test(codec):
 
 
 def test_frame_rate(codec):
-    # TODO
-    fail(msg='not implemented')
+    frame_rate = 60
+    file_name = '%sframe_rate_%f.%s'\
+                % (tmp_file_prefix, frame_rate, __file_ext(codec))
+    target.init(file_name, frame_rate)
+    for i in range(10):
+        target.append(frame)
+    target.finalise()
+    assert inspection.frame_rate(file_name) == frame_rate
 
 
 def test_resolution(codec):
