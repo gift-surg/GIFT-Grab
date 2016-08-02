@@ -57,8 +57,8 @@ def peri_test(codec):
 
 def test_frame_rate(codec):
     _frame_rate = 40
-    file_name = '%sframe_rate_%f.%s'\
-                % (tmp_file_prefix, _frame_rate, __file_ext(codec))
+    file_name = '%sframe_rate.%s'\
+                % (tmp_file_prefix, __file_ext(codec))
     target.init(file_name, _frame_rate)
     for i in range(10):
         target.append(frame)
@@ -70,8 +70,8 @@ def test_resolution(codec):
     rows = 1080
     cols = 1920
     frame1920x1080 = VideoFrame_BGRA(rows, cols)
-    file_name = '%sresolution_%f.%s'\
-                % (tmp_file_prefix, frame_rate, __file_ext(codec))
+    file_name = '%sresolution.%s'\
+                % (tmp_file_prefix, __file_ext(codec))
     target.init(file_name, frame_rate)
     for i in range(10):
         target.append(frame1920x1080)
@@ -80,8 +80,8 @@ def test_resolution(codec):
 
 
 def test_num_frames(codec):
-    file_name = '%snum_frames_%f.%s'\
-                % (tmp_file_prefix, frame_rate, __file_ext(codec))
+    file_name = '%snum_frames.%s'\
+                % (tmp_file_prefix, __file_ext(codec))
     target.init(file_name, frame_rate)
     num_frames = 3 * frame_rate
     for i in range(num_frames):
@@ -98,7 +98,7 @@ def test_can_reuse_target(codec):
 def test_filetype_checked(codec):
     file_ext = 'rrr'
     assert not file_ext == __file_ext(codec)
-    file_name = '%sfiletype_checked_%f.%s'\
-                % (tmp_file_prefix, frame_rate, file_ext)
+    file_name = '%sfiletype_checked.%s'\
+                % (tmp_file_prefix, file_ext)
     with raises(RuntimeError):
         target.init(file_name, frame_rate)
