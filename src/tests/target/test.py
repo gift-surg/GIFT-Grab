@@ -9,6 +9,7 @@ import inspection
 tmp_file_prefix = 'tmp_GiftGrab_test_'
 target = None
 frame = None
+frame_rate = 60
 
 
 def __file_ext(codec):
@@ -55,14 +56,14 @@ def peri_test(codec):
 
 
 def test_frame_rate(codec):
-    frame_rate = 60
+    _frame_rate = 40
     file_name = '%sframe_rate_%f.%s'\
-                % (tmp_file_prefix, frame_rate, __file_ext(codec))
-    target.init(file_name, frame_rate)
+                % (tmp_file_prefix, _frame_rate, __file_ext(codec))
+    target.init(file_name, _frame_rate)
     for i in range(10):
         target.append(frame)
     target.finalise()
-    assert inspection.frame_rate(file_name) == frame_rate
+    assert inspection.frame_rate(file_name) == _frame_rate
 
 
 def test_resolution(codec):
@@ -70,8 +71,8 @@ def test_resolution(codec):
     cols = 1920
     frame1920x1080 = VideoFrame_BGRA(rows, cols)
     file_name = '%sresolution_%f.%s'\
-                % (tmp_file_prefix, 60, __file_ext(codec))
-    target.init(file_name, 60)
+                % (tmp_file_prefix, frame_rate, __file_ext(codec))
+    target.init(file_name, frame_rate)
     for i in range(10):
         target.append(frame1920x1080)
     target.finalise()
