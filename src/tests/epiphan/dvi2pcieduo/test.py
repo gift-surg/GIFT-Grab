@@ -40,8 +40,22 @@ def test_get_frame():
 
 
 def test_sub_frame(port):
-    # TODO
-    fail(msg='not implemented')
+    assert source.get_frame(frame)
+    rows = frame.rows()
+    cols = frame.cols()
+
+    _width = cols // 3
+    _height = rows // 3
+    _x = cols // 2
+    _y = rows // 2
+    # health checks
+    assert _x + _width < cols
+    assert _y + _height < rows
+    source.set_sub_frame(_x, _y, _width, _height)
+
+    assert source.get_frame(frame)
+    assert frame.cols() == _width
+    assert frame.rows() == _height
 
 
 def test_full_frame(port):
