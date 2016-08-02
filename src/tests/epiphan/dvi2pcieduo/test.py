@@ -3,7 +3,12 @@ from pygiftgrab import Factory, VideoFrame_BGRA
 
 source = None
 frame = None
-
+width = 0
+height = 0
+sub_x = 0
+sub_y = 0
+sub_width = 0
+sub_height = 0
 
 @yield_fixture(autouse=True)
 def peri_test(port):
@@ -19,6 +24,20 @@ def peri_test(port):
 
     global frame
     frame = VideoFrame_BGRA(False)
+
+    global height, width
+    assert source.get_frame(frame)
+    width = frame.cols()
+    height = frame.rows()
+
+    global sub_x, sub_y, sub_width, sub_height
+    sub_width = width // 3
+    sub_height = height // 3
+    sub_x = width // 2
+    sub_y = height // 2
+    # health checks
+    assert sub_x + sub_width < width
+    assert sub_y + sub_height < height
 
     # Run test
     yield
@@ -40,27 +59,20 @@ def test_get_frame():
 
 
 def test_sub_frame(port):
+    source.set_sub_frame(sub_x, sub_y,
+                         sub_width, sub_height)
     assert source.get_frame(frame)
-    rows = frame.rows()
-    cols = frame.cols()
-
-    _width = cols // 3
-    _height = rows // 3
-    _x = cols // 2
-    _y = rows // 2
-    # health checks
-    assert _x + _width < cols
-    assert _y + _height < rows
-    source.set_sub_frame(_x, _y, _width, _height)
-
-    assert source.get_frame(frame)
-    assert frame.cols() == _width
-    assert frame.rows() == _height
+    assert frame.cols() == sub_width
+    assert frame.rows() == sub_height
 
 
 def test_full_frame(port):
-    # TODO
-    fail(msg='not implemented')
+    source.set_sub_frame(sub_x, sub_y,
+                         sub_width, sub_height)
+    source.get_full_frame()
+    assert source.get_frame(frame)
+    assert frame.cols() == width
+    assert frame.rows() == height
 
 
 def test_frame_dimensions(port):
