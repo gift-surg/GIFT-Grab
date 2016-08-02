@@ -37,6 +37,7 @@ OPTION(USE_EPIPHAN "Support for streaming video using Epiphan framegrabbers" OFF
 OPTION(USE_BLACKMAGIC "Support for streaming video using BlackMagic framegrabbers" OFF)
 OPTION(USE_FFMPEG "Support for saving video to files using FFmpeg" OFF)
 OPTION(USE_EPIPHAN_DVI2PCIE_DUO "Support for Epiphan DVI2PCIe Duo" OFF)
+OPTION(USE_H265 "Support for the H265 codec (HEVC)" OFF)
 # OpenCV
 FIND_PACKAGE(OpenCV REQUIRED)
 if(OpenCV_FOUND)
@@ -204,9 +205,14 @@ if(BUILD_TESTS)
     TARGET_LINK_LIBRARIES(${TEST_NAME} ${NAME} ${LIBS})
 
     ENABLE_TESTING()
+
     if(USE_EPIPHAN_DVI2PCIE_DUO)
         SUBDIRS(tests/epiphan/dvi2pcieduo)
     endif(USE_EPIPHAN_DVI2PCIE_DUO)
+
+    if(USE_H265)
+        SUBDIRS(tests/h265)
+    endif(USE_H265)
 endif(BUILD_TESTS)
 
 # Python wrappers
