@@ -80,8 +80,14 @@ def test_resolution(codec):
 
 
 def test_num_frames(codec):
-    # TODO
-    fail(msg='not implemented')
+    file_name = '%snum_frames_%f.%s'\
+                % (tmp_file_prefix, frame_rate, __file_ext(codec))
+    target.init(file_name, frame_rate)
+    num_frames = 3 * frame_rate
+    for i in range(num_frames):
+        target.append(frame)
+    target.finalise()
+    assert inspection.duration(file_name) * frame_rate == num_frames
 
 
 def test_can_reuse_target(codec):
