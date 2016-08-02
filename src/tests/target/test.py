@@ -1,4 +1,4 @@
-from pytest import fail, yield_fixture
+from pytest import fail, yield_fixture, raises
 from subprocess import check_call
 from os import devnull, remove, listdir
 from pygiftgrab import Storage, Factory, VideoFrame_BGRA
@@ -96,5 +96,9 @@ def test_can_reuse_target(codec):
 
 
 def test_filetype_checked(codec):
-    # TODO
-    fail(msg='not implemented')
+    file_ext = 'rrr'
+    assert not file_ext == __file_ext(codec)
+    file_name = '%sfiletype_checked_%f.%s'\
+                % (tmp_file_prefix, frame_rate, file_ext)
+    with raises(RuntimeError):
+        target.init(file_name, frame_rate)
