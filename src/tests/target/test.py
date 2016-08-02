@@ -2,7 +2,7 @@ from pytest import fail, yield_fixture
 
 
 @yield_fixture(autouse=True)
-def peri_test():
+def peri_test(codec):
     # This section runs before each test
 
     # TODO

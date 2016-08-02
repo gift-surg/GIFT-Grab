@@ -38,6 +38,7 @@ OPTION(USE_BLACKMAGIC "Support for streaming video using BlackMagic framegrabber
 OPTION(USE_FFMPEG "Support for saving video to files using FFmpeg" OFF)
 OPTION(USE_EPIPHAN_DVI2PCIE_DUO "Support for Epiphan DVI2PCIe Duo" OFF)
 OPTION(USE_H265 "Support for the H265 codec (HEVC)" OFF)
+OPTION(USE_XVID "Support for the Xvid codec" OFF)
 # OpenCV
 FIND_PACKAGE(OpenCV REQUIRED)
 if(OpenCV_FOUND)
@@ -213,6 +214,10 @@ if(BUILD_TESTS)
     if(USE_H265)
         SUBDIRS(tests/h265)
     endif(USE_H265)
+
+    if(USE_XVID)
+        SUBDIRS(tests/xvid)
+    endif(USE_XVID)
 endif(BUILD_TESTS)
 
 # Python wrappers
