@@ -1,5 +1,5 @@
 FILE(COPY
-    ${CMAKE_SOURCE_DIR}/tests/h265/test.py
+    ${CMAKE_SOURCE_DIR}/tests/target/test.py
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
 )
 
