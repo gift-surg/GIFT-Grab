@@ -31,7 +31,7 @@ def peri_test(codec):
     # This section runs before each test
 
     global target, frame
-    frame = VideoFrame_BGRA(640, 400)
+    frame = VideoFrame_BGRA(400, 640)
     target = Factory.writer(codec)
     if target is None:
         raise RuntimeError('No ' + __storage2str(codec) + ' writer returned')
