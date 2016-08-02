@@ -66,8 +66,16 @@ def test_frame_rate(codec):
 
 
 def test_resolution(codec):
-    # TODO
-    fail(msg='not implemented')
+    rows = 1080
+    cols = 1920
+    frame1920x1080 = VideoFrame_BGRA(rows, cols)
+    file_name = '%sresolution_%f.%s'\
+                % (tmp_file_prefix, 60, __file_ext(codec))
+    target.init(file_name, 60)
+    for i in range(10):
+        target.append(frame1920x1080)
+    target.finalise()
+    assert inspection.resolution(file_name) == (cols, rows)
 
 
 def test_num_frames(codec):
