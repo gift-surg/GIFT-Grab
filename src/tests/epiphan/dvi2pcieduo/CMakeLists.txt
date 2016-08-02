@@ -11,9 +11,14 @@ FILE(COPY
     FILES_MATCHING PATTERN *.yml
 )
 
-SET(NAME_TEST Test_EpiphanDVI2PCIeDuo_BGR24)
+SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo)
+if(USE_COLOUR_SPACE_I420)
+    SET(COLOUR_SPACE I420)
+else(USE_COLOUR_SPACE_I420)
+    SET(COLOUR_SPACE BGR24)
+endif(USE_COLOUR_SPACE_I420)
 ADD_TEST(NAME ${NAME_TEST}
-    COMMAND py.test --colour-space=BGR24 test.py
+    COMMAND py.test --colour-space=${COLOUR_SPACE} test.py
 )
 # to avoid copying pygiftgrab
 SET_TESTS_PROPERTIES(${NAME_TEST}
