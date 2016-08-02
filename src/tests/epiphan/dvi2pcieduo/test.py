@@ -1,4 +1,4 @@
-from pytest import fail, yield_fixture
+from pytest import yield_fixture
 from pygiftgrab import Factory, VideoFrame_BGRA
 
 source = None
@@ -9,6 +9,7 @@ sub_x = 0
 sub_y = 0
 sub_width = 0
 sub_height = 0
+
 
 @yield_fixture(autouse=True)
 def peri_test(port):
@@ -58,7 +59,7 @@ def test_get_frame():
     assert frame.cols() > 0
 
 
-def test_sub_frame(port):
+def test_sub_frame():
     source.set_sub_frame(sub_x, sub_y,
                          sub_width, sub_height)
     assert source.get_frame(frame)
@@ -66,11 +67,10 @@ def test_sub_frame(port):
     assert frame.rows() == sub_height
 
 
-def test_full_frame(port):
+def test_full_frame():
     source.set_sub_frame(sub_x, sub_y,
                          sub_width, sub_height)
     source.get_full_frame()
     assert source.get_frame(frame)
     assert frame.cols() == width
     assert frame.rows() == height
-
