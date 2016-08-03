@@ -29,6 +29,7 @@ gift-linux:
 or-recording-compatibility:
   script:
     - export PATH=/home/gitlab-runner/environments/giftgrab/usr/local/bin:$PATH
+    - export LD_LIBRARY_PATH=/home/gitlab-runner/environments/giftgrab/opt/ffmpeg/3.0.1/lib:$LD_LIBRARY_PATH
     - "$CI_SCRIPTS_DIR/build-uzl1603.sh"
     - "$CI_SCRIPTS_DIR/test-uzl1603.sh"
     - "$CI_SCRIPTS_DIR/build-uzl1603-i420.sh"
