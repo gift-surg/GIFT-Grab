@@ -206,7 +206,7 @@ def test_frame_grabbing(colour_space):
         us.colour_space == colour_space
 
     # test actual output now
-    roi = [426, 40, 1068, 1040]
+    roi = [426, 40, 1064, 1040]
     fs.start()
     us.start()
     fs.set_sub_frame(roi[0], roi[1], roi[2], roi[3])  # should have no effect
