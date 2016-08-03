@@ -1,5 +1,4 @@
 #!/bin/bash
-num_lines=$(v2u | grep --count "no signal detected")
 if [ $num_lines -gt 0 ]; then
   echo "No alive device seems to be connected to Epiphan"
   echo "Please connect both ports of Storz, and retry build"
