@@ -206,7 +206,10 @@ def test_frame_grabbing(colour_space):
         us.colour_space == colour_space
 
     # test actual output now
-    roi = [426, 40, 1068, 1040]
+    roi = [426, 40, 1064, 1040]
+    width_offset = 0
+    if colour_space == I420:
+        width_offset = 4  # see GiftGrab issues #54 and #67
     fs.start()
     us.start()
     fs.set_sub_frame(roi[0], roi[1], roi[2], roi[3])  # should have no effect
@@ -258,8 +261,8 @@ def test_frame_grabbing(colour_space):
     assert frame_rate(us_file_path) == us.frame_rate
     assert duration(fs_file_path) >= recording_duration
     assert duration(us_file_path) >= recording_duration
-    assert resolution(fs_file_path) == (roi[2], roi[3])
-    assert resolution(us_file_path) == (roi[2], roi[3])
+    assert resolution(fs_file_path) == (roi[2] - width_offset, roi[3])
+    assert resolution(us_file_path) == (roi[2] - width_offset, roi[3])
     assert codec(fs_file_path) == 'hevc'
     assert codec(us_file_path) == 'hevc'
 
@@ -284,7 +287,7 @@ def test_frame_grabbing(colour_space):
     assert duration(fs_file_path) >= recording_duration
     assert duration(us_file_path) >= recording_duration
     assert resolution(fs_file_path) == (1920, 1080)
-    assert resolution(us_file_path) == (roi[2], roi[3])
+    assert resolution(us_file_path) == (roi[2] - width_offset, roi[3])
     assert codec(fs_file_path) == 'hevc'
     assert codec(us_file_path) == 'hevc'
 
