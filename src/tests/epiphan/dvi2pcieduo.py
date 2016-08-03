@@ -207,7 +207,9 @@ def test_frame_grabbing(colour_space):
 
     # test actual output now
     roi = [426, 40, 1064, 1040]
-    width_offset = 4  # see GiftGrab issues #54 and #67
+    width_offset = 0
+    if colour_space == I420:
+        width_offset = 4  # see GiftGrab issues #54 and #67
     fs.start()
     us.start()
     fs.set_sub_frame(roi[0], roi[1], roi[2], roi[3])  # should have no effect
