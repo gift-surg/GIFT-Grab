@@ -33,7 +33,7 @@ or-recording-compatibility:
     - "$CI_SCRIPTS_DIR/build-uzl1603-i420.sh"
     - "$CI_SCRIPTS_DIR/test-uzl1603-i420.sh"
   tags:
-    - uzl1603
+    - gift-surg-storz-stack
   only:
     - 31-i420-colour-space-on-epiphan
     - 31-i420-colour-space-on-epiphan-clean-start
