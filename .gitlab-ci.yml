@@ -28,6 +28,7 @@ gift-linux:
 # UZ Leuven OR Workstation 1603 - see GiftGrab#46
 or-recording-compatibility:
   script:
+    - export PATH=/home/gitlab-runner/environments/giftgrab/usr/local/bin:$PATH
     - "$CI_SCRIPTS_DIR/build-uzl1603.sh"
     - "$CI_SCRIPTS_DIR/test-uzl1603.sh"
     - "$CI_SCRIPTS_DIR/build-uzl1603-i420.sh"
