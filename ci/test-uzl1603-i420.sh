@@ -6,6 +6,6 @@ if [ $num_lines -gt 0 ]; then
 else
   cd "$GiftGrab_BUILD_DIR"
 
-  py.test --colour-space=I420 dvi2pcieduo.py
+  py.test --colour-space=I420 $DVI2PCIEDUO_REALTIME
 fi
 
