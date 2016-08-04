@@ -3,7 +3,7 @@ rm -rf "$GiftGrab_BUILD_DIR"
 mkdir -p "$GiftGrab_BUILD_DIR"
 cd "$GiftGrab_BUILD_DIR"
 cmake -D CMAKE_INSTALL_PREFIX="$INSTALL_DIR" \
-      -D USE_EPIPHAN=ON \
+      -D USE_EPIPHAN_DVI2PCIE_DUO=ON \
       -D BUILD_DOC=ON \
       -D BUILD_PYTHON=ON \
       -D BUILD_TESTS=ON \
