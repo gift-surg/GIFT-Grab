@@ -36,13 +36,22 @@ OPTION(USE_FFMPEG "Support for saving video to files using FFmpeg" OFF)
 OPTION(USE_EPIPHAN_DVI2PCIE_DUO "Support for Epiphan DVI2PCIe Duo" OFF)
 OPTION(USE_H265 "Support for the H265 codec (HEVC)" OFF)
 OPTION(USE_XVID "Support for the Xvid codec" OFF)
+
+# Determine whether OpenCV needed
+if((USE_EPIPHAN_DVI2PCIE_DUO AND NOT USE_COLOUR_SPACE_I420) OR
+    USE_XVID)
+    SET(USE_OPENCV ON CACHE BOOL "OFF ON" FORCE)
+endif()
+
 # OpenCV
-FIND_PACKAGE(OpenCV REQUIRED)
-if(OpenCV_FOUND)
-    INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
-else(OpenCV_FOUND)
-    MESSAGE(FATAL_ERROR "OpenCV could not be found. This library requires OpenCV.")
-endif(OpenCV_FOUND)
+if(USE_OPENCV)
+    FIND_PACKAGE(OpenCV REQUIRED)
+    if(OpenCV_FOUND)
+        INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
+    else(OpenCV_FOUND)
+        MESSAGE(FATAL_ERROR "OpenCV could not be found. This library requires OpenCV.")
+    endif(OpenCV_FOUND)
+endif(USE_OPENCV)
 
 # Library name
 SET(NAME giftgrab)
@@ -66,7 +75,9 @@ SET(SOURCES
     api/factory.cpp
     api/except.cpp
     )
-SET(LIBS ${OpenCV_LIBS})
+if(USE_OPENCV)
+    LIST(APPEND LIBS ${OpenCV_LIBS})
+endif(USE_OPENCV)
 
 # Video files
 
@@ -87,7 +98,7 @@ endif(USE_BLACKMAGICSDK)
 # we do not officially support libVLC yet!
 SET(USE_LIBVLC OFF CACHE BOOL "ON OFF" FORCE)
 
-# OpenCV framegrabber
+# OpenCV components
 if(USE_OPENCV)
     INCLUDE_DIRECTORIES(opencv)
     LIST(APPEND HEADERS opencv/opencv_video_source.h)
