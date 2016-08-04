@@ -28,12 +28,18 @@ gift-linux:
 # UZ Leuven OR Workstation 1603 - see GiftGrab#46
 or-recording-compatibility:
   script:
+    - export PATH=/home/gitlab-runner/environments/giftgrab/usr/local/bin:$PATH
+    - export LD_LIBRARY_PATH=/home/gitlab-runner/environments/giftgrab/opt/ffmpeg/3.0.1/lib:$LD_LIBRARY_PATH
+    - export EpiphanSDK_DIR=/home/gitlab-runner/environments/giftgrab/opt/include/epiphansdk
+    - export FFmpeg_DIR=/home/gitlab-runner/environments/giftgrab/opt/ffmpeg/3.0.1
+    - export num_lines=$(v2u | grep --count "no signal detected")
+    - export DVI2PCIEDUO_REALTIME=test_realtime.py
     - "$CI_SCRIPTS_DIR/build-uzl1603.sh"
     - "$CI_SCRIPTS_DIR/test-uzl1603.sh"
     - "$CI_SCRIPTS_DIR/build-uzl1603-i420.sh"
     - "$CI_SCRIPTS_DIR/test-uzl1603-i420.sh"
   tags:
-    - uzl1603
+    - gift-surg-storz-stack
   only:
     - 31-i420-colour-space-on-epiphan
     - 31-i420-colour-space-on-epiphan-clean-start
@@ -41,3 +47,5 @@ or-recording-compatibility:
     - 48-i420-frame-support-in-video-targets-extend-test-suite-to-i420
     - 43-test-long-duration-recordings
     - 60-videoframe_i420-header-not-protected-by-i420-macro
+    - 67-create-user-friendly-tests-activate-storz-ci
+    - 67-create-user-friendly-tests
