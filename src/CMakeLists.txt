@@ -32,7 +32,6 @@ else()
 endif()
 
 # Configurable options, depending on desired functionality
-OPTION(USE_FILES "Support for loading video from files" OFF)
 OPTION(USE_EPIPHAN "Support for streaming video using Epiphan framegrabbers" OFF)
 OPTION(USE_BLACKMAGIC "Support for streaming video using BlackMagic framegrabbers" OFF)
 OPTION(USE_FFMPEG "Support for saving video to files using FFmpeg" OFF)
@@ -72,12 +71,10 @@ SET(SOURCES
 SET(LIBS ${OpenCV_LIBS})
 
 # Video files
-if(USE_FILES OR USE_EPIPHAN)
+if(USE_EPIPHAN)
     SET(USE_OPENCV ON CACHE BOOL "OFF ON" FORCE)
-    if(USE_EPIPHAN)
-        ADD_DEFINITIONS(-DUSE_EPIPHAN)
-    endif(USE_EPIPHAN)
-endif(USE_FILES OR USE_EPIPHAN)
+    ADD_DEFINITIONS(-DUSE_EPIPHAN)
+endif(USE_EPIPHAN)
 
 # BlackMagicSDK
 if(USE_BLACKMAGIC)
