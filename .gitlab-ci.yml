@@ -2,6 +2,8 @@ variables:
   CI_SCRIPTS_DIR: "./ci"
   Qt5Widgets_DIR: "/opt/qt5/5.5/gcc_64/lib/cmake/Qt5Widgets"
   Qt5OpenGL_DIR: "/opt/qt5/5.5/gcc_64/lib/cmake/Qt5OpenGL"
+  FFmpeg_DIR: "/home/gitlab-runner/environments/giftgrab/opt/ffmpeg/3.0.1"
+  EpiphanSDK_DIR: "/home/gitlab-runner/environments/giftgrab/opt/include/epiphansdk"
 
 before_script:
   - export SCRATCH_DIR="$(pwd)/../scratch-space"
@@ -30,8 +32,6 @@ or-recording-compatibility:
   script:
     - export PATH=/home/gitlab-runner/environments/giftgrab/usr/local/bin:$PATH
     - export LD_LIBRARY_PATH=/home/gitlab-runner/environments/giftgrab/opt/ffmpeg/3.0.1/lib:$LD_LIBRARY_PATH
-    - export EpiphanSDK_DIR=/home/gitlab-runner/environments/giftgrab/opt/include/epiphansdk
-    - export FFmpeg_DIR=/home/gitlab-runner/environments/giftgrab/opt/ffmpeg/3.0.1
     - export num_lines=$(v2u | grep --count "no signal detected")
     - export DVI2PCIEDUO_REALTIME=test_realtime.py
     - "$CI_SCRIPTS_DIR/build-uzl1603.sh"
