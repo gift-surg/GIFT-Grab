@@ -32,7 +32,6 @@ else()
 endif()
 
 # Configurable options, depending on desired functionality
-OPTION(USE_BLACKMAGIC "Support for streaming video using BlackMagic framegrabbers" OFF)
 OPTION(USE_FFMPEG "Support for saving video to files using FFmpeg" OFF)
 OPTION(USE_EPIPHAN_DVI2PCIE_DUO "Support for Epiphan DVI2PCIe Duo" OFF)
 OPTION(USE_H265 "Support for the H265 codec (HEVC)" OFF)
@@ -72,20 +71,18 @@ SET(LIBS ${OpenCV_LIBS})
 # Video files
 
 # BlackMagicSDK
-if(USE_BLACKMAGIC)
+if(USE_BLACKMAGICSDK)
     FIND_PACKAGE(BlackMagicSDK CONFIG REQUIRED)
     if(BlackMagicSDK_FOUND)
         INCLUDE_DIRECTORIES(${BlackMagicSDK_INCLUDE_DIR})
         INCLUDE_DIRECTORIES(blackmagic)
-        ADD_DEFINITIONS(-DUSE_BLACKMAGIC)
         LIST(APPEND HEADERS blackmagic/blackmagic_frame_grabber.h)
         LIST(APPEND SOURCES blackmagic/blackmagic_frame_grabber.cpp)
         LIST(APPEND LIBS ${BlackMagicSDK_LIBS})
     else(BlackMagicSDK_FOUND)
-        SET(USE_BLACKMAGIC OFF CACHE BOOL "ON OFF" FORCE)
         MESSAGE(FATAL_ERROR "Blackmagic SDK could not be found.")
     endif(BlackMagicSDK_FOUND)
-endif(USE_BLACKMAGIC)
+endif(USE_BLACKMAGICSDK)
 
 # we do not officially support libVLC yet!
 SET(USE_LIBVLC OFF CACHE BOOL "ON OFF" FORCE)
