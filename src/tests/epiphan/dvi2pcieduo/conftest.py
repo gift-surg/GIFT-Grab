@@ -1,4 +1,5 @@
 from pygiftgrab import Device
+from epiphan import BGR24, I420
 
 
 def pytest_addoption(parser):
