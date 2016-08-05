@@ -49,7 +49,7 @@ Use the following options to build with desired features:
 * `-D USE_XVID=ON` for Xvid support (requires OpenCV).
 * `-D USE_H265=ON -D FFmpeg_DIR=/path/to/your/ffmpeg` for H.265 (HEVC) support (requires FFmpeg and x265).
 * `-D USE_H265=ON -D FFmpeg_DIR=/path/to/your/ffmpeg -D USE_NVENC=ON` for hardware-accelerated H.265 support (requires a supported GPU, FFmpeg and NVENC).
-* `-D BUILD_PYTHON=ON` for GiftGrab Python API.
+* `-D BUILD_PYTHON=ON` for GiftGrab Python API (requires Python and Boost.Python).
 
 To use GiftGrab in your software projects:
 
