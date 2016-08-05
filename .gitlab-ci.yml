@@ -2,7 +2,7 @@ variables:
   CI_SCRIPTS_DIR: "./ci"
   Qt5Widgets_DIR: "/opt/qt5/5.5/gcc_64/lib/cmake/Qt5Widgets"
   Qt5OpenGL_DIR: "/opt/qt5/5.5/gcc_64/lib/cmake/Qt5OpenGL"
-  FFmpeg_PKG_CONFIG_DIR: "/home/gitlab-runner/environments/giftgrab/opt/ffmpeg/3.0.1/lib/pkgconfig"
+  FFmpeg_PKG_CONFIG_DIR: "/opt/ffmpeg/3.0.1/lib/pkgconfig"
   EpiphanSDK_DIR: "/home/gitlab-runner/environments/giftgrab/opt/include/epiphansdk"
 
 before_script:
