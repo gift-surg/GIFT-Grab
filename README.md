@@ -44,7 +44,7 @@ How to use
 
 Build GiftGrab from source using CMake. Check out [our tips and tricks](doc/tips.md) for troubleshooting and how to obtain the external dependencies.
 
-Use the following options to build with desired features:
+Customise GiftGrab with the following options as desired:
 
 * `-D USE_EPIPHAN_DVI2PCIE_DUO=ON` for Epiphan DVI2PCIe Duo support (requires OpenCV). Append `-D USE_COLOUR_SPACE_I420=ON -D EpiphanSDK_DIR=/path/to/your/epiphansdk` to capture at 60 fps (requires EpiphanSDK).
 * `-D USE_XVID=ON` for Xvid support (requires OpenCV).
@@ -52,12 +52,12 @@ Use the following options to build with desired features:
 * `-D USE_H265=ON -D USE_NVENC=ON` for hardware-accelerated H.265 support (requires a supported GPU, FFmpeg, pkg-config and NVENC).
 * `-D BUILD_PYTHON=ON` for GiftGrab Python API (requires Python and Boost.Python).
 
-To use GiftGrab in your software projects: use `FIND_PACKAGE(GiftGrab)` in your CMake file to discover the `GiftGrab_INCLUDE_DIRS` and `GiftGrab_LIBS` CMake variables (respectively for GiftGrab headers to include and libraries to link against).
+To use GiftGrab in your software projects: use `FIND_PACKAGE(GiftGrab)` in your CMake file to discover the `GiftGrab_INCLUDE_DIRS` and `GiftGrab_LIBS` CMake variables (respectively for GiftGrab headers to include and GiftGrab libraries to link against).
 
-To quickly test whether GiftGrab works on your system:
+How to test
+-----------
 
-1. Append `-D BUILD_PYTHON=ON -D BUILD_TESTS=ON` to CMake options (requires Python and Boost.Python).
-1. Run `ctest` or `make test` in the build directory.
+To quickly see whether GiftGrab works on your system, turn on tests with `-D BUILD_TESTS=ON` (requires Python and Boost.Python). Then run `ctest` or `make test` in the build directory.
 
 Funding
 -------
