@@ -2,13 +2,14 @@ variables:
   CI_SCRIPTS_DIR: "./ci"
   Qt5Widgets_DIR: "/opt/qt5/5.5/gcc_64/lib/cmake/Qt5Widgets"
   Qt5OpenGL_DIR: "/opt/qt5/5.5/gcc_64/lib/cmake/Qt5OpenGL"
-  FFmpeg_DIR: "/home/gitlab-runner/environments/giftgrab/opt/ffmpeg/3.0.1"
+  FFmpeg_PKG_CONFIG_DIR: "/home/gitlab-runner/environments/giftgrab/opt/ffmpeg/3.0.1/lib/pkgconfig"
   EpiphanSDK_DIR: "/home/gitlab-runner/environments/giftgrab/opt/include/epiphansdk"
 
 before_script:
   - export SCRATCH_DIR="/home/gitlab-runner/giftgrab-scratch"
   - rm -rf $SCRATCH_DIR
   - mkdir $SCRATCH_DIR
+  - export PKG_CONFIG_DIR="$FFmpeg_PKG_CONFIG_DIR:$PKG_CONFIG_DIR"
   - export GiftGrab_SOURCE_DIR="$(pwd)/src"
   - export GiftGrab_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab"
   - export INSTALL_DIR="$SCRATCH_DIR/install"

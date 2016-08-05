@@ -31,9 +31,7 @@ make -j; exit_on_fail
 make install
 
 # H265 support
-cmake -D USE_H265=ON \
-      -D FFmpeg_DIR=$FFmpeg_DIR \
-      .
+cmake -D USE_H265=ON .
 make -j; exit_on_fail
 make install
 

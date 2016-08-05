@@ -8,7 +8,6 @@ cmake -D CMAKE_INSTALL_PREFIX="$INSTALL_DIR" \
       -D BUILD_PYTHON=ON \
       -D BUILD_TESTS=ON \
       -D USE_H265=ON -D USE_NVENC=ON \
-      -D FFmpeg_DIR=${FFmpeg_DIR} \
       "$GiftGrab_SOURCE_DIR"
 make -j
 make install
