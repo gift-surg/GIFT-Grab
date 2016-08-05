@@ -198,14 +198,6 @@ endif(BUILD_DOC)
 # Tests
 OPTION(BUILD_TESTS "Build tests" OFF)
 if(BUILD_TESTS)
-    SET(TEST_NAME save_frames)
-    ADD_EXECUTABLE(${TEST_NAME} tests/save_frames.cpp)
-    TARGET_LINK_LIBRARIES(${TEST_NAME} ${NAME} ${LIBS})
-
-    SET(TEST_NAME dvi2pcieduo)
-    ADD_EXECUTABLE(${TEST_NAME} tests/epiphan/dvi2pcieduo.cpp)
-    TARGET_LINK_LIBRARIES(${TEST_NAME} ${NAME} ${LIBS})
-
     ENABLE_TESTING()
 
     if(USE_EPIPHAN_DVI2PCIE_DUO)
