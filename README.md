@@ -1,95 +1,78 @@
-# Summary
+GiftGrab
+--------
 
-An umbrella library that provides an easy-to-use C++ (and optionally Python) API to stream and capture video using frame grabber hardware. It also supports hardware-accelerated video encoding.
+GiftGrab provides an easy-to-use Python/C++ API to capture and save video using frame-grabber hardware. It also supports hardware-accelerated video encoding.
 
-# Supported hardware
+GiftGrab was developed as part of the [GIFT-Surg][giftsurg] project. The algorithm and software were developed by Guotai Wang at the [Translational Imaging Group][tig] in the [Centre for Medical Image Computing][cmic] at [University College London (UCL)][ucl].
+
+System requirements
+-------------------
+
+Required:
+
+* Linux (tested on Ubuntu 14.04 LTS)
+* C++11
+* [CMake](https://cmake.org/) (tested with 3.2)
+
+Optional (depending on desired features, see "How to use" below):
+
+* [OpenCV](http://www.opencv.org/) (tested with 2.4.12)
+* [FFmpeg](https://ffmpeg.org/) (tested with 3.0.1)
+* [NVENC](https://developer.nvidia.com/nvidia-video-codec-sdk) (tested with 6.0.1)
+* [A GPU supporting NVENC](https://developer.nvidia.com/nvidia-video-codec-sdk)
+* [x265](http://x265.org/)
+* EpiphanSDK
+* [Python](https://www.python.org/) (tested with 2.7)
+* [Boost.Python](http://www.boost.org/doc/libs/release/libs/python/)
+
+Please note that there are cross-dependencies between some of these external libraries. Check out [our tips and tricks](doc/tips.md) for details.
+
+Supported hardware
+------------------
 
 * [Epiphan DVI2PCIe Duo](http://www.epiphan.com/products/dvi2pcie-duo/)
 
-# Supported video formats
+Supported video formats
+-----------------------
 
 * [XviD](https://www.xvid.com/) (saved as [AVI](https://msdn.microsoft.com/en-us/library/windows/desktop/dd318189(v=vs.85).aspx))
 * [HEVC/H.265](http://www.itu.int/ITU-T/recommendations/rec.aspx?rec=11885) (saved as [MP4](http://www.iso.org/iso/catalogue_detail.htm?csnumber=38538))
 
-# Pre-requisites
+How to use
+----------
 
-## Required
+Build GiftGrab from source using CMake. Check out [our tips and tricks](doc/tips.md) for troubleshooting and how to obtain the external dependencies.
 
-1. Linux (tested on Ubuntu 14.04 LTS)
-1. CMake 3.2+
-1. C++11
-1. OpenCV (tested with 2.4.12)
+Use the following options to build with desired features:
 
-## Optional
+* `-D USE_EPIPHAN_DVI2PCIE_DUO=ON` for Epiphan DVI2PCIe Duo support (requires OpenCV). Append `-D USE_COLOUR_SPACE_I420=ON -D EpiphanSDK_DIR=/path/to/your/epiphansdk` to capture at 60 fps (requires EpiphanSDK).
+* `-D USE_XVID=ON` for Xvid support (requires OpenCV).
+* `-D USE_H265=ON -D FFmpeg_DIR=/path/to/your/ffmpeg` for H.265 (HEVC) support (requires FFmpeg and x265).
+* `-D USE_H265=ON -D FFmpeg_DIR=/path/to/your/ffmpeg -D USE_NVENC=ON` for hardware-accelerated H.265 support (requires a supported GPU, FFmpeg and NVENC).
+* `-D BUILD_PYTHON=ON` for GiftGrab Python API.
 
-* For HEVC/H.265 video-saving support:
+To use GiftGrab in your software projects:
 
-  1. x265 or (for hardware acceleration) NVENC (in conj. with [a compatible graphics card](https://developer.nvidia.com/nvidia-video-codec-sdk))
-  1. FFmpeg (__Make sure your OpenCV links against your custom-built FFmpeg -- see relevant information in advanced options below__)
+1. Use `FIND_PACKAGE(GiftGrab CONFIG)` in your CMake file.
+1. Specify `GiftGrab_DIR`.
+1. Use the GiftGrab CMake variables.
 
-* For Python API:
+To quickly test whether GiftGrab works on your system:
 
-  1. Python 2.7
-  1. Boost.Python
+1. Append `-D BUILD_PYTHON=ON -D BUILD_TESTS=ON` to CMake options (requires Python and Boost.Python).
+1. Run `ctest` or `make test` in the build directory.
 
-* For acquiring videos at up to 60 fps using both Epiphan DVI2PCIe Duo ports simultaneously, EpiphanSDK
+Funding
+-------
 
-# Build
+This work was supported through an Innovative Engineering for Health award by the [Wellcome Trust][wellcometrust] [WT101957], the [Engineering and Physical Sciences Research Council (EPSRC)][epsrc] [NS/A000027/1] and a [National Institute for Health Research][nihr] Biomedical Research Centre [UCLH][uclh]/UCL High Impact Initiative.
 
-## Basic
 
-```
-git clone <this-repo> GiftGrab
-mkdir GiftGrab-build
-cd GiftGrab-build
-cmake ../GiftGrab/src
-make -j
-sudo make install # CMAKE_INSTALL_PREFIX defaults to /usr/local
-```
-
-## Advanced
-
-* `-D BUILD_DOC=ON` for building documentation.
-* `-D BUILD_TESTS=ON` for building the available test applications.
-* `-D USE_EPIPHAN_DVI2PCIE_DUO=ON` for building support for [Epiphan DVI2PCIe Duo framegrabber](http://www.epiphan.com/products/dvi2pcie-duo). __Note when using this option:__
-   1. `/dev/video0` and `/dev/video1` will be probed for connecting to the DVI and SDI ports respectively.
-   1. Due to the use of the generic [OpenCV VideoCapture](http://docs.opencv.org/2.4/modules/highgui/doc/reading_and_writing_images_and_video.html#VideoCapture::VideoCapture%28int%20device%29) API for grabbing frames from Epiphan cards, it is currently not possible to distinguish Epiphan framegrabbers from others.
-* `-D USE_COLOUR_SPACE_I420=ON` for acquiring 60 fps using both Epiphan DVI2PCIe Duo ports. __Note when using this option:__
-   * EpiphanSDK is needed. Specify `-D EpiphanSDK_DIR=/your/epiphansdk/installation/location`
-   * Frames will be acquired in the [I420 colour space](https://wiki.videolan.org/YUV#I420) instead of BGR24.
-* `-D USE_NVENC=ON` for hardware-accelerated video encoding using [FFmpeg](https://www.ffmpeg.org/) as well). __Note when using this option:__
-   1. For video encoding, depending on whether hardware acceleration is desired:
-      * (No hardware acceleration) Build and install [x265](http://x265.org/):
-         1. `hg clone https://bitbucket.org/multicoreware/x265`
-         1. `cd x265`
-         1. `hg checkout 1.9`
-         1. `cd ..` and `mkdir x265-build` and `cd x265-build`
-         1. `cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=/your/x265/installation/location -D ENABLE_SHARED:bool=on ../x265/source/`
-         1. `make -j` and `make install`
-      * (GPU-based hardware acceleration) Install [NVENC SDK](https://developer.nvidia.com/nvidia-video-codec-sdk):
-         1. Download the [SDK](https://developer.nvidia.com/video-sdk-601)
-         1. Extract its contents and copy `nvidia_video_sdk_6.0.1/Samples/common/inc/nvEncodeAPI.h` to a standard system include folder (e.g. `/usr/local/include`)
-   1. Build and install [FFmpeg](https://www.ffmpeg.org/):
-      1. `git clone https://github.com/FFmpeg/FFmpeg.git`
-      1. `git checkout n3.0.1`
-      1. `mkdir ffmpeg-build` and `cd ffmpeg-build`
-      1. Depending on hardware acceleration:
-         * No hardware acceleration:
-           ```
-           export PKG_CONFIG_PATH="/your/x265/installation/location/lib/pkgconfig:$PKG_CONFIG_PATH"
-           ../ffmpeg/configure --prefix=/your/ffmpeg/installation/location --enable-shared --enable-avresample --enable-libx265 --enable-gpl --enable-muxer=mp4
-           ```
-         * GPU-based hardware acceleration:
-           ```
-           ../ffmpeg/configure --prefix=/your/ffmpeg/installation/location --enable-shared --enable-avresample --enable-nvenc --enable-nonfree --enable-gpl --enable-muxer=mp4
-           ```
-      1. `make -j` and `make install`
-   1. Supply `-D FFmpeg_DIR=/your/ffmpeg/installation/location` to CMake.
-* `-D BUILD_PYTHON=ON` for building the Python API. __Note when using this option,__ Python-related items (modules and libraries) will be installed in `$CMAKE_INSTALL_PREFIX/lib/giftgrab`, so:
-   1. To be able to import the Python modules, [`PYTHONPATH`](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONPATH) must include this directory.
-   1. A (one-liner) `/etc/ld.so.conf.d/giftgrab.conf` file must be created that includes this directory. Once this is done `ldconfig` must be run.
-
-# Use
-1. Put `FIND_PACKAGE(GiftGrab CONFIG REQUIRED)` into your project's CMake file.
-1. Specify `GiftGrab_DIR` as `/usr/local/include/giftgrab` for CMake.
-1. See `src/cmake/GiftGrabConfig.cmake` (installed in `/usr/local/include/giftgrab/GiftGrabConfig.cmake`) to see which CMake variables to use.
+[tig]: http://cmictig.cs.ucl.ac.uk
+[giftsurg]: http://www.gift-surg.ac.uk
+[cmic]: http://cmic.cs.ucl.ac.uk
+[ucl]: http://www.ucl.ac.uk
+[nihr]: http://www.nihr.ac.uk/research
+[uclh]: http://www.uclh.nhs.uk
+[epsrc]: http://www.epsrc.ac.uk
+[wellcometrust]: http://www.wellcome.ac.uk
