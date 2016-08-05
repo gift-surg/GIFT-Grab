@@ -35,6 +35,7 @@ endif()
 OPTION(USE_EPIPHAN_DVI2PCIE_DUO "Support for Epiphan DVI2PCIe Duo" OFF)
 OPTION(USE_H265 "Support for the H265 codec (HEVC)" OFF)
 OPTION(USE_XVID "Support for the Xvid codec" OFF)
+OPTION(USE_NVENC "NVIDIA hardware-accelerated video encoding (requires FFmpeg)" OFF)
 
 # Determine whether OpenCV needed
 if((USE_EPIPHAN_DVI2PCIE_DUO AND NOT USE_COLOUR_SPACE_I420) OR
@@ -42,9 +43,9 @@ if((USE_EPIPHAN_DVI2PCIE_DUO AND NOT USE_COLOUR_SPACE_I420) OR
     SET(USE_OPENCV ON CACHE BOOL "OFF ON" FORCE)
 endif()
 
-if(USE_H265)
+if(USE_H265 OR USE_NVENC)
     SET(USE_FFMPEG ON CACHE BOOL "OFF ON" FORCE)
-endif(USE_H265)
+endif()
 
 # OpenCV
 if(USE_OPENCV)
@@ -113,12 +114,14 @@ endif(USE_OPENCV)
 
 # FFmpeg video encoder
 if(USE_FFMPEG)
+    if(NOT DEFINED FFmpeg_DIR)
+        MESSAGE(FATAL_ERROR
+                "FFmpeg_DIR not defined. This configuration requires FFmpeg.")
+    endif()
     ADD_DEFINITIONS(-DUSE_FFMPEG)
-    OPTION(FFMPEG_HWACCEL
-        "NVIDIA GPU-based hardware-accelerated video encoding" OFF)
-    if(FFMPEG_HWACCEL)
-        ADD_DEFINITIONS(-DFFMPEG_HWACCEL)
-    endif(FFMPEG_HWACCEL)
+    if(USE_NVENC)
+        ADD_DEFINITIONS(-DUSE_NVENC)
+    endif(USE_NVENC)
     INCLUDE_DIRECTORIES(${FFmpeg_DIR}/include)
     INCLUDE_DIRECTORIES(ffmpeg)
     LIST(APPEND HEADERS ffmpeg/ffmpeg_video_target.h)

@@ -36,7 +36,7 @@ VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
            .append(" not recognised");
         throw VideoTargetError(msg);
     }
-#ifdef FFMPEG_HWACCEL
+#ifdef USE_NVENC
     _codec_name = "nvenc_hevc";
 #else
     _codec_name = "libx265";
@@ -171,7 +171,7 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
         {
         case AV_CODEC_ID_H264:
         case AV_CODEC_ID_HEVC:
-#ifdef FFMPEG_HWACCEL
+#ifdef USE_NVENC
             // nop
             ret = 0;
 #else
