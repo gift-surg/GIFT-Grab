@@ -32,7 +32,6 @@ else()
 endif()
 
 # Configurable options, depending on desired functionality
-OPTION(USE_FFMPEG "Support for saving video to files using FFmpeg" OFF)
 OPTION(USE_EPIPHAN_DVI2PCIE_DUO "Support for Epiphan DVI2PCIe Duo" OFF)
 OPTION(USE_H265 "Support for the H265 codec (HEVC)" OFF)
 OPTION(USE_XVID "Support for the Xvid codec" OFF)
@@ -42,6 +41,10 @@ if((USE_EPIPHAN_DVI2PCIE_DUO AND NOT USE_COLOUR_SPACE_I420) OR
     USE_XVID)
     SET(USE_OPENCV ON CACHE BOOL "OFF ON" FORCE)
 endif()
+
+if(USE_H265)
+    SET(USE_FFMPEG ON CACHE BOOL "OFF ON" FORCE)
+endif(USE_H265)
 
 # OpenCV
 if(USE_OPENCV)

@@ -67,7 +67,7 @@ sudo make install # CMAKE_INSTALL_PREFIX defaults to /usr/local
 * `-D USE_COLOUR_SPACE_I420=ON` for acquiring 60 fps using both Epiphan DVI2PCIe Duo ports. __Note when using this option:__
    * EpiphanSDK is needed. Specify `-D EpiphanSDK_DIR=/your/epiphansdk/installation/location`
    * Frames will be acquired in the [I420 colour space](https://wiki.videolan.org/YUV#I420) instead of BGR24.
-* `-D USE_FFMPEG=ON` for building support for saving frames as video files using [FFmpeg](https://www.ffmpeg.org/) (for hardware-accelerated video encoding, append `-D FFMPEG_HWACCEL=ON` as well). __Note when using this option:__
+* `-D FFMPEG_HWACCEL=ON` for hardware-accelerated video encoding using [FFmpeg](https://www.ffmpeg.org/) as well). __Note when using this option:__
    1. For video encoding, depending on whether hardware acceleration is desired:
       * (No hardware acceleration) Build and install [x265](http://x265.org/):
          1. `hg clone https://bitbucket.org/multicoreware/x265`
