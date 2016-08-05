@@ -9,7 +9,7 @@ before_script:
   - export SCRATCH_DIR="/home/gitlab-runner/giftgrab-scratch"
   - rm -rf $SCRATCH_DIR
   - mkdir $SCRATCH_DIR
-  - export PKG_CONFIG_PATH="$FFmpeg_PKG_CONFIG_DIR:PKG_CONFIG_PATH"
+  - export PKG_CONFIG_PATH="$FFmpeg_PKG_CONFIG_DIR:$PKG_CONFIG_PATH"
   - export GiftGrab_SOURCE_DIR="$(pwd)/src"
   - export GiftGrab_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab"
   - export INSTALL_DIR="$SCRATCH_DIR/install"
