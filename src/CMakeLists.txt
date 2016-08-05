@@ -246,11 +246,12 @@ endif(BUILD_PYTHON)
 # Install
 SET(GiftGrab_PATH_SUFFIX giftgrab)
 INSTALL(
-    FILES ${HEADERS} cmake/GiftGrabConfig.cmake
+    FILES ${HEADERS}
     DESTINATION ${CMAKE_INSTALL_PREFIX}/include/${GiftGrab_PATH_SUFFIX}
     )
 INSTALL(
     FILES ${CMAKE_CURRENT_SOURCE_DIR}/python/modules/epiphan.py
+    cmake/GiftGrabConfig.cmake
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${GiftGrab_PATH_SUFFIX}
     )
 INSTALL(

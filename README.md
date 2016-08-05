@@ -51,11 +51,7 @@ Use the following options to build with desired features:
 * `-D USE_H265=ON -D FFmpeg_DIR=/path/to/your/ffmpeg -D USE_NVENC=ON` for hardware-accelerated H.265 support (requires a supported GPU, FFmpeg and NVENC).
 * `-D BUILD_PYTHON=ON` for GiftGrab Python API (requires Python and Boost.Python).
 
-To use GiftGrab in your software projects:
-
-1. Use `FIND_PACKAGE(GiftGrab CONFIG)` in your CMake file.
-1. Specify `GiftGrab_DIR`.
-1. Use the GiftGrab CMake variables.
+To use GiftGrab in your software projects: use `FIND_PACKAGE(GiftGrab)` in your CMake file to discover the `GiftGrab_INCLUDE_DIRS` and `GiftGrab_LIBS` CMake variables (respectively for GiftGrab headers to include and libraries to link against).
 
 To quickly test whether GiftGrab works on your system:
 
