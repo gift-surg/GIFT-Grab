@@ -54,8 +54,8 @@ IVideoSource * Factory::connect(enum Device type) {
 
     if (_sources[(int) type] == NULL)
     {
-#ifdef USE_COLOUR_SPACE_I420
         IVideoSource * src = nullptr;
+#ifdef USE_COLOUR_SPACE_I420
         try
         {
             src = new VideoSourceEpiphanSDK(device_id,
@@ -67,7 +67,7 @@ IVideoSource * Factory::connect(enum Device type) {
         }
 #else
 #ifdef USE_OPENCV
-        IVideoSource * src = new VideoSourceOpenCV(device_id);
+        src = new VideoSourceOpenCV(device_id);
 #else
         std::string msg;
         msg.append("Device ")
