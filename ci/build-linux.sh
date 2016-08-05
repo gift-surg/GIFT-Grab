@@ -37,6 +37,11 @@ cmake -D USE_H265=ON \
 make -j; exit_on_fail
 make install
 
+# hardware-accelerated H265
+cmake -D USE_NVENC=ON .
+make -j; exit_on_fail
+make install
+
 # Xvid support (OpenCV should get switched here)
 cmake -D USE_XVID=ON .
 make -j; exit_on_fail
