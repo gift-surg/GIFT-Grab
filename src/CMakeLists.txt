@@ -45,6 +45,8 @@ OPTION(GENERATE_PERFORMANCE_OUTPUT
     "Support for performance (timer) reports via Boost.Timer" OFF)
 MARK_AS_ADVANCED(GENERATE_PERFORMANCE_OUTPUT)
 
+LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+
 # Determine whether OpenCV needed
 if((USE_EPIPHAN_DVI2PCIE_DUO AND NOT USE_COLOUR_SPACE_I420) OR
     USE_XVID)
@@ -122,24 +124,18 @@ endif(USE_OPENCV)
 
 # FFmpeg video encoder
 if(USE_FFMPEG)
-    if(NOT DEFINED FFmpeg_DIR)
-        MESSAGE(FATAL_ERROR
-                "FFmpeg_DIR not defined. This configuration requires FFmpeg.")
-    endif()
+    LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+    FIND_PACKAGE(FFmpeg REQUIRED)
+
     ADD_DEFINITIONS(-DUSE_FFMPEG)
     if(USE_NVENC)
         ADD_DEFINITIONS(-DUSE_NVENC)
     endif(USE_NVENC)
-    INCLUDE_DIRECTORIES(${FFmpeg_DIR}/include)
+    INCLUDE_DIRECTORIES(${FFmpeg_INCLUDE_DIRS})
     INCLUDE_DIRECTORIES(ffmpeg)
     LIST(APPEND HEADERS ffmpeg/ffmpeg_video_target.h)
     LIST(APPEND SOURCES ffmpeg/ffmpeg_video_target.cpp)
-    LIST(APPEND LIBS
-        ${FFmpeg_DIR}/lib/libavformat.so
-        ${FFmpeg_DIR}/lib/libavcodec.so
-        ${FFmpeg_DIR}/lib/libavutil.so
-        ${FFmpeg_DIR}/lib/libswscale.so
-    )
+    LIST(APPEND LIBS ${FFmpeg_LIBS})
 endif(USE_FFMPEG)
 
 # libVLC
