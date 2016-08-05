@@ -12,7 +12,6 @@ before_script:
   - export GiftGrab_SOURCE_DIR="$(pwd)/src"
   - export GiftGrab_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab"
   - export INSTALL_DIR="$SCRATCH_DIR/install"
-  - export GiftGrab_DIR="$INSTALL_DIR/include/giftgrab"
   - export NiftyMatch_REPO_DIR="$SCRATCH_DIR/source/NiftyMatch"
   - export NiftyMatch_SOURCE_DIR="$NiftyMatch_REPO_DIR/src"
   - export NiftyMatch_BUILD_DIR="$SCRATCH_DIR/build/NiftyMatch"

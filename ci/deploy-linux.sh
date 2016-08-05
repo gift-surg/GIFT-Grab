@@ -22,7 +22,6 @@ rm -rf "$GpuMosaicing_BUILD_DIR"
 mkdir -p "$GpuMosaicing_BUILD_DIR"
 cd "$GpuMosaicing_BUILD_DIR"
 cmake -D NiftyMatch_DIR="$NiftyMatch_DIR" \
-      -D GiftGrab_DIR="$GiftGrab_DIR" \
       -D Qt5Widgets_DIR="$Qt5Widgets_DIR" \
       -D Qt5OpenGL_DIR="$Qt5OpenGL_DIR" \
       -D CMAKE_BUILD_TYPE=Release \
