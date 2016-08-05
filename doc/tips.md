@@ -1,5 +1,10 @@
 Below we provide some troubleshooting tips and tricks, as well as detailed installation instructions for GiftGrab dependencies.
 
+GiftGrab Caveats
+----------------
+
+In case GiftGrab is built with a custom `CMAKE_INSTALL_PREFIX` that is **not** a standard system path, `${CMAKE_INSTALL_PREFIX}/lib/giftgrab` needs to be included in `CMAKE_MODULE_PATH`.
+
 Epiphan DVI2PCIe Duo
 --------------------
 
