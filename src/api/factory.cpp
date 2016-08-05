@@ -1,6 +1,8 @@
 #include "factory.h"
+#ifdef USE_OPENCV
 #include "opencv_video_source.h"
 #include "opencv_video_target.h"
+#endif // USE_OPENCV
 #ifdef USE_FFMPEG
 #include "ffmpeg_video_target.h"
 #endif
@@ -64,7 +66,15 @@ IVideoSource * Factory::connect(enum Device type) {
             throw DeviceNotFound(e.what());
         }
 #else
+#ifdef USE_OPENCV
         IVideoSource * src = new VideoSourceOpenCV(device_id);
+#else
+        std::string msg;
+        msg.append("Device ")
+           .append(std::to_string(type))
+           .append(" not supported");
+        throw VideoSourceError(msg);
+#endif // USE_OPENCV
 #endif
 
         // check querying frame dimensions
