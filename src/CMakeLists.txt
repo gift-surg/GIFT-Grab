@@ -168,6 +168,10 @@ endif(USE_COLOUR_SPACE_I420)
 
 # Epiphan SDK video source
 if(USE_EPIPHANSDK)
+    if(NOT DEFINED EpiphanSDK_DIR)
+        MESSAGE(FATAL_ERROR
+                "EpiphanSDK_DIR not defined. This configuration requires EpiphanSDK.")
+    endif()
     FIND_PACKAGE(EpiphanSDK CONFIG REQUIRED)
     INCLUDE_DIRECTORIES(${EpiphanSDK_INCLUDE_DIR})
     INCLUDE_DIRECTORIES(epiphansdk)
