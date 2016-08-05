@@ -160,7 +160,9 @@ IVideoTarget * Factory::writer(Storage type)
     switch (type)
     {
     case File_XviD:
+#ifdef USE_OPENCV
         return new VideoTargetOpenCV("XVID");
+#endif // USE_OPENCV
     case File_H265:
 #ifdef USE_FFMPEG
         return new VideoTargetFFmpeg("H265");
@@ -171,7 +173,7 @@ IVideoTarget * Factory::writer(Storage type)
         std::string msg;
         msg.append("Video target type ")
            .append(std::to_string(type))
-           .append(" not recognised");
+           .append(" not supported");
         throw VideoTargetError(msg);
     }
 }
