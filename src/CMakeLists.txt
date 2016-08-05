@@ -36,6 +36,14 @@ OPTION(USE_EPIPHAN_DVI2PCIE_DUO "Support for Epiphan DVI2PCIe Duo" OFF)
 OPTION(USE_H265 "Support for the H265 codec (HEVC)" OFF)
 OPTION(USE_XVID "Support for the Xvid codec" OFF)
 OPTION(USE_NVENC "NVIDIA hardware-accelerated video encoding (requires FFmpeg)" OFF)
+OPTION(BUILD_DOC "Build source code documentation" OFF)
+OPTION(BUILD_TESTS "Build tests" OFF)
+OPTION(BUILD_PYTHON "Build GiftGrab Python API" OFF)
+OPTION(USE_COLOUR_SPACE_I420
+    "Support for grabbing frames in I420 colour space instead of BGR24" OFF)
+OPTION(GENERATE_PERFORMANCE_OUTPUT
+    "Support for performance (timer) reports via Boost.Timer" OFF)
+MARK_AS_ADVANCED(GENERATE_PERFORMANCE_OUTPUT)
 
 # Determine whether OpenCV needed
 if((USE_EPIPHAN_DVI2PCIE_DUO AND NOT USE_COLOUR_SPACE_I420) OR
@@ -151,8 +159,6 @@ if(USE_LIBVLC)
 endif(USE_LIBVLC)
 
 # Support for I420 (YUV420p) colour space
-OPTION(USE_COLOUR_SPACE_I420
-    "Support for grabbing frames in I420 colour space instead of BGR24" OFF)
 if(USE_COLOUR_SPACE_I420)
     SET(USE_EPIPHANSDK ON)
     ADD_DEFINITIONS(-DUSE_COLOUR_SPACE_I420)
@@ -171,9 +177,6 @@ if(USE_EPIPHANSDK)
 endif(USE_EPIPHANSDK)
 
 # Performance benchmarking
-OPTION(GENERATE_PERFORMANCE_OUTPUT
-    "Support for performance (timer) reports via Boost.Timer" OFF)
-MARK_AS_ADVANCED(GENERATE_PERFORMANCE_OUTPUT)
 if(GENERATE_PERFORMANCE_OUTPUT)
     FIND_PACKAGE(Boost COMPONENTS timer system REQUIRED)
     ADD_DEFINITIONS(-DGENERATE_PERFORMANCE_OUTPUT)
@@ -186,7 +189,6 @@ TARGET_LINK_LIBRARIES(${NAME} ${LIBS})
 LIST(APPEND INSTALLABLES ${NAME})
 
 # Documentation
-OPTION(BUILD_DOC "Build source code documentation" OFF)
 if(BUILD_DOC)
     FIND_PACKAGE(Doxygen)
     if(DOXYGEN_FOUND)
@@ -202,7 +204,6 @@ if(BUILD_DOC)
 endif(BUILD_DOC)
 
 # Tests
-OPTION(BUILD_TESTS "Build tests" OFF)
 if(BUILD_TESTS)
     if(NOT BUILD_PYTHON)
         MESSAGE(FATAL_ERROR "Tests currently depend on Python support")
@@ -224,7 +225,6 @@ if(BUILD_TESTS)
 endif(BUILD_TESTS)
 
 # Python wrappers
-OPTION(BUILD_PYTHON "Build GiftGrab Python API" OFF)
 if(BUILD_PYTHON)
     FIND_PACKAGE(PythonLibs 2.7 REQUIRED)
     INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_DIRS})
