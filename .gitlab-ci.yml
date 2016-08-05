@@ -6,7 +6,9 @@ variables:
   EpiphanSDK_DIR: "/home/gitlab-runner/environments/giftgrab/opt/include/epiphansdk"
 
 before_script:
-  - export SCRATCH_DIR="$(pwd)/../scratch-space"
+  - export SCRATCH_DIR="~/giftgrab-scratch"
+  - rm -rf $SCRATCH_DIR
+  - mkdir $SCRATCH_DIR
   - export GiftGrab_SOURCE_DIR="$(pwd)/src"
   - export GiftGrab_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab"
   - export INSTALL_DIR="$SCRATCH_DIR/install"
