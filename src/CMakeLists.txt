@@ -204,6 +204,10 @@ endif(BUILD_DOC)
 # Tests
 OPTION(BUILD_TESTS "Build tests" OFF)
 if(BUILD_TESTS)
+    if(NOT BUILD_PYTHON)
+        MESSAGE(FATAL_ERROR "Tests currently depend on Python support")
+    endif()
+
     ENABLE_TESTING()
 
     if(USE_EPIPHAN_DVI2PCIE_DUO)

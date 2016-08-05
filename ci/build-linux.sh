@@ -14,12 +14,16 @@ function exit_on_fail {
 
 # bare-bones build
 cmake -D CMAKE_INSTALL_PREFIX="$INSTALL_DIR" \
-      -D BUILD_DOC=ON \
       "$GiftGrab_SOURCE_DIR"
 make -j; exit_on_fail
 make install
 
-# Python and tests (some of which depend on python)
+# build docs
+cmake -D BUILD_DOC=ON .
+make -j; exit_on_fail
+make install
+
+# Python and tests (currently all python)
 cmake -D BUILD_PYTHON=ON \
       -D BUILD_TESTS=ON \
       .
