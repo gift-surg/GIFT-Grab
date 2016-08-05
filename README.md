@@ -4,22 +4,12 @@ An umbrella library that provides an easy-to-use C++ (and optionally Python) API
 
 # Supported hardware
 
-## Current
-
 * [Epiphan DVI2PCIe Duo](http://www.epiphan.com/products/dvi2pcie-duo/)
 
-## Future
+# Supported video formats
 
-There are bits and pieces in the current codebase pertaining to some of the following, but we do not support them yet. Support might be added in the future for these and possibly other hardware in case need arises.
-
-* [BlackMagic DeckLink SDI 4K](https://www.blackmagicdesign.com/uk/products/decklink/techspecs/W-DLK-11)
-* [BlackMagic DeckLink Quad](https://www.blackmagicdesign.com/uk/products/decklink/techspecs/W-DLK-02)
-* [Epiphan Pearl](http://www.epiphan.com/products/pearl/)
-
-# Supported formats and codecs for saving video streams
-
-* [XviD](https://www.xvid.com/)-encoded video saved in an [AVI](https://msdn.microsoft.com/en-us/library/windows/desktop/dd318189(v=vs.85).aspx) container
-* [HEVC/H.265](http://www.itu.int/ITU-T/recommendations/rec.aspx?rec=11885)-encoded video saved in an [MP4](http://www.iso.org/iso/catalogue_detail.htm?csnumber=38538) container
+* [XviD](https://www.xvid.com/) (saved as [AVI](https://msdn.microsoft.com/en-us/library/windows/desktop/dd318189(v=vs.85).aspx))
+* [HEVC/H.265](http://www.itu.int/ITU-T/recommendations/rec.aspx?rec=11885) (saved as [MP4](http://www.iso.org/iso/catalogue_detail.htm?csnumber=38538))
 
 # Pre-requisites
 
