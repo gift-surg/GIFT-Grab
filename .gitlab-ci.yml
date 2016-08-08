@@ -38,3 +38,4 @@ real-time:
     - 67-create-user-friendly-tests-activate-storz-ci
     - 67-create-user-friendly-tests
     - 65-restructure-cmake-build-process
+    - 66-simplify-file-hierarchy
