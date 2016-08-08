@@ -31,15 +31,12 @@ gift-linux:
     - gift-linux
 
 # UZ Leuven OR Workstation 1603 - see GiftGrab#46
-or-recording-compatibility:
+real-time:
   script:
     - export LD_LIBRARY_PATH=/home/gitlab-runner/environments/giftgrab/opt/ffmpeg/3.0.1/lib:$LD_LIBRARY_PATH
     - export num_lines=$(v2u | grep --count "no signal detected")
     - export DVI2PCIEDUO_REALTIME=test_realtime.py
-    - "$CI_SCRIPTS_DIR/build-uzl1603.sh"
-    - "$CI_SCRIPTS_DIR/test-uzl1603.sh"
-    - "$CI_SCRIPTS_DIR/build-uzl1603-i420.sh"
-    - "$CI_SCRIPTS_DIR/test-uzl1603-i420.sh"
+    - "$CI_SCRIPTS_DIR/test-real-time.sh"
   tags:
     - gift-surg-storz-stack
   only:
