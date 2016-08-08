@@ -13,8 +13,7 @@ function exit_on_fail {
 }
 
 # bare-bones build
-cmake -D CMAKE_INSTALL_PREFIX="$INSTALL_DIR" \
-      "$GiftGrab_SOURCE_DIR"
+cmake -D CMAKE_INSTALL_PREFIX="$INSTALL_DIR" "$GiftGrab_SOURCE_DIR"
 make -j; exit_on_fail
 make install
 
@@ -24,9 +23,7 @@ make -j; exit_on_fail
 make install
 
 # Python and tests (currently all python)
-cmake -D BUILD_PYTHON=ON \
-      -D BUILD_TESTS=ON \
-      .
+cmake -D BUILD_PYTHON=ON -D BUILD_TESTS=ON .
 make -j; exit_on_fail
 make install
 
@@ -51,7 +48,6 @@ make -j; exit_on_fail
 make install
 
 # Epiphan DVI2PCIe Duo support (EpiphanSDK)
-cmake -D USE_COLOUR_SPACE_I420=ON \
-      .
+cmake -D USE_COLOUR_SPACE_I420=ON .
 make -j; exit_on_fail
 make install

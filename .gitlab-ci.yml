@@ -11,7 +11,8 @@ before_script:
   - export PATH="$PATH_ROOT/usr/local/bin:$PATH_ROOT/opt:$PATH"
   - export GiftGrab_SOURCE_DIR="$(pwd)/src"
   - export GiftGrab_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab"
-  
+  - export INSTALL_DIR="$SCRATCH_DIR/install"
+
 # Linux ##################
 gift-linux:
   script:
