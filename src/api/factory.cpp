@@ -1,10 +1,12 @@
 #include "factory.h"
+#ifdef USE_OPENCV
 #include "opencv_video_source.h"
 #include "opencv_video_target.h"
+#endif // USE_OPENCV
 #ifdef USE_FFMPEG
 #include "ffmpeg_video_target.h"
 #endif
-#ifdef USE_COLOUR_SPACE_I420
+#ifdef USE_I420
 #include "epiphansdk_video_source.h"
 #endif
 
@@ -13,7 +15,7 @@ namespace gg {
 IVideoSource * Factory::_sources[2] = { NULL, NULL };
 
 IVideoSource * Factory::connect(enum Device type) {
-#ifdef USE_COLOUR_SPACE_I420
+#ifdef USE_I420
     std::string device_id = "";
 #else
     int device_id = -1; // default value makes no sense
@@ -21,7 +23,7 @@ IVideoSource * Factory::connect(enum Device type) {
 
     switch (type) {
     case DVI2PCIeDuo_DVI:
-#ifdef USE_COLOUR_SPACE_I420
+#ifdef USE_I420
 #ifdef EpiphanSDK_DVI
         device_id = EpiphanSDK_DVI;
 #else
@@ -32,7 +34,7 @@ IVideoSource * Factory::connect(enum Device type) {
 #endif
         break;
     case DVI2PCIeDuo_SDI:
-#ifdef USE_COLOUR_SPACE_I420
+#ifdef USE_I420
 #ifdef EpiphanSDK_SDI
         device_id = EpiphanSDK_SDI;
 #else
@@ -52,8 +54,8 @@ IVideoSource * Factory::connect(enum Device type) {
 
     if (_sources[(int) type] == NULL)
     {
-#ifdef USE_COLOUR_SPACE_I420
         IVideoSource * src = nullptr;
+#ifdef USE_I420
         try
         {
             src = new VideoSourceEpiphanSDK(device_id,
@@ -64,7 +66,15 @@ IVideoSource * Factory::connect(enum Device type) {
             throw DeviceNotFound(e.what());
         }
 #else
-        IVideoSource * src = new VideoSourceOpenCV(device_id);
+#ifdef USE_OPENCV
+        src = new VideoSourceOpenCV(device_id);
+#else
+        std::string msg;
+        msg.append("Device ")
+           .append(std::to_string(type))
+           .append(" not supported");
+        throw VideoSourceError(msg);
+#endif // USE_OPENCV
 #endif
 
         // check querying frame dimensions
@@ -73,7 +83,7 @@ IVideoSource * Factory::connect(enum Device type) {
         {
             std::string error;
             error.append("Device ")
-#ifdef USE_COLOUR_SPACE_I420
+#ifdef USE_I420
                  .append(device_id)
 #else
                  .append(std::to_string(device_id))
@@ -88,7 +98,7 @@ IVideoSource * Factory::connect(enum Device type) {
         {
             std::string error;
             error.append("Device ")
-#ifdef USE_COLOUR_SPACE_I420
+#ifdef USE_I420
                  .append(device_id)
 #else
                  .append(std::to_string(device_id))
@@ -99,7 +109,7 @@ IVideoSource * Factory::connect(enum Device type) {
         }
 
         // check querying frames
-#ifdef USE_COLOUR_SPACE_I420
+#ifdef USE_I420
         VideoFrame_I420 frame;
 #else
         VideoFrame_BGRA frame;
@@ -108,7 +118,7 @@ IVideoSource * Factory::connect(enum Device type) {
         {
             std::string error;
             error.append("Device ")
-#ifdef USE_COLOUR_SPACE_I420
+#ifdef USE_I420
                  .append(device_id)
 #else
                  .append(std::to_string(device_id))
@@ -150,7 +160,9 @@ IVideoTarget * Factory::writer(Storage type)
     switch (type)
     {
     case File_XviD:
+#ifdef USE_OPENCV
         return new VideoTargetOpenCV("XVID");
+#endif // USE_OPENCV
     case File_H265:
 #ifdef USE_FFMPEG
         return new VideoTargetFFmpeg("H265");
@@ -161,7 +173,7 @@ IVideoTarget * Factory::writer(Storage type)
         std::string msg;
         msg.append("Video target type ")
            .append(std::to_string(type))
-           .append(" not recognised");
+           .append(" not supported");
         throw VideoTargetError(msg);
     }
 }

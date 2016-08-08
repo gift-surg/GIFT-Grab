@@ -1,13 +1,15 @@
 #include "factory.h"
 #include "except.h"
+#ifdef USE_OPENCV
 #include "opencv_video_source.h"
-#ifdef USE_COLOUR_SPACE_I420
+#include "opencv_video_target.h"
+#endif // USE_OPENCV
+#ifdef USE_I420
 #include "epiphansdk_video_source.h"
 #endif
 #ifdef USE_FFMPEG
 #include "ffmpeg_video_target.h"
 #endif
-#include "opencv_video_target.h"
 #include <boost/python.hpp>
 #include <boost/python/exception_translator.hpp>
 
@@ -25,7 +27,7 @@ class IVideoSourceWrapper : IVideoSource, wrapper<IVideoSource>
         return this->get_override("get_frame")(frame);
     }
 
-#ifdef USE_COLOUR_SPACE_I420
+#ifdef USE_I420
     bool get_frame(gg::VideoFrame_I420 & frame)
     {
         return this->get_override("get_frame")(frame);
@@ -66,6 +68,13 @@ class IVideoTargetWrapper : gg::IVideoTarget, wrapper<gg::IVideoTarget>
     }
 };
 
+void translate_VideoSourceError(gg::VideoSourceError const & e)
+{
+    std::string msg;
+    msg.append("VideoSourceError: ").append(e.what());
+    PyErr_SetString(PyExc_RuntimeError, msg.c_str());
+}
+
 void translate_DeviceNotFound(gg::DeviceNotFound const & e)
 {
     std::string msg;
@@ -89,6 +98,7 @@ void translate_VideoTargetError(gg::VideoTargetError const & e)
 
 BOOST_PYTHON_MODULE(pygiftgrab)
 {
+    register_exception_translator<gg::VideoSourceError>(&translate_VideoSourceError);
     register_exception_translator<gg::DeviceNotFound>(&translate_DeviceNotFound);
     register_exception_translator<gg::DeviceOffline>(&translate_DeviceOffline);
     register_exception_translator<gg::VideoTargetError>(&translate_VideoTargetError);
@@ -104,7 +114,9 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     ;
 
     class_<VideoFrame_BGRA>("VideoFrame_BGRA", init<bool>())
+#ifdef USE_OPENCV
         .def(init<const size_t, const size_t>())
+#endif // USE_OPENCV
         .def("rows", &VideoFrame_BGRA::rows)
         .def("cols", &VideoFrame_BGRA::cols)
     ;
@@ -112,6 +124,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     class_<IVideoSource, boost::noncopyable>("IVideoSource", no_init)
     ;
 
+#ifdef USE_OPENCV
     bool (VideoSourceOpenCV::*opencv_get_frame_bgra)(VideoFrame_BGRA &) = &VideoSourceOpenCV::get_frame;
     class_<VideoSourceOpenCV, bases<IVideoSource>, boost::noncopyable>(
                 "VideoSourceOpenCV", init<int>())
@@ -122,8 +135,9 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .def("set_sub_frame", &VideoSourceOpenCV::set_sub_frame)
         .def("get_full_frame", &VideoSourceOpenCV::get_full_frame)
     ;
+#endif // USE_OPENCV
 
-#ifdef USE_COLOUR_SPACE_I420
+#ifdef USE_I420
     class_<gg::VideoFrame_I420>("VideoFrame_I420", init<bool>())
         .def(init<const size_t, const size_t>())
         .def("rows", &gg::VideoFrame_I420::rows)
@@ -145,7 +159,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
 
 #ifdef USE_FFMPEG
     void (gg::VideoTargetFFmpeg::*ffmpeg_append_bgra)(const VideoFrame_BGRA &) = &gg::VideoTargetFFmpeg::append;
-#ifdef USE_COLOUR_SPACE_I420
+#ifdef USE_I420
     void (gg::VideoTargetFFmpeg::*ffmpeg_append_i420)(const gg::VideoFrame_I420 &) = &gg::VideoTargetFFmpeg::append;
 #endif
 
@@ -153,19 +167,21 @@ BOOST_PYTHON_MODULE(pygiftgrab)
                 "VideoTargetFFmpeg", init<std::string>())
         .def("init", &gg::VideoTargetFFmpeg::init)
         .def("append", ffmpeg_append_bgra)
-#ifdef USE_COLOUR_SPACE_I420
+#ifdef USE_I420
         .def("append", ffmpeg_append_i420)
 #endif
         .def("finalise", &gg::VideoTargetFFmpeg::finalise)
     ;
 #endif
 
+#ifdef USE_OPENCV
     class_<gg::VideoTargetOpenCV, bases<gg::IVideoTarget>, boost::noncopyable>(
                 "VideoTargetOpenCV", init<std::string>())
         .def("init", &gg::VideoTargetOpenCV::init)
         .def("append", &gg::VideoTargetOpenCV::append)
         .def("finalise", &gg::VideoTargetOpenCV::finalise)
     ;
+#endif // USE_OPENCV
 
     class_<gg::Factory>("Factory", no_init)
         .def("connect", &gg::Factory::connect,

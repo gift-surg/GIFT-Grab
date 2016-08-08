@@ -1,10 +1,11 @@
 #ifndef __VIDEOFRAME_H__
 #define __VIDEOFRAME_H__
 
-// OpenCV includes
+#ifdef USE_OPENCV
 #include <opencv2/core/core.hpp>
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
+#endif // USE_OPENCV
 
 #include <memory>
 #include "maskframe.h"
@@ -29,6 +30,7 @@ public:
     //!
     VideoFrame(bool manage_data=false);
 
+#ifdef USE_OPENCV
     //!
     //! \brief Compute an elliptical mask for this image
     //! \param x
@@ -39,6 +41,7 @@ public:
     //!
     std::unique_ptr<MaskFrame> compute_image_mask(int x, int y, int width,
                                                   int height);
+#endif // USE_OPENCV
 
     //!
     //! \brief Destructor that will free allocated data in case data
@@ -149,6 +152,7 @@ public:
     //!
     VideoFrame_BGRA(bool manage_data=false);
 
+#ifdef USE_OPENCV
     //!
     //! \brief Allocates memory for specified dimensions, and
     //! sets all pixels to black
@@ -163,6 +167,7 @@ public:
     //! \param manage_data
     //!
     VideoFrame_BGRA(const cv::Mat & mat, bool manage_data=false);
+#endif // USE_OPENCV
 
     //!
     //! \brief Constructor with full data and parameter specs
@@ -190,6 +195,7 @@ public:
     //!
     void operator=(const VideoFrame_BGRA & rhs);
 
+#ifdef USE_OPENCV
     //!
     //! \brief Initialise from passed OpenCV \c mat, based on the
     //! data management setting
@@ -197,6 +203,7 @@ public:
     //! \sa manages_own_data
     //!
     void init_from_opencv_mat(const cv::Mat & mat);
+#endif // USE_OPENCV
 
     //!
     //! \brief Initialise from passed \c data, based on the data

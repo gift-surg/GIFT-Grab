@@ -39,7 +39,7 @@ void grab(const enum gg::Device device,
     }
 
     float frame_rate = 0;
-#ifdef USE_COLOUR_SPACE_I420
+#ifdef USE_I420
     gg::VideoFrame_I420 frame;
     frame_rate = 59;
 #else

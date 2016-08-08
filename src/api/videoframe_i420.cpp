@@ -10,6 +10,7 @@ VideoFrame_I420::VideoFrame_I420(bool manage_data)
 
 }
 
+#ifdef USE_OPENCV
 VideoFrame_I420::VideoFrame_I420(const size_t cols, const size_t rows)
     : gg::VideoFrame(true)
 {
@@ -17,6 +18,7 @@ VideoFrame_I420::VideoFrame_I420(const size_t cols, const size_t rows)
     cv::cvtColor(buffer, buffer, CV_BGRA2YUV_I420);
     init_from_pointer(buffer.data, buffer.total(), cols, rows);
 }
+#endif // USE_OPENCV
 
 VideoFrame_I420::VideoFrame_I420(unsigned char * data, const size_t length,
                                  const size_t cols, const size_t rows,

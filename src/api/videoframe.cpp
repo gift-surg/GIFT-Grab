@@ -1,5 +1,6 @@
 #include "videoframe.h"
 #include <algorithm>
+#include <cstring>
 
 namespace gg
 {
@@ -14,6 +15,7 @@ VideoFrame::VideoFrame(bool manage_data)
 
 }
 
+#ifdef USE_OPENCV
 std::unique_ptr<MaskFrame> VideoFrame::compute_image_mask(int x, int y,
                                                                int width, int height)
 {
@@ -106,6 +108,7 @@ std::unique_ptr<MaskFrame> VideoFrame::compute_image_mask(int x, int y,
     }
     return mask;
 }
+#endif // USE_OPENCV
 
 VideoFrame::~VideoFrame()
 {
@@ -131,6 +134,7 @@ VideoFrame_BGRA::VideoFrame_BGRA(bool manage_data)
 
 }
 
+#ifdef USE_OPENCV
 VideoFrame_BGRA::VideoFrame_BGRA(const size_t rows, const size_t cols)
     : gg::VideoFrame(true)
 {
@@ -142,6 +146,7 @@ VideoFrame_BGRA::VideoFrame_BGRA(const cv::Mat & mat, bool manage_data)
     _manage_data = manage_data;
     init_from_opencv_mat(mat);
 }
+#endif // USE_OPENCV
 
 VideoFrame_BGRA::VideoFrame_BGRA(unsigned char * data, size_t rows, size_t cols, bool manage_data)
   : VideoFrame(manage_data)
@@ -159,6 +164,7 @@ void VideoFrame_BGRA::operator =(const VideoFrame_BGRA & rhs)
     clone(rhs);
 }
 
+#ifdef USE_OPENCV
 void VideoFrame_BGRA::init_from_opencv_mat(const cv::Mat &mat)
 {
     assert(mat.channels() == 4);
@@ -180,6 +186,7 @@ void VideoFrame_BGRA::init_from_opencv_mat(const cv::Mat &mat)
         _data = mat.data;
     }
 }
+#endif // USE_OPENCV
 
 void VideoFrame_BGRA::init_from_pointer(unsigned char * data, size_t rows, size_t cols)
 {

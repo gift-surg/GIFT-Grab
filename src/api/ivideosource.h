@@ -3,7 +3,7 @@
 
 #include "videoframe.h"
 #include "except.h"
-#ifdef USE_COLOUR_SPACE_I420
+#ifdef USE_I420
 #include "videoframe_i420.h"
 #endif
 
@@ -39,7 +39,7 @@ public:
     //!
     virtual bool get_frame(VideoFrame_BGRA & frame) = 0;
 
-#ifdef USE_COLOUR_SPACE_I420
+#ifdef USE_I420
     //!
     //! \brief Grab next available frame using
     //! I420 colour space
