@@ -3,7 +3,7 @@ GiftGrab
 
 GiftGrab provides an easy-to-use Python/C++ API to capture and save video using frame-grabber hardware. It also supports hardware-accelerated video encoding.
 
-GiftGrab was developed as part of the [GIFT-Surg][giftsurg] project. The algorithm and software were developed by Guotai Wang at the [Translational Imaging Group][tig] in the [Centre for Medical Image Computing][cmic] at [University College London (UCL)][ucl].
+GiftGrab was developed as part of the [GIFT-Surg][giftsurg] project at the [Translational Imaging Group][tig] in the [Centre for Medical Image Computing][cmic] at [University College London (UCL)][ucl].
 
 System requirements
 -------------------
