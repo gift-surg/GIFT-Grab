@@ -1,3 +1,12 @@
 CMakeLists.txt.user
 _CMakeLists.txt
 src/extern
+.idea
+**/*/pygiftgrab.so
+*.mp4
+*.avi
+*.pyc
+*.latency.txt
+*.timing.txt
+*.timing.yml
+.cache

@@ -1,6 +1,13 @@
 PROJECT(GiftGrab)
 CMAKE_MINIMUM_REQUIRED(VERSION 3.2.0)
 
+# Build types and default build type
+SET_PROPERTY(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release")
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    MESSAGE(STATUS "Setting build type to 'Release' as none was specified.")
+    SET(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+endif()
+
 # Unsupported platforms
 if(APPLE)
     MESSAGE(FATAL_ERROR "This library does not support Mac OS X yet.")
@@ -25,17 +32,41 @@ else()
 endif()
 
 # Configurable options, depending on desired functionality
-OPTION(USE_FILES "Support for loading video from files" OFF)
-OPTION(USE_EPIPHAN "Support for streaming video using Epiphan framegrabbers" OFF)
-OPTION(USE_BLACKMAGIC "Support for streaming video using BlackMagic framegrabbers" OFF)
+OPTION(USE_EPIPHAN_DVI2PCIE_DUO "Support for Epiphan DVI2PCIe Duo" OFF)
+OPTION(USE_H265 "Support for the H265 codec (HEVC)" OFF)
+OPTION(USE_XVID "Support for the Xvid codec" OFF)
+OPTION(USE_NVENC "NVIDIA hardware-accelerated video encoding (requires FFmpeg)" OFF)
+OPTION(BUILD_DOC "Build source code documentation" OFF)
+OPTION(BUILD_TESTS "Build tests" OFF)
+OPTION(BUILD_PYTHON "Build GiftGrab Python API" OFF)
+OPTION(USE_I420
+    "Support for grabbing frames in I420 colour space instead of BGR24" OFF)
+OPTION(GENERATE_PERFORMANCE_OUTPUT
+    "Support for performance (timer) reports via Boost.Timer" OFF)
+MARK_AS_ADVANCED(GENERATE_PERFORMANCE_OUTPUT)
+
+LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+
+# Determine whether OpenCV needed
+if((USE_EPIPHAN_DVI2PCIE_DUO AND NOT USE_I420) OR
+    USE_XVID)
+    SET(USE_OPENCV ON CACHE BOOL "OFF ON" FORCE)
+endif()
+
+if(USE_H265 OR USE_NVENC)
+    SET(USE_FFMPEG ON CACHE BOOL "OFF ON" FORCE)
+endif()
 
 # OpenCV
-FIND_PACKAGE(OpenCV REQUIRED)
-if(OpenCV_FOUND)
-    INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
-else(OpenCV_FOUND)
-    MESSAGE(FATAL_ERROR "OpenCV could not be found. This library requires OpenCV.")
-endif(OpenCV_FOUND)
+if(USE_OPENCV)
+    FIND_PACKAGE(OpenCV REQUIRED)
+    if(OpenCV_FOUND)
+        INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
+        ADD_DEFINITIONS(-DUSE_OPENCV)
+    else(OpenCV_FOUND)
+        MESSAGE(FATAL_ERROR "OpenCV could not be found. This library requires OpenCV.")
+    endif(OpenCV_FOUND)
+endif(USE_OPENCV)
 
 # Library name
 SET(NAME giftgrab)
@@ -47,6 +78,7 @@ INCLUDE_DIRECTORIES(utils)
 # Variable for header and source files
 SET(HEADERS
     api/ivideosource.h
+    api/ivideotarget.h
     api/videoframe.h
     api/maskframe.h
     api/factory.h
@@ -58,42 +90,55 @@ SET(SOURCES
     api/factory.cpp
     api/except.cpp
     )
-SET(LIBS ${OpenCV_LIBS})
+if(USE_OPENCV)
+    LIST(APPEND LIBS ${OpenCV_LIBS})
+endif(USE_OPENCV)
 
 # Video files
-if(USE_FILES OR USE_EPIPHAN)
-    SET(USE_OPENCV ON CACHE BOOL "OFF ON" FORCE)
-endif(USE_FILES OR USE_EPIPHAN)
 
 # BlackMagicSDK
-if(USE_BLACKMAGIC)
+if(USE_BLACKMAGICSDK)
     FIND_PACKAGE(BlackMagicSDK CONFIG REQUIRED)
     if(BlackMagicSDK_FOUND)
         INCLUDE_DIRECTORIES(${BlackMagicSDK_INCLUDE_DIR})
         INCLUDE_DIRECTORIES(blackmagic)
-        ADD_DEFINITIONS(-DUSE_BLACKMAGIC)
         LIST(APPEND HEADERS blackmagic/blackmagic_frame_grabber.h)
         LIST(APPEND SOURCES blackmagic/blackmagic_frame_grabber.cpp)
         LIST(APPEND LIBS ${BlackMagicSDK_LIBS})
     else(BlackMagicSDK_FOUND)
-        SET(USE_BLACKMAGIC OFF CACHE BOOL "ON OFF" FORCE)
         MESSAGE(FATAL_ERROR "Blackmagic SDK could not be found.")
     endif(BlackMagicSDK_FOUND)
-endif(USE_BLACKMAGIC)
+endif(USE_BLACKMAGICSDK)
 
 # we do not officially support libVLC yet!
 SET(USE_LIBVLC OFF CACHE BOOL "ON OFF" FORCE)
 
-# OpenCV framegrabber
+# OpenCV components
 if(USE_OPENCV)
     INCLUDE_DIRECTORIES(opencv)
     LIST(APPEND HEADERS opencv/opencv_video_source.h)
+    LIST(APPEND HEADERS opencv/opencv_video_target.h)
     LIST(APPEND SOURCES opencv/opencv_video_source.cpp)
+    LIST(APPEND SOURCES opencv/opencv_video_target.cpp)
 endif(USE_OPENCV)
+
+# FFmpeg video encoder
+if(USE_FFMPEG)
+    FIND_PACKAGE(FFmpeg REQUIRED)
+
+    ADD_DEFINITIONS(-DUSE_FFMPEG)
+    if(USE_NVENC)
+        ADD_DEFINITIONS(-DUSE_NVENC)
+    endif(USE_NVENC)
+    INCLUDE_DIRECTORIES(${FFmpeg_INCLUDE_DIRS})
+    INCLUDE_DIRECTORIES(ffmpeg)
+    LIST(APPEND HEADERS ffmpeg/ffmpeg_video_target.h)
+    LIST(APPEND SOURCES ffmpeg/ffmpeg_video_target.cpp)
+    LIST(APPEND LIBS ${FFmpeg_LIBS})
+endif(USE_FFMPEG)
 
 # libVLC
 if(USE_LIBVLC)
-    LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
     FIND_PACKAGE(LIBVLC REQUIRED)
     if(LIBVLC_FOUND)
         ADD_DEFINITIONS(-DUSE_LIBVLC)
@@ -107,26 +152,42 @@ if(USE_LIBVLC)
     endif(LIBVLC_FOUND)
 endif(USE_LIBVLC)
 
-# Compile and link
-ADD_LIBRARY(${NAME} ${HEADERS} ${SOURCES})
-TARGET_LINK_LIBRARIES(${NAME} ${LIBS})
+# Support for I420 (YUV420p) colour space
+if(USE_I420)
+    SET(USE_EPIPHANSDK ON)
+    ADD_DEFINITIONS(-DUSE_I420)
+    LIST(APPEND HEADERS api/videoframe_i420.h)
+    LIST(APPEND SOURCES api/videoframe_i420.cpp)
+endif(USE_I420)
 
-# Install
-SET(GiftGrab_PATH_SUFFIX giftgrab)
-INSTALL(
-    FILES ${HEADERS} cmake/GiftGrabConfig.cmake
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/include/${GiftGrab_PATH_SUFFIX}
-    )
-INSTALL(TARGETS ${NAME}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/${GiftGrab_PATH_SUFFIX}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${GiftGrab_PATH_SUFFIX}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${GiftGrab_PATH_SUFFIX}
-    )
+# Epiphan SDK video source
+if(USE_EPIPHANSDK)
+    FIND_PACKAGE(EpiphanSDK REQUIRED)
+    INCLUDE_DIRECTORIES(${EpiphanSDK_INCLUDE_DIRS})
+    INCLUDE_DIRECTORIES(epiphansdk)
+    LIST(APPEND LIBS ${EpiphanSDK_LIBS})
+    LIST(APPEND HEADERS epiphansdk/epiphansdk_video_source.h)
+    LIST(APPEND SOURCES epiphansdk/epiphansdk_video_source.cpp)
+endif(USE_EPIPHANSDK)
+
+# Performance benchmarking
+if(GENERATE_PERFORMANCE_OUTPUT)
+    FIND_PACKAGE(Boost COMPONENTS timer system REQUIRED)
+    ADD_DEFINITIONS(-DGENERATE_PERFORMANCE_OUTPUT)
+    LIST(APPEND LIBS ${Boost_LIBRARIES})
+endif(GENERATE_PERFORMANCE_OUTPUT)
+
+# Compile and link
+if(USE_FFMPEG)
+    LINK_DIRECTORIES(${FFmpeg_LIBRARY_DIRS})
+endif(USE_FFMPEG)
+ADD_LIBRARY(${NAME} SHARED ${HEADERS} ${SOURCES})
+TARGET_LINK_LIBRARIES(${NAME} ${LIBS})
+LIST(APPEND INSTALLABLES ${NAME})
 
 # Documentation
-OPTION(BUILD_DOC "Build source code documentation" OFF)
 if(BUILD_DOC)
-    FIND_PACKAGE(Doxygen)
+    FIND_PACKAGE(Doxygen REQUIRED)
     if(DOXYGEN_FOUND)
         SET(DOXYFILE_IN ${CMAKE_CURRENT_SOURCE_DIR}/../doc/Doxyfile.in)
         SET(DOXYFILE ${CMAKE_CURRENT_BINARY_DIR}/doc/Doxyfile)
@@ -138,3 +199,57 @@ if(BUILD_DOC)
             COMMENT "Generating API documentation with Doxygen" VERBATIM)
     endif(DOXYGEN_FOUND)
 endif(BUILD_DOC)
+
+# Tests
+if(BUILD_TESTS)
+    if(NOT BUILD_PYTHON)
+        MESSAGE(FATAL_ERROR "Tests currently depend on Python support")
+    endif()
+
+    ENABLE_TESTING()
+
+    if(USE_EPIPHAN_DVI2PCIE_DUO)
+        SUBDIRS(tests/epiphan/dvi2pcieduo)
+    endif(USE_EPIPHAN_DVI2PCIE_DUO)
+
+    if(USE_H265)
+        SUBDIRS(tests/h265)
+    endif(USE_H265)
+
+    if(USE_XVID)
+        SUBDIRS(tests/xvid)
+    endif(USE_XVID)
+endif(BUILD_TESTS)
+
+# Python wrappers
+if(BUILD_PYTHON)
+    FIND_PACKAGE(PythonLibs 2.7 REQUIRED)
+    INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_DIRS})
+    FIND_PACKAGE(Boost COMPONENTS python REQUIRED)
+    INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
+    SET(NAME_PYTHON py${NAME})
+    ADD_LIBRARY(${NAME_PYTHON} SHARED python/wrapper.cpp)
+    TARGET_LINK_LIBRARIES(${NAME_PYTHON} ${Boost_LIBRARIES} ${NAME})
+    FILE(COPY tests/save_frames.py DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+    # no lib prefix
+    SET_TARGET_PROPERTIES(${NAME_PYTHON} PROPERTIES PREFIX "")
+    LIST(APPEND INSTALLABLES ${NAME_PYTHON})
+endif(BUILD_PYTHON)
+
+# Install
+SET(GiftGrab_PATH_SUFFIX giftgrab)
+INSTALL(
+    FILES ${HEADERS}
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/include/${GiftGrab_PATH_SUFFIX}
+    )
+INSTALL(
+    FILES ${CMAKE_CURRENT_SOURCE_DIR}/python/modules/epiphan.py
+    cmake/GiftGrabConfig.cmake
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${GiftGrab_PATH_SUFFIX}
+    )
+INSTALL(
+    TARGETS ${INSTALLABLES}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/${GiftGrab_PATH_SUFFIX}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${GiftGrab_PATH_SUFFIX}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${GiftGrab_PATH_SUFFIX}
+    )

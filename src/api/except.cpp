@@ -40,4 +40,26 @@ DeviceOffline::~DeviceOffline() noexcept
 
 }
 
+VideoTargetError::VideoTargetError(const std::string & detail) :
+    BasicException(detail)
+{
+
+}
+
+VideoTargetError::~VideoTargetError() noexcept
+{
+
+}
+
+VideoSourceError::VideoSourceError(const std::string & detail) :
+    BasicException(detail)
+{
+
+}
+
+VideoSourceError::~VideoSourceError() noexcept
+{
+
+}
+
 }

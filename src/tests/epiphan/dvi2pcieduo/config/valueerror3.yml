@@ -1,0 +1,5 @@
+port: SDI
+colour_space: I420
+frame_rate: 59.1
+file_path: /tmp/giftgrab/test-data-fetoscope
+timeout_limit: 20.0

@@ -76,4 +76,44 @@ public:
     virtual ~DeviceOffline() noexcept;
 };
 
+//!
+//! \brief Thrown in case of problems outputting
+//! video, e.g. to files
+//!
+class VideoTargetError : public BasicException
+{
+public:
+    //!
+    //! \brief
+    //! \param detail
+    //! \sa BasicException::BasicException
+    //!
+    VideoTargetError(const std::string & detail);
+
+    //!
+    //! \brief ~VideoTargetError
+    //! \sa BasicException::BasicException
+    //!
+    virtual ~VideoTargetError() noexcept;
+};
+
+//!
+//! \brief Thrown in case of errors related to
+//! video sources
+//!
+class VideoSourceError : public BasicException
+{
+public:
+    //!
+    //! \brief
+    //! \param detail
+    //!
+    VideoSourceError(const std::string & detail);
+
+    //!
+    //! \brief ~VideoTargetError
+    //! \sa BasicException::BasicException
+    //!
+    virtual ~VideoSourceError() noexcept;
+};
 }

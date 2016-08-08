@@ -1,0 +1,5 @@
+port: DVI
+colour_space: I420
+frame_rate: 28.0
+file_path: ./test-data-ultrasound
+timeout_limit: 15.0
