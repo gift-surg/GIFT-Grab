@@ -3,7 +3,6 @@ variables:
   Qt5Widgets_DIR: "/opt/qt5/5.5/gcc_64/lib/cmake/Qt5Widgets"
   Qt5OpenGL_DIR: "/opt/qt5/5.5/gcc_64/lib/cmake/Qt5OpenGL"
   FFmpeg_DIR: "/home/gitlab-runner/environments/giftgrab/opt/ffmpeg/3.0.1"
-  EpiphanSDK_DIR: "/home/gitlab-runner/environments/giftgrab/opt/include/epiphansdk"
 
 before_script:
   - export SCRATCH_DIR="/home/gitlab-runner/giftgrab-scratch"
@@ -11,6 +10,7 @@ before_script:
   - mkdir $SCRATCH_DIR
   - export PKG_CONFIG_PATH="$FFmpeg_DIR/lib/pkgconfig:$PKG_CONFIG_PATH"
   - export LD_LIBRARY_PATH="$FFmpeg_DIR/lib:$LD_LIBRARY_PATH"
+  - export PATH=/home/gitlab-runner/environments/giftgrab/usr/local/bin:/home/gitlab-runner/environments/giftgrab/opt:$PATH
   - export GiftGrab_SOURCE_DIR="$(pwd)/src"
   - export GiftGrab_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab"
   - export INSTALL_DIR="$SCRATCH_DIR/install"
@@ -33,7 +33,6 @@ gift-linux:
 # UZ Leuven OR Workstation 1603 - see GiftGrab#46
 or-recording-compatibility:
   script:
-    - export PATH=/home/gitlab-runner/environments/giftgrab/usr/local/bin:$PATH
     - export LD_LIBRARY_PATH=/home/gitlab-runner/environments/giftgrab/opt/ffmpeg/3.0.1/lib:$LD_LIBRARY_PATH
     - export num_lines=$(v2u | grep --count "no signal detected")
     - export DVI2PCIEDUO_REALTIME=test_realtime.py
