@@ -3,7 +3,7 @@
 #include "dvi2pcieduo_defs.h"
 #include "ivideosource.h"
 #include "macros.h"
-#ifdef USE_COLOUR_SPACE_I420
+#ifdef USE_I420
 #include "videoframe_i420.h"
 #endif
 

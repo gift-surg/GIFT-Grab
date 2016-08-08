@@ -46,7 +46,7 @@ Build GiftGrab from source using CMake. Check out [our tips and tricks](doc/tips
 
 Customise GiftGrab with the following options as desired:
 
-* `-D USE_EPIPHAN_DVI2PCIE_DUO=ON` for Epiphan DVI2PCIe Duo support (requires OpenCV). Append `-D USE_COLOUR_SPACE_I420=ON` to capture at 60 fps (requires EpiphanSDK).
+* `-D USE_EPIPHAN_DVI2PCIE_DUO=ON` for Epiphan DVI2PCIe Duo support (requires OpenCV). Append `-D USE_I420=ON` to capture at 60 fps (requires EpiphanSDK).
 * `-D USE_XVID=ON` for Xvid support (requires OpenCV).
 * `-D USE_H265=ON` for H.265 (HEVC) support (requires FFmpeg, pkg-config and x265).
 * `-D USE_H265=ON -D USE_NVENC=ON` for hardware-accelerated H.265 support (requires a supported GPU, FFmpeg, pkg-config and NVENC).

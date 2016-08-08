@@ -34,7 +34,7 @@ echo "Testing real-time recording in BGR24"
 py.test --colour-space=BGR24 $DVI2PCIEDUO_REALTIME
 
 # and now with I420
-cmake -D USE_COLOUR_SPACE_I420=ON .
+cmake -D USE_I420=ON .
 make -j
 # check smt connected to Epiphan
 check_epiphan_alive

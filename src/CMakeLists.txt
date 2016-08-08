@@ -39,7 +39,7 @@ OPTION(USE_NVENC "NVIDIA hardware-accelerated video encoding (requires FFmpeg)" 
 OPTION(BUILD_DOC "Build source code documentation" OFF)
 OPTION(BUILD_TESTS "Build tests" OFF)
 OPTION(BUILD_PYTHON "Build GiftGrab Python API" OFF)
-OPTION(USE_COLOUR_SPACE_I420
+OPTION(USE_I420
     "Support for grabbing frames in I420 colour space instead of BGR24" OFF)
 OPTION(GENERATE_PERFORMANCE_OUTPUT
     "Support for performance (timer) reports via Boost.Timer" OFF)
@@ -48,7 +48,7 @@ MARK_AS_ADVANCED(GENERATE_PERFORMANCE_OUTPUT)
 LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 # Determine whether OpenCV needed
-if((USE_EPIPHAN_DVI2PCIE_DUO AND NOT USE_COLOUR_SPACE_I420) OR
+if((USE_EPIPHAN_DVI2PCIE_DUO AND NOT USE_I420) OR
     USE_XVID)
     SET(USE_OPENCV ON CACHE BOOL "OFF ON" FORCE)
 endif()
@@ -153,12 +153,12 @@ if(USE_LIBVLC)
 endif(USE_LIBVLC)
 
 # Support for I420 (YUV420p) colour space
-if(USE_COLOUR_SPACE_I420)
+if(USE_I420)
     SET(USE_EPIPHANSDK ON)
-    ADD_DEFINITIONS(-DUSE_COLOUR_SPACE_I420)
+    ADD_DEFINITIONS(-DUSE_I420)
     LIST(APPEND HEADERS api/videoframe_i420.h)
     LIST(APPEND SOURCES api/videoframe_i420.cpp)
-endif(USE_COLOUR_SPACE_I420)
+endif(USE_I420)
 
 # Epiphan SDK video source
 if(USE_EPIPHANSDK)

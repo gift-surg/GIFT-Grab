@@ -1,7 +1,7 @@
 #pragma once
 
 #include "videoframe.h"
-#ifdef USE_COLOUR_SPACE_I420
+#ifdef USE_I420
 #include "videoframe_i420.h"
 #endif
 #include "except.h"
@@ -36,7 +36,7 @@ public:
     //!
     virtual void append(const VideoFrame_BGRA & frame) = 0;
 
-#ifdef USE_COLOUR_SPACE_I420
+#ifdef USE_I420
     //!
     //! \brief Append I420 \c frame to output
     //! \param frame

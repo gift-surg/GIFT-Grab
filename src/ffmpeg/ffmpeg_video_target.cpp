@@ -106,7 +106,7 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
     } // END auto_cpu_timer scope
 }
 
-#ifdef USE_COLOUR_SPACE_I420
+#ifdef USE_I420
 void VideoTargetFFmpeg::append(const VideoFrame_I420 & frame)
 {
     { // START auto_cpu_timer scope
@@ -255,7 +255,7 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
         if (ret < 0)
             throw VideoTargetError("Could not write header to file");
 
-        /* TODO USE_COLOUR_SPACE_I420 also implicitly provides
+        /* TODO USE_I420 also implicitly provides
          * this check, but selective code compilation might make
          * code faster, due to not having the conditional checks
          */
@@ -312,7 +312,7 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
     boost::timer::auto_cpu_timer t(this_class_str + "2-sws_scale" + timer_format_str);
 #endif
 
-    /* TODO USE_COLOUR_SPACE_I420 also implicitly provides
+    /* TODO USE_I420 also implicitly provides
      * this check, but selective code compilation might make
      * code faster, due to not having the conditional checks
      */

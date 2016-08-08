@@ -4,7 +4,7 @@
 #include "opencv_video_source.h"
 #include "opencv_video_target.h"
 #endif // USE_OPENCV
-#ifdef USE_COLOUR_SPACE_I420
+#ifdef USE_I420
 #include "epiphansdk_video_source.h"
 #endif
 #ifdef USE_FFMPEG
@@ -27,7 +27,7 @@ class IVideoSourceWrapper : IVideoSource, wrapper<IVideoSource>
         return this->get_override("get_frame")(frame);
     }
 
-#ifdef USE_COLOUR_SPACE_I420
+#ifdef USE_I420
     bool get_frame(gg::VideoFrame_I420 & frame)
     {
         return this->get_override("get_frame")(frame);
@@ -137,7 +137,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     ;
 #endif // USE_OPENCV
 
-#ifdef USE_COLOUR_SPACE_I420
+#ifdef USE_I420
     class_<gg::VideoFrame_I420>("VideoFrame_I420", init<bool>())
         .def(init<const size_t, const size_t>())
         .def("rows", &gg::VideoFrame_I420::rows)
@@ -159,7 +159,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
 
 #ifdef USE_FFMPEG
     void (gg::VideoTargetFFmpeg::*ffmpeg_append_bgra)(const VideoFrame_BGRA &) = &gg::VideoTargetFFmpeg::append;
-#ifdef USE_COLOUR_SPACE_I420
+#ifdef USE_I420
     void (gg::VideoTargetFFmpeg::*ffmpeg_append_i420)(const gg::VideoFrame_I420 &) = &gg::VideoTargetFFmpeg::append;
 #endif
 
@@ -167,7 +167,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
                 "VideoTargetFFmpeg", init<std::string>())
         .def("init", &gg::VideoTargetFFmpeg::init)
         .def("append", ffmpeg_append_bgra)
-#ifdef USE_COLOUR_SPACE_I420
+#ifdef USE_I420
         .def("append", ffmpeg_append_i420)
 #endif
         .def("finalise", &gg::VideoTargetFFmpeg::finalise)

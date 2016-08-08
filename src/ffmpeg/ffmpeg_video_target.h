@@ -104,7 +104,7 @@ public:
 
     void append(const VideoFrame_BGRA & frame);
 
-#ifdef USE_COLOUR_SPACE_I420
+#ifdef USE_I420
     void append(const VideoFrame_I420 & frame);
 #endif
 

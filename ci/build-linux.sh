@@ -48,6 +48,6 @@ make -j; exit_on_fail
 make install
 
 # Epiphan DVI2PCIe Duo support (EpiphanSDK)
-cmake -D USE_COLOUR_SPACE_I420=ON .
+cmake -D USE_I420=ON .
 make -j; exit_on_fail
 make install
