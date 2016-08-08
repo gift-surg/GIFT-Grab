@@ -1,28 +1,17 @@
 variables:
   CI_SCRIPTS_DIR: "./ci"
-  Qt5Widgets_DIR: "/opt/qt5/5.5/gcc_64/lib/cmake/Qt5Widgets"
-  Qt5OpenGL_DIR: "/opt/qt5/5.5/gcc_64/lib/cmake/Qt5OpenGL"
-  FFmpeg_DIR: "/home/gitlab-runner/environments/giftgrab/opt/ffmpeg/3.0.1"
+  PATH_ROOT: "/home/gitlab-runner/environments/giftgrab"
+  SCRATCH_DIR: "/home/gitlab-runner/giftgrab-scratch"
 
 before_script:
-  - export SCRATCH_DIR="/home/gitlab-runner/giftgrab-scratch"
   - rm -rf $SCRATCH_DIR
   - mkdir $SCRATCH_DIR
-  - export PKG_CONFIG_PATH="$FFmpeg_DIR/lib/pkgconfig:$PKG_CONFIG_PATH"
-  - export LD_LIBRARY_PATH="$FFmpeg_DIR/lib:$LD_LIBRARY_PATH"
-  - export PATH=/home/gitlab-runner/environments/giftgrab/usr/local/bin:/home/gitlab-runner/environments/giftgrab/opt:$PATH
+  - export PKG_CONFIG_PATH="$PATH_ROOT/opt/ffmpeg/3.0.1/lib/pkgconfig:$PKG_CONFIG_PATH"
+  - export LD_LIBRARY_PATH="$PATH_ROOT/opt/ffmpeg/3.0.1/lib:$LD_LIBRARY_PATH"
+  - export PATH="$PATH_ROOT/usr/local/bin:$PATH_ROOT/opt:$PATH"
   - export GiftGrab_SOURCE_DIR="$(pwd)/src"
   - export GiftGrab_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab"
-  - export INSTALL_DIR="$SCRATCH_DIR/install"
-  - export GiftGrab_DIR="$INSTALL_DIR/lib/giftgrab"
-  - export NiftyMatch_REPO_DIR="$SCRATCH_DIR/source/NiftyMatch"
-  - export NiftyMatch_SOURCE_DIR="$NiftyMatch_REPO_DIR/src"
-  - export NiftyMatch_BUILD_DIR="$SCRATCH_DIR/build/NiftyMatch"
-  - export NiftyMatch_DIR="$INSTALL_DIR/include/nm"
-  - export GpuMosaicing_REPO_DIR="$SCRATCH_DIR/source/gpu-mosaicing"
-  - export GpuMosaicing_SOURCE_DIR="$GpuMosaicing_REPO_DIR/src"
-  - export GpuMosaicing_BUILD_DIR="$SCRATCH_DIR/build/gpu-mosaicing"
-
+  
 # Linux ##################
 gift-linux:
   script:
@@ -30,10 +19,9 @@ gift-linux:
   tags:
     - gift-linux
 
-# UZ Leuven OR Workstation 1603 - see GiftGrab#46
+# Real-time recording ####
 real-time:
   script:
-    - export LD_LIBRARY_PATH=/home/gitlab-runner/environments/giftgrab/opt/ffmpeg/3.0.1/lib:$LD_LIBRARY_PATH
     - export num_lines=$(v2u | grep --count "no signal detected")
     - export DVI2PCIEDUO_REALTIME=test_realtime.py
     - "$CI_SCRIPTS_DIR/test-real-time.sh"
