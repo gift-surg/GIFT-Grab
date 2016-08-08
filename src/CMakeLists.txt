@@ -163,7 +163,7 @@ endif(USE_COLOUR_SPACE_I420)
 # Epiphan SDK video source
 if(USE_EPIPHANSDK)
     FIND_PACKAGE(EpiphanSDK REQUIRED)
-    INCLUDE_DIRECTORIES(${EpiphanSDK_INCLUDE_DIR})
+    INCLUDE_DIRECTORIES(${EpiphanSDK_INCLUDE_DIRS})
     INCLUDE_DIRECTORIES(epiphansdk)
     LIST(APPEND LIBS ${EpiphanSDK_LIBS})
     LIST(APPEND HEADERS epiphansdk/epiphansdk_video_source.h)
