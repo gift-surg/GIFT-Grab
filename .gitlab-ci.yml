@@ -27,7 +27,6 @@ before_script:
 gift-linux:
   script:
     - "$CI_SCRIPTS_DIR/build-linux.sh"
-    - "$CI_SCRIPTS_DIR/deploy-linux.sh"
   tags:
     - gift-linux
 
