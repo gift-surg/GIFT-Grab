@@ -152,7 +152,6 @@ public:
     //!
     VideoFrame_BGRA(bool manage_data=false);
 
-#ifdef USE_OPENCV
     //!
     //! \brief Allocates memory for specified dimensions, and
     //! sets all pixels to black
@@ -161,6 +160,7 @@ public:
     //!
     VideoFrame_BGRA(const size_t rows, const size_t cols);
 
+#ifdef USE_OPENCV
     //!
     //! \brief OpenCV based constructor
     //! \param mat

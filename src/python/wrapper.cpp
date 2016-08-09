@@ -114,9 +114,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     ;
 
     class_<VideoFrame_BGRA>("VideoFrame_BGRA", init<bool>())
-#ifdef USE_OPENCV
         .def(init<const size_t, const size_t>())
-#endif // USE_OPENCV
         .def("rows", &VideoFrame_BGRA::rows)
         .def("cols", &VideoFrame_BGRA::cols)
     ;

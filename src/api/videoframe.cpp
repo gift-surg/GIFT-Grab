@@ -134,13 +134,18 @@ VideoFrame_BGRA::VideoFrame_BGRA(bool manage_data)
 
 }
 
-#ifdef USE_OPENCV
 VideoFrame_BGRA::VideoFrame_BGRA(const size_t rows, const size_t cols)
     : gg::VideoFrame(true)
 {
+#ifdef USE_OPENCV
     init_from_opencv_mat(cv::Mat::zeros(rows, cols, CV_8UC4));
+#else
+    unsigned char data[rows * cols * 4] = { 0 };
+    init_from_pointer(data, rows, cols);
+#endif // USE_OPENCV
 }
 
+#ifdef USE_OPENCV
 VideoFrame_BGRA::VideoFrame_BGRA(const cv::Mat & mat, bool manage_data)
 {
     _manage_data = manage_data;
