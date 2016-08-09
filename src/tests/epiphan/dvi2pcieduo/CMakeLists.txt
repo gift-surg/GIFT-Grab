@@ -40,19 +40,11 @@ ADD_TEST(NAME ${NAME_TEST}
 )
 LIST(APPEND TESTS_LIST ${NAME_TEST})
 
-if(NOT USE_I420)
-    SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_RealTime_MultiThreaded_BGR24)
-    ADD_TEST(NAME ${NAME_TEST}
-        COMMAND py.test --colour-space=BGR24 test_realtime.py
-    )
-    LIST(APPEND TESTS_LIST ${NAME_TEST})
-else(NOT USE_I420)
-    SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_RealTime_MultiThreaded_I420)
-    ADD_TEST(NAME ${NAME_TEST}
-        COMMAND py.test --colour-space=I420 test_realtime.py
-    )
-    LIST(APPEND TESTS_LIST ${NAME_TEST})
-endif(NOT USE_I420)
+SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_RealTime_MultiThreaded_${COLOUR_SPACE})
+ADD_TEST(NAME ${NAME_TEST}
+    COMMAND py.test --colour-space=${COLOUR_SPACE} test_realtime.py
+)
+LIST(APPEND TESTS_LIST ${NAME_TEST})
 
 SET_TESTS_PROPERTIES(${TESTS_LIST}
     PROPERTIES ENVIRONMENT
