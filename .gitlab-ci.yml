@@ -7,7 +7,7 @@ before_script:
   - rm -rf $SCRATCH_DIR
   - mkdir $SCRATCH_DIR
   - export PKG_CONFIG_PATH="$PATH_ROOT/opt/ffmpeg/3.0.1/lib/pkgconfig:$PKG_CONFIG_PATH"
-  - export LD_LIBRARY_PATH="$PATH_ROOT/opt/ffmpeg/3.0.1/lib:$LD_LIBRARY_PATH"
+  - export LD_LIBRARY_PATH="$PATH_ROOT/opt/x265/1.9/lib:$PATH_ROOT/opt/ffmpeg/3.0.1/lib:$LD_LIBRARY_PATH"
   - export PATH="$PATH_ROOT/usr/local/bin:$PATH_ROOT/opt:$PATH"
   - export GiftGrab_SOURCE_DIR="$(pwd)/src"
   - export GiftGrab_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab"
