@@ -71,23 +71,15 @@ real-time:
   script:
     - cmake -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D BUILD_PYTHON=ON -D BUILD_TESTS=ON -D USE_H265=ON -D USE_NVENC=ON "$GiftGrab_SOURCE_DIR"
     - make -j; exit_on_fail
-    # check smt connected to Epiphan
+    # test BGR24 colour space
     - check_epiphan_alive
-    # copy needed files
-    - cp "$GiftGrab_SOURCE_DIR/python/modules/epiphan.py" ./
-    - cp "$GiftGrab_SOURCE_DIR/tests/epiphan/dvi2pcieduo/test_realtime.py" ./
-    - cp "$GiftGrab_SOURCE_DIR/tests/epiphan/dvi2pcieduo/conftest.py" ./
-    - cp --recursive "$GiftGrab_SOURCE_DIR/tests/epiphan/dvi2pcieduo/config" ./
-    - cp "$GiftGrab_SOURCE_DIR/python/modules/example_epiphan/"* ./config
-    - cp "$GiftGrab_SOURCE_DIR/tests/utils/inspection.py" ./
-    # actual test
-    - py.test --colour-space=BGR24 test_realtime.py
-    # and now with I420
+    - ctest; exit_on_fail
+    # test I420 colour space
     - cmake -D USE_I420=ON .
     - make -j; exit_on_fail
     # check smt connected to Epiphan
     - check_epiphan_alive
-    - py.test --colour-space=I420 test_realtime.py
+    - ctest; exit_on_fail
   tags:
     - gift-surg-storz-stack
   only:
