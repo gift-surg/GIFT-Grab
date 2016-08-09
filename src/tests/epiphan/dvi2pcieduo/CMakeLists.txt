@@ -11,42 +11,28 @@ FILE(COPY
     FILES_MATCHING PATTERN *.yml
 )
 
-# to avoid copying pygiftgrab and inspection module
-SET(PYTHONPATH
-    "${CMAKE_SOURCE_DIR}/tests/utils:${CMAKE_BINARY_DIR}:$ENV{PYTHONPATH}"
-)
-# to avoid copying epiphan module
-SET(PYTHONPATH "${CMAKE_SOURCE_DIR}/python/modules:${PYTHONPATH}")
-
-# start with a fresh variable
-SET(TESTS_LIST "")
-
-# set colour space
-if(USE_I420)
-    SET(COLOUR_SPACE I420)
-else(USE_I420)
-    SET(COLOUR_SPACE BGR24)
-endif(USE_I420)
-
+# SDI port on its own
 SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_SDI)
 ADD_TEST(NAME ${NAME_TEST}
     COMMAND py.test --port=SDI --colour-space=${COLOUR_SPACE} test_unit.py
 )
 LIST(APPEND TESTS_LIST ${NAME_TEST})
 
+# DVI port on its own
 SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_DVI)
 ADD_TEST(NAME ${NAME_TEST}
     COMMAND py.test --port=DVI --colour-space=${COLOUR_SPACE} test_unit.py
 )
 LIST(APPEND TESTS_LIST ${NAME_TEST})
 
-SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_RealTime_MultiThreaded_${COLOUR_SPACE})
+# Both ports in real-time
+SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_RealTime_${COLOUR_SPACE})
 ADD_TEST(NAME ${NAME_TEST}
     COMMAND py.test --colour-space=${COLOUR_SPACE} test_realtime.py
 )
 LIST(APPEND TESTS_LIST ${NAME_TEST})
 
+# to avoid copying stuff around
 SET_TESTS_PROPERTIES(${TESTS_LIST}
-    PROPERTIES ENVIRONMENT
-    "PYTHONPATH=${PYTHONPATH}"
+    PROPERTIES ENVIRONMENT "PYTHONPATH=${PYTHONPATH}"
 )
