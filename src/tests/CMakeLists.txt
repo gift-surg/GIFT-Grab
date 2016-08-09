@@ -1,0 +1,11 @@
+if(USE_EPIPHAN_DVI2PCIE_DUO)
+    SUBDIRS(epiphan/dvi2pcieduo)
+endif(USE_EPIPHAN_DVI2PCIE_DUO)
+
+if(USE_H265)
+    SUBDIRS(h265)
+endif(USE_H265)
+
+if(USE_XVID)
+    SUBDIRS(xvid)
+endif(USE_XVID)

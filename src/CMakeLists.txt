@@ -208,17 +208,7 @@ if(BUILD_TESTS)
 
     ENABLE_TESTING()
 
-    if(USE_EPIPHAN_DVI2PCIE_DUO)
-        SUBDIRS(tests/epiphan/dvi2pcieduo)
-    endif(USE_EPIPHAN_DVI2PCIE_DUO)
-
-    if(USE_H265)
-        SUBDIRS(tests/h265)
-    endif(USE_H265)
-
-    if(USE_XVID)
-        SUBDIRS(tests/xvid)
-    endif(USE_XVID)
+    SUBDIRS(tests)
 endif(BUILD_TESTS)
 
 # Python wrappers
