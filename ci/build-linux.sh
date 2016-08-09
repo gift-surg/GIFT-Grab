@@ -18,12 +18,6 @@ make -j; exit_on_fail
 # no ctest: no features activated to be tested yet
 make install
 
-# build docs
-cmake -D BUILD_DOC=ON .
-make -j; exit_on_fail
-# no ctest: no features activated to be tested yet
-make install
-
 # Python and tests (currently all python)
 cmake -D BUILD_PYTHON=ON -D BUILD_TESTS=ON .
 make -j; exit_on_fail
@@ -60,4 +54,11 @@ cmake -D USE_I420=ON .
 make -j; exit_on_fail
 # no ctest for Epiphan DVI2PCIe Duo on
 # general-purpose Linux test server
+make install
+
+# build docs
+cmake -D BUILD_DOC=ON .
+make -j; exit_on_fail
+# no ctest: only checking whether doc building
+# properly here
 make install
