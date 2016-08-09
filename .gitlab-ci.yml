@@ -70,7 +70,7 @@ gift-linux:
 real-time:
   script:
     - cmake -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D BUILD_PYTHON=ON -D BUILD_TESTS=ON -D USE_H265=ON -D USE_NVENC=ON "$GiftGrab_SOURCE_DIR"
-    - make -j
+    - make -j; exit_on_fail
     # check smt connected to Epiphan
     - check_epiphan_alive
     # copy needed files
@@ -84,7 +84,7 @@ real-time:
     - py.test --colour-space=BGR24 test_realtime.py
     # and now with I420
     - cmake -D USE_I420=ON .
-    - make -j
+    - make -j; exit_on_fail
     # check smt connected to Epiphan
     - check_epiphan_alive
     - py.test --colour-space=I420 test_realtime.py
