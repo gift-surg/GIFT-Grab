@@ -25,6 +25,7 @@ Optional (depending on desired features, see "How to use" below):
 * [Python](https://www.python.org/) (tested with 2.7)
 * [Boost.Python](http://www.boost.org/doc/libs/release/libs/python/)
 * [pkg-config](https://www.freedesktop.org/wiki/Software/pkg-config/)
+* [pytest](http://doc.pytest.org/en/latest/)
 
 Please note that there are cross-dependencies between some of these external libraries. Check out [our tips and tricks](doc/tips.md) for details.
 
@@ -44,7 +45,7 @@ How to use
 
 Build GiftGrab from source using CMake. Check out [our tips and tricks](doc/tips.md) for troubleshooting and how to obtain the external dependencies.
 
-Customise GiftGrab with the following options as desired:
+Customise GiftGrab with the following options as desired (all options are turned off by default):
 
 * `-D USE_EPIPHAN_DVI2PCIE_DUO=ON` for Epiphan DVI2PCIe Duo support (requires OpenCV). Append `-D USE_I420=ON` to capture at 60 fps (requires EpiphanSDK).
 * `-D USE_XVID=ON` for Xvid support (requires OpenCV).
@@ -57,7 +58,7 @@ To use GiftGrab in your software projects: use `FIND_PACKAGE(GiftGrab)` in your 
 How to test
 -----------
 
-To quickly see whether GiftGrab works on your system, turn on tests with `-D BUILD_TESTS=ON` (requires Python and Boost.Python). Then run `ctest` or `make test` in the build directory.
+To quickly see whether GiftGrab works on your system, turn on tests with `-D BUILD_TESTS=ON` (requires Python, Boost.Python, and pytest). Then run `ctest` or `make test` in the build directory.
 
 Funding
 -------

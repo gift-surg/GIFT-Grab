@@ -96,3 +96,4 @@ real-time:
     - 70-corrupt-memory-when-reusing-target
     - 76-tests-not-working-without-opencv
     - 78-add-ctest-to-ci-scripts
+    - 77-use_libvlc-still-appearing-in-cmake
