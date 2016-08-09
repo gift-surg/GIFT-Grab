@@ -32,17 +32,24 @@ else()
 endif()
 
 # Configurable options, depending on desired functionality
-OPTION(USE_EPIPHAN_DVI2PCIE_DUO "Support for Epiphan DVI2PCIe Duo" OFF)
-OPTION(USE_H265 "Support for the H265 codec (HEVC)" OFF)
-OPTION(USE_XVID "Support for the Xvid codec" OFF)
-OPTION(USE_NVENC "NVIDIA hardware-accelerated video encoding (requires FFmpeg)" OFF)
-OPTION(BUILD_DOC "Build source code documentation" OFF)
-OPTION(BUILD_TESTS "Build tests" OFF)
-OPTION(BUILD_PYTHON "Build GiftGrab Python API" OFF)
+OPTION(USE_EPIPHAN_DVI2PCIE_DUO
+    "Capture video with Epiphan DVI2PCIe Duo" OFF)
+OPTION(USE_H265
+    "Video encoding with H.265 (requires FFmpeg, pkg-config and x265)" OFF)
+OPTION(USE_XVID
+    "Video encoding with Xvid (requires OpenCV)" OFF)
+OPTION(USE_NVENC
+    "Hardware-accelerated video encoding with H.265 (requires FFmpeg, pkg-config and NVENC)" OFF)
+OPTION(BUILD_DOC
+    "Source code documentation (requires Doxygen)" OFF)
+OPTION(BUILD_TESTS
+    "Tests (requires pytest)" OFF)
+OPTION(BUILD_PYTHON
+    "GiftGrab Python API (requires Python and Boost.Python)" OFF)
 OPTION(USE_I420
-    "Support for grabbing frames in I420 colour space instead of BGR24" OFF)
+    "Capture video in I420 colour space (requires EpiphanSDK)" OFF)
 OPTION(GENERATE_PERFORMANCE_OUTPUT
-    "Support for performance (timer) reports via Boost.Timer" OFF)
+    "Performance benchmark reports (requires Boost.Timer and Boost.System)" OFF)
 MARK_AS_ADVANCED(GENERATE_PERFORMANCE_OUTPUT)
 
 # Augment module path to be able to find needed packages
