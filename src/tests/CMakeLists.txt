@@ -3,7 +3,6 @@ if(USE_H265 OR USE_XVID)
     FILE(COPY
         ${CMAKE_SOURCE_DIR}/tests/target/test_unit.py
         ${CMAKE_SOURCE_DIR}/tests/target/conftest.py
-        ${CMAKE_SOURCE_DIR}/tests/utils/inspection.py
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
     )
 endif(USE_H265 OR USE_XVID)
@@ -34,5 +33,5 @@ endif(USE_EPIPHAN_DVI2PCIE_DUO)
 # to avoid copying stuff around
 SET_TESTS_PROPERTIES(${TESTS_LIST}
     PROPERTIES ENVIRONMENT
-    "PYTHONPATH=${CMAKE_BINARY_DIR}:$ENV{PYTHONPATH}"
+    "PYTHONPATH=${CMAKE_SOURCE_DIR}/tests/utils:${CMAKE_BINARY_DIR}:$ENV{PYTHONPATH}"
 )
