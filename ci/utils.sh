@@ -9,3 +9,12 @@ function exit_on_fail
         exit $exit_status
     fi
 }
+
+function check_epiphan_alive
+{
+    if [ $(v2u | grep --count "no signal detected") -gt 0 ]; then
+        echo "No alive device seems to be connected to Epiphan"
+        echo "Please connect both ports of Storz, and retry build"
+        exit 1
+    fi
+}
