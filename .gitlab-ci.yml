@@ -23,7 +23,6 @@ gift-linux:
     - cmake -D CMAKE_INSTALL_PREFIX="$INSTALL_DIR" "$GiftGrab_SOURCE_DIR"
     - make -j; exit_on_fail
     - make install
-    - "$CI_SCRIPTS_DIR/build-linux.sh"
     # Python and tests (currently all python)
     - cmake -D BUILD_PYTHON=ON -D BUILD_TESTS=ON .
     - make -j; exit_on_fail
