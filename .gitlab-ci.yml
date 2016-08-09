@@ -40,3 +40,4 @@ real-time:
     - 65-restructure-cmake-build-process
     - 66-simplify-file-hierarchy
     - 70-corrupt-memory-when-reusing-target
+    - 76-tests-not-working-without-opencv
