@@ -147,16 +147,13 @@ LIST(APPEND INSTALLABLES ${NAME})
 # Documentation
 if(BUILD_DOC)
     FIND_PACKAGE(Doxygen REQUIRED)
-    if(DOXYGEN_FOUND)
-        SET(DOXYFILE_IN ${CMAKE_CURRENT_SOURCE_DIR}/../doc/Doxyfile.in)
-        SET(DOXYFILE ${CMAKE_CURRENT_BINARY_DIR}/doc/Doxyfile)
-        CONFIGURE_FILE(${DOXYFILE_IN}
-            ${DOXYFILE} @ONLY)
-        ADD_CUSTOM_TARGET(doc ALL
-            ${DOXYGEN_EXECUTABLE} ${DOXYFILE}
-            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc
-            COMMENT "Generating API documentation with Doxygen" VERBATIM)
-    endif(DOXYGEN_FOUND)
+    SET(DOXYFILE_IN ${CMAKE_CURRENT_SOURCE_DIR}/../doc/Doxyfile.in)
+    SET(DOXYFILE ${CMAKE_CURRENT_BINARY_DIR}/doc/Doxyfile)
+    CONFIGURE_FILE(${DOXYFILE_IN} ${DOXYFILE} @ONLY)
+    ADD_CUSTOM_TARGET(doc ALL
+        ${DOXYGEN_EXECUTABLE} ${DOXYFILE}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc
+        COMMENT "Generating API documentation with Doxygen" VERBATIM)
 endif(BUILD_DOC)
 
 # Tests
