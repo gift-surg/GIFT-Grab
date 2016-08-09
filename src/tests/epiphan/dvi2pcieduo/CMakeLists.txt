@@ -18,9 +18,16 @@ SET(PYTHONPATH
 # to avoid copying epiphan module
 SET(PYTHONPATH "${CMAKE_SOURCE_DIR}/python/modules:${PYTHONPATH}")
 
+# set colour space
+if(USE_I420)
+    SET(COLOUR_SPACE I420)
+else(USE_I420)
+    SET(COLOUR_SPACE BGR24)
+endif(USE_I420)
+
 SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_SDI)
 ADD_TEST(NAME ${NAME_TEST}
-    COMMAND py.test --port=SDI test_unit.py
+    COMMAND py.test --port=SDI --colour-space=${COLOUR_SPACE} test_unit.py
 )
 SET_TESTS_PROPERTIES(${NAME_TEST}
     PROPERTIES ENVIRONMENT
@@ -29,7 +36,7 @@ SET_TESTS_PROPERTIES(${NAME_TEST}
 
 SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_DVI)
 ADD_TEST(NAME ${NAME_TEST}
-    COMMAND py.test --port=DVI test_unit.py
+    COMMAND py.test --port=DVI --colour-space=${COLOUR_SPACE} test_unit.py
 )
 SET_TESTS_PROPERTIES(${NAME_TEST}
     PROPERTIES ENVIRONMENT

@@ -1,5 +1,6 @@
-from pytest import yield_fixture
+from pytest import yield_fixture, fail
 from pygiftgrab import Factory, VideoFrame_BGRA
+from epiphan import BGR24, I420
 
 source = None
 frame = None
@@ -12,7 +13,7 @@ sub_height = 0
 
 
 @yield_fixture(autouse=True)
-def peri_test(port):
+def peri_test(port, colour_space):
     # This section runs before each test
     global source
     try:
@@ -24,7 +25,13 @@ def peri_test(port):
     assert source is not None
 
     global frame
-    frame = VideoFrame_BGRA(False)
+    if colour_space == BGR24:
+        frame = VideoFrame_BGRA(False)
+    elif colour_space == I420:
+        from pygiftgrab import VideoFrame_I420
+        frame = VideoFrame_I420(False)
+    else:
+        fail('Colour space not defined')
 
     global height, width
     assert source.get_frame(frame)
