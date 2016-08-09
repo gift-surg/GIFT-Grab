@@ -11,47 +11,28 @@ FILE(COPY
     FILES_MATCHING PATTERN *.yml
 )
 
-# to avoid copying pygiftgrab and inspection module
-SET(PYTHONPATH
-    "${CMAKE_SOURCE_DIR}/tests/utils:${CMAKE_BINARY_DIR}:$ENV{PYTHONPATH}"
-)
-# to avoid copying epiphan module
-SET(PYTHONPATH "${CMAKE_SOURCE_DIR}/python/modules:${PYTHONPATH}")
-
+# SDI port on its own
 SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_SDI)
 ADD_TEST(NAME ${NAME_TEST}
-    COMMAND py.test --port=SDI test_unit.py
+    COMMAND py.test --port=SDI --colour-space=${COLOUR_SPACE} test_unit.py
 )
-SET_TESTS_PROPERTIES(${NAME_TEST}
-    PROPERTIES ENVIRONMENT
-    "PYTHONPATH=${PYTHONPATH}"
-)
+LIST(APPEND TESTS_LIST ${NAME_TEST})
 
+# DVI port on its own
 SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_DVI)
 ADD_TEST(NAME ${NAME_TEST}
-    COMMAND py.test --port=DVI test_unit.py
+    COMMAND py.test --port=DVI --colour-space=${COLOUR_SPACE} test_unit.py
 )
-SET_TESTS_PROPERTIES(${NAME_TEST}
-    PROPERTIES ENVIRONMENT
-    "PYTHONPATH=${PYTHONPATH}"
-)
+LIST(APPEND TESTS_LIST ${NAME_TEST})
 
-if(NOT USE_I420)
-    SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_RealTime_MultiThreaded_BGR24)
-    ADD_TEST(NAME ${NAME_TEST}
-        COMMAND py.test --colour-space=BGR24 test_realtime.py
-    )
-    SET_TESTS_PROPERTIES(${NAME_TEST}
-        PROPERTIES ENVIRONMENT
-        "PYTHONPATH=${PYTHONPATH}"
-    )
-else(NOT USE_I420)
-    SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_RealTime_MultiThreaded_I420)
-    ADD_TEST(NAME ${NAME_TEST}
-        COMMAND py.test --colour-space=I420 test_realtime.py
-    )
-    SET_TESTS_PROPERTIES(${NAME_TEST}
-        PROPERTIES ENVIRONMENT
-        "PYTHONPATH=${PYTHONPATH}"
-    )
-endif(NOT USE_I420)
+# Both ports in real-time
+SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_RealTime_${COLOUR_SPACE})
+ADD_TEST(NAME ${NAME_TEST}
+    COMMAND py.test --colour-space=${COLOUR_SPACE} test_realtime.py
+)
+LIST(APPEND TESTS_LIST ${NAME_TEST})
+
+# to avoid copying stuff around
+SET_TESTS_PROPERTIES(${TESTS_LIST}
+    PROPERTIES ENVIRONMENT "PYTHONPATH=${PYTHONPATH}"
+)

@@ -7,25 +7,79 @@ before_script:
   - rm -rf $SCRATCH_DIR
   - mkdir $SCRATCH_DIR
   - export PKG_CONFIG_PATH="$PATH_ROOT/opt/ffmpeg/3.0.1/lib/pkgconfig:$PKG_CONFIG_PATH"
-  - export LD_LIBRARY_PATH="$PATH_ROOT/opt/ffmpeg/3.0.1/lib:$LD_LIBRARY_PATH"
+  - export LD_LIBRARY_PATH="$PATH_ROOT/opt/x265/1.9/lib:$PATH_ROOT/opt/ffmpeg/3.0.1/lib:$LD_LIBRARY_PATH"
   - export PATH="$PATH_ROOT/usr/local/bin:$PATH_ROOT/opt:$PATH"
   - export GiftGrab_SOURCE_DIR="$(pwd)/src"
   - export GiftGrab_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab"
   - export INSTALL_DIR="$SCRATCH_DIR/install"
+  - source "$CI_SCRIPTS_DIR/utils.sh"
+  - rm -rf "$GiftGrab_BUILD_DIR"
+  - mkdir -p "$GiftGrab_BUILD_DIR"
+  - cd "$GiftGrab_BUILD_DIR"
 
 # Linux ##################
 gift-linux:
   script:
-    - "$CI_SCRIPTS_DIR/build-linux.sh"
+    # bare-bones build
+    - cmake -D CMAKE_INSTALL_PREFIX="$INSTALL_DIR" "$GiftGrab_SOURCE_DIR"
+    - make -j; exit_on_fail
+    # no ctest: no features activated to be tested yet
+    - make install
+    # Python and tests (currently all python)
+    - cmake -D BUILD_PYTHON=ON -D BUILD_TESTS=ON .
+    - make -j; exit_on_fail
+    # no ctest: no features activated to be tested yet
+    - make install
+    # H265 support
+    - cmake -D USE_H265=ON .
+    - make -j; exit_on_fail
+    - ctest; exit_on_fail
+    - make install
+    # hardware-accelerated H265
+    - cmake -D USE_NVENC=ON .
+    - make -j; exit_on_fail
+    - ctest; exit_on_fail
+    - make install
+    # Xvid support (OpenCV should get switched here)
+    - cmake -D USE_XVID=ON .
+    - make -j; exit_on_fail
+    - ctest; exit_on_fail
+    - make install
+    # Epiphan DVI2PCIe Duo support (OpenCV)
+    - cmake -D USE_EPIPHAN_DVI2PCIE_DUO=ON .
+    - make -j; exit_on_fail
+    # no ctest for Epiphan DVI2PCIe Duo on
+    # general-purpose Linux test server
+    - make install
+    # Epiphan DVI2PCIe Duo support (EpiphanSDK)
+    - cmake -D USE_I420=ON .
+    - make -j; exit_on_fail
+    # no ctest for Epiphan DVI2PCIe Duo on
+    # general-purpose Linux test server
+    - make install
+    # build docs
+    - cmake -D BUILD_DOC=ON .
+    - make -j; exit_on_fail
+    # no ctest: only checking whether doc building
+    # properly here
+    - make install
   tags:
     - gift-linux
 
 # Real-time recording ####
 real-time:
   script:
-    - export num_lines=$(v2u | grep --count "no signal detected")
-    - export DVI2PCIEDUO_REALTIME=test_realtime.py
-    - "$CI_SCRIPTS_DIR/test-real-time.sh"
+    - cmake -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D BUILD_PYTHON=ON -D BUILD_TESTS=ON -D USE_H265=ON -D USE_NVENC=ON "$GiftGrab_SOURCE_DIR"
+    - make -j; exit_on_fail
+    # test BGR24 colour space
+    - check_epiphan_alive
+    - ctest; exit_on_fail
+    # test I420 colour space
+    - cmake -D USE_I420=ON .
+    - make -j; exit_on_fail
+    # check smt connected to Epiphan
+    - check_epiphan_alive
+    - ctest; exit_on_fail
   tags:
     - gift-surg-storz-stack
   only:
@@ -41,3 +95,4 @@ real-time:
     - 66-simplify-file-hierarchy
     - 70-corrupt-memory-when-reusing-target
     - 76-tests-not-working-without-opencv
+    - 78-add-ctest-to-ci-scripts
