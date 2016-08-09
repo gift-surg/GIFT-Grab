@@ -45,6 +45,7 @@ OPTION(GENERATE_PERFORMANCE_OUTPUT
     "Support for performance (timer) reports via Boost.Timer" OFF)
 MARK_AS_ADVANCED(GENERATE_PERFORMANCE_OUTPUT)
 
+# Augment module path to be able to find needed packages
 LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 # Determine whether OpenCV needed
@@ -53,20 +54,10 @@ if((USE_EPIPHAN_DVI2PCIE_DUO AND NOT USE_I420) OR
     SET(USE_OPENCV ON CACHE BOOL "OFF ON" FORCE)
 endif()
 
+# Determine whether FFmpeg needed
 if(USE_H265 OR USE_NVENC)
     SET(USE_FFMPEG ON CACHE BOOL "OFF ON" FORCE)
 endif()
-
-# OpenCV
-if(USE_OPENCV)
-    FIND_PACKAGE(OpenCV REQUIRED)
-    if(OpenCV_FOUND)
-        INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
-        ADD_DEFINITIONS(-DUSE_OPENCV)
-    else(OpenCV_FOUND)
-        MESSAGE(FATAL_ERROR "OpenCV could not be found. This library requires OpenCV.")
-    endif(OpenCV_FOUND)
-endif(USE_OPENCV)
 
 # Library name
 SET(NAME giftgrab)
@@ -83,19 +74,21 @@ SET(HEADERS
     api/maskframe.h
     api/factory.h
     api/except.h
-    )
+)
 SET(SOURCES
     api/videoframe.cpp
     api/maskframe.cpp
     api/factory.cpp
     api/except.cpp
-    )
-if(USE_OPENCV)
-    LIST(APPEND LIBS ${OpenCV_LIBS})
-endif(USE_OPENCV)
+)
 
 # OpenCV components
 if(USE_OPENCV)
+    FIND_PACKAGE(OpenCV REQUIRED)
+    INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
+    LIST(APPEND LIBS ${OpenCV_LIBS})
+    ADD_DEFINITIONS(-DUSE_OPENCV)
+    
     INCLUDE_DIRECTORIES(opencv)
     LIST(APPEND HEADERS opencv/opencv_video_source.h)
     LIST(APPEND HEADERS opencv/opencv_video_target.h)
@@ -196,15 +189,15 @@ SET(GiftGrab_PATH_SUFFIX giftgrab)
 INSTALL(
     FILES ${HEADERS}
     DESTINATION ${CMAKE_INSTALL_PREFIX}/include/${GiftGrab_PATH_SUFFIX}
-    )
+)
 INSTALL(
     FILES ${CMAKE_CURRENT_SOURCE_DIR}/python/modules/epiphan.py
     cmake/GiftGrabConfig.cmake
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${GiftGrab_PATH_SUFFIX}
-    )
+)
 INSTALL(
     TARGETS ${INSTALLABLES}
     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/${GiftGrab_PATH_SUFFIX}
     LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${GiftGrab_PATH_SUFFIX}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${GiftGrab_PATH_SUFFIX}
-    )
+)
