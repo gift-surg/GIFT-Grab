@@ -85,13 +85,12 @@ void VideoTargetOpenCV::finalise()
         try
         {
             _writer.release();
+            _buffer_bgr.release();
         }
         catch (std::exception & e)
         {
             throw VideoTargetError(e.what());
         }
-
-        _buffer_bgr.deallocate();
     }
 }
 
