@@ -97,3 +97,4 @@ real-time:
     - 76-tests-not-working-without-opencv
     - 78-add-ctest-to-ci-scripts
     - 77-use_libvlc-still-appearing-in-cmake
+    - 68-publish-giftgrab-on-pypi
