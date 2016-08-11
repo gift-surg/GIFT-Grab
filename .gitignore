@@ -10,3 +10,6 @@ src/extern
 *.timing.txt
 *.timing.yml
 .cache
+*.egg-info
+dist
+*venv
