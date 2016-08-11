@@ -3,7 +3,9 @@ Below we provide some troubleshooting tips and tricks, as well as detailed insta
 GiftGrab Caveats
 ----------------
 
-In case GiftGrab is built with a custom `CMAKE_INSTALL_PREFIX` that is **not** a standard system path, `${CMAKE_INSTALL_PREFIX}/lib/giftgrab` needs to be included in `CMAKE_MODULE_PATH`.
+* In case GiftGrab is built with a custom `CMAKE_INSTALL_PREFIX` that is **not** a standard system path, `${CMAKE_INSTALL_PREFIX}/lib/giftgrab` needs to be included in `CMAKE_MODULE_PATH`.
+
+* GiftGrab Python modules and libraries are installed in `${CMAKE_INSTALL_PREFIX}/lib/giftgrab`. Add this directory to [`PYTHONPATH`](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONPATH) to be able to use GiftGrab Python modules.
 
 Epiphan DVI2PCIe Duo
 --------------------
@@ -51,12 +53,3 @@ Installation instructions:
 1. `cd ..` and `mkdir x265-build` and `cd x265-build`
 1. `cmake -D ENABLE_SHARED:bool=on ../x265/source/`
 1. `make -j` and `make install`
-
-GiftGrab Python API
--------------------
-
-GiftGrab Python items (modules and libraries) are installed in `${CMAKE_INSTALL_PREFIX}/lib/giftgrab`, so:
-
-1. Add this directory to [`PYTHONPATH`](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONPATH) to be able to use GiftGrab Python modules.
-1. Create a one-liner `/etc/ld.so.conf.d/giftgrab.conf` file with this directory as content.
-1. Run `ldconfig`.
