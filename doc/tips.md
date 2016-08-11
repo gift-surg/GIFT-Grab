@@ -1,4 +1,4 @@
-Below we provide some troubleshooting tips and tricks, as well as detailed installation instructions for GiftGrab dependencies.
+Below are troubleshooting tips and tricks, as well as detailed installation instructions for some GiftGrab dependencies. **These were tested only on an Ubuntu LTS 14.04.**
 
 GiftGrab Caveats
 ----------------
