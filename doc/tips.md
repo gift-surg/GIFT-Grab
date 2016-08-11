@@ -26,13 +26,11 @@ Installation instructions:
 1. `git clone https://github.com/FFmpeg/FFmpeg.git`
 1. `git checkout n3.0.1`
 1. `mkdir ffmpeg-build` and `cd ffmpeg-build`
-1. If using x265:
-   1. `export PKG_CONFIG_PATH="/your/x265/installation/location/lib/pkgconfig:$PKG_CONFIG_PATH"`
-   1. `../ffmpeg/configure --prefix=/your/ffmpeg/installation/location --enable-shared --enable-avresample --enable-libx265 --enable-gpl --enable-muxer=mp4`
-1. If using NVENC: `../ffmpeg/configure --prefix=/your/ffmpeg/installation/location --enable-shared --enable-avresample --enable-nvenc --enable-nonfree --enable-gpl --enable-muxer=mp4`
+1. If using x265: `../FFmpeg/configure --enable-shared --enable-avresample --enable-libx265 --enable-gpl --enable-muxer=mp4`
+1. If using NVENC: `../FFmpeg/configure --enable-shared --enable-avresample --enable-nvenc --enable-nonfree --enable-gpl --enable-muxer=mp4`
 1. `make -j` and `make install`
 
-In case your `/your/ffmpeg/installation/location` is a non-standard path, you will need to append `/your/ffmpeg/installation/location` to your system's `PKG_CONFIG_PATH` for GiftGrab to be able to locate FFmpeg.
+**Note:** In case you install FFmpeg in a non-standard location, you will need to appropriately augment your `PKG_CONFIG_PATH` for GiftGrab to be able to locate FFmpeg.
 
 NVENC
 -----
