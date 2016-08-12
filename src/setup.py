@@ -6,7 +6,7 @@ from giftgrab_configurator import Builder
 import sys
 
 xvid = False
-mn = 'me'
+h265 = False
 mods = None
 
 
@@ -42,8 +42,8 @@ class GiftGrabBuildExtCommand(build_ext):
         build_ext.finalize_options(self)
 
     def run(self):
-        global mn, mods
-        print '<<<<< BE me = %s' % (mn)
+        global h265, mods
+        print '<<<<< BE h265 = %s' % (h265)
         print '<<<<< BE be = %s' % (self.be)
         print '<<<<< BE pei = %s' % (self.pei)
         global mods
@@ -69,13 +69,13 @@ class GiftGrabBuildExtCommand(build_ext):
 class GiftGrabInstallCommand(install):
     user_options = install.user_options + [
         ('xvid', None, None),
-        ('mn=', None, None)
+        ('h265', None, None),
     ]
 
     def initialize_options(self):
         install.initialize_options(self)
         self.xvid = None
-        self.mn = None
+        self.h265 = None
         #self.someval = None
 
     def finalize_options(self):
@@ -83,11 +83,11 @@ class GiftGrabInstallCommand(install):
         install.finalize_options(self)
 
     def run(self):
-        global xvid, mn
+        global xvid, h265
         xvid = self.xvid # will be 1 or None
-        mn = self.mn
-        print '<<<<< xvid = %s' % (xvid)
-        print '<<<<< mn = %s' % (mn)
+        h265 = self.h265
+        print '<<<<< xvid = %s' % str(xvid)
+        print '<<<<< h265 = %s' % str(h265)
         install.run(self)
 
 
@@ -103,7 +103,7 @@ class GiftGrabInstallCommand(install):
 
 # TODO: BUILD_TESTS
 print '>>>> xvid = %s' % (xvid)
-print '>>>> mn = %s' % (mn)
+print '>>>> h265 = %s' % (h265)
 
 
 setup(
