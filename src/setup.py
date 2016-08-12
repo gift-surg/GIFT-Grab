@@ -2,7 +2,7 @@ from setuptools import setup, Extension
 from setuptools.command.install import install
 from setuptools.command.build_ext import build_ext
 from os import environ
-from giftgrab_configurator import Builder, Features
+from giftgrab_configurator import BuildOptions, Features
 import sys
 
 # TODO: error if c++ doesn't exist
@@ -10,33 +10,33 @@ environ["CC"] = "c++"
 environ["CXX"] = "c++"
 
 features = Features()
-builder = Builder(features)
+build_opts = BuildOptions(features)
 
 libgiftgrab = Extension(
-    name=builder.lib_name(),
-    sources=builder.lib_sources()
+    name=build_opts.lib_name(),
+    sources=build_opts.lib_sources()
     )
 
 pygiftgrab = Extension(
-    name=builder.py_name(),
-    sources=builder.py_sources()
+    name=build_opts.py_name(),
+    sources=build_opts.py_sources()
     )
 
 class GiftGrabBuildExtCommand(build_ext):
     def run(self):
-        global libgiftgrab, pygiftgrab, builder
+        global libgiftgrab, pygiftgrab, build_opts
         for e in self.extensions:
             if e is libgiftgrab:
-                e.include_dirs=builder.lib_include_dirs()
-                e.extra_compile_args=builder.lib_compile_args()
-                e.extra_link_args=builder.lib_link_args()
+                e.include_dirs=build_opts.lib_include_dirs()
+                e.extra_compile_args=build_opts.lib_compile_args()
+                e.extra_link_args=build_opts.lib_link_args()
             elif e is pygiftgrab:
-                e.include_dirs=builder.py_include_dirs()
-                e.extra_compile_args=builder.py_compile_args()
-                e.extra_link_args=builder.py_link_args()
-                e.libraries=builder.py_libraries()
-                e.library_dirs=builder.py_library_dirs()
-                e.runtime_library_dirs=builder.py_runtime_library_dirs()
+                e.include_dirs=build_opts.py_include_dirs()
+                e.extra_compile_args=build_opts.py_compile_args()
+                e.extra_link_args=build_opts.py_link_args()
+                e.libraries=build_opts.py_libraries()
+                e.library_dirs=build_opts.py_library_dirs()
+                e.runtime_library_dirs=build_opts.py_runtime_library_dirs()
         build_ext.run(self)
 
 class GiftGrabInstallCommand(install):

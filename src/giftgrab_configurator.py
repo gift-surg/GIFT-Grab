@@ -36,7 +36,7 @@ class Features:
         return s
 
 
-class Builder:
+class BuildOptions:
 
     """This class generates build requirements
     like include dirs based on desired features.
