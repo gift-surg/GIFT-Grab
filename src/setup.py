@@ -2,6 +2,10 @@ from setuptools import setup, Extension
 from sys import version_info, exec_prefix
 from sysconfig import get_platform
 from os.path import join
+from os import environ
+
+environ["CC"] = "c++"
+environ["CXX"] = "c++"
 
 lib_sources = ['api/videoframe.cpp',
                'api/maskframe.cpp',
