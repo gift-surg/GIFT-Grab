@@ -2,12 +2,14 @@ from setuptools import setup, Extension
 from setuptools.command.install import install
 from setuptools.command.build_ext import build_ext
 from os import environ
-from giftgrab_configurator import Builder
+from giftgrab_configurator import Builder, Features
 import sys
 
 xvid = False
 h265 = False
 mods = None
+
+features = Features()
 
 
 # TODO: error if c++ doesn't exist
@@ -83,11 +85,12 @@ class GiftGrabInstallCommand(install):
         install.finalize_options(self)
 
     def run(self):
-        global xvid, h265
-        xvid = self.xvid # will be 1 or None
-        h265 = self.h265
-        print '<<<<< xvid = %s' % str(xvid)
-        print '<<<<< h265 = %s' % str(h265)
+        global features
+        if self.xvid:
+            features.xvid = True
+        if self.h265:
+            features.h265 = True
+        print '<<<<< IN features %s' % (str(features))
         install.run(self)
 
 

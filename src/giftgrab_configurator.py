@@ -4,6 +4,38 @@ from os.path import join
 from sysconfig import get_platform
 
 
+class Features:
+
+    """This class represents GiftGrab features
+    as can be configured on building from source.
+
+    """
+
+    def __init__(self):
+        """Switch all features off.
+
+        """
+        self.epiphan_dvi2pcie_duo = False
+        self.i420 = False
+        self.xvid = False
+        self.h265 = False
+        self.nvenc = False
+
+
+    def __repr__(self):
+        """Return a string representation.
+
+        @return
+        """
+        s = ''
+        if self.epiphan_dvi2pcie_duo: s += 'Epiphan DVI2PCIe Duo, '
+        if self.i420: s += 'I420, '
+        if self.xvid: s += 'Xvid, '
+        if self.h265: s += 'H265, '
+        if self.nvenc: s += 'NVENC'
+        return s
+
+
 class Builder:
     def __init__(self, features):
         """Initialise build parameters based on
@@ -16,7 +48,7 @@ class Builder:
         # self.xvid = '--xvid' in features
         # self.h265 = '--h265' in features
         # self.nvenc = '--nvenc' in features
-        
+
         # TODO
         # TODO: USE_EPIPHAN_DVI2PCIE_DUO
 
