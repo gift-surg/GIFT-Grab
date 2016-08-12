@@ -70,12 +70,16 @@ class GiftGrabBuildExtCommand(build_ext):
 
 class GiftGrabInstallCommand(install):
     user_options = install.user_options + [
+        ('epiphan-dvi2pcie-duo', None, None),
+        ('i420', None, None),
         ('xvid', None, None),
         ('h265', None, None),
     ]
 
     def initialize_options(self):
         install.initialize_options(self)
+        self.epiphan_dvi2pcie_duo = None
+        self.i420 = None
         self.xvid = None
         self.h265 = None
         #self.someval = None
@@ -86,10 +90,10 @@ class GiftGrabInstallCommand(install):
 
     def run(self):
         global features
-        if self.xvid:
-            features.xvid = True
-        if self.h265:
-            features.h265 = True
+        features.epiphan_dvi2pcie_duo = self.epiphan_dvi2pcie_duo
+        features.i420 = self.i420
+        features.xvid = self.xvid
+        features.h265 = self.h265
         print '<<<<< IN features %s' % (str(features))
         install.run(self)
 
