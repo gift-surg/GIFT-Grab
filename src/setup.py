@@ -4,7 +4,31 @@ from sysconfig import get_platform
 from os.path import join
 from os import environ
 from site import getsitepackages
+import giftgrab_configurator
 
+lib_sources = None
+lib_include_dirs = None
+lib_compile_args = None
+lib_link_args = None
+lib_libraries = None
+lib_library_dirs = None
+lib_runtime_library_dirs = None
+
+py_sources = None
+py_include_dirs = None
+py_compile_args = None
+py_link_args = None
+py_libraries = None
+py_library_dirs = None
+py_runtime_library_dirs = None
+
+
+# TODO: pip python dependencies (e.g. py.test)
+
+# TODO: resources (e.g. sources, headers, include dirs,
+# etc. based on selected features)
+
+# TODO: error if c++ doesn't exist
 environ["CC"] = "c++"
 environ["CXX"] = "c++"
 
