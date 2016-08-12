@@ -1,3 +1,9 @@
+from site import getsitepackages
+from sys import version_info
+from os.path import join
+from sysconfig import get_platform
+
+
 class Builder:
     def __init__(self, features):
         """Initialise build parameters based on
@@ -16,46 +22,56 @@ class Builder:
         # TODO: USE_NVENC
 
         # TODO: BUILD_TESTS
-        
-        pass
+        self.name = 'giftgrab'
 
 
-    def lib_sources():
+    def lib_name(self):
+        """Get name of library file.
+
+        """
+        return 'lib%s' % (self.name)
+
+
+    def lib_sources(self):
         """Determine needed source files for building
         C++ library.
 
         """
         # TODO
-        pass
+        return ['api/videoframe.cpp',
+                'api/maskframe.cpp',
+                'api/factory.cpp',
+                'api/except.cpp']
 
 
-    def lib_include_dirs():
+    def lib_include_dirs(self):
         """Determine needed include dirs for building
         C++ library.
 
         """
         # TODO
-        pass
+        return ['api', 'utils']
 
 
-    def lib_compile_args():
+    def lib_compile_args(self):
         """Get compiler arguments for building C++
         library.
 
         """
         # TODO
-        pass
+        return ['-std=c++11', '-O3', '-DNDEBUG', '-fPIC']
 
 
-    def lib_link_args():
+    def lib_link_args(self):
         """Get linker args for building C++ library.
 
         """
         # TODO
-        pass
+        return ['-fPIC', '-std=c++11', '-O3', '-DNDEBUG', '-shared']
+        # TODO: all flags, e.g. -Wl
 
 
-    def lib_libraries():
+    def lib_libraries(self):
         """Determine libraries to link against for
         building C++ library.
 
@@ -64,7 +80,7 @@ class Builder:
         pass
 
 
-    def lib_library_dirs():
+    def lib_library_dirs(self):
         """Determine locations of libraries to link
         against for building C++ library.
 
@@ -73,7 +89,7 @@ class Builder:
         pass
 
 
-    def lib_runtime_library_dirs():
+    def lib_runtime_library_dirs(self):
         """Determine runtime library path for C++
         library.
 
@@ -81,64 +97,77 @@ class Builder:
         # TODO
         pass
 
+    def py_name(self):
+        """Get name for Python library file.
 
-    def py_sources():
+        """
+        return 'py%s' % (self.name)
+
+
+    def py_sources(self):
         """Determine needed source files for building
         Python library.
 
         """
         # TODO
-        pass
+        return ['python/wrapper.cpp']
 
 
-    def py_include_dirs():
+    def py_include_dirs(self):
         """Determine needed include dirs for building
         Python library.
 
         """
         # TODO
-        pass
+        py_dirs = ['/usr/include/python%d.%d' % (version_info.major, version_info.minor)]
+        lib_dirs = self.lib_include_dirs()
+        return lib_dirs + py_dirs
+                
 
 
-    def py_compile_args():
+
+    def py_compile_args(self):
         """Get compiler arguments for building Python
         library.
 
         """
         # TODO
-        pass
+        return self.lib_compile_args()
 
 
-    def py_link_args():
+    def py_link_args(self):
         """Get linker args for building Python library.
 
         """
         # TODO
-        pass
+        return self.lib_link_args()
 
 
-    def py_libraries():
+    def py_libraries(self):
         """Determine libraries to link against for
         building Python library.
 
         """
         # TODO
-        pass
+        return ['boost_python', self.name]
 
 
-    def py_library_dirs():
+    def py_library_dirs(self):
         """Determine locations of libraries to link
         against for building Python library.
 
         """
         # TODO
-        pass
+        lib_dir = 'lib.%s-%d.%d' % (get_platform(),
+                                    version_info.major,
+                                    version_info.minor)
+        return [join('build', lib_dir)]
 
 
-    def py_runtime_library_dirs():
+    def py_runtime_library_dirs(self):
         """Determine runtime library path for Python
         library.
 
         """
         # TODO
-        pass
+        return getsitepackages()
