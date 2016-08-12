@@ -12,6 +12,11 @@ class Builder:
         @param features arguments as passed by user
         when invoking ``pip install``
         """
+        # self.epiphan_dvi2pcie_duo = '--epiphan-dvi2pcie-duo' in features
+        # self.xvid = '--xvid' in features
+        # self.h265 = '--h265' in features
+        # self.nvenc = '--nvenc' in features
+        
         # TODO
         # TODO: USE_EPIPHAN_DVI2PCIE_DUO
 
