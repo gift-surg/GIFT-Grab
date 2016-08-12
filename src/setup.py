@@ -5,15 +5,12 @@ from os import environ
 from giftgrab_configurator import Builder, Features
 import sys
 
-features = Features()
-
-
 # TODO: error if c++ doesn't exist
 environ["CC"] = "c++"
 environ["CXX"] = "c++"
 
-# TODO: pass user options instead of None
-builder = Builder(None)
+features = Features()
+builder = Builder(features)
 
 libgiftgrab = Extension(
     name=builder.lib_name(),

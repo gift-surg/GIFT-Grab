@@ -60,6 +60,7 @@ class Builder:
 
         # TODO: BUILD_TESTS
         self.name = 'giftgrab'
+        self.features = features
 
 
     def lib_name(self):
