@@ -3,6 +3,7 @@ from sys import version_info, exec_prefix
 from sysconfig import get_platform
 from os.path import join
 from os import environ
+from site import getsitepackages
 
 environ["CC"] = "c++"
 environ["CXX"] = "c++"
@@ -25,10 +26,8 @@ libgiftgrab = Extension('libgiftgrab',
                         extra_compile_args=extra_compile_args,
                         extra_link_flags=extra_link_args
                         )
-py_runtime_library_dirs = [join(
-                              join(join(exec_prefix, 'lib'),
-                                'python%d.%d' % (version_info.major, version_info.minor)
-                                ), 'site-packages')]
+py_runtime_library_dirs = getsitepackages()
+print '>>> SP :' + str(py_runtime_library_dirs)
 py_library_dirs = [join('build',
                         'lib.%s-%d.%d' % (get_platform(), version_info.major, version_info.minor))]
 print '>>>lib  %s' % (py_library_dirs)
