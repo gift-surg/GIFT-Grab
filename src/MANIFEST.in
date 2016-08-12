@@ -1,2 +1,1 @@
-include api/*.h
-include utils/*.h
+recursive-include * *.h
