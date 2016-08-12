@@ -2,7 +2,7 @@ from setuptools import setup, Extension
 from setuptools.command.install import install
 from setuptools.command.build_ext import build_ext
 from os import environ
-from giftgrab_configurator import BuildOptions, Features
+from build_config import BuildOptions, Features
 import sys
 
 # TODO: error if c++ doesn't exist

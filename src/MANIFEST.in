@@ -1,2 +1,2 @@
 recursive-include * *.h
-include giftgrab_configurator.py
+include build_config.py
