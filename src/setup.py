@@ -24,7 +24,7 @@ libgiftgrab = Extension('libgiftgrab',
                         sources=lib_sources,
                         include_dirs=lib_include_dirs,
                         extra_compile_args=extra_compile_args,
-                        extra_link_flags=extra_link_args
+                        extra_link_args=extra_link_args
                         )
 py_runtime_library_dirs = getsitepackages()
 print '>>> SP :' + str(py_runtime_library_dirs)
@@ -36,7 +36,7 @@ pygiftgrab = Extension('pygiftgrab',
                        sources=py_sources,
                        include_dirs=py_include_dirs,
                        extra_compile_args=extra_compile_args,
-                       extra_link_flags=extra_link_args,
+                       extra_link_args=extra_link_args,
                        libraries=['boost_python', libgiftgrab.name[3:]],
                        library_dirs=py_library_dirs,
                        runtime_library_dirs=py_runtime_library_dirs,
