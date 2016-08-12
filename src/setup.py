@@ -5,10 +5,6 @@ from os import environ
 from giftgrab_configurator import Builder, Features
 import sys
 
-xvid = False
-h265 = False
-mods = None
-
 features = Features()
 
 
@@ -30,29 +26,9 @@ pygiftgrab = Extension(
     )
 
 class GiftGrabBuildExtCommand(build_ext):
-    user_options = build_ext.user_options + [
-        ('be', None, None),
-        ('pei=', None, None)
-    ]
-
-    def initialize_options(self):
-        build_ext.initialize_options(self)
-        self.be = None
-        self.pei = None
-
-    def finalize_options(self):
-        build_ext.finalize_options(self)
-
     def run(self):
-        global h265, mods
-        print '<<<<< BE h265 = %s' % (h265)
-        print '<<<<< BE be = %s' % (self.be)
-        print '<<<<< BE pei = %s' % (self.pei)
-        global mods
-        print '<<<< mods bef = %s' % (str(mods))
-        mods = self.extensions
         global libgiftgrab, pygiftgrab, builder
-        for e in mods:
+        for e in self.extensions:
             if e is libgiftgrab:
                 e.include_dirs=builder.lib_include_dirs()
                 e.extra_compile_args=builder.lib_compile_args()
@@ -64,8 +40,6 @@ class GiftGrabBuildExtCommand(build_ext):
                 e.libraries=builder.py_libraries()
                 e.library_dirs=builder.py_library_dirs()
                 e.runtime_library_dirs=builder.py_runtime_library_dirs()
-        print '<<<< mods = %s' % (str(mods))
-        print '<<<<< dir %s' % str(dir(self))
         build_ext.run(self)
 
 class GiftGrabInstallCommand(install):
@@ -82,10 +56,8 @@ class GiftGrabInstallCommand(install):
         self.i420 = None
         self.xvid = None
         self.h265 = None
-        #self.someval = None
 
     def finalize_options(self):
-        #print("value of someopt is", self.someopt)
         install.finalize_options(self)
 
     def run(self):
@@ -109,8 +81,6 @@ class GiftGrabInstallCommand(install):
 
 
 # TODO: BUILD_TESTS
-print '>>>> xvid = %s' % (xvid)
-print '>>>> h265 = %s' % (h265)
 
 
 setup(
