@@ -37,6 +37,12 @@ class Features:
 
 
 class Builder:
+
+    """This class generates build requirements
+    like include dirs based on desired features.
+
+    """
+
     def __init__(self, features):
         """Initialise build parameters based on
         passed `features`.
@@ -44,21 +50,6 @@ class Builder:
         @param features arguments as passed by user
         when invoking ``pip install``
         """
-        # self.epiphan_dvi2pcie_duo = '--epiphan-dvi2pcie-duo' in features
-        # self.xvid = '--xvid' in features
-        # self.h265 = '--h265' in features
-        # self.nvenc = '--nvenc' in features
-
-        # TODO
-        # TODO: USE_EPIPHAN_DVI2PCIE_DUO
-
-        # TODO: USE_XVID
-
-        # TODO: USE_H265
-
-        # TODO: USE_NVENC
-
-        # TODO: BUILD_TESTS
         self.name = 'giftgrab'
         self.features = features
 
@@ -160,8 +151,6 @@ class Builder:
         py_dirs = ['/usr/include/python%d.%d' % (version_info.major, version_info.minor)]
         lib_dirs = self.lib_include_dirs()
         return lib_dirs + py_dirs
-                
-
 
 
     def py_compile_args(self):
