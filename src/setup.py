@@ -37,6 +37,7 @@ class GiftGrabInstallCommand(install):
             str_rep += ' H265'
             if self.nvenc:
                 str_rep += ' (NVENC)'
+        if not str_rep: str_rep = 'no features'
         return str_rep.rstrip(',')
 
 
