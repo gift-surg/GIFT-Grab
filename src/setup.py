@@ -28,16 +28,16 @@ class GiftGrabInstallCommand(install):
         """
         str_rep = ''
         if self.epiphan_dvi2pcie_duo:
-            str_rep += 'Epiphan DVI2PCIe Duo '
+            str_rep += 'Epiphan DVI2PCIe Duo, '
         if self.i420:
-            str_rep += 'I420 '
+            str_rep += 'I420, '
         if self.xvid:
-            str_rep += 'Xvid '
+            str_rep += 'Xvid, '
         if self.h265:
             str_rep += 'H265 '
             if self.nvenc:
                 str_rep += '(NVENC)'
-        return str_rep
+        return str_rep.rstrip(',')
 
 
     def initialize_options(self):
@@ -210,7 +210,7 @@ class GiftGrabInstallCommand(install):
         self.__check_command(cmd, err_msg)
 
         # everything fine so far:
-        print('+++++ INFO +++++\n%s%s' % (
+        print('\n+++++ INFO +++++\n%s%s\n\n' % (
                'Installing GiftGrab with support for: ',
                str(self)
                )
