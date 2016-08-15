@@ -25,18 +25,18 @@ pygiftgrab = Extension(
 class GiftGrabBuildExtCommand(build_ext):
     def run(self):
         global libgiftgrab, pygiftgrab, build_opts
-        for e in self.extensions:
-            if e is libgiftgrab:
-                e.include_dirs=build_opts.lib_include_dirs()
-                e.extra_compile_args=build_opts.lib_compile_args()
-                e.extra_link_args=build_opts.lib_link_args()
-            elif e is pygiftgrab:
-                e.include_dirs=build_opts.py_include_dirs()
-                e.extra_compile_args=build_opts.py_compile_args()
-                e.extra_link_args=build_opts.py_link_args()
-                e.libraries=build_opts.py_libraries()
-                e.library_dirs=build_opts.py_library_dirs()
-                e.runtime_library_dirs=build_opts.py_runtime_library_dirs()
+
+        libgiftgrab.include_dirs = build_opts.lib_include_dirs()
+        libgiftgrab.extra_compile_args = build_opts.lib_compile_args()
+        libgiftgrab.extra_link_args = build_opts.lib_link_args()
+
+        pygiftgrab.include_dirs = build_opts.py_include_dirs()
+        pygiftgrab.extra_compile_args = build_opts.py_compile_args()
+        pygiftgrab.extra_link_args = build_opts.py_link_args()
+        pygiftgrab.libraries = build_opts.py_libraries()
+        pygiftgrab.library_dirs = build_opts.py_library_dirs()
+        pygiftgrab.runtime_library_dirs = build_opts.py_runtime_library_dirs()
+
         build_ext.run(self)
 
 class GiftGrabInstallCommand(install):
@@ -82,7 +82,7 @@ class GiftGrabInstallCommand(install):
 
 setup(
     name='giftgrab',
-    version='16.08.11rc1',
+    version='16.08.15rc1',
     ext_modules=[libgiftgrab, pygiftgrab],
     cmdclass={
         'install': GiftGrabInstallCommand,
