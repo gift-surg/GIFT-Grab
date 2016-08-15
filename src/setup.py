@@ -1,7 +1,7 @@
 from setuptools import setup, Extension
 from setuptools.command.install import install
 from setuptools.command.build_ext import build_ext
-from os import environ, mkdir, chdir, getcwd, path, listdir
+from os import environ, mkdir, chdir, getcwd, path, listdir, rmdir
 from build_config import BuildOptions, Features
 
 from subprocess import check_output
@@ -100,6 +100,22 @@ class GiftGrabInstallCommand(install):
                 print('OpenCV does not seem to be installed on your system.')
                 print('OpenCV is needed for Xvid and Epiphan DVI2PCIe Duo (without EpiphanSDK) support.\n\n')
                 raise
+
+        chdir(here)
+        build_dir += '1'
+        mkdir(build_dir)
+        chdir(build_dir)
+
+
+        # check FFmpeg
+        if features.h265 or features.nvenc:
+            try:
+                output_buffer = check_output(['cmake', path.join(here, 'cmake/ffmpeg')])
+            except:
+                print('FFmpeg does not seem to be installed on your system.')
+                print('FFmpeg is needed for H265 support.')
+                raise
+            # TODO also check whether ffmpeg built with correct support
 
         install.run(self)
 

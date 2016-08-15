@@ -52,9 +52,6 @@ OPTION(GENERATE_PERFORMANCE_OUTPUT
     "Performance benchmark reports (requires Boost.Timer and Boost.System)" OFF)
 MARK_AS_ADVANCED(GENERATE_PERFORMANCE_OUTPUT)
 
-# Augment module path to be able to find needed packages
-LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
-
 # Determine whether OpenCV needed
 if((USE_EPIPHAN_DVI2PCIE_DUO AND NOT USE_I420) OR
     USE_XVID)
@@ -105,7 +102,7 @@ endif(USE_OPENCV)
 
 # FFmpeg components
 if(USE_FFMPEG)
-    FIND_PACKAGE(FFmpeg REQUIRED)
+    ADD_SUBDIRECTORY(cmake/ffmpeg)
     INCLUDE_DIRECTORIES(${FFmpeg_INCLUDE_DIRS})
     LIST(APPEND LIBS ${FFmpeg_LIBS})
     LINK_DIRECTORIES(${FFmpeg_LIBRARY_DIRS})
