@@ -16,6 +16,7 @@ before_script:
   - rm -rf "$GiftGrab_BUILD_DIR"
   - mkdir -p "$GiftGrab_BUILD_DIR"
   - cd "$GiftGrab_BUILD_DIR"
+  - export GiftGrab_PyPI_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab_PyPI"
 
 # Linux ##################
 gift-linux:
@@ -69,7 +70,8 @@ gift-linux:
 
 pypi-packaging:
   script:
-    - cd src
+    - rm -rf "$GiftGrab_PyPI_BUILD_DIR"
+    - cd "$GiftGrab_PyPI_BUILD_DIR"
     - pwd
   tags:
     - gift-linux
