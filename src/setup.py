@@ -94,6 +94,18 @@ class GiftGrabInstallCommand(install):
         mkdir(build_dir)
         chdir(build_dir)
 
+        try:
+            output_buffer = check_output(['cmake', path.join(here, 'cmake/cpp11')])
+        except:
+            print('Your compiler does not seem to support C++11.')
+            print('A C++11 supporting compiler is needed to build GiftGrab.\n\n')
+            raise
+
+        chdir(here)
+        build_dir += '-1'
+        mkdir(build_dir)
+        chdir(build_dir)
+
         # check platform supported
         try:
             output_buffer = check_output(['cmake', path.join(here, 'cmake/platform')])

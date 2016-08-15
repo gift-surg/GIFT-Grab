@@ -1,0 +1,20 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 3.2.0)
+
+# C++11
+INCLUDE(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+if(COMPILER_SUPPORTS_CXX11)
+    LIST(APPEND CMAKE_CXX_FLAGS "-std=c++11")
+    SET(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS}
+        CACHE INTERNAL "c++11 flag set")
+else()
+    CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+    if(COMPILER_SUPPORTS_CXX0X)
+        LIST(APPEND CMAKE_CXX_FLAGS "-std=c++0x")
+        SET(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS}
+            CACHE INTERNAL "c++0x flag set")
+    else()
+        MESSAGE(FATAL_ERROR
+            "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support.")
+    endif()
+endif()

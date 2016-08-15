@@ -9,21 +9,7 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 endif()
 
 ADD_SUBDIRECTORY(cmake/platform)
-
-# C++11
-INCLUDE(CheckCXXCompilerFlag)
-CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
-if(COMPILER_SUPPORTS_CXX11)
-    LIST(APPEND CMAKE_CXX_FLAGS "-std=c++11")
-else()
-    CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
-    if(COMPILER_SUPPORTS_CXX0X)
-        LIST(APPEND CMAKE_CXX_FLAGS "-std=c++0x")
-    else()
-        MESSAGE(FATAL_ERROR
-            "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support.")
-    endif()
-endif()
+ADD_SUBDIRECTORY(cmake/cpp11)
 
 # Configurable options, depending on desired functionality
 OPTION(USE_EPIPHAN_DVI2PCIE_DUO
