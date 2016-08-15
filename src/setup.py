@@ -1,13 +1,13 @@
-from setuptools import setup, Extension
+from setuptools import setup
 from distutils.errors import LibError
 from setuptools.command.install import install
-from setuptools.command.build_ext import build_ext
-from os import environ, mkdir, chdir, getcwd, path, listdir, rmdir
+from os import mkdir, chdir, path, listdir
 from subprocess import check_output
 
 class GiftGrabInstallCommand(install):
 
-    """This class parses the user-input feature requests.
+    """This class builds GiftGrab components based on
+    requested features from user.
 
     """
 
