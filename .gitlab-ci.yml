@@ -74,6 +74,8 @@ pypi-packaging:
     - mkdir "$GiftGrab_PyPI_BUILD_DIR"
     - cd "$GiftGrab_PyPI_BUILD_DIR"
     - pwd
+    - python "$GiftGrab_SOURCE_DIR/setup.py" sdist
+    - ls -alh ./*
   tags:
     - gift-linux
 
