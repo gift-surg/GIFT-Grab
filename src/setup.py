@@ -1,4 +1,5 @@
 from setuptools import setup, Extension
+from distutils.errors import LibError
 from setuptools.command.install import install
 from setuptools.command.build_ext import build_ext
 from os import environ, mkdir, chdir, getcwd, path, listdir, rmdir
@@ -53,6 +54,7 @@ class GiftGrabInstallCommand(install):
         ('i420', None, None),
         ('xvid', None, None),
         ('h265', None, None),
+        ('nvenc', None, None),
     ]
 
     def initialize_options(self):
@@ -61,6 +63,7 @@ class GiftGrabInstallCommand(install):
         self.i420 = None
         self.xvid = None
         self.h265 = None
+        self.nvenc = None
 
     def finalize_options(self):
         install.finalize_options(self)
@@ -71,6 +74,7 @@ class GiftGrabInstallCommand(install):
         features.i420 = self.i420
         features.xvid = self.xvid
         features.h265 = self.h265
+        features.nvenc = self.nvenc
         print '<<<<< IN features %s' % (str(features))
 
 
@@ -115,7 +119,30 @@ class GiftGrabInstallCommand(install):
                 print('FFmpeg does not seem to be installed on your system.')
                 print('FFmpeg is needed for H265 support.')
                 raise
-            # TODO also check whether ffmpeg built with correct support
+
+            try:
+                ffmpeg_buildconf = ['ffmpeg', '-buildconf']
+                output_buffer = check_output(ffmpeg_buildconf)
+            except:
+                print('Failed to obtain your FFmpeg build configuration.')
+                print('This command failed: %s %s\n\n' % tuple(ffmpeg_buildconf))
+                raise
+
+            if '--enable-muxer=mp4' not in output_buffer:
+                print('Your FFmpeg does not seem to support MP4.')
+                print('Please install FFmpeg with MP4 support (--enable-muxer=mp4).\n\n')
+                raise LibError('FFmpeg not built with MP4 support')
+
+            if features.nvenc and '--enable-nvenc' not in output_buffer:
+                print('Your FFmpeg does not seem to support NVENC.')
+                print('Please install FFmpeg with NVENC support (--enable-nvenc).\n\n')
+                raise LibError('FFmpeg not built with NVENC support')
+
+            if features.h265 and not features.nvenc and \
+               '--enable-libx265' not in output_buffer:
+                print('Your FFmpeg does not seem to support H265.')
+                print('Please install FFmpeg with x265 support (--enable-libx265).\n\n')
+                raise LibError('FFmpeg not built with x265 support')
 
         install.run(self)
 
