@@ -8,13 +8,7 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     SET(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
 endif()
 
-# Unsupported platforms
-if(APPLE)
-    MESSAGE(FATAL_ERROR "This library does not support Mac OS X yet.")
-endif(APPLE)
-if(WIN32)
-    MESSAGE(FATAL_ERROR "This library does not support Windows yet.")
-endif(WIN32)
+ADD_SUBDIRECTORY(cmake/platform)
 
 # C++11
 INCLUDE(CheckCXXCompilerFlag)

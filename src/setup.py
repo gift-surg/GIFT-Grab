@@ -94,6 +94,18 @@ class GiftGrabInstallCommand(install):
         mkdir(build_dir)
         chdir(build_dir)
 
+        # check platform supported
+        try:
+            output_buffer = check_output(['cmake', path.join(here, 'cmake/platform')])
+        except:
+            print('Your platform does not seem to be supported.\n\n')
+            raise
+
+        chdir(here)
+        build_dir += '0'
+        mkdir(build_dir)
+        chdir(build_dir)
+
         # check OpenCV
         if (features.epiphan_dvi2pcie_duo and not features.i420) \
            or features.xvid:
