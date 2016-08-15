@@ -78,7 +78,10 @@ pypi-packaging:
     - cd "$GiftGrab_PyPI_BUILD_DIR"
     - export GiftGrab_PyPI_DIST_DIR=dist
     - rm -rfv "$GiftGrab_PyPI_DIST_DIR"
-    - python "$GiftGrab_SOURCE_DIR/setup.py" sdist
+    - cd "$GiftGrab_SOURCE_DIR"
+    - python setup.py sdist
+    - mv "$GiftGrab_PyPI_DIST_DIR" "$GiftGrab_PyPI_BUILD_DIR"
+    - cd "$GiftGrab_PyPI_BUILD_DIR"
     - ls -alh ./*
     - PyPI_INSTALLER="$GiftGrab_PyPI_DIST_DIR/$(ls $GiftGrab_PyPI_DIST_DIR | grep tar.gz)"
     - if [ -z "$PyPI_INSTALLER" ]; then echo "nothing"; else tar tf "$PyPI_INSTALLER"; fi
