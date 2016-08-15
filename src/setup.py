@@ -144,6 +144,20 @@ class GiftGrabInstallCommand(install):
                 print('Please install FFmpeg with x265 support (--enable-libx265).\n\n')
                 raise LibError('FFmpeg not built with x265 support')
 
+        chdir(here)
+        build_dir += '2'
+        mkdir(build_dir)
+        chdir(build_dir)
+
+        # check EpiphanSDK
+        if features.i420:
+            try:
+                output_buffer = check_output(['cmake', path.join(here, 'cmake/epiphansdk')])
+            except:
+                print('EpiphanSDK does not seem to be installed on your system.')
+                print('EpiphanSDK is needed for I420 colour space support.')
+                raise
+
         install.run(self)
 
 

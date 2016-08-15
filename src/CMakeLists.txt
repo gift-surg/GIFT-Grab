@@ -127,7 +127,7 @@ endif(USE_I420)
 
 # Epiphan SDK video source
 if(USE_EPIPHANSDK)
-    FIND_PACKAGE(EpiphanSDK REQUIRED)
+    ADD_SUBDIRECTORY(cmake/epiphansdk)
     INCLUDE_DIRECTORIES(${EpiphanSDK_INCLUDE_DIRS})
     LIST(APPEND LIBS ${EpiphanSDK_LIBS})
 
