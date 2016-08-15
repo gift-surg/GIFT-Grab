@@ -83,7 +83,7 @@ pypi-packaging:
     - mv "$GiftGrab_PyPI_DIST_DIR" "$GiftGrab_PyPI_BUILD_DIR"
     - cd "$GiftGrab_PyPI_BUILD_DIR"
     - ls -alh ./*
-    - PyPI_INSTALLER="$GiftGrab_PyPI_DIST_DIR/$(ls $GiftGrab_PyPI_DIST_DIR | grep ta.gz)"
+    - PyPI_INSTALLER="$GiftGrab_PyPI_DIST_DIR/$(ls $GiftGrab_PyPI_DIST_DIR | grep tar.gz)"
     - if [ -z "$PyPI_INSTALLER" ]; then exit 1; fi
     - pip install --target "$GiftGrab_PyPI_INSTALL_DIR" --upgrade "$PyPI_INSTALLER"
   tags:
