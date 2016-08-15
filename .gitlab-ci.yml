@@ -16,8 +16,6 @@ before_script:
   - rm -rf "$GiftGrab_BUILD_DIR"
   - mkdir -p "$GiftGrab_BUILD_DIR"
   - cd "$GiftGrab_BUILD_DIR"
-  - export GiftGrab_PyPI_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab_PyPI"
-  - export GiftGrab_PyPI_INSTALL_DIR="$GiftGrab_PyPI_BUILD_DIR/pip_install"
 
 # Linux ##################
 gift-linux:
@@ -73,6 +71,8 @@ gift-linux:
 
 pypi-packaging:
   script:
+    - GiftGrab_PyPI_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab_PyPI"
+    - GiftGrab_PyPI_INSTALL_DIR="$GiftGrab_PyPI_BUILD_DIR/pip_install"
     - rm -rf "$GiftGrab_PyPI_BUILD_DIR"
     - mkdir "$GiftGrab_PyPI_BUILD_DIR"
     - cd "$GiftGrab_PyPI_BUILD_DIR"
@@ -83,8 +83,8 @@ pypi-packaging:
     - mv "$GiftGrab_PyPI_DIST_DIR" "$GiftGrab_PyPI_BUILD_DIR"
     - cd "$GiftGrab_PyPI_BUILD_DIR"
     - ls -alh ./*
-    - PyPI_INSTALLER="$GiftGrab_PyPI_DIST_DIR/$(ls $GiftGrab_PyPI_DIST_DIR | grep tar.gz)"
-    - if [ -z "$PyPI_INSTALLER" ]; then echo "nothing"; else tar tf "$PyPI_INSTALLER"; fi
+    - PyPI_INSTALLER="$GiftGrab_PyPI_DIST_DIR/$(ls $GiftGrab_PyPI_DIST_DIR | grep ta.gz)"
+    - if [ -z "$PyPI_INSTALLER" ]; then exit 1; fi
     - pip install --target "$GiftGrab_PyPI_INSTALL_DIR" --upgrade "$PyPI_INSTALLER"
   tags:
     - gift-linux
