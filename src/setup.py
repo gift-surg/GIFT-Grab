@@ -3,7 +3,6 @@ from setuptools.command.install import install
 from setuptools.command.build_ext import build_ext
 from os import environ
 from build_config import BuildOptions, Features
-import sys
 
 # TODO: error if c++ doesn't exist
 environ["CC"] = "c++"
@@ -15,14 +14,20 @@ build_opts = BuildOptions(features)
 libgiftgrab = Extension(
     name=build_opts.lib_name(),
     sources=build_opts.lib_sources()
-    )
+)
 
 pygiftgrab = Extension(
     name=build_opts.py_name(),
     sources=build_opts.py_sources()
-    )
+)
 
 class GiftGrabBuildExtCommand(build_ext):
+
+    """This class customises the GiftGrab C++ and Python library
+    based on the user-input feature list.
+
+    """
+
     def run(self):
         global libgiftgrab, pygiftgrab, build_opts
 
@@ -40,6 +45,11 @@ class GiftGrabBuildExtCommand(build_ext):
         build_ext.run(self)
 
 class GiftGrabInstallCommand(install):
+
+    """This class parses the user-input feature requests.
+
+    """
+
     user_options = install.user_options + [
         ('epiphan-dvi2pcie-duo', None, None),
         ('i420', None, None),
@@ -88,4 +98,4 @@ setup(
         'install': GiftGrabInstallCommand,
         'build_ext': GiftGrabBuildExtCommand,
     },
-    )
+)
