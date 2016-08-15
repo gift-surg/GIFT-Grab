@@ -78,6 +78,7 @@ pypi-packaging:
     - ls -alh ./*
   tags:
     - gift-linux
+    - gift-pypi
 
 # Real-time recording ####
 real-time:
