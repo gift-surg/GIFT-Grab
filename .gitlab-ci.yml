@@ -20,6 +20,7 @@ before_script:
 # Linux ##################
 gift-linux:
   script:
+    - pwd
     # bare-bones build
     - cmake -D CMAKE_INSTALL_PREFIX="$INSTALL_DIR" "$GiftGrab_SOURCE_DIR"
     - make -j; exit_on_fail
@@ -63,6 +64,13 @@ gift-linux:
     # no ctest: only checking whether doc building
     # properly here
     - make install
+  tags:
+    - gift-linux
+
+pypi-packaging:
+  script:
+    - cd src
+    - pwd
   tags:
     - gift-linux
 
