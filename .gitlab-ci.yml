@@ -86,17 +86,17 @@ pypi-packaging:
     - PyPI_INSTALLER="$GiftGrab_PyPI_DIST_DIR/$(ls $GiftGrab_PyPI_DIST_DIR | grep tar.gz)"
     - if [ -z "$PyPI_INSTALLER" ]; then exit 1; fi
     # Python and tests (currently all python)
-    - pip install --target "$GiftGrab_PyPI_INSTALL_DIR" --upgrade "$PyPI_INSTALLER"
+    - pip install -vvv --target "$GiftGrab_PyPI_INSTALL_DIR" --upgrade "$PyPI_INSTALLER"
     # H265 support
-    - pip install --install-option="--h265" --target "$GiftGrab_PyPI_INSTALL_DIR" --upgrade "$PyPI_INSTALLER"
+    - pip install -vvv --install-option="--h265" --target "$GiftGrab_PyPI_INSTALL_DIR" --upgrade "$PyPI_INSTALLER"
     # hardware-accelerated H265
-    - pip install --install-option="--h265" --install-option="--nvenc" --target "$GiftGrab_PyPI_INSTALL_DIR" --upgrade "$PyPI_INSTALLER"
+    - pip install -vvv --install-option="--h265" --install-option="--nvenc" --target "$GiftGrab_PyPI_INSTALL_DIR" --upgrade "$PyPI_INSTALLER"
     # Xvid support (OpenCV should get switched here)
-    - pip install --install-option="--xvid" --target "$GiftGrab_PyPI_INSTALL_DIR" --upgrade "$PyPI_INSTALLER"
+    - pip install -vvv --install-option="--xvid" --target "$GiftGrab_PyPI_INSTALL_DIR" --upgrade "$PyPI_INSTALLER"
     # Epiphan DVI2PCIe Duo support (OpenCV)
-    - pip install --install-option="--epiphan-dvi2pcie-duo" --target "$GiftGrab_PyPI_INSTALL_DIR" --upgrade "$PyPI_INSTALLER"
+    - pip install -vvv --install-option="--epiphan-dvi2pcie-duo" --target "$GiftGrab_PyPI_INSTALL_DIR" --upgrade "$PyPI_INSTALLER"
     # Epiphan DVI2PCIe Duo support (EpiphanSDK)
-    - pip install --install-option="--epiphan-dvi2pcie-duo" --install-option="--i420" --target "$GiftGrab_PyPI_INSTALL_DIR" --upgrade "$PyPI_INSTALLER"
+    - pip install -vvv --install-option="--epiphan-dvi2pcie-duo" --install-option="--i420" --target "$GiftGrab_PyPI_INSTALL_DIR" --upgrade "$PyPI_INSTALLER"
   tags:
     - gift-linux
     - gift-pypi
