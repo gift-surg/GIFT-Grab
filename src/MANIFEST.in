@@ -1,4 +1,5 @@
 include build_config.py
+recursive-include api *
 recursive-include cmake *
 recursive-include epiphansdk *
 recursive-include ffmpeg *
