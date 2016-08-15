@@ -3,45 +3,7 @@ from distutils.errors import LibError
 from setuptools.command.install import install
 from setuptools.command.build_ext import build_ext
 from os import environ, mkdir, chdir, getcwd, path, listdir, rmdir
-from build_config import BuildOptions, Features
-
 from subprocess import check_output
-
-features = Features()
-build_opts = BuildOptions(features)
-
-libgiftgrab = Extension(
-    name=build_opts.lib_name(),
-    sources=build_opts.lib_sources()
-)
-
-pygiftgrab = Extension(
-    name=build_opts.py_name(),
-    sources=build_opts.py_sources()
-)
-
-class GiftGrabBuildExtCommand(build_ext):
-
-    """This class customises the GiftGrab C++ and Python library
-    based on the user-input feature list.
-
-    """
-
-    def run(self):
-        global libgiftgrab, pygiftgrab, build_opts
-
-        libgiftgrab.include_dirs = build_opts.lib_include_dirs()
-        libgiftgrab.extra_compile_args = build_opts.lib_compile_args()
-        libgiftgrab.extra_link_args = build_opts.lib_link_args()
-
-        pygiftgrab.include_dirs = build_opts.py_include_dirs()
-        pygiftgrab.extra_compile_args = build_opts.py_compile_args()
-        pygiftgrab.extra_link_args = build_opts.py_link_args()
-        pygiftgrab.libraries = build_opts.py_libraries()
-        pygiftgrab.library_dirs = build_opts.py_library_dirs()
-        pygiftgrab.runtime_library_dirs = build_opts.py_runtime_library_dirs()
-
-        build_ext.run(self)
 
 class GiftGrabInstallCommand(install):
 
