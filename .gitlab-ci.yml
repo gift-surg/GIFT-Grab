@@ -79,7 +79,7 @@ pypi-packaging:
     - python "$GiftGrab_SOURCE_DIR/setup.py" sdist
     - ls -alh ./*
     - PyPI_INSTALLER="$GiftGrab_PyPI_DIST_DIR/$(ls $GiftGrab_PyPI_DIST_DIR | grep tar.gz)"
-    - if [ -z "$PyPI_INSTALLER" ]; then echo "nothing"; else echo "$PyPI_INSTALLER"; fi
+    - if [ -z "$PyPI_INSTALLER" ]; then echo "nothing"; else tar tf "$PyPI_INSTALLER"; fi
     - pip install --target "$GiftGrab_PyPI_INSTALL_DIR" --upgrade "$PyPI_INSTALLER"
   tags:
     - gift-linux
