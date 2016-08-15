@@ -71,6 +71,7 @@ gift-linux:
 pypi-packaging:
   script:
     - rm -rf "$GiftGrab_PyPI_BUILD_DIR"
+    - mkdir "$GiftGrab_PyPI_BUILD_DIR"
     - cd "$GiftGrab_PyPI_BUILD_DIR"
     - pwd
   tags:
