@@ -28,15 +28,15 @@ class GiftGrabInstallCommand(install):
         """
         str_rep = ''
         if self.epiphan_dvi2pcie_duo:
-            str_rep += 'Epiphan DVI2PCIe Duo, '
+            str_rep += 'Epiphan DVI2PCIe Duo,'
         if self.i420:
-            str_rep += 'I420, '
+            str_rep += ' I420,'
         if self.xvid:
-            str_rep += 'Xvid, '
+            str_rep += ' Xvid,'
         if self.h265:
-            str_rep += 'H265 '
+            str_rep += ' H265'
             if self.nvenc:
-                str_rep += '(NVENC)'
+                str_rep += ' (NVENC)'
         return str_rep.rstrip(',')
 
 
