@@ -77,7 +77,7 @@ pypi-packaging:
     - rm -rfv "$GiftGrab_PyPI_DIST_DIR"
     - python "$GiftGrab_SOURCE_DIR/setup.py" sdist
     - ls -alh ./*
-    - installer=$(ls "$GiftGrab_PyPI_DIST_DIR" | grep giftgrab | grep tar | grep gz)
+    - installer="$GiftGrab_PyPI_DIST_DIR/$(ls $GiftGrab_PyPI_DIST_DIR | grep tar.gz)"
     - if [ -z "$installer" ]; then echo "nothing"; else echo "$installer"; fi
   tags:
     - gift-linux
