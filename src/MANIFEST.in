@@ -1,3 +1,9 @@
-recursive-include * *.h
 include build_config.py
 recursive-include cmake *
+recursive-include epiphansdk *
+recursive-include ffmpeg *
+recursive-include opencv *
+recursive-include python *
+recursive-include tests *
+recursive-include utils *
+include CMakeLists.txt

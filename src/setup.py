@@ -77,10 +77,6 @@ class GiftGrabInstallCommand(install):
         features.nvenc = self.nvenc
         print '<<<<< IN features %s' % (str(features))
 
-
-
-        # TODO: error if c++ doesn't exist
-
         # check whether CMake installed
         try:
             output_buffer = check_output(['cmake'])
@@ -181,6 +177,33 @@ class GiftGrabInstallCommand(install):
                 print('EpiphanSDK does not seem to be installed on your system.')
                 print('EpiphanSDK is needed for I420 colour space support.')
                 raise
+
+        chdir(here)
+        build_dir += 'REAL'
+        mkdir(build_dir)
+        chdir(build_dir)
+
+        # moment of truth
+        cmake_args = []
+        cmake_args.append('-DBUILD_PYTHON=ON')
+        cmake_args.append('-DBUILD_TESTS=ON')
+        if features.epiphan_dvi2pcie_duo:
+            cmake_args.append('-DUSE_EPIPHAN_DVI2PCIE_DUO=ON')
+        if features.xvid:
+            cmake_args.append('-DUSE_XVID=ON')
+        if features.h265:
+            cmake_args.append('-DUSE_H265=ON')
+            if features.nvenc:
+                cmake_args.append('-DUSE_NVENC=ON')
+        cmake_cmds = ['cmake', here]
+        cmake_cmds[1:1] = cmake_args
+        try:
+            output_buffer = check_output(cmake_cmds)
+            output_buffer = check_output(['make', '-j'])
+        except:
+            print('There was an error (following below) when trying to build GiftGrab.\n\n')
+            raise
+        # raise RuntimeError(listdir('.'))
 
         install.run(self)
 
