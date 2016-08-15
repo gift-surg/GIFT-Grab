@@ -69,13 +69,11 @@ class GiftGrabInstallCommand(install):
         install.finalize_options(self)
 
     def run(self):
-        global features
-        features.epiphan_dvi2pcie_duo = self.epiphan_dvi2pcie_duo
-        features.i420 = self.i420
-        features.xvid = self.xvid
-        features.h265 = self.h265
-        features.nvenc = self.nvenc
-        print '<<<<< IN features %s' % (str(features))
+        self.epiphan_dvi2pcie_duo = self.epiphan_dvi2pcie_duo
+        self.i420 = self.i420
+        self.xvid = self.xvid
+        self.h265 = self.h265
+        self.nvenc = self.nvenc
 
         # check whether CMake installed
         try:
@@ -115,8 +113,8 @@ class GiftGrabInstallCommand(install):
         chdir(build_dir)
 
         # check OpenCV
-        if (features.epiphan_dvi2pcie_duo and not features.i420) \
-           or features.xvid:
+        if (self.epiphan_dvi2pcie_duo and not self.i420) \
+           or self.xvid:
             try:
                 output_buffer = check_output(['cmake', path.join(here, 'cmake/opencv')])
                 # raise OSError(output_buffer)
@@ -132,7 +130,7 @@ class GiftGrabInstallCommand(install):
 
 
         # check FFmpeg
-        if features.h265 or features.nvenc:
+        if self.h265 or self.nvenc:
             try:
                 output_buffer = check_output(['cmake', path.join(here, 'cmake/ffmpeg')])
             except:
@@ -153,12 +151,12 @@ class GiftGrabInstallCommand(install):
                 print('Please install FFmpeg with MP4 support (--enable-muxer=mp4).\n\n')
                 raise LibError('FFmpeg not built with MP4 support')
 
-            if features.nvenc and '--enable-nvenc' not in output_buffer:
+            if self.nvenc and '--enable-nvenc' not in output_buffer:
                 print('Your FFmpeg does not seem to support NVENC.')
                 print('Please install FFmpeg with NVENC support (--enable-nvenc).\n\n')
                 raise LibError('FFmpeg not built with NVENC support')
 
-            if features.h265 and not features.nvenc and \
+            if self.h265 and not self.nvenc and \
                '--enable-libx265' not in output_buffer:
                 print('Your FFmpeg does not seem to support H265.')
                 print('Please install FFmpeg with x265 support (--enable-libx265).\n\n')
@@ -170,7 +168,7 @@ class GiftGrabInstallCommand(install):
         chdir(build_dir)
 
         # check EpiphanSDK
-        if features.i420:
+        if self.i420:
             try:
                 output_buffer = check_output(['cmake', path.join(here, 'cmake/epiphansdk')])
             except:
@@ -187,13 +185,13 @@ class GiftGrabInstallCommand(install):
         cmake_args = []
         cmake_args.append('-DBUILD_PYTHON=ON')
         cmake_args.append('-DBUILD_TESTS=ON')
-        if features.epiphan_dvi2pcie_duo:
+        if self.epiphan_dvi2pcie_duo:
             cmake_args.append('-DUSE_EPIPHAN_DVI2PCIE_DUO=ON')
-        if features.xvid:
+        if self.xvid:
             cmake_args.append('-DUSE_XVID=ON')
-        if features.h265:
+        if self.h265:
             cmake_args.append('-DUSE_H265=ON')
-            if features.nvenc:
+            if self.nvenc:
                 cmake_args.append('-DUSE_NVENC=ON')
         cmake_cmds = ['cmake', here]
         cmake_cmds[1:1] = cmake_args
