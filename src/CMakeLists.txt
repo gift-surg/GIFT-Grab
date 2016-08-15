@@ -91,16 +91,7 @@ SET(SOURCES
 
 # OpenCV components
 if(USE_OPENCV)
-    FIND_PACKAGE(OpenCV REQUIRED)
-    INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
-    LIST(APPEND LIBS ${OpenCV_LIBS})
-    ADD_DEFINITIONS(-DUSE_OPENCV)
-    
-    INCLUDE_DIRECTORIES(opencv)
-    LIST(APPEND HEADERS opencv/opencv_video_source.h)
-    LIST(APPEND HEADERS opencv/opencv_video_target.h)
-    LIST(APPEND SOURCES opencv/opencv_video_source.cpp)
-    LIST(APPEND SOURCES opencv/opencv_video_target.cpp)
+    INCLUDE(cmake/GiftGrab_OpenCV.cmake)
 endif(USE_OPENCV)
 
 # FFmpeg components
