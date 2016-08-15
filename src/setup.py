@@ -1,7 +1,8 @@
 from setuptools import setup
 from distutils.errors import LibError
 from setuptools.command.install import install
-from os import mkdir, chdir, path, listdir
+from os import mkdir, chdir, listdir
+from os.path import join, abspath, dirname
 from subprocess import check_output
 
 class GiftGrabInstallCommand(install):
@@ -11,13 +12,13 @@ class GiftGrabInstallCommand(install):
 
     """
 
-    user_options = install.user_options + [
-        ('epiphan-dvi2pcie-duo', None, None),
-        ('i420', None, None),
-        ('xvid', None, None),
-        ('h265', None, None),
-        ('nvenc', None, None),
-    ]
+    user_options = install.user_options + \
+                  [('epiphan-dvi2pcie-duo', None, None),
+                   ('i420', None, None),
+                   ('xvid', None, None),
+                   ('h265', None, None),
+                   ('nvenc', None, None)]
+
 
     def initialize_options(self):
         install.initialize_options(self)
@@ -27,121 +28,146 @@ class GiftGrabInstallCommand(install):
         self.h265 = None
         self.nvenc = None
 
+
     def finalize_options(self):
         install.finalize_options(self)
 
+
+    def __new_build_dir(self):
+        """Create new build directory and go there,
+        incrementing build directory index.
+
+        """
+        chdir(self.here)
+        self.build_dir_index += 1
+        build_dir = '%s_%d' % (self.build_dir_prefix, self.build_dir_index)
+        mkdir(build_dir)
+        chdir(build_dir)
+
+
+    def __check_command(self, cmd, err_msg):
+        """Check whether `cmd` exits normally,
+        displaying `err_msg` and propagating the
+        raised exception if not.
+
+        This function changes to a new build
+        directory before the check.
+
+        @param cmd
+        @param err_msg
+        @return output of `cmd`
+        """
+        self.__new_build_dir()
+        try:
+            return check_output(cmd)
+        except:
+            __print_err_msg(err_msg)
+            raise
+
+
+    def __print_err_msg(self, err_msg):
+        """Print error message in a nice and
+        standard format.
+
+        """
+        print('%s\n\n' % (err_msg))
+
+
     def run(self):
-        self.epiphan_dvi2pcie_duo = self.epiphan_dvi2pcie_duo
-        self.i420 = self.i420
-        self.xvid = self.xvid
-        self.h265 = self.h265
-        self.nvenc = self.nvenc
+        self.build_dir_prefix = '_giftgrab-build'
+        self.build_dir_index = 0
+        self.here = abspath(dirname(__file__))
 
         # check whether CMake installed
-        try:
-            output_buffer = check_output(['cmake'])
-        except:
-            print('CMake does not seem to be installed on your system.\n\n')
-            print('CMake is needed to build GiftGrab.')
-            raise
+        err_msg = '%s\n%s' % (
+            'CMake does not seem to be installed on your system.',
+            'CMake is needed to build GiftGrab.'
+        )
+        self.__check_command(['cmake'], err_msg)
 
-        build_dir = '_buildinglskdjf'
-        here = path.abspath(path.dirname(__file__))
-        mkdir(build_dir)
-        chdir(build_dir)
-
-        try:
-            output_buffer = check_output(['cmake', path.join(here, 'cmake/cpp11')])
-        except:
-            print('Your compiler does not seem to support C++11.')
-            print('A C++11 supporting compiler is needed to build GiftGrab.\n\n')
-            raise
-
-        chdir(here)
-        build_dir += '-1'
-        mkdir(build_dir)
-        chdir(build_dir)
+        # check C++11 support
+        cmd = ['cmake', join(join(self.here, 'cmake'), 'cpp11')]
+        err_msg = '%s\n%s' % (
+            'Your compiler does not seem to support C++11.',
+            'A C++11 supporting compiler is needed to build GiftGrab.'
+        )
+        self.__check_command(cmd, err_msg)
 
         # check platform supported
-        try:
-            output_buffer = check_output(['cmake', path.join(here, 'cmake/platform')])
-        except:
-            print('Your platform does not seem to be supported.\n\n')
-            raise
-
-        chdir(here)
-        build_dir += '0'
-        mkdir(build_dir)
-        chdir(build_dir)
+        cmd = ['cmake', join(join(self.here, 'cmake'), 'platform')]
+        err_msg = 'Your platform does not seem to be supported.'
+        self.__check_command(cmd, err_msg)
 
         # check OpenCV
         if (self.epiphan_dvi2pcie_duo and not self.i420) \
            or self.xvid:
-            try:
-                output_buffer = check_output(['cmake', path.join(here, 'cmake/opencv')])
-                # raise OSError(output_buffer)
-            except:
-                print('OpenCV does not seem to be installed on your system.')
-                print('OpenCV is needed for Xvid and Epiphan DVI2PCIe Duo (without EpiphanSDK) support.\n\n')
-                raise
-
-        chdir(here)
-        build_dir += '1'
-        mkdir(build_dir)
-        chdir(build_dir)
-
+            cmd = ['cmake', join(join(self.here, 'cmake'), 'opencv')]
+            err_msg = '%s\n%s%s' % (
+                'OpenCV does not seem to be installed on your system.',
+                'OpenCV is needed for Xvid and Epiphan DVI2PCIe Duo ',
+                '(without EpiphanSDK) support.'
+            )
+            self.__check_command(cmd, err_msg)
 
         # check FFmpeg
         if self.h265 or self.nvenc:
-            try:
-                output_buffer = check_output(['cmake', path.join(here, 'cmake/ffmpeg')])
-            except:
-                print('FFmpeg does not seem to be installed on your system.')
-                print('FFmpeg is needed for H265 support.')
-                raise
+            cmd = ['cmake', join(join(self.here, 'cmake'), 'ffmpeg')]
+            err_msg = '%s\n%s' % (
+                'FFmpeg does not seem to be installed on your system.',
+                'FFmpeg is needed for H265 support.'
+            )
+            self.__check_command(cmd, err_msg)
 
-            try:
-                ffmpeg_buildconf = ['ffmpeg', '-buildconf']
-                output_buffer = check_output(ffmpeg_buildconf)
-            except:
-                print('Failed to obtain your FFmpeg build configuration.')
-                print('This command failed: %s %s\n\n' % tuple(ffmpeg_buildconf))
-                raise
+            # built correctly ?
+            cmd = ['ffmpeg', '-buildconf']
+            err_msg = '%s\n%s' % (
+                'Failed to obtain your FFmpeg build configuration.',
+                'This command failed: %s %s' % tuple(cmd)
+            )
+            output_buffer = self.__check_command(cmd, err_msg)
 
-            if '--enable-muxer=mp4' not in output_buffer:
-                print('Your FFmpeg does not seem to support MP4.')
-                print('Please install FFmpeg with MP4 support (--enable-muxer=mp4).\n\n')
-                raise LibError('FFmpeg not built with MP4 support')
+            opt = '--enable-muxer=mp4'
+            if opt not in output_buffer:
+                err_summary = 'Your FFmpeg does not seem to support MP4.'
+                err_msg = '%s\n%s%s' % (
+                    err_summary,
+                    'Please install FFmpeg with MP4 support ',
+                    '(%s).' % (opt)
+                )
+                self.__print_err_msg(err_msg)
+                raise LibError(err_summary)
 
-            if self.nvenc and '--enable-nvenc' not in output_buffer:
-                print('Your FFmpeg does not seem to support NVENC.')
-                print('Please install FFmpeg with NVENC support (--enable-nvenc).\n\n')
-                raise LibError('FFmpeg not built with NVENC support')
+            opt = '--enable-nvenc'
+            if self.nvenc and opt not in output_buffer:
+                err_summary = 'Your FFmpeg does not seem to support NVENC.'
+                err_msg = '%s\n%s%s' % (
+                    err_summary,
+                    'Please install FFmpeg with NVENC support ',
+                    '(%s).' % (opt)
+                )
+                self.__print_err_msg(err_msg)
+                raise LibError(err_summary)
 
+            opt = '--enable-libx265'
             if self.h265 and not self.nvenc and \
-               '--enable-libx265' not in output_buffer:
-                print('Your FFmpeg does not seem to support H265.')
-                print('Please install FFmpeg with x265 support (--enable-libx265).\n\n')
-                raise LibError('FFmpeg not built with x265 support')
-
-        chdir(here)
-        build_dir += '2'
-        mkdir(build_dir)
-        chdir(build_dir)
+               opt not in output_buffer:
+                err_summary = 'Your FFmpeg does not seem to support x265.'
+                err_msg = '%s\n%s%s' % (
+                    err_summary,
+                    'Please install FFmpeg with x265 support ',
+                    '(%s).' % (opt)
+                )
+                self.__print_err_msg(err_msg)
+                raise LibError(err_summary)
 
         # check EpiphanSDK
         if self.i420:
-            try:
-                output_buffer = check_output(['cmake', path.join(here, 'cmake/epiphansdk')])
-            except:
-                print('EpiphanSDK does not seem to be installed on your system.')
-                print('EpiphanSDK is needed for I420 colour space support.')
-                raise
-
-        chdir(here)
-        build_dir += 'REAL'
-        mkdir(build_dir)
-        chdir(build_dir)
+            cmd = ['cmake', join(join(self.here, 'cmake'), 'epiphansdk')]
+            err_msg = '%s\n%s' % (
+                'EpiphanSDK does not seem to be installed on your system.',
+                'EpiphanSDK is needed for I420 colour space support.'
+            )
+            self.__check_command(cmd, err_msg)
 
         # moment of truth
         cmake_args = []
@@ -155,16 +181,15 @@ class GiftGrabInstallCommand(install):
             cmake_args.append('-DUSE_H265=ON')
             if self.nvenc:
                 cmake_args.append('-DUSE_NVENC=ON')
-        cmake_cmds = ['cmake', here]
-        cmake_cmds[1:1] = cmake_args
-        try:
-            output_buffer = check_output(cmake_cmds)
-            output_buffer = check_output(['make', '-j'])
-        except:
-            print('There was an error (following below) when trying to build GiftGrab.\n\n')
-            raise
-        # raise RuntimeError(listdir('.'))
+        cmd = ['cmake', self.here]
+        cmd[1:1] = cmake_args
+        err_msg = '%s\n%s' % (
+            'There was an error (details below) ',
+            'when trying to build GiftGrab.'
+        )
+        self.__check_command(cmd, err_msg)
 
+        # everything fine so far:
         install.run(self)
 
 
