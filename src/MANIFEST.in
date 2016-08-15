@@ -1,2 +1,3 @@
 recursive-include * *.h
 include build_config.py
+recursive-include cmake *

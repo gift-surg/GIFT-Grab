@@ -1,14 +1,10 @@
 from setuptools import setup, Extension
 from setuptools.command.install import install
 from setuptools.command.build_ext import build_ext
-from os import environ
+from os import environ, mkdir, chdir, getcwd, path, listdir
 from build_config import BuildOptions, Features
 
 from subprocess import check_output
-
-# TODO: error if c++ doesn't exist
-environ["CC"] = "c++"
-environ["CXX"] = "c++"
 
 features = Features()
 build_opts = BuildOptions(features)
@@ -78,15 +74,34 @@ class GiftGrabInstallCommand(install):
         print '<<<<< IN features %s' % (str(features))
 
 
+
+        # TODO: error if c++ doesn't exist
+
         # check whether CMake installed
         try:
-            output_buffer = check_output(["cmake"])
+            output_buffer = check_output(['cmake'])
         except:
-            print('CMake does not seem to be installed on your system.')
+            print('CMake does not seem to be installed on your system.\n\n')
             print('CMake is needed to build GiftGrab.')
             raise
 
-        if requirements_ok: install.run(self)
+        build_dir = '_buildinglskdjf'
+        here = path.abspath(path.dirname(__file__))
+        mkdir(build_dir)
+        chdir(build_dir)
+
+        # check OpenCV
+        if (features.epiphan_dvi2pcie_duo and not features.i420) \
+           or features.xvid:
+            try:
+                output_buffer = check_output(['cmake', path.join(here, 'cmake/opencv')])
+                # raise OSError(output_buffer)
+            except:
+                print('OpenCV does not seem to be installed on your system.')
+                print('OpenCV is needed for Xvid and Epiphan DVI2PCIe Duo (without EpiphanSDK) support.\n\n')
+                raise
+
+        install.run(self)
 
 
 # TODO: pip python dependencies (e.g. py.test)
