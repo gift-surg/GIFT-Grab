@@ -4,6 +4,8 @@ from setuptools.command.build_ext import build_ext
 from os import environ
 from build_config import BuildOptions, Features
 
+from subprocess import check_output
+
 # TODO: error if c++ doesn't exist
 environ["CC"] = "c++"
 environ["CXX"] = "c++"
@@ -74,7 +76,17 @@ class GiftGrabInstallCommand(install):
         features.xvid = self.xvid
         features.h265 = self.h265
         print '<<<<< IN features %s' % (str(features))
-        install.run(self)
+
+
+        # check whether CMake installed
+        try:
+            output_buffer = check_output(["cmake"])
+        except:
+            print('CMake does not seem to be installed on your system.')
+            print('CMake is needed to build GiftGrab.')
+            raise
+
+        if requirements_ok: install.run(self)
 
 
 # TODO: pip python dependencies (e.g. py.test)
@@ -93,9 +105,7 @@ class GiftGrabInstallCommand(install):
 setup(
     name='giftgrab',
     version='16.08.15rc1',
-    ext_modules=[libgiftgrab, pygiftgrab],
     cmdclass={
         'install': GiftGrabInstallCommand,
-        'build_ext': GiftGrabBuildExtCommand,
     },
 )
