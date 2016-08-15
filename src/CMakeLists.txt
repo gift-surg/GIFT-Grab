@@ -81,7 +81,6 @@ SET(HEADERS
     api/maskframe.h
     api/factory.h
     api/except.h
-    CACHE INTERNAL "Basic header files"
 )
 SET(SOURCES
     api/videoframe.cpp
@@ -92,8 +91,16 @@ SET(SOURCES
 
 # OpenCV components
 if(USE_OPENCV)
-    ADD_DEFINITIONS(-DUSE_OPENCV)
     ADD_SUBDIRECTORY(cmake/opencv)
+    INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
+    LIST(APPEND LIBS ${OpenCV_LIBS})
+    ADD_DEFINITIONS(-DUSE_OPENCV)
+
+    INCLUDE_DIRECTORIES(opencv)
+    LIST(APPEND HEADERS opencv/opencv_video_source.h)
+    LIST(APPEND HEADERS opencv/opencv_video_target.h)
+    LIST(APPEND SOURCES opencv/opencv_video_source.cpp)
+    LIST(APPEND SOURCES opencv/opencv_video_target.cpp)
 endif(USE_OPENCV)
 
 # FFmpeg components
