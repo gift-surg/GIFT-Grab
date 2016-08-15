@@ -91,7 +91,7 @@ SET(SOURCES
 
 # OpenCV components
 if(USE_OPENCV)
-    INCLUDE(cmake/GiftGrab_OpenCV.cmake)
+    SUBDIRS(cmake/opencv)
 endif(USE_OPENCV)
 
 # FFmpeg components
