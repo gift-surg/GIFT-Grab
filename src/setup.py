@@ -5,6 +5,7 @@ from os import mkdir, chdir, listdir
 from os.path import join, abspath, dirname
 from subprocess import check_output
 
+
 class GiftGrabInstallCommand(install):
 
     """This class builds GiftGrab components based on
@@ -18,6 +19,25 @@ class GiftGrabInstallCommand(install):
                    ('xvid', None, None),
                    ('h265', None, None),
                    ('nvenc', None, None)]
+
+
+    def __repr__(self):
+        """A string representation of the configuration.
+
+        @return
+        """
+        str_rep = ''
+        if self.epiphan_dvi2pcie_duo:
+            str_rep += 'Epiphan DVI2PCIe Duo '
+        if self.i420:
+            str_rep += 'I420 '
+        if self.xvid:
+            str_rep += 'Xvid '
+        if self.h265:
+            str_rep += 'H265 '
+            if self.nvenc:
+                str_rep += '(NVENC)'
+        return str_rep
 
 
     def initialize_options(self):
@@ -70,7 +90,7 @@ class GiftGrabInstallCommand(install):
         standard format.
 
         """
-        print('%s\n\n' % (err_msg))
+        print('!!!!! ERROR !!!!!\n%s\n\n' % (err_msg))
 
 
     def run(self):
@@ -190,6 +210,11 @@ class GiftGrabInstallCommand(install):
         self.__check_command(cmd, err_msg)
 
         # everything fine so far:
+        print('+++++ INFO +++++\n%s%s' % (
+               'Installing GiftGrab with support for: ',
+               str(self)
+               )
+        )
         install.run(self)
 
 
