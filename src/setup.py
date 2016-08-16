@@ -66,7 +66,7 @@ class GiftGrabInstallCommand(install):
         chdir(build_dir)
 
 
-    def __check_command(self, cmd, err_msg):
+    def __check_command(self, cmd, err_msg, new_dir=True):
         """Check whether `cmd` exits normally,
         displaying `err_msg` and propagating the
         raised exception if not.
@@ -76,13 +76,16 @@ class GiftGrabInstallCommand(install):
 
         @param cmd
         @param err_msg
+        @param new_dir
         @return output of `cmd`
         """
-        self.__new_build_dir()
+        if new_dir: self.__new_build_dir()
         try:
-            return check_output(cmd)
+            print('+++++ Running: %s\n\n' % (' '.join(cmd)))
+            output_buffer = check_output(cmd)
+            return output_buffer
         except:
-            __print_err_msg(err_msg)
+            self.__print_err_msg(err_msg)
             raise
 
 
