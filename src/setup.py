@@ -1,7 +1,8 @@
 from setuptools import setup
+from site import getsitepackages
 from distutils.errors import LibError
 from setuptools.command.install import install
-from os import mkdir, chdir, listdir
+from os import mkdir, chdir, listdir, getcwd, symlink, rename
 from os.path import join, abspath, dirname
 from subprocess import check_output
 
@@ -212,6 +213,8 @@ class GiftGrabInstallCommand(install):
             'when trying to build GiftGrab.'
         )
         self.__check_command(cmd, err_msg)
+        cmd = ['make', '-j', 'install']
+        self.__check_command(cmd, err_msg, False)
 
         # everything fine so far:
         print('\n+++++ INFO +++++\n%s%s\n\n' % (
