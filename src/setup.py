@@ -216,6 +216,30 @@ class GiftGrabInstallCommand(install):
         cmd = ['make', '-j', 'install']
         self.__check_command(cmd, err_msg, False)
 
+        # TODO: the following is a massive hack
+        # to create a symlink from Python base to
+        # installed GiftGrab Python lib. Consider
+        # replacing with something better
+        cmd = ['cmake', '-L', self.here]
+        err_msg = '%s\n%s %s' % (
+            'Could not obtain CMake install prefix path.',
+            'This step is necessary to make',
+            'GiftGrab Python API accessible.'
+        )
+        output_buffer = self.__check_command(cmd, err_msg, False)
+        cmake_install_prefix = output_buffer.split(
+            'CMAKE_INSTALL_PREFIX:PATH=')[1]
+        cmake_install_prefix = cmake_install_prefix.split('\n')[0]
+        pylib_path = join(join(join(cmake_install_prefix, 'lib'),
+                               'giftgrab'),
+                          'pygiftgrab.so')
+        pylib_link = join(getsitepackages()[0], 'pygiftgrab.so')
+        # will create temp link first, and then move to actual one
+        # to prevent "already exists" error
+        tmp_pylib_link = pylib_link + '.tmp'
+        symlink(pylib_path, tmp_pylib_link)
+        rename(tmp_pylib_link, pylib_link)
+
         # everything fine so far:
         print('\n+++++ INFO +++++\n%s%s\n\n' % (
                'Installing GiftGrab with support for: ',
