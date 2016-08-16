@@ -224,14 +224,6 @@ class GiftGrabInstallCommand(install):
 # TODO: resources (e.g. sources, headers, include dirs,
 # etc. based on selected features)
 
-
-
-# print '>>>>> %s' % (sys.argv)
-
-
-# TODO: BUILD_TESTS
-
-
 setup(
     name='giftgrab',
     version='16.08.15rc1',
