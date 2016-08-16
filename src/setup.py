@@ -214,7 +214,8 @@ class GiftGrabInstallCommand(install):
         )
         self.__check_command(cmd, err_msg)
         cmd = ['make', '-j', 'install']
-        self.__check_command(cmd, err_msg, False)
+        output_buffer = self.__check_command(cmd, err_msg, False)
+        print(output_buffer)
 
         # TODO: the following is a massive hack
         # to create a symlink from Python base to
@@ -234,18 +235,24 @@ class GiftGrabInstallCommand(install):
                                'giftgrab'),
                           'pygiftgrab.so')
         pylib_link = join(getsitepackages()[0], 'pygiftgrab.so')
-        # will create temp link first, and then move to actual one
-        # to prevent "already exists" error
-        tmp_pylib_link = pylib_link + '.tmp'
-        symlink(pylib_path, tmp_pylib_link)
-        rename(tmp_pylib_link, pylib_link)
-
-        # everything fine so far:
         print('\n+++++ INFO +++++\n%s%s\n\n' % (
                'Installing GiftGrab with support for: ',
                str(self)
                )
         )
+        # will create temp link first, and then move to actual one
+        # to prevent "already exists" error
+        tmp_pylib_link = pylib_link + '.tmp'
+        symlink(pylib_path, tmp_pylib_link)
+        rename(tmp_pylib_link, pylib_link)
+        print('+++++ INFO +++++\n%s %s %s %s\n\n' % (
+              'Created symlink',
+              pylib_link,
+              'to',
+              pylib_path)
+        )
+
+        # everything fine so far:
         install.run(self)
 
 
