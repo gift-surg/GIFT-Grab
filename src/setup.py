@@ -1,3 +1,4 @@
+from __future__ import print_function
 from setuptools import setup
 from site import getsitepackages
 from distutils.errors import LibError
@@ -5,6 +6,7 @@ from setuptools.command.install import install
 from os import mkdir, chdir, listdir, getcwd, symlink, rename
 from os.path import join, abspath, dirname
 from subprocess import check_output
+from sys import stderr
 
 
 class GiftGrabInstallCommand(install):
@@ -95,7 +97,7 @@ class GiftGrabInstallCommand(install):
         standard format.
 
         """
-        print('!!!!! ERROR !!!!!\n%s\n\n' % (err_msg))
+        print('!!!!! ERROR !!!!!\n%s\n\n' % (err_msg), file=stderr)
 
 
     def run(self):
