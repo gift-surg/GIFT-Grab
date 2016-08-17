@@ -82,8 +82,8 @@ pypi-packaging:
     - cd "$GiftGrab_PyPI_BUILD_DIR"
     - virtualenv $GiftGrab_venv
     - cd $GiftGrab_venv
-    - source bin/activate
     - python -c "from site import getsitepackages"  # no output = success!
+    - source bin/activate
     - pwd
     - python -c "from site import getsitepackages"  # should err!
     - deactivate
