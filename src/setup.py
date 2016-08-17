@@ -77,7 +77,6 @@ class GiftGrabInstallCommand(install):
         self.xvid = None
         self.h265 = None
         self.nvenc = None
-        self.cmake_install_prefix = None
 
 
     def finalize_options(self):
@@ -251,9 +250,8 @@ class GiftGrabInstallCommand(install):
             cmake_args.append('-DUSE_H265=ON')
             if self.nvenc:
                 cmake_args.append('-DUSE_NVENC=ON')
-        if self.cmake_install_prefix:
-            cmake_args.append('-DCMAKE_INSTALL_PREFIX=%s' % (
-                self.cmake_install_prefix))
+        cmake_args.append('-DCMAKE_INSTALL_PREFIX=%s' % (
+            join(get_pip_root(), 'giftgrab')))
         cmd = ['cmake', self.here]
         cmd[1:1] = cmake_args
         err_msg = '%s\n%s' % (
