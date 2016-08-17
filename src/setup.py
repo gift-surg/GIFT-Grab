@@ -123,6 +123,22 @@ class GiftGrabInstallCommand(install):
         err_msg = 'Your platform does not seem to be supported.'
         self.__check_command(cmd, err_msg)
 
+        # check PythonLibs
+        cmd = ['cmake', join(join(self.here, 'cmake'), 'pythonlibs')]
+        err_msg = '%s\n%s' % (
+            'PythonLibs do not seem to be installed on your system.',
+            'PythonLibs are needed for the GiftGrab Python API.'
+        )
+        self.__check_command(cmd, err_msg)
+
+        # check Boost.Python
+        cmd = ['cmake', join(join(self.here, 'cmake'), 'boost.python')]
+        err_msg = '%s\n%s' % (
+            'Boost.Python does not seem to be installed on your system.',
+            'Boost.Python is needed for the GiftGrab Python API.'
+        )
+        self.__check_command(cmd, err_msg)
+
         # check OpenCV
         if (self.epiphan_dvi2pcie_duo and not self.i420) \
            or self.xvid:
