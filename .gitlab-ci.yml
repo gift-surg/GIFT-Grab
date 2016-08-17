@@ -70,7 +70,7 @@ gift-linux:
 pypi-packaging:
   script:
     - GiftGrab_PyPI_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab_PyPI"
-    - GiftGrab_PyPI_INSTALL_DIR="$GiftGrab_PyPI_BUILD_DIR/pip_install"
+    - GiftGrab_venv=venv
     - rm -rf "$GiftGrab_PyPI_BUILD_DIR"
     - mkdir "$GiftGrab_PyPI_BUILD_DIR"
     - cd "$GiftGrab_PyPI_BUILD_DIR"
@@ -80,21 +80,26 @@ pypi-packaging:
     - python setup.py sdist
     - mv "$GiftGrab_PyPI_DIST_DIR" "$GiftGrab_PyPI_BUILD_DIR"
     - cd "$GiftGrab_PyPI_BUILD_DIR"
-    - ls -alh ./*
-    - PyPI_INSTALLER="$GiftGrab_PyPI_DIST_DIR/$(ls $GiftGrab_PyPI_DIST_DIR | grep tar.gz)"
-    - if [ -z "$PyPI_INSTALLER" ]; then exit 1; fi
-    # Python and tests (currently all python)
-    - pip install -vvv --target "$GiftGrab_PyPI_INSTALL_DIR" --upgrade "$PyPI_INSTALLER"
-    # H265 support
-    - pip install -vvv --install-option="--h265" --target "$GiftGrab_PyPI_INSTALL_DIR" --upgrade "$PyPI_INSTALLER"
-    # hardware-accelerated H265
-    - pip install -vvv --install-option="--h265" --install-option="--nvenc" --target "$GiftGrab_PyPI_INSTALL_DIR" --upgrade "$PyPI_INSTALLER"
-    # Xvid support (OpenCV should get switched here)
-    - pip install -vvv --install-option="--h265" --install-option="--nvenc" --install-option="--xvid" --target "$GiftGrab_PyPI_INSTALL_DIR" --upgrade "$PyPI_INSTALLER"
-    # Epiphan DVI2PCIe Duo support (OpenCV)
-    - pip install -vvv --install-option="--h265" --install-option="--nvenc" --install-option="--xvid" --install-option="--epiphan-dvi2pcie-duo" --target "$GiftGrab_PyPI_INSTALL_DIR" --upgrade "$PyPI_INSTALLER"
-    # Epiphan DVI2PCIe Duo support (EpiphanSDK)
-    - pip install -vvv --install-option="--h265" --install-option="--nvenc" --install-option="--xvid" --install-option="--epiphan-dvi2pcie-duo" --install-option="--i420" --target "$GiftGrab_PyPI_INSTALL_DIR" --upgrade "$PyPI_INSTALLER"
+    - virtualenv $GiftGrab_venv
+    - cd $GiftGrab_venv
+    - source bin/activate
+    - pwd
+    - deactivate
+    # - ls -alh ./*
+    # - PyPI_INSTALLER="$GiftGrab_PyPI_DIST_DIR/$(ls $GiftGrab_PyPI_DIST_DIR | grep tar.gz)"
+    # - if [ -z "$PyPI_INSTALLER" ]; then exit 1; fi
+    # # Python and tests (currently all python)
+    # - pip install -vvv --upgrade "$PyPI_INSTALLER"
+    # # H265 support
+    # - pip install -vvv --install-option="--h265" --upgrade "$PyPI_INSTALLER"
+    # # hardware-accelerated H265
+    # - pip install -vvv --install-option="--h265" --install-option="--nvenc" --upgrade "$PyPI_INSTALLER"
+    # # Xvid support (OpenCV should get switched here)
+    # - pip install -vvv --install-option="--h265" --install-option="--nvenc" --install-option="--xvid" --upgrade "$PyPI_INSTALLER"
+    # # Epiphan DVI2PCIe Duo support (OpenCV)
+    # - pip install -vvv --install-option="--h265" --install-option="--nvenc" --install-option="--xvid" --install-option="--epiphan-dvi2pcie-duo" --upgrade "$PyPI_INSTALLER"
+    # # Epiphan DVI2PCIe Duo support (EpiphanSDK)
+    # - pip install -vvv --install-option="--h265" --install-option="--nvenc" --install-option="--xvid" --install-option="--epiphan-dvi2pcie-duo" --install-option="--i420" --upgrade "$PyPI_INSTALLER"
   tags:
     - gift-linux
     - gift-pypi
