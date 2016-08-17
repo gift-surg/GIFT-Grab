@@ -140,7 +140,9 @@ VideoFrame_BGRA::VideoFrame_BGRA(const size_t rows, const size_t cols)
 #ifdef USE_OPENCV
     init_from_opencv_mat(cv::Mat::zeros(rows, cols, CV_8UC4));
 #else
-    unsigned char data[rows * cols * 4] = { 0 };
+    size_t data_length = rows * cols * 4;
+    unsigned char data[data_length];
+    memset(data, 0, data_length * sizeof(unsigned char));
     init_from_pointer(data, rows, cols);
 #endif // USE_OPENCV
 }
