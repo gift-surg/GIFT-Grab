@@ -83,7 +83,9 @@ pypi-packaging:
     - virtualenv $GiftGrab_venv
     - cd $GiftGrab_venv
     - source bin/activate
+    - python -c "from site import getsitepackages"  # no output = success!
     - pwd
+    - python -c "from site import getsitepackages"  # should err!
     - deactivate
     # - ls -alh ./*
     # - PyPI_INSTALLER="$GiftGrab_PyPI_DIST_DIR/$(ls $GiftGrab_PyPI_DIST_DIR | grep tar.gz)"
