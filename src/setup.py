@@ -1,12 +1,18 @@
 from __future__ import print_function
 from setuptools import setup
-from site import getsitepackages
 from distutils.errors import LibError
 from setuptools.command.install import install
 from os import mkdir, chdir, listdir, getcwd, symlink, rename
 from os.path import join, abspath, dirname
 from subprocess import check_output
 from sys import stderr
+import sys
+venv = hasattr(sys, 'real_prefix')
+if not venv:
+    # see https://github.com/pypa/virtualenv/issues/355
+    from site import getsitepackages
+else:
+    from sys import exec_prefix, version_info
 
 
 class GiftGrabInstallCommand(install):
@@ -252,7 +258,16 @@ class GiftGrabInstallCommand(install):
         pylib_path = join(join(join(cmake_install_prefix, 'lib'),
                                'giftgrab'),
                           'pygiftgrab.so')
-        pylib_link = join(getsitepackages()[0], 'pygiftgrab.so')
+        if not venv:
+            site_packages = getsitepackages()[0]
+        else:
+            # see https://github.com/pypa/virtualenv/issues/355
+            site_packages = 'python%d.%d' % (version_info.major,
+                                             version_info.minor)
+            site_packages = join('lib', site_packages)
+            site_packages = join(site_packages, 'site-packages')
+            site_packages = join(exec_prefix, site_packages)
+        pylib_link = join(site_packages, 'pygiftgrab.so')
         print('\n+++++ INFO +++++\n%s%s\n\n' % (
                'Installing GiftGrab with support for: ',
                str(self)
