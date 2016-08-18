@@ -331,6 +331,7 @@ class GiftGrabInstallCommand(install):
         )
 
         # everything fine so far:
+        chdir(self.here)
         install.run(self)
 
 class GiftGrabInstallLibCommand(install_lib):
