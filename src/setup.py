@@ -1,14 +1,16 @@
 from __future__ import print_function
-from setuptools import setup
+from setuptools import setup, Extension
 from distutils.errors import LibError
 from setuptools.command.install import install
+from distutils.command.build_ext import build_ext
+from distutils.command.install_lib import install_lib
 from os import mkdir, chdir, listdir, getcwd, symlink, rename
 from os.path import join, abspath, dirname
 from subprocess import check_output
 from sys import stderr
 
 
-def get_pip_root():
+def pip_root():
     """Get pip root directory, in different ways,
     depending on whether running from within a
     virtualenv.
@@ -32,6 +34,39 @@ def get_pip_root():
         site_packages = join(exec_prefix, site_packages)
 
     return site_packages
+
+
+def cmake_install_prefix():
+    """Generate ``CMAKE_INSTALL_PREFIX`` for installing
+    GiftGrab under the PyPI root.
+
+    @return
+    """
+    return join(pip_root(), 'giftgrab')
+
+
+class GiftGrabPyExtension(Extension):
+
+    """This class is used for adding GiftGrab Python
+    library (built inside install command class below)
+    to the PyPI install chain.
+
+    """
+    def __init__(self):
+        self.name = 'pygiftgrab'
+        self.sources = ['']
+
+
+class GiftGrabBuildExtCommand(build_ext):
+
+    """This class is used for adding GiftGrab
+    components (build inside the GiftGrab install
+    command class) to the PyPI install chain.
+
+    """
+
+    def run(self):
+        pass
 
 
 class GiftGrabInstallCommand(install):
@@ -251,7 +286,7 @@ class GiftGrabInstallCommand(install):
             if self.nvenc:
                 cmake_args.append('-DUSE_NVENC=ON')
         cmake_args.append('-DCMAKE_INSTALL_PREFIX=%s' % (
-            join(get_pip_root(), 'giftgrab')))
+                          cmake_install_prefix()))
         cmd = ['cmake', self.here]
         cmd[1:1] = cmake_args
         err_msg = '%s\n%s' % (
@@ -274,13 +309,10 @@ class GiftGrabInstallCommand(install):
             'GiftGrab Python API accessible.'
         )
         output_buffer = self.__check_command(cmd, err_msg, False)
-        cmake_install_prefix = output_buffer.split(
-            'CMAKE_INSTALL_PREFIX:PATH=')[1]
-        cmake_install_prefix = cmake_install_prefix.split('\n')[0]
-        pylib_path = join(join(join(cmake_install_prefix, 'lib'),
+        pylib_path = join(join(join(cmake_install_prefix(), 'lib'),
                                'giftgrab'),
                           'pygiftgrab.so')
-        pylib_link = join(get_pip_root(), 'pygiftgrab.so')
+        pylib_link = join(pip_root(), 'pygiftgrab.so')
         print('\n+++++ INFO +++++\n%s%s\n\n' % (
                'Installing GiftGrab with support for: ',
                str(self)
@@ -301,6 +333,16 @@ class GiftGrabInstallCommand(install):
         # everything fine so far:
         install.run(self)
 
+class GiftGrabInstallLibCommand(install_lib):
+
+    """This class adds GiftGrab installation directory
+    to list of installed files, for deletion upon
+    ``pip uninstall``.
+
+    """
+
+    def get_outputs(self):
+        return install_lib.get_outputs(self) + [cmake_install_prefix()]
 
 # TODO: pip python dependencies (e.g. py.test)
 
@@ -310,7 +352,10 @@ class GiftGrabInstallCommand(install):
 setup(
     name='giftgrab',
     version='16.08.15rc1',
+    ext_modules=[GiftGrabPyExtension()],
     cmdclass={
         'install': GiftGrabInstallCommand,
+        'build_ext': GiftGrabBuildExtCommand,
+        'install_lib': GiftGrabInstallLibCommand
     },
 )
