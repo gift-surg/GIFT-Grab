@@ -43,22 +43,25 @@ Supported video formats
 How to use
 ----------
 
-Build GiftGrab from source using CMake. Check out [our tips and tricks](doc/tips.md) for troubleshooting and how to obtain the external dependencies.
+GiftGrab can be either built from source (for the C++ API) **or** installed via the Python Packaging Index (for the Python API). For either of these options, check out [our tips and tricks](doc/tips.md) for troubleshooting and how to obtain the external dependencies.
 
-Customise GiftGrab with the following options as desired (all options are turned off by default):
+**Build GiftGrab from source** using CMake. Use the following options to customise features as desired (all options are disabled by default):
 
 * `-D USE_EPIPHAN_DVI2PCIE_DUO=ON` for Epiphan DVI2PCIe Duo support (requires OpenCV). Append `-D USE_I420=ON` to capture at 60 fps (requires EpiphanSDK).
 * `-D USE_XVID=ON` for Xvid support (requires OpenCV).
 * `-D USE_H265=ON` for H.265 (HEVC) support (requires FFmpeg, pkg-config and x265).
 * `-D USE_H265=ON -D USE_NVENC=ON` for hardware-accelerated H.265 support (requires a supported GPU, FFmpeg, pkg-config and NVENC).
 * `-D BUILD_PYTHON=ON` for GiftGrab Python API (requires Python and Boost.Python).
+* To quickly see whether GiftGrab works on your system, turn on tests with `-D BUILD_TESTS=ON -D BUILD_PYTHON=ON` (requires Python, Boost.Python, and pytest). Then run `ctest` or `make test` in the build directory.
 
-To use GiftGrab in your software projects: use `FIND_PACKAGE(GiftGrab)` in your CMake file to discover the `GiftGrab_INCLUDE_DIRS` and `GiftGrab_LIBS` CMake variables (respectively for GiftGrab headers to include and GiftGrab libraries to link against).
+**To use the GiftGrab C++ API** in your software: include `FIND_PACKAGE(GiftGrab)` in your CMake file to discover the `GiftGrab_INCLUDE_DIRS` and `GiftGrab_LIBS` CMake variables (respectively for GiftGrab header directories to include and GiftGrab libraries to link against).
 
-How to test
------------
+**To install from the Python Packaging Index** simply run `pip install giftgrab`. Note that all features are disabled by default. Enable them by appending the following to the command:
 
-To quickly see whether GiftGrab works on your system, turn on tests with `-D BUILD_TESTS=ON` (requires Python, Boost.Python, and pytest). Then run `ctest` or `make test` in the build directory.
+* `--install-option="--epiphan-dvi2pcie-duo"` for Epiphan DVI2PCIe Duo support (requires OpenCV). Add `--install-option="--i420"` to capture at 60 fps (requires EpiphanSDK).
+* `--install-option="--xvid"` for Xvid support (requires OpenCV).
+* `--install-option="--h265"` for H.265 (HEVC) support (requires FFmpeg, pkg-config and x265).
+* `--install-option="--h265" --install-option="--nvenc"` for hardware-accelerated H.265 support (requires a supported GPU, FFmpeg, pkg-config and NVENC).
 
 Funding
 -------
