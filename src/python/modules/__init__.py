@@ -4,13 +4,17 @@ from giftgrab.epiphan import parse, dump
 from time import sleep
 import yaml
 import logging
+from os.path import join
+from pkg_resources import resource_filename
 
 
 def test():
     try:
+        data_dir = resource_filename('giftgrab', join('data', 'epiphan'))
+
         # create sessions
-        fs_config = 'example_epiphan/sdi-i420.yml'
-        us_config = 'example_epiphan/dvi-i420.yml'
+        fs_config = join(data_dir, 'sdi-i420.yml')
+        us_config = join(data_dir, 'dvi-i420.yml')
         logging.basicConfig(format='%(threadName)s -- %(asctime)s -- %(message)s',
                             datefmt='%m/%d/%Y %H:%M:%S')
 

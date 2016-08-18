@@ -365,4 +365,5 @@ setup(
     entry_points={
         'console_scripts': ['epiphan-dvi2pcie-duo-test=giftgrab:test'],
     },
+    package_data={'giftgrab': [join('data', 'epiphan', '*')]},
 )

@@ -2,11 +2,10 @@ FILE(COPY
     ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/test_unit.py
     ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/test_realtime.py
     ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/conftest.py
-    ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/config
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
 )
 FILE(COPY
-    ${CMAKE_SOURCE_DIR}/python/modules/example_epiphan/
+    ${CMAKE_SOURCE_DIR}/python/modules/data/epiphan/
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/config
     FILES_MATCHING PATTERN *.yml
 )
