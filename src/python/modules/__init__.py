@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
-from epiphan import parse, dump
+from giftgrab.epiphan import parse, dump
 from time import sleep
 import yaml
 import logging
 
 
-if __name__ == '__main__':
+def test():
     try:
         # create sessions
         fs_config = 'example_epiphan/sdi-i420.yml'

@@ -353,10 +353,16 @@ class GiftGrabInstallLibCommand(install_lib):
 setup(
     name='giftgrab',
     version='16.08.15rc1',
+    packages=['giftgrab'],
+    package_dir={'giftgrab': join('python', 'modules')},
+    py_modules=['giftgrab.epiphan'],
     ext_modules=[GiftGrabPyExtension()],
     cmdclass={
         'install': GiftGrabInstallCommand,
         'build_ext': GiftGrabBuildExtCommand,
         'install_lib': GiftGrabInstallLibCommand
+    },
+    entry_points={
+        'console_scripts': ['epiphan-dvi2pcie-duo-test=giftgrab:test'],
     },
 )
