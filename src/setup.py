@@ -4,7 +4,7 @@ from distutils.errors import LibError
 from setuptools.command.install import install
 from distutils.command.build_ext import build_ext
 from distutils.command.install_lib import install_lib
-from os import mkdir, chdir, listdir, getcwd, symlink, rename
+from os import mkdir, chdir, listdir, getcwd, link, rename
 from os.path import join, abspath, dirname
 from subprocess import check_output
 from sys import stderr
@@ -301,7 +301,7 @@ class GiftGrabInstallCommand(install):
         print(output_buffer)
 
         # TODO: the following is a massive hack
-        # to create a symlink from Python base to
+        # to create a hard link from Python base to
         # installed GiftGrab Python lib. Consider
         # replacing with something better
         cmd = ['cmake', '-L', self.here]
@@ -323,7 +323,7 @@ class GiftGrabInstallCommand(install):
         # will create temp link first, and then move to actual one
         # to prevent "already exists" error
         tmp_pylib_link = pylib_link + '.tmp'
-        symlink(pylib_path, tmp_pylib_link)
+        link(pylib_path, tmp_pylib_link)
         rename(tmp_pylib_link, pylib_link)
         print('+++++ INFO +++++\n%s %s %s %s\n\n' % (
               'Created symlink',
