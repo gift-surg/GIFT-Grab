@@ -8,7 +8,7 @@ from os.path import join
 from pkg_resources import resource_filename
 
 
-def test():
+def test_epiphan_dvi2pcie_duo():
     try:
         data_dir = resource_filename('giftgrab', join('data', 'epiphan'))
 

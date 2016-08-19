@@ -345,13 +345,14 @@ class GiftGrabInstallLibCommand(install_lib):
     """
 
     def get_outputs(self):
-        return install_lib.get_outputs(self) + [cmake_install_prefix()]
+        return [cmake_install_prefix()] + install_lib.get_outputs(self)
 
 # TODO: pip python dependencies (e.g. py.test)
 
 # TODO: resources (e.g. sources, headers, include dirs,
 # etc. based on selected features)
 
+console_scripts = ['test-epiphan-dvi2pcie-duo=giftgrab:test_epiphan_dvi2pcie_duo']
 setup(
     name='giftgrab',
     version='16.08.15rc1',
@@ -365,7 +366,7 @@ setup(
         'install_lib': GiftGrabInstallLibCommand
     },
     entry_points={
-        'console_scripts': ['epiphan-dvi2pcie-duo-test=giftgrab:test'],
+        'console_scripts': console_scripts,
     },
     package_data={'giftgrab': [join('data', 'epiphan', '*')]},
 )
