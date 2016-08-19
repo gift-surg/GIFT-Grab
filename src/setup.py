@@ -285,6 +285,8 @@ class GiftGrabInstallCommand(install):
             cmake_args.append('-DUSE_H265=ON')
             if self.nvenc:
                 cmake_args.append('-DUSE_NVENC=ON')
+        if self.i420:
+            cmake_args.append('-DUSE_I420=ON')
         cmake_args.append('-DCMAKE_INSTALL_PREFIX=%s' % (
                           cmake_install_prefix()))
         cmd = ['cmake', self.here]
