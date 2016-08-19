@@ -63,6 +63,10 @@ GiftGrab can be either built from source (for the C++ API) **or** installed via 
 * `--install-option="--h265"` for H.265 (HEVC) support (requires FFmpeg, pkg-config and x265).
 * `--install-option="--h265" --install-option="--nvenc"` for hardware-accelerated H.265 support (requires a supported GPU, FFmpeg, pkg-config and NVENC).
 
+**To quickly test whether the GiftGrab Python API works:**
+
+* If GiftGrab was installed with Epiphan DVI2PCIe Duo support, then run `test-epiphan-dvi2pcie-duo`. This command should capture data from your Epiphan DVI2PCIe Duo and save it as video files in timestamped folders in the current directory.
+
 Funding
 -------
 
