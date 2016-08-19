@@ -353,6 +353,16 @@ class GiftGrabInstallLibCommand(install_lib):
 # etc. based on selected features)
 
 console_scripts = ['test-epiphan-dvi2pcie-duo=giftgrab:test_epiphan_dvi2pcie_duo']
+tests_dir = join('tests', 'epiphan', 'dvi2pcieduo')
+data_files = []
+data_files.append( (tests_dir, [join(tests_dir, 'conftest.py'),
+                                join(tests_dir, 'test_unit.py'),
+                                join(tests_dir, 'test_realtime.py')]) )
+tests_dir = join('tests', 'target')
+data_files.append( (tests_dir, [join(tests_dir, 'conftest.py'),
+                                join(tests_dir, 'test_unit.py')]) )
+tests_dir = join('tests', 'utils')
+data_files.append( (tests_dir, [join(tests_dir, 'inspection.py')]) )
 setup(
     name='giftgrab',
     version='16.08.15rc1',
@@ -369,4 +379,5 @@ setup(
         'console_scripts': console_scripts,
     },
     package_data={'giftgrab': [join('data', 'epiphan', '*')]},
+    data_files=data_files,
 )
