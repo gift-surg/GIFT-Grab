@@ -13,11 +13,14 @@ def test_giftgrab():
     main(['--codec=XviD', working_dir])
 
     working_dir = abspath(
-            resource_filename('giftgrab.tests', 
+            resource_filename('giftgrab.tests',
                               join('epiphan', 'dvi2pcieduo')))
+    config_dir = abspath(
+            resource_filename('giftgrab',
+                              join('data', 'epiphan')))
     for port in ['SDI', 'DVI']:
         for colour_space in ['BGR24', 'I420']:
-            main('--colour-space=%s --port=%s %s' % (colour_space,
-                                                     port,
-                                                     working_dir))
-
+            main(['--colour-space=%s' % (colour_space),
+                  '--port=%s' % (port),
+                  '--config-dir=%s' % (config_dir),
+                  working_dir])
