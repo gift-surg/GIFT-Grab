@@ -1,6 +1,6 @@
 from pytest import yield_fixture, fail
 from pygiftgrab import Factory, VideoFrame_BGRA
-from epiphan import BGR24, I420
+from giftgrab.epiphan import BGR24, I420
 
 source = None
 frame = None

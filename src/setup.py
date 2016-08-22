@@ -352,23 +352,15 @@ class GiftGrabInstallLibCommand(install_lib):
 # TODO: resources (e.g. sources, headers, include dirs,
 # etc. based on selected features)
 
-console_scripts = ['test-epiphan-dvi2pcie-duo=giftgrab:test_epiphan_dvi2pcie_duo']
-tests_dir = join('tests', 'epiphan', 'dvi2pcieduo')
-data_files = []
-data_files.append( (tests_dir, [join(tests_dir, 'conftest.py'),
-                                join(tests_dir, 'test_unit.py'),
-                                join(tests_dir, 'test_realtime.py')]) )
-tests_dir = join('tests', 'target')
-data_files.append( (tests_dir, [join(tests_dir, 'conftest.py'),
-                                join(tests_dir, 'test_unit.py')]) )
-tests_dir = join('tests', 'utils')
-data_files.append( (tests_dir, [join(tests_dir, 'inspection.py')]) )
+console_scripts = ['test-giftgrab=giftgrab.tests:test_giftgrab']
 setup(
     name='giftgrab',
     version='16.08.15rc1',
-    packages=['giftgrab'],
-    package_dir={'giftgrab': join('python', 'modules')},
-    py_modules=['giftgrab.epiphan'],
+    packages=['giftgrab', 'giftgrab.tests', 'giftgrab.tests.utils'],
+    package_dir={'giftgrab': join('python', 'modules'),
+                 'giftgrab.tests': 'tests',
+                 'giftgrab.tests.utils': join('tests', 'utils')},
+    py_modules=['giftgrab.epiphan', 'giftgrab.tests.utils.inspection'],
     ext_modules=[GiftGrabPyExtension()],
     cmdclass={
         'install': GiftGrabInstallCommand,
@@ -378,6 +370,7 @@ setup(
     entry_points={
         'console_scripts': console_scripts,
     },
-    package_data={'giftgrab': [join('data', 'epiphan', '*')]},
-    data_files=data_files,
+    package_data={'giftgrab': [join('data', 'epiphan', '*')],
+                  'giftgrab.tests': [join('target', '*.py'),
+                                     join('epiphan', 'dvi2pcieduo', '*.py')]},
 )

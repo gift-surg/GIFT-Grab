@@ -6,7 +6,7 @@ import yaml
 from subprocess import check_output
 from os.path import isdir, dirname, isfile, join
 from shutil import rmtree
-from epiphan import parse, dump, BGR24, I420
+from giftgrab.epiphan import parse, dump, BGR24, I420
 import pygiftgrab
 from inspection import frame_rate, duration, resolution, codec
 
