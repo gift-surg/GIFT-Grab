@@ -361,7 +361,7 @@ setup(
     package_dir={'giftgrab': join('python', 'modules', 'giftgrab'),
                  'giftgrab.tests': 'tests',
                  'giftgrab.utils': join('python', 'modules', 'giftgrab', 'utils')},
-    py_modules=['giftgrab.epiphan', 'giftgrab.tests.utils.inspection'],
+    py_modules=['giftgrab.epiphan', 'giftgrab.utils.inspection'],
     ext_modules=[GiftGrabPyExtension()],
     cmdclass={
         'install': GiftGrabInstallCommand,
