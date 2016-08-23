@@ -1,6 +1,5 @@
 # to avoid copying stuff around
 SET(PYTHONPATH "${CMAKE_BINARY_DIR}:$ENV{PYTHONPATH}")
-SET(PYTHONPATH "${CMAKE_SOURCE_DIR}/tests/utils:${PYTHONPATH}")
 SET(PYTHONPATH "${CMAKE_SOURCE_DIR}/python/modules:${PYTHONPATH}")
 
 # set colour space
