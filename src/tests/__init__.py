@@ -16,8 +16,8 @@ def test_giftgrab():
             resource_filename('giftgrab.tests',
                               join('epiphan', 'dvi2pcieduo')))
     config_dir = abspath(
-            resource_filename('giftgrab',
-                              join('data', 'epiphan')))
+            resource_filename('giftgrab.tests',
+                              join('epiphan', 'dvi2pcieduo', 'data')))
     for port in ['SDI', 'DVI']:
         for colour_space in ['BGR24', 'I420']:
             main(['--colour-space=%s' % (colour_space),
