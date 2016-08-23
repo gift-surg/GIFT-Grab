@@ -348,6 +348,22 @@ class GiftGrabInstallLibCommand(install_lib):
         return [cmake_install_prefix()] + install_lib.get_outputs(self)
 
 
+summary = 'GiftGrab provides an easy-to-use Python/C++ API to capture ' +\
+          'and save video using frame-grabber hardware. It also supports ' +\
+          'hardware-accelerated video encoding.'
+description = 'GiftGrab was developed as part of the GIFT-Surg project ' +\
+              '(http://www.gift-surg.ac.uk) at the Translational Imaging ' +\
+              'Group in the Centre for Medical Image Computing at ' +\
+              'University College London (UCL). See the GiftGrab ' +\
+              'home-page on GitHub for features and manual.' +\
+              '\n\n' +\
+              'Copyright (c) 2016, University College London. This work ' +\
+              'was supported through an Innovative Engineering for Health ' +\
+              'award by the Wellcome Trust [WT101957], the Engineering ' +\
+              'and Physical Sciences Research Council (EPSRC) and a ' +\
+              'National Institute for Health Research Biomedical Research ' +\
+              'Centre UCLH/UCL High Impact Initiative.'
+description = '%s\n\n%s' % (summary, description)
 console_scripts = ['test-giftgrab-h265=giftgrab.tests:test_h265',
                    'test-giftgrab-xvid=giftgrab.tests:test_xvid',
                    'test-giftgrab-epiphan-dvi2pcieduo-bgr24=giftgrab.tests:test_epiphan_dvi2pcieduo_bgr24',
@@ -355,6 +371,42 @@ console_scripts = ['test-giftgrab-h265=giftgrab.tests:test_h265',
 setup(
     name='giftgrab',
     version='16.08.15rc1',
+    description=summary,
+    long_description=description,
+    url='https://github.com/gift-surg/giftgrab',
+    author='Dzhoshkun Ismail Shakir',
+    author_email='d.shakir@ucl.ac.uk',
+    license='BSD-3-Clause',
+    classifiers=[
+        'Development Status :: 4 - Beta',
+
+        'Intended Audience :: Developers',
+        'Intended Audience :: End Users/Desktop',
+        'Intended Audience :: Healthcare Industry',
+        'Intended Audience :: Information Technology',
+        'Intended Audience :: Science/Research',
+
+        'License :: OSI Approved :: BSD License',
+
+        'Operating System :: POSIX :: Linux',
+
+        'Programming Language :: C++',
+        'Programming Language :: Python',
+
+        'Topic :: Multimedia :: Video',
+        'Topic :: Multimedia :: Video :: Capture',
+        'Topic :: Multimedia :: Video :: Conversion',
+        'Topic :: Scientific/Engineering',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+        'Topic :: Utilities'
+    ],
+    keywords='frame-grabber, framegrabber, frame grabber,'
+             'video encoding, hardware-accelerated video encoding,'
+             'GPU-accelerated video encoding,'
+             'real-time video encoding, codec, Xvid, H.265, HEVC, NVENC,'
+             'Epiphan DVI2PCIe Duo, medical imaging,'
+             'FFmpeg, OpenCV, x265',
+
     install_requires=['pytest'],
     packages=['giftgrab', 'giftgrab.tests', 'giftgrab.utils'],
     package_dir={'giftgrab': join('python', 'modules', 'giftgrab'),
