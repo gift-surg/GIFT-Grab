@@ -4,7 +4,7 @@ FILE(COPY
     ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/conftest.py
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
 )
-SET(CONFIG_DIR ${CMAKE_SOURCE_DIR}/python/modules/data/epiphan)
+SET(CONFIG_DIR ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/data)
 
 # SDI port on its own
 SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_SDI)
