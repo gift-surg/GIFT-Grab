@@ -4,7 +4,7 @@ GiftGrab Caveats
 ----------------
 
 * In case GiftGrab is built with a custom `CMAKE_INSTALL_PREFIX` that is **not** a standard system path, `${CMAKE_INSTALL_PREFIX}/lib/giftgrab` needs to be included in `CMAKE_MODULE_PATH`.
-* If you encounter an `option not recognized` error while `pip install`ling GiftGrab, run `pip install pytest`.
+* If you encounter an `option not recognized` error while `pip install`ling GiftGrab, run `pip install pytest` before `pip install giftgrab`.
 
 Epiphan DVI2PCIe Duo
 --------------------
