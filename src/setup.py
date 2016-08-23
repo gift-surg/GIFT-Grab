@@ -357,10 +357,10 @@ setup(
     name='giftgrab',
     version='16.08.15rc1',
     install_requires=['pytest'],
-    packages=['giftgrab', 'giftgrab.tests', 'giftgrab.tests.utils'],
-    package_dir={'giftgrab': join('python', 'modules'),
+    packages=['giftgrab', 'giftgrab.tests', 'giftgrab.utils'],
+    package_dir={'giftgrab': join('python', 'modules', 'giftgrab'),
                  'giftgrab.tests': 'tests',
-                 'giftgrab.tests.utils': join('tests', 'utils')},
+                 'giftgrab.utils': join('python', 'modules', 'giftgrab', 'utils')},
     py_modules=['giftgrab.epiphan', 'giftgrab.tests.utils.inspection'],
     ext_modules=[GiftGrabPyExtension()],
     cmdclass={
