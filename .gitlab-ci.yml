@@ -93,10 +93,13 @@ pypi-packaging:
     - pip install -vvv --upgrade "$PyPI_INSTALLER"
     # H265 support
     - pip install -vvv --install-option="--h265" --upgrade "$PyPI_INSTALLER"
+    - test-giftgrab-h265
     # hardware-accelerated H265
     - pip install -vvv --install-option="--h265" --install-option="--nvenc" --upgrade "$PyPI_INSTALLER"
+    - test-giftgrab-h265
     # Xvid support (OpenCV should get switched here)
     - pip install -vvv --install-option="--h265" --install-option="--nvenc" --install-option="--xvid" --upgrade "$PyPI_INSTALLER"
+    - test-giftgrab-xvid
     # Epiphan DVI2PCIe Duo support (OpenCV)
     - pip install -vvv --install-option="--h265" --install-option="--nvenc" --install-option="--xvid" --install-option="--epiphan-dvi2pcie-duo" --upgrade "$PyPI_INSTALLER"
     # Epiphan DVI2PCIe Duo support (EpiphanSDK)
@@ -105,6 +108,43 @@ pypi-packaging:
   tags:
     - gift-linux
     - gift-pypi
+
+pypi-packaging-epiphan:
+  script:
+    - GiftGrab_PyPI_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab_PyPI"
+    - GiftGrab_PyPI_INSTALL_DIR="$GiftGrab_PyPI_BUILD_DIR/install"
+    - GiftGrab_venv=venv
+    - rm -rf "$GiftGrab_PyPI_BUILD_DIR"
+    - mkdir "$GiftGrab_PyPI_BUILD_DIR"
+    - rm -rf "$GiftGrab_PyPI_INSTALL_DIR"
+    - mkdir "$GiftGrab_PyPI_INSTALL_DIR"
+    - cd "$GiftGrab_PyPI_BUILD_DIR"
+    - export GiftGrab_PyPI_DIST_DIR=dist
+    - rm -rfv "$GiftGrab_PyPI_DIST_DIR"
+    - cd "$GiftGrab_SOURCE_DIR"
+    - python setup.py sdist
+    - mv "$GiftGrab_PyPI_DIST_DIR" "$GiftGrab_PyPI_BUILD_DIR"
+    - cd "$GiftGrab_PyPI_BUILD_DIR"
+    - virtualenv $GiftGrab_venv
+    - cd $GiftGrab_venv
+    - source bin/activate
+    - ls -alh ./*
+    - PyPI_INSTALLER="../$GiftGrab_PyPI_DIST_DIR/$(ls ../$GiftGrab_PyPI_DIST_DIR | grep tar.gz)"
+    - if [ -z "$PyPI_INSTALLER" ]; then exit 1; fi
+    # Epiphan DVI2PCIe Duo support (OpenCV)
+    - pip install -vvv --install-option="--h265" --install-option="--nvenc" --install-option="--xvid" --install-option="--epiphan-dvi2pcie-duo" --upgrade "$PyPI_INSTALLER"
+    - test-giftgrab-h265
+    - test-giftgrab-xvid
+    - test-giftgrab-epiphan-dvi2pcieduo-bgr24
+    # Epiphan DVI2PCIe Duo support (EpiphanSDK)
+    - pip install -vvv --install-option="--h265" --install-option="--nvenc" --install-option="--xvid" --install-option="--epiphan-dvi2pcie-duo" --install-option="--i420" --upgrade "$PyPI_INSTALLER"
+    - test-giftgrab-h265
+    - test-giftgrab-xvid
+    - test-giftgrab-epiphan-dvi2pcieduo-i420
+    - deactivate
+  tags:
+    - gift-pypi
+    - gift-surg-storz-stack
 
 # Real-time recording ####
 real-time:
