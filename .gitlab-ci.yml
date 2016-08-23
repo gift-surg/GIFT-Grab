@@ -131,6 +131,8 @@ pypi-packaging-epiphan:
     - ls -alh ./*
     - PyPI_INSTALLER="../$GiftGrab_PyPI_DIST_DIR/$(ls ../$GiftGrab_PyPI_DIST_DIR | grep tar.gz)"
     - if [ -z "$PyPI_INSTALLER" ]; then exit 1; fi
+    # because pip seems to be getting confused about install options on Storz stack:
+    - pip install pytest
     # Epiphan DVI2PCIe Duo support (OpenCV)
     - pip install -vvv --install-option="--h265" --install-option="--nvenc" --install-option="--xvid" --install-option="--epiphan-dvi2pcie-duo" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-h265
