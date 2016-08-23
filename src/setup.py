@@ -356,6 +356,7 @@ console_scripts = ['test-giftgrab=giftgrab.tests:test_giftgrab']
 setup(
     name='giftgrab',
     version='16.08.15rc1',
+    install_requires=['pytest'],
     packages=['giftgrab', 'giftgrab.tests', 'giftgrab.tests.utils'],
     package_dir={'giftgrab': join('python', 'modules'),
                  'giftgrab.tests': 'tests',
