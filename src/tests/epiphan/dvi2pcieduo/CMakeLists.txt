@@ -4,11 +4,7 @@ FILE(COPY
     ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/conftest.py
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
 )
-FILE(COPY
-    ${CMAKE_SOURCE_DIR}/python/modules/data/epiphan/
-    DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/config
-    FILES_MATCHING PATTERN *.yml
-)
+SET(CONFIG_DIR ${CMAKE_SOURCE_DIR}/python/modules/data/epiphan)
 
 # SDI port on its own
 SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_SDI)
@@ -27,7 +23,7 @@ LIST(APPEND TESTS_LIST ${NAME_TEST})
 # Both ports in real-time
 SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_RealTime_${COLOUR_SPACE})
 ADD_TEST(NAME ${NAME_TEST}
-    COMMAND py.test --colour-space=${COLOUR_SPACE} test_realtime.py
+    COMMAND py.test --colour-space=${COLOUR_SPACE} --config-dir=${CONFIG_DIR} test_realtime.py
 )
 LIST(APPEND TESTS_LIST ${NAME_TEST})
 
