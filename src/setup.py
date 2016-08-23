@@ -347,10 +347,6 @@ class GiftGrabInstallLibCommand(install_lib):
     def get_outputs(self):
         return [cmake_install_prefix()] + install_lib.get_outputs(self)
 
-# TODO: pip python dependencies (e.g. py.test)
-
-# TODO: resources (e.g. sources, headers, include dirs,
-# etc. based on selected features)
 
 console_scripts = ['test-giftgrab-h265=giftgrab.tests:test_h265',
                    'test-giftgrab-xvid=giftgrab.tests:test_xvid',
