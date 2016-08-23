@@ -352,7 +352,10 @@ class GiftGrabInstallLibCommand(install_lib):
 # TODO: resources (e.g. sources, headers, include dirs,
 # etc. based on selected features)
 
-console_scripts = ['test-giftgrab=giftgrab.tests:test_giftgrab']
+console_scripts = ['test-giftgrab-h265=giftgrab.tests:test_h265',
+                   'test-giftgrab-xvid=giftgrab.tests:test_xvid',
+                   'test-giftgrab-epiphan-dvi2pcieduo-bgr24=giftgrab.tests:test_epiphan_dvi2pcieduo_bgr24',
+                   'test-giftgrab-epiphan-dvi2pcieduo-i420=giftgrab.tests:test_epiphan_dvi2pcieduo_i420']
 setup(
     name='giftgrab',
     version='16.08.15rc1',

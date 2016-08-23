@@ -5,22 +5,35 @@ from pkg_resources import resource_filename
 from pytest import main
 
 
-def test_giftgrab():
+epiphan_dvi2pcieduo_working_dir = abspath(
+    resource_filename('giftgrab.tests',
+                      join('epiphan', 'dvi2pcieduo')))
+epiphan_dvi2pcieduo_config_dir = abspath(
+    resource_filename('giftgrab.tests',
+                      join('epiphan', 'dvi2pcieduo', 'data')))
+
+
+def test_h265():
     working_dir = abspath(resource_filename('giftgrab.tests', 'target'))
     main(['--codec=H265', working_dir])
 
+
+def test_xvid():
     working_dir = abspath(resource_filename('giftgrab.tests', 'target'))
     main(['--codec=XviD', working_dir])
 
-    working_dir = abspath(
-            resource_filename('giftgrab.tests',
-                              join('epiphan', 'dvi2pcieduo')))
-    config_dir = abspath(
-            resource_filename('giftgrab.tests',
-                              join('epiphan', 'dvi2pcieduo', 'data')))
+
+def test_epiphan_dvi2pcieduo_bgr24():
     for port in ['SDI', 'DVI']:
-        for colour_space in ['BGR24', 'I420']:
-            main(['--colour-space=%s' % (colour_space),
-                  '--port=%s' % (port),
-                  '--config-dir=%s' % (config_dir),
-                  working_dir])
+        main(['--colour-space=%s' % ('BGR24'),
+              '--port=%s' % (port),
+              '--config-dir=%s' % (epiphan_dvi2pcieduo_config_dir),
+              epiphan_dvi2pcieduo_working_dir])
+
+
+def test_epiphan_dvi2pcieduo_i420():
+    for port in ['SDI', 'DVI']:
+        main(['--colour-space=%s' % ('I420'),
+              '--port=%s' % (port),
+              '--config-dir=%s' % (epiphan_dvi2pcieduo_config_dir),
+              epiphan_dvi2pcieduo_working_dir])
