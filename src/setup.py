@@ -401,11 +401,13 @@ setup(
         'Topic :: Utilities'
     ],
     keywords='frame-grabber, framegrabber, frame grabber,'
-             'video encoding, hardware-accelerated video encoding,'
+             'multi-channel video capture, multi-channel video encoding,'
+             'hardware-accelerated video encoding,'
              'GPU-accelerated video encoding,'
              'real-time video encoding, codec, Xvid, H.265, HEVC, NVENC,'
              'Epiphan DVI2PCIe Duo, medical imaging,'
-             'FFmpeg, OpenCV, x265',
+             'FFmpeg, OpenCV, x265'
+             'GIFT-Surg',
 
     install_requires=['pytest'],
     packages=['giftgrab', 'giftgrab.tests', 'giftgrab.utils'],
