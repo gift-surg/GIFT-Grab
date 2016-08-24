@@ -348,13 +348,13 @@ class GiftGrabInstallLibCommand(install_lib):
         return [cmake_install_prefix()] + install_lib.get_outputs(self)
 
 
-summary = 'GiftGrab provides an easy-to-use Python/C++ API to capture ' +\
-          'and save video using frame-grabber hardware. It also supports ' +\
-          'hardware-accelerated video encoding.'
-description = 'GiftGrab was developed as part of the GIFT-Surg project ' +\
+summary = 'GIFT-Grab provides a user-friendly Python and C++ API for the ' +\
+          'real-time acquisition and encoding of multi-channel video ' +\
+          'streams by means of frame-grabber hardware.'
+description = 'GIFT-Grab was developed as part of the GIFT-Surg project ' +\
               '(http://www.gift-surg.ac.uk) at the Translational Imaging ' +\
               'Group in the Centre for Medical Image Computing at ' +\
-              'University College London (UCL). See the GiftGrab ' +\
+              'University College London (UCL). See the GIFT-Grab ' +\
               'home-page on GitHub for features and manual.' +\
               '\n\n' +\
               'Copyright (c) 2016, University College London. This work ' +\
