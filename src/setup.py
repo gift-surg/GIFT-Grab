@@ -409,7 +409,7 @@ setup(
              'FFmpeg, OpenCV, x265'
              'GIFT-Surg',
 
-    install_requires=['pytest'],
+    install_requires=['pytest', 'PyYAML'],
     packages=['giftgrab', 'giftgrab.tests', 'giftgrab.utils'],
     package_dir={'giftgrab': join('python', 'modules', 'giftgrab'),
                  'giftgrab.tests': 'tests',
