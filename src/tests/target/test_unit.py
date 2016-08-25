@@ -2,7 +2,7 @@ from pytest import fail, yield_fixture, raises
 from subprocess import check_call
 from os import devnull, remove, listdir
 from pygiftgrab import Storage, Factory, VideoFrame_BGRA
-import inspection
+from giftgrab.utils import inspection
 
 
 # for easily removing created files when done

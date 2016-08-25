@@ -3,8 +3,8 @@ Below are troubleshooting tips and tricks, as well as detailed installation inst
 GiftGrab Caveats
 ----------------
 
-* In case GiftGrab is installed in a non-standard location, i.e. via CMake's `CMAKE_INSTALL_PREFIX`, then `${CMAKE_INSTALL_PREFIX}/lib/giftgrab` needs to be included in CMake's `CMAKE_MODULE_PATH` for `FIND_PACKAGE(GiftGrab)` to work.
-* GiftGrab Python modules and libraries are installed in `${CMAKE_INSTALL_PREFIX}/lib/giftgrab`. Add this directory to [`PYTHONPATH`](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONPATH) to be able to use GiftGrab Python modules.
+* In case GiftGrab is built with a custom `CMAKE_INSTALL_PREFIX` that is **not** a standard system path, `${CMAKE_INSTALL_PREFIX}/lib/giftgrab` needs to be included in CMake's `CMAKE_MODULE_PATH` for `FIND_PACKAGE(GiftGrab)` to work.
+* If you encounter an `option not recognized` error while `pip install`ling GiftGrab, run `pip install pytest` and `pip install PyYAML` before running `pip install giftgrab`.
 
 Epiphan DVI2PCIe Duo
 --------------------

@@ -1,6 +1,15 @@
 PROJECT(GiftGrab)
 CMAKE_MINIMUM_REQUIRED(VERSION 3.2.0)
 
+# Will be used when installing
+SET(GiftGrab_PATH_SUFFIX giftgrab)
+
+# RPATH stuff - to avoid losing linking information
+SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
+SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib/${GiftGrab_PATH_SUFFIX}")
+SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
 # Build types and default build type
 SET_PROPERTY(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release")
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
@@ -8,28 +17,8 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     SET(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
 endif()
 
-# Unsupported platforms
-if(APPLE)
-    MESSAGE(FATAL_ERROR "This library does not support Mac OS X yet.")
-endif(APPLE)
-if(WIN32)
-    MESSAGE(FATAL_ERROR "This library does not support Windows yet.")
-endif(WIN32)
-
-# C++11
-INCLUDE(CheckCXXCompilerFlag)
-CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
-if(COMPILER_SUPPORTS_CXX11)
-    LIST(APPEND CMAKE_CXX_FLAGS "-std=c++11")
-else()
-    CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
-    if(COMPILER_SUPPORTS_CXX0X)
-        LIST(APPEND CMAKE_CXX_FLAGS "-std=c++0x")
-    else()
-        MESSAGE(FATAL_ERROR
-            "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support.")
-    endif()
-endif()
+ADD_SUBDIRECTORY(cmake/platform)
+ADD_SUBDIRECTORY(cmake/cpp11)
 
 # Configurable options, depending on desired functionality
 OPTION(USE_EPIPHAN_DVI2PCIE_DUO
@@ -51,9 +40,6 @@ OPTION(USE_I420
 OPTION(GENERATE_PERFORMANCE_OUTPUT
     "Performance benchmark reports (requires Boost.Timer and Boost.System)" OFF)
 MARK_AS_ADVANCED(GENERATE_PERFORMANCE_OUTPUT)
-
-# Augment module path to be able to find needed packages
-LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 # Determine whether OpenCV needed
 if((USE_EPIPHAN_DVI2PCIE_DUO AND NOT USE_I420) OR
@@ -91,11 +77,11 @@ SET(SOURCES
 
 # OpenCV components
 if(USE_OPENCV)
-    FIND_PACKAGE(OpenCV REQUIRED)
+    ADD_SUBDIRECTORY(cmake/opencv)
     INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
     LIST(APPEND LIBS ${OpenCV_LIBS})
     ADD_DEFINITIONS(-DUSE_OPENCV)
-    
+
     INCLUDE_DIRECTORIES(opencv)
     LIST(APPEND HEADERS opencv/opencv_video_source.h)
     LIST(APPEND HEADERS opencv/opencv_video_target.h)
@@ -105,7 +91,7 @@ endif(USE_OPENCV)
 
 # FFmpeg components
 if(USE_FFMPEG)
-    FIND_PACKAGE(FFmpeg REQUIRED)
+    ADD_SUBDIRECTORY(cmake/ffmpeg)
     INCLUDE_DIRECTORIES(${FFmpeg_INCLUDE_DIRS})
     LIST(APPEND LIBS ${FFmpeg_LIBS})
     LINK_DIRECTORIES(${FFmpeg_LIBRARY_DIRS})
@@ -130,7 +116,7 @@ endif(USE_I420)
 
 # Epiphan SDK video source
 if(USE_EPIPHANSDK)
-    FIND_PACKAGE(EpiphanSDK REQUIRED)
+    ADD_SUBDIRECTORY(cmake/epiphansdk)
     INCLUDE_DIRECTORIES(${EpiphanSDK_INCLUDE_DIRS})
     LIST(APPEND LIBS ${EpiphanSDK_LIBS})
 
@@ -176,9 +162,9 @@ endif(BUILD_TESTS)
 
 # Python wrappers
 if(BUILD_PYTHON)
-    FIND_PACKAGE(PythonLibs 2.7 REQUIRED)
+    ADD_SUBDIRECTORY(cmake/pythonlibs)
     INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_DIRS})
-    FIND_PACKAGE(Boost COMPONENTS python REQUIRED)
+    ADD_SUBDIRECTORY(cmake/boost.python)
     INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
 
     SET(NAME_PYTHON py${NAME})
@@ -189,20 +175,19 @@ if(BUILD_PYTHON)
     LIST(APPEND INSTALLABLES ${NAME_PYTHON})
 endif(BUILD_PYTHON)
 
+
 # Install
-SET(GiftGrab_PATH_SUFFIX giftgrab)
 INSTALL(
     FILES ${HEADERS}
     DESTINATION ${CMAKE_INSTALL_PREFIX}/include/${GiftGrab_PATH_SUFFIX}
 )
 INSTALL(
-    FILES ${CMAKE_CURRENT_SOURCE_DIR}/python/modules/epiphan.py
-    cmake/GiftGrabConfig.cmake
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${GiftGrab_PATH_SUFFIX}
+    FILES ${CMAKE_CURRENT_SOURCE_DIR}/cmake/GiftGrabConfig.cmake
+    DESTINATION ${CMAKE_INSTALL_RPATH}
 )
 INSTALL(
     TARGETS ${INSTALLABLES}
     RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/${GiftGrab_PATH_SUFFIX}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${GiftGrab_PATH_SUFFIX}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_RPATH}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/${GiftGrab_PATH_SUFFIX}
 )

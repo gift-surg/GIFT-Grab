@@ -1,5 +1,5 @@
 from pygiftgrab import Device
-from epiphan import BGR24, I420
+from giftgrab.epiphan import BGR24, I420
 
 
 def pytest_addoption(parser):
@@ -7,6 +7,8 @@ def pytest_addoption(parser):
                      help='Colour space specification (BGR24 or I420)')
     parser.addoption('--port', action='store',
                      help='Epiphan DVI2PCIe Duo port specification (SDI or DVI)')
+    parser.addoption('--config-dir', action='store',
+                     help='Epiphan DVI2PCIe Duo config files directory')
 
 
 def pytest_generate_tests(metafunc):
@@ -29,3 +31,6 @@ def pytest_generate_tests(metafunc):
             raise RuntimeError('Could not recognise Epiphan DVI2PCIe Duo port ' +
                                metafunc.config.option.port)
         metafunc.parametrize('port', [port])
+
+    if 'config_dir' in metafunc.fixturenames:
+        metafunc.parametrize('config_dir', [metafunc.config.option.config_dir])

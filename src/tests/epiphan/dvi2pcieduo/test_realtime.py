@@ -6,9 +6,9 @@ import yaml
 from subprocess import check_output
 from os.path import isdir, dirname, isfile, join
 from shutil import rmtree
-from epiphan import parse, dump, BGR24, I420
+from giftgrab.epiphan import parse, dump, BGR24, I420
 import pygiftgrab
-from inspection import frame_rate, duration, resolution, codec
+from giftgrab.utils.inspection import frame_rate, duration, resolution, codec
 
 
 recorders = []
@@ -39,42 +39,42 @@ def timing_report(file_path):
     return True
 
 
-def test_parse(colour_space):
+def test_parse(colour_space, config_dir):
     # not existing config file
     with pytest.raises(IOError):
-        _ = parse('/this/file/should/never/exist.yml')
+        _ = parse(join('this', 'file', 'should', 'never', 'exist.yml'))
 
     # non-parseable file
     with pytest.raises(yaml.YAMLError):
-        _ = parse('config/yamlerror.yml')
+        _ = parse(join(config_dir, 'yamlerror.yml'))
 
     # files with invalid values
     with pytest.raises(ValueError):
-        _ = parse('config/valueerror1.yml')
+        _ = parse(join(config_dir, 'valueerror1.yml'))
     if colour_space == BGR24:
         with pytest.raises(ValueError):
-            _ = parse('config/valueerror2.yml')
+            _ = parse(join(config_dir, 'valueerror2.yml'))
     elif colour_space == I420:
         with pytest.raises(ValueError):
-            _ = parse('config/valueerror3.yml')
+            _ = parse(join(config_dir, 'valueerror3.yml'))
     else:
         pytest.fail('Colour space not configured properly')
 
     # folder that can't be created
     with pytest.raises(OSError):
-        _ = parse('config/oserror.yml')
+        _ = parse(join(config_dir, 'oserror.yml'))
 
 
-def test_frame_grabbing(colour_space):
+def test_frame_grabbing(colour_space, config_dir):
     # test-input & data
     if colour_space == BGR24:
-        fs_config_file = 'config/sdi.yml'
-        us_config_file = 'config/dvi.yml'
+        fs_config_file = join(config_dir, 'sdi.yml')
+        us_config_file = join(config_dir, 'dvi.yml')
         fs_frame_rate = 28.0
         us_frame_rate = 14.0
     elif colour_space == I420:
-        fs_config_file = 'config/sdi-i420.yml'
-        us_config_file = 'config/dvi-i420.yml'
+        fs_config_file = join(config_dir, 'sdi-i420.yml')
+        us_config_file = join(config_dir, 'dvi-i420.yml')
         fs_frame_rate = 40.0
         us_frame_rate = 28.0
     else:
@@ -227,3 +227,5 @@ def cleanup():
 
     for recorder in recorders:
         assert not recorder.isAlive()
+
+    del recorders[:]
