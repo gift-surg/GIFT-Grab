@@ -478,7 +478,7 @@ def parse(file_path):
             raise ValueError('Timeout should be positive, ' +
                              'and up to 20 sec.')
         port = __str_to_port(data['port'])
-        file_path = data['file_path']
+        file_path = abspath(data['file_path'])
         unique_file_path = None
         max_attempts = 5
         attempt = 0
