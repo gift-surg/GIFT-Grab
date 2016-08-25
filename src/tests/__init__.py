@@ -15,20 +15,23 @@ epiphan_dvi2pcieduo_config_dir = abspath(
 
 def test_h265():
     working_dir = abspath(resource_filename('giftgrab.tests', 'target'))
-    main(['--codec=H265', working_dir])
+    ret = main(['--codec=H265', working_dir]):
+    if ret: exit(ret)
 
 
 def test_xvid():
     working_dir = abspath(resource_filename('giftgrab.tests', 'target'))
-    main(['--codec=XviD', working_dir])
+    ret = main(['--codec=XviD', working_dir])
+    if ret: exit(ret)
 
 
 def test_epiphan_dvi2pcieduo_bgr24():
     for port in ['SDI', 'DVI']:
-        main(['--colour-space=%s' % ('BGR24'),
-              '--port=%s' % (port),
-              '--config-dir=%s' % (epiphan_dvi2pcieduo_config_dir),
-              epiphan_dvi2pcieduo_working_dir])
+        ret = main(['--colour-space=%s' % ('BGR24'),
+                    '--port=%s' % (port),
+                    '--config-dir=%s' % (epiphan_dvi2pcieduo_config_dir),
+                    epiphan_dvi2pcieduo_working_dir])
+        if ret: exit(ret)
 
 
 def test_epiphan_dvi2pcieduo_i420():
