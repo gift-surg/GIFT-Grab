@@ -111,7 +111,7 @@ pypi-packaging:
 
 pypi-packaging-epiphan:
   script:
-    - GiftGrab_PyPI_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab_PyPI"
+    - GiftGrab_PyPI_BUILD_DIR="$SCRATCH_DIR/pypi"
     - GiftGrab_PyPI_INSTALL_DIR="$GiftGrab_PyPI_BUILD_DIR/install"
     - GiftGrab_venv=venv
     - rm -rf "$GiftGrab_PyPI_BUILD_DIR"
