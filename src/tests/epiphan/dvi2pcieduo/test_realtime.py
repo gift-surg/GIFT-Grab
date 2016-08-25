@@ -227,3 +227,5 @@ def cleanup():
 
     for recorder in recorders:
         assert not recorder.isAlive()
+
+    del recorders[:]
