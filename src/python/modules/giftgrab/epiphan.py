@@ -4,7 +4,7 @@ from threading import Thread
 from time import sleep, time, strftime
 from datetime import timedelta
 import yaml
-from os.path import join, split, dirname
+from os.path import join, split, dirname, abspath
 from os import makedirs
 from random import choice
 from string import ascii_uppercase
@@ -52,7 +52,8 @@ class Recorder(Thread):
         at ``1920 x 1080``, when using a single port, and 37 fps when using
         both ports (when capturing in the RGB24 colour space)
         @param file_path any referenced directories must exist and be
-        writable by user
+        writable by user. If a relative directory is specified, it is
+        internally converted to an absolute one
         @param timeout_limit 5 attempts will be made for critical operations
         within this number of seconds (thread will not start if this is
         negative)
@@ -67,7 +68,7 @@ class Recorder(Thread):
         self.name = str(self.port)
         self.file = None
         self.is_running = False
-        self.file_path = file_path
+        self.file_path = abspath(file_path)
         self.recording_index = 0
         self.frame_rate = frame_rate
         self.is_recording = False
