@@ -478,14 +478,14 @@ def parse(file_path):
             raise ValueError('Timeout should be positive, ' +
                              'and up to 20 sec.')
         port = __str_to_port(data['port'])
-        file_path = abspath(data['file_path'])
+        data_file_path = abspath(data['file_path'])
         unique_file_path = None
         max_attempts = 5
         attempt = 0
         while True:
             attempt += 1
             try:
-                unique_file_path = __session_folder(path_prefix=file_path)
+                unique_file_path = __session_folder(path_prefix=data_file_path)
             except OSError as e:
                 if attempt >= max_attempts:
                     raise e
