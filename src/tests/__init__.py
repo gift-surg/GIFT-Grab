@@ -36,7 +36,8 @@ def test_epiphan_dvi2pcieduo_bgr24():
 
 def test_epiphan_dvi2pcieduo_i420():
     for port in ['SDI', 'DVI']:
-        main(['--colour-space=%s' % ('I420'),
-              '--port=%s' % (port),
-              '--config-dir=%s' % (epiphan_dvi2pcieduo_config_dir),
-              epiphan_dvi2pcieduo_working_dir])
+        ret = main(['--colour-space=%s' % ('I420'),
+                    '--port=%s' % (port),
+                    '--config-dir=%s' % (epiphan_dvi2pcieduo_config_dir),
+                    epiphan_dvi2pcieduo_working_dir])
+        if ret: exit(ret)
