@@ -43,6 +43,8 @@ public:
 
     bool get_frame( VideoFrame_BGRA & frame );
 
+    bool get_frame(VideoFrame_I420 & frame);
+
     double get_frame_rate();
 
     void set_sub_frame( int x, int y, int width, int height );

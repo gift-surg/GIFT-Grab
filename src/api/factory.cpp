@@ -10,6 +10,9 @@
 #ifdef USE_EPIPHANSDK
 #include "epiphansdk_video_source.h"
 #endif
+#ifdef USE_LIBVLC
+#include "vlc_video_source.h"
+#endif
 #endif
 
 namespace gg {
@@ -36,6 +39,10 @@ IVideoSource * Factory::connect(enum Device type) {
         throw DeviceNotFound("EpiphanSDK_DVI macro not defined");
 #endif
 #endif
+
+#ifdef USE_LIBVLC
+        device_id = ""; // TODO
+#endif
 #else
         device_id = 0; // always /dev/video0
 #endif
@@ -48,6 +55,10 @@ IVideoSource * Factory::connect(enum Device type) {
 #else
         throw DeviceNotFound("EpiphanSDK_SDI macro not defined");
 #endif
+#endif
+
+#ifdef USE_LIBVLC
+        device_id = ""; // TODO
 #endif
 #else
         device_id = 1; // always /dev/video1
@@ -70,6 +81,17 @@ IVideoSource * Factory::connect(enum Device type) {
         {
             src = new VideoSourceEpiphanSDK(device_id,
                                             V2U_GRABFRAME_FORMAT_I420);
+        }
+        catch (VideoSourceError & e)
+        {
+            throw DeviceNotFound(e.what());
+        }
+#endif
+
+#ifdef USE_LIBVLC
+        try
+        {
+            src = new VideoSourceVLC(device_id);
         }
         catch (VideoSourceError & e)
         {

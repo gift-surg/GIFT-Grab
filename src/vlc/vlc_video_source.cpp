@@ -86,6 +86,12 @@ bool VideoSourceVLC::get_frame( VideoFrame_BGRA & frame )
     return true;
 }
 
+bool get_frame(VideoFrame_I420 & frame)
+{
+    // TODO
+    throw gg::VideoSourceError("get_frame(VideoFrame_I420 & frame) not implemented for VLC");
+}
+
 //-----------------------------------------------------------------------------
 double VideoSourceVLC::get_frame_rate()
 {
