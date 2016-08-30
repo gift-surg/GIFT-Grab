@@ -69,7 +69,7 @@ if((USE_EPIPHAN_DVI2PCIE_DUO AND NOT USE_I420) OR
 endif()
 
 if(USE_EPIPHAN_DVI2PCIE_DUO AND USE_I420)
-    SET(USE_EPIPHANSDK ON CACHE BOOL "OFF ON" FORCE)
+    SET(USE_LIBVLC ON CACHE BOOL "OFF ON" FORCE)
 endif(USE_EPIPHAN_DVI2PCIE_DUO AND USE_I420)
 
 # Determine whether FFmpeg needed
@@ -142,6 +142,16 @@ if(USE_I420)
     LIST(APPEND HEADERS api/videoframe_i420.h)
     LIST(APPEND SOURCES api/videoframe_i420.cpp)
 endif(USE_I420)
+
+# libVLC video source
+if(USE_LIBVLC)
+    ADD_SUBDIRECTORY(cmake/libvlc)
+    LIST(APPEND LIBS ${LIBVLC_LIBRARY})
+
+    INCLUDE_DIRECTORIES(vlc)
+    LIST(APPEND HEADERS vlc/vlc_video_source.h)
+    LIST(APPEND SOURCES vlc/vlc_video_source.cpp)
+endif(USE_LIBVLC)
 
 # Epiphan SDK video source
 if(USE_EPIPHANSDK)
