@@ -29,10 +29,12 @@ IVideoSource * Factory::connect(enum Device type) {
     switch (type) {
     case DVI2PCIeDuo_DVI:
 #ifdef USE_I420
+#ifdef USE_EPIPHANSDK
 #ifdef EpiphanSDK_DVI
         device_id = EpiphanSDK_DVI;
 #else
         throw DeviceNotFound("EpiphanSDK_DVI macro not defined");
+#endif
 #endif
 #else
         device_id = 0; // always /dev/video0
@@ -40,10 +42,12 @@ IVideoSource * Factory::connect(enum Device type) {
         break;
     case DVI2PCIeDuo_SDI:
 #ifdef USE_I420
+#ifdef USE_EPIPHANSDK
 #ifdef EpiphanSDK_SDI
         device_id = EpiphanSDK_SDI;
 #else
         throw DeviceNotFound("EpiphanSDK_SDI macro not defined");
+#endif
 #endif
 #else
         device_id = 1; // always /dev/video1

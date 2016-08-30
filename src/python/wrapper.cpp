@@ -139,6 +139,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
 #endif // USE_OPENCV
 
 #ifdef USE_I420
+#ifdef USE_EPIPHANSDK
     class_<gg::VideoFrame_I420>("VideoFrame_I420", init<bool>())
         .def(init<const size_t, const size_t>())
         .def("rows", &gg::VideoFrame_I420::rows)
