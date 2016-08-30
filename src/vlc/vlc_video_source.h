@@ -32,7 +32,7 @@ public:
     //! and start streaming
     //! \param path as in list provided in class description
     //!
-    VideoSourceVLC(const char * path);
+    VideoSourceVLC(const std::string path);
 
     //!
     //! \brief Finalise current video source and stop streaming

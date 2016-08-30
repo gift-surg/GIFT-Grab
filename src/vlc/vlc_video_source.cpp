@@ -15,12 +15,12 @@ namespace gg
 {
 
 //-----------------------------------------------------------------------------
-VideoSourceVLC::VideoSourceVLC( const char * path )
+VideoSourceVLC::VideoSourceVLC( const std::string path )
    : m_size( 0 )
    , m_pixWidth( 0 )
    , m_pixHeight( 0 )
 {
-   this->mInitSource( path );
+   this->mInitSource( path.c_str() );
    this->mRunSource();
    //std::cout<<"sleeping"<<std::endl;
    //std::this_thread::sleep_for(std::chrono::seconds(1));
