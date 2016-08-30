@@ -6,6 +6,9 @@
 // VLC includes
 #include <vlc/vlc.h>
 
+namespace gg
+{
+
 //!
 //! \brief This class uses VLC to import video streams that can
 //! come from files (mp4, avi, ...) or from the network.
@@ -115,5 +118,7 @@ private:
 
     DISALLOW_COPY_AND_ASSIGNMENT(VideoSourceVLC);
 };
+
+}
 
 #endif

@@ -11,6 +11,9 @@
 #include <chrono>
 #include <thread>
 
+namespace gg
+{
+
 //-----------------------------------------------------------------------------
 VideoSourceVLC::VideoSourceVLC( const char * path )
    : m_size( 0 )
@@ -206,4 +209,6 @@ void VideoSourceVLC::handleStream( VideoSourceVLC* /*p_video_data*/, uint8_t* /*
    //p_video_data->mReadRGBFrame( p_video_data->m_videoBuffer );
    //p_video_data->m_pixWidth = width;
    //p_video_data->m_pixHeight = height;
+}
+
 }
