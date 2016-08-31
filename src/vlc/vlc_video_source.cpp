@@ -41,13 +41,13 @@ VideoSourceVLC::~VideoSourceVLC()
 
 
 //-----------------------------------------------------------------------------
-bool VideoSourceVLC::get_frame_dimensions( int & width, int & height )
+bool VideoSourceVLC::get_frame_dimensions(int & width, int & height)
 {
     ///\todo mutex
-    if( this->_cols==0 || this->_rows==0 ) {
-        //std::cerr<<"Size not set yet"<<std::endl;
+
+    if(this->_cols == 0 || this->_rows == 0)
         return false;
-    }
+
     width = this->_cols;
     height = this->_rows;
     return true;
