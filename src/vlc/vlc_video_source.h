@@ -40,6 +40,23 @@ protected:
     //!
     uint8_t * _video_buffer;
 
+    //!
+    //! \brief Total amount of memory allocated for frames
+    //! \sa _cols
+    //! \sa _rows
+    //!
+    size_t _data_length;
+
+    //!
+    //! \brief Frame width
+    //!
+    uint32_t _cols;
+
+    //!
+    //! \brief Frame height
+    //!
+    uint32_t _rows;
+
 public:
     //!
     //! \brief Initialise video source using given \c path
@@ -90,23 +107,6 @@ private:
     //!
     static void handleStream( VideoSourceVLC * p_video_data, uint8_t * p_pixel_buffer, int width,
                               int height, int pixel_pitch, int size, int64_t pts );
-
-    //!
-    //! \brief Total amount of memory allocated for frames
-    //! \sa m_pixWidth
-    //! \sa m_pixHeight
-    //!
-    int                                m_size;
-
-    //!
-    //! \brief Frame width
-    //!
-    uint32_t                           m_pixWidth;
-
-    //!
-    //! \brief Frame height
-    //!
-    uint32_t                           m_pixHeight;
 
     //!
     //! \brief Wraps low-level calls needed by VLC for initialising

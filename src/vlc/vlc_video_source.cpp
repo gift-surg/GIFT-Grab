@@ -11,9 +11,9 @@ namespace gg
 VideoSourceVLC::VideoSourceVLC( const std::string path )
     : _vlc_inst(nullptr)
     , _vlc_mp(nullptr)
-    , m_size( 0 )
-    , m_pixWidth( 0 )
-    , m_pixHeight( 0 )
+    , _data_length( 0 )
+    , _cols( 0 )
+    , _rows( 0 )
 {
     this->mInitSource( path.c_str() );
     this->mRunSource();
@@ -44,12 +44,12 @@ VideoSourceVLC::~VideoSourceVLC()
 bool VideoSourceVLC::get_frame_dimensions( int & width, int & height )
 {
     ///\todo mutex
-    if( this->m_pixWidth==0 || this->m_pixHeight==0 ) {
+    if( this->_cols==0 || this->_rows==0 ) {
         //std::cerr<<"Size not set yet"<<std::endl;
         return false;
     }
-    width = this->m_pixWidth;
-    height = this->m_pixHeight;
+    width = this->_cols;
+    height = this->_rows;
     return true;
 }
 
@@ -58,7 +58,7 @@ bool VideoSourceVLC::get_frame( VideoFrame_BGRA & frame )
 {
     ///\todo mutex
 
-    if( this->m_pixWidth==0 || this->m_pixHeight==0 || !this->_video_buffer ) {
+    if( this->_cols==0 || this->_rows==0 || !this->_video_buffer ) {
         //std::cerr<<"Size not set yet in VideoSourceVLC::get_next_frame"<<std::endl;
         return false;
     }
@@ -68,8 +68,8 @@ bool VideoSourceVLC::get_frame( VideoFrame_BGRA & frame )
     //std::cout<<"m_size: "<<m_size<<std::endl;
 
     //Allocate and fill the image
-    if( this->m_pixWidth*this->m_pixHeight*4 == this->m_size ) {
-        frame = VideoFrame_BGRA(this->_video_buffer, this->m_pixWidth, this->m_pixHeight);
+    if( this->_cols*this->_rows*4 == this->_data_length ) {
+        frame = VideoFrame_BGRA(this->_video_buffer, this->_cols, this->_rows);
     }
     else
     {
@@ -183,13 +183,13 @@ void VideoSourceVLC::prepareRender( VideoSourceVLC* p_video_data, uint8_t** pp_p
     //std::cout<<"VideoSourceVLC::prepareRender"<<std::endl;
     // called before video rendered
     // p_video_data is the echo of the "this" pointer
-    if( size != p_video_data->m_size ) {
+    if( size != p_video_data->_data_length ) {
         p_video_data->_video_buffer = new uint8_t[size];
-        p_video_data->m_size = size;
+        p_video_data->_data_length = size;
         unsigned int width,height;
         libvlc_video_get_size( p_video_data->_vlc_mp, 0, &width, &height );
-        p_video_data->m_pixWidth = width;
-        p_video_data->m_pixHeight = height;
+        p_video_data->_cols = width;
+        p_video_data->_rows = height;
     }
 
     *pp_pixel_buffer = p_video_data->_video_buffer;
