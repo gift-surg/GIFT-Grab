@@ -185,6 +185,7 @@ void VideoSourceVLC::prepareRender(VideoSourceVLC * p_video_data,
 
     if(size != p_video_data->_data_length)
     {
+        // TODO deallocate previous data?
         p_video_data->_video_buffer = new uint8_t[size];
         p_video_data->_data_length = size;
         unsigned int width,height;
@@ -199,12 +200,10 @@ void VideoSourceVLC::prepareRender(VideoSourceVLC * p_video_data,
 //-----------------------------------------------------------------------------
 void VideoSourceVLC::handleStream(VideoSourceVLC * p_video_data,
                                   uint8_t * p_pixel_buffer,
-                                  unsigned int channels,
-                                  unsigned int rate,
-                                  unsigned int nb_samples,
-                                  unsigned int bits_per_sample,
-                                  size_t size,
-                                  int64_t pts)
+                                  size_t cols,
+                                  size_t rows,
+                                  size_t colour_depth,
+                                  size_t size)
 {
     // TODO: explain how data should be handled (see #86)
     // TODO: Unlock the mutex

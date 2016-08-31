@@ -103,21 +103,17 @@ protected:
     //!
     //! \param p_video_data
     //! \param p_pixel_buffer
-    //! \param channels
-    //! \param rate
-    //! \param nb_samples
-    //! \param bits_per_sample
+    //! \param cols
+    //! \param rows
+    //! \param colour_depth
     //! \param size
-    //! \param pts
     //!
     static void handleStream(VideoSourceVLC * p_video_data,
                              uint8_t * p_pixel_buffer,
-                             unsigned int channels,
-                             unsigned int rate,
-                             unsigned int nb_samples,
-                             unsigned int bits_per_sample,
-                             size_t size,
-                             int64_t pts);
+                             size_t cols,
+                             size_t rows,
+                             size_t colour_depth,
+                             size_t size);
 
     //!
     //! \brief Wraps low-level calls needed by VLC for initialising
