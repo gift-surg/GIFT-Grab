@@ -7,14 +7,14 @@ FILE(COPY
 SET(CONFIG_DIR ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/data)
 
 # SDI port on its own
-SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_SDI)
+SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_SDI_${COLOUR_SPACE})
 ADD_TEST(NAME ${NAME_TEST}
     COMMAND py.test --port=SDI --colour-space=${COLOUR_SPACE} test_unit.py
 )
 LIST(APPEND TESTS_LIST ${NAME_TEST})
 
 # DVI port on its own
-SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_DVI)
+SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_DVI_${COLOUR_SPACE})
 ADD_TEST(NAME ${NAME_TEST}
     COMMAND py.test --port=DVI --colour-space=${COLOUR_SPACE} test_unit.py
 )
