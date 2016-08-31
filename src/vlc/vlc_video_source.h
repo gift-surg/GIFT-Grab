@@ -127,10 +127,13 @@ protected:
     void init_vlc(const char * path);
 
     //!
-    //! \brief Starts streaming
-    //! \throw std::runtime_error in case launch of streaming fails
+    //! \brief Start streaming from previously configured video
+    //! source
     //!
-    void mRunSource();
+    //! \throw gg::VideoSourceError with a detailed message in case
+    //! launch of streaming fails
+    //!
+    void run_vlc();
 
     DISALLOW_COPY_AND_ASSIGNMENT(VideoSourceVLC);
 };

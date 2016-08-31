@@ -16,7 +16,7 @@ VideoSourceVLC::VideoSourceVLC( const std::string path )
     , _rows( 0 )
 {
     this->init_vlc( path.c_str() );
-    this->mRunSource();
+    this->run_vlc();
     //std::cout<<"sleeping"<<std::endl;
     //std::this_thread::sleep_for(std::chrono::seconds(1));
     //std::cout<<"done sleeping"<<std::endl;
@@ -160,19 +160,16 @@ void VideoSourceVLC::init_vlc(const char * path)
 
 
 //-----------------------------------------------------------------------------
-void VideoSourceVLC::mRunSource()
+void VideoSourceVLC::run_vlc()
 {
-    try {
+    try
+    {
         // play the media_player
         libvlc_media_player_play( _vlc_mp );
-        //std::cout<<"Media playing"<<std::endl;
-        return;
     }
     catch( ... )
     {
-        throw std::runtime_error("Error while running source");
-        //std::cerr<<"Error while running source"<<std::endl;
-        //return;
+        throw VideoSourceError("Error while running source");
     }
 }
 
