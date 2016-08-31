@@ -107,7 +107,6 @@ void VideoSourceVLC::mInitSource( const char * path )
 {
     try {
         // VLC pointers
-        libvlc_instance_t *vlcInstance;
         libvlc_media_t    *media;
 
         // VLC options
@@ -131,17 +130,17 @@ void VideoSourceVLC::mInitSource( const char * path )
         };
 
         // We launch VLC
-        vlcInstance = libvlc_new( sizeof(vlc_args) / sizeof(vlc_args[0]), vlc_args );
+        _vlc_inst = libvlc_new( sizeof(vlc_args) / sizeof(vlc_args[0]), vlc_args );
 
         // If path contains a colon (:), it will be treated as a
         // URL. Else, it will be considered as a local path.
         if( std::string(path).find(":") == std::string::npos ) {
             //std::cout<<"opening file "<<path<<std::endl;
-            media = libvlc_media_new_path( vlcInstance, path );
+            media = libvlc_media_new_path( _vlc_inst, path );
         }
         else {
             //std::cout<<"opening url "<<path<<std::endl;
-            media = libvlc_media_new_location( vlcInstance, path );
+            media = libvlc_media_new_location( _vlc_inst, path );
         }
 
         libvlc_media_add_option( media, ":noaudio" );
