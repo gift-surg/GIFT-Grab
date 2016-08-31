@@ -7,7 +7,6 @@
 namespace gg
 {
 
-//-----------------------------------------------------------------------------
 VideoSourceVLC::VideoSourceVLC(const std::string path)
     : _vlc_inst(nullptr)
     , _vlc_mp(nullptr)
@@ -21,7 +20,6 @@ VideoSourceVLC::VideoSourceVLC(const std::string path)
 }
 
 
-//-----------------------------------------------------------------------------
 VideoSourceVLC::~VideoSourceVLC()
 {
     // stop playing
@@ -41,7 +39,6 @@ VideoSourceVLC::~VideoSourceVLC()
 }
 
 
-//-----------------------------------------------------------------------------
 bool VideoSourceVLC::get_frame_dimensions(int & width, int & height)
 {
     ///\todo mutex
@@ -54,12 +51,12 @@ bool VideoSourceVLC::get_frame_dimensions(int & width, int & height)
     return true;
 }
 
-//-----------------------------------------------------------------------------
-bool VideoSourceVLC::get_frame( VideoFrame_BGRA & frame )
+
+bool VideoSourceVLC::get_frame(VideoFrame_BGRA & frame)
 {
     ///\todo mutex
 
-    if( this->_cols==0 || this->_rows==0 || !this->_video_buffer ) {
+    if(this->_cols==0 || this->_rows==0 || !this->_video_buffer) {
         //std::cerr<<"Size not set yet in VideoSourceVLC::get_next_frame"<<std::endl;
         return false;
     }
@@ -69,7 +66,8 @@ bool VideoSourceVLC::get_frame( VideoFrame_BGRA & frame )
     //std::cout<<"m_size: "<<m_size<<std::endl;
 
     //Allocate and fill the image
-    if( this->_cols*this->_rows*4 == this->_data_length ) {
+    if(this->_cols * this->_rows*4 == this->_data_length)
+    {
         frame = VideoFrame_BGRA(this->_video_buffer, this->_cols, this->_rows);
     }
     else
@@ -81,6 +79,7 @@ bool VideoSourceVLC::get_frame( VideoFrame_BGRA & frame )
     //throw std::runtime_error("get_next_frame to be implemented");
     return true;
 }
+
 
 bool VideoSourceVLC::get_frame(VideoFrame_I420 & frame)
 {
@@ -96,25 +95,26 @@ bool VideoSourceVLC::get_frame(VideoFrame_I420 & frame)
     // TODO #86
 }
 
-//-----------------------------------------------------------------------------
+
 double VideoSourceVLC::get_frame_rate()
 {
     //return libvlc_media_player_get_rate( m_mp );
-    return libvlc_media_player_get_fps( this->_vlc_mp );
+    return libvlc_media_player_get_fps(_vlc_mp);
     //throw std::runtime_error("get_frame_rate to be implemented");
     //return 0.0;
 }
 
-//-----------------------------------------------------------------------------
+
 void VideoSourceVLC::set_sub_frame( int x, int y, int width, int height )
 {
-    throw std::runtime_error("set_sub_frame not implemented");
+    throw VideoSourceError("set_sub_frame not implemented");
 }
 
-//-----------------------------------------------------------------------------
+
 void VideoSourceVLC::init_vlc(const char * path)
 {
-    try {
+    try
+    {
         // VLC pointers
         libvlc_media_t * vlc_media = nullptr;
 
@@ -157,7 +157,7 @@ void VideoSourceVLC::init_vlc(const char * path)
         libvlc_media_add_option(vlc_media, ":no-video-title-show");
 
         // Create a media player playing environement
-        _vlc_mp = libvlc_media_player_new_from_media( vlc_media );
+        _vlc_mp = libvlc_media_player_new_from_media(vlc_media);
         // No need to keep the media now
         libvlc_media_release( vlc_media );
     }
@@ -168,7 +168,6 @@ void VideoSourceVLC::init_vlc(const char * path)
 }
 
 
-//-----------------------------------------------------------------------------
 void VideoSourceVLC::run_vlc()
 {
     try
@@ -185,7 +184,7 @@ void VideoSourceVLC::run_vlc()
     }
 }
 
-//-----------------------------------------------------------------------------
+
 void VideoSourceVLC::prepareRender(VideoSourceVLC * p_video_data,
                                    uint8_t ** pp_pixel_buffer,
                                    size_t size)
@@ -206,7 +205,7 @@ void VideoSourceVLC::prepareRender(VideoSourceVLC * p_video_data,
     *pp_pixel_buffer = p_video_data->_video_buffer;
 }
 
-//-----------------------------------------------------------------------------
+
 void VideoSourceVLC::handleStream(VideoSourceVLC * p_video_data,
                                   uint8_t * p_pixel_buffer,
                                   size_t cols,

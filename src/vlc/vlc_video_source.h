@@ -9,20 +9,13 @@ namespace gg
 
 //!
 //! \brief This class uses VLC to import video streams that can
-//! come from files (mp4, avi, ...) or from the network.
+//! come from files, devices, network, etc., pointed to by a
+//! supported media resource locator.
 //!
-//! Supported formats are (perhaps a little bit outdated):
-//!   * Plain media file: <tt> [file://]filename </tt>
-//!   * HTTP URL: <tt> http://ip:port/file </tt>
-//!   * FTP URL: <tt> ftp://ip:port/file </tt>
-//!   * MMS URL: <tt> mms://ip:port/file </tt>
-//!   * Screen capture: <tt> screen:// </tt>
-//!   * DVD device: <tt> [dvd://][device][@raw_device] </tt>
-//!   * VCD device: <tt> [vcd://][device] </tt>
-//!   * Audio CD device: <tt> [cdda://][device] </tt>
-//!   * <tt> udp:[[<source address>]@[<bind address>][:<bind port>]] </tt>
+//! For a list of the supported media resource locators, see:
+//! https://wiki.videolan.org/Media_resource_locator/
 //!
-class VideoSourceVLC: public IVideoSource
+class VideoSourceVLC : public IVideoSource
 {
 protected:
     //!
@@ -70,19 +63,20 @@ public:
     VideoSourceVLC(const std::string path);
 
     //!
-    //! \brief Finalise current video source and stop streaming
+    //! \brief Stop streaming and finalise current video
+    //! source, freeing all used resources
     //!
     ~VideoSourceVLC();
 
-    bool get_frame_dimensions( int & width, int & height );
+    bool get_frame_dimensions(int & width, int & height);
 
-    bool get_frame( VideoFrame_BGRA & frame );
+    bool get_frame(VideoFrame_BGRA & frame);
 
     bool get_frame(VideoFrame_I420 & frame);
 
     double get_frame_rate();
 
-    void set_sub_frame( int x, int y, int width, int height );
+    void set_sub_frame(int x, int y, int width, int height);
 
 protected:
     //!
