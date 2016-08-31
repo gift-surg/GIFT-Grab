@@ -24,6 +24,17 @@ namespace gg
 //!
 class VideoSourceVLC: public IVideoSource
 {
+protected:
+    //!
+    //! \brief VLC engine
+    //!
+    libvlc_instance_t * _vlc_inst;
+
+    //!
+    //! \brief Actual VLC player (streamer)
+    //!
+    libvlc_media_player_t * _vlc_mp;
+
 public:
     //!
     //! \brief Initialise video source using given \c path
@@ -96,11 +107,6 @@ private:
     //! \brief Buffer for frames, has to be allocated before use
     //!
     uint8_t *                          m_videoBuffer;
-
-    //!
-    //! \brief Actual libVLC player (streamer)
-    //!
-    libvlc_media_player_t *            m_mp;
 
     //!
     //! \brief Wraps low-level calls needed by VLC for initialising

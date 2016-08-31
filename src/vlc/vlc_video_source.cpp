@@ -9,7 +9,9 @@ namespace gg
 
 //-----------------------------------------------------------------------------
 VideoSourceVLC::VideoSourceVLC( const std::string path )
-    : m_size( 0 )
+    : _vlc_inst(nullptr)
+    , _vlc_mp(nullptr)
+    , m_size( 0 )
     , m_pixWidth( 0 )
     , m_pixHeight( 0 )
 {
@@ -25,11 +27,11 @@ VideoSourceVLC::VideoSourceVLC( const std::string path )
 VideoSourceVLC::~VideoSourceVLC()
 {
     /* Stop playing */
-    libvlc_media_player_stop( this->m_mp );
+    libvlc_media_player_stop( this->_vlc_mp );
 
     /* Free the media_player */
-    if( m_mp ) {
-        libvlc_media_player_release( this->m_mp );
+    if( _vlc_mp ) {
+        libvlc_media_player_release( this->_vlc_mp );
     }
     // the following lines was not working a few years ago (core dump if several streams are open) - \todo recheck if we want it back
     //if ( m_vlcInstance ){
@@ -89,7 +91,7 @@ bool get_frame(VideoFrame_I420 & frame)
 double VideoSourceVLC::get_frame_rate()
 {
     //return libvlc_media_player_get_rate( m_mp );
-    return libvlc_media_player_get_fps( this->m_mp );
+    return libvlc_media_player_get_fps( this->_vlc_mp );
     //throw std::runtime_error("get_frame_rate to be implemented");
     //return 0.0;
 }
@@ -146,7 +148,7 @@ void VideoSourceVLC::mInitSource( const char * path )
         libvlc_media_add_option( media, ":no-video-title-show" );
 
         // Create a media player playing environement
-        m_mp = libvlc_media_player_new_from_media( media );
+        _vlc_mp = libvlc_media_player_new_from_media( media );
         // No need to keep the media now
         libvlc_media_release( media );
 
@@ -163,7 +165,7 @@ void VideoSourceVLC::mRunSource()
 {
     try {
         // play the media_player
-        libvlc_media_player_play( m_mp );
+        libvlc_media_player_play( _vlc_mp );
         //std::cout<<"Media playing"<<std::endl;
         return;
     }
@@ -186,7 +188,7 @@ void VideoSourceVLC::prepareRender( VideoSourceVLC* p_video_data, uint8_t** pp_p
         p_video_data->m_videoBuffer = new uint8_t[size];
         p_video_data->m_size = size;
         unsigned int width,height;
-        libvlc_video_get_size( p_video_data->m_mp, 0, &width, &height );
+        libvlc_video_get_size( p_video_data->_vlc_mp, 0, &width, &height );
         p_video_data->m_pixWidth = width;
         p_video_data->m_pixHeight = height;
     }
