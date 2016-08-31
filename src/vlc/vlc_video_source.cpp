@@ -1,11 +1,4 @@
-/**
-    \file vlc_video_source.cpp
-
-    \brief  Video Streaming capture implementation.
- */
-
 #include "vlc_video_source.h"
-
 #include <cstdio>
 #include <cstdlib>
 #include <chrono>

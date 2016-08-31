@@ -1,9 +1,7 @@
-#ifndef __VLC_DATA_SOURCE_H__
-#define __VLC_DATA_SOURCE_H__
+#pragma once
 
 #include "ivideosource.h"
 #include "macros.h"
-// VLC includes
 #include <vlc/vlc.h>
 
 namespace gg
@@ -122,5 +120,3 @@ private:
 };
 
 }
-
-#endif
