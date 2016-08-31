@@ -116,12 +116,15 @@ protected:
                              size_t size);
 
     //!
-    //! \brief Wraps low-level calls needed by VLC for initialising
+    //! \brief Initialise VLC low-level configuration for opening
     //! video source specified in \c path
-    //! \param path as in list provided in class description
-    //! \throw std::runtime_error in case initialisation fails
     //!
-    void mInitSource( const char * path );
+    //! \param path as in list provided in class description
+    //!
+    //! \throw gg::VideoSourceError with a detailed message in case
+    //! initialisation fails
+    //!
+    void init_vlc(const char * path);
 
     //!
     //! \brief Starts streaming

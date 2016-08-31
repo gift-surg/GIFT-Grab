@@ -15,7 +15,7 @@ VideoSourceVLC::VideoSourceVLC( const std::string path )
     , _cols( 0 )
     , _rows( 0 )
 {
-    this->mInitSource( path.c_str() );
+    this->init_vlc( path.c_str() );
     this->mRunSource();
     //std::cout<<"sleeping"<<std::endl;
     //std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -103,58 +103,58 @@ void VideoSourceVLC::set_sub_frame( int x, int y, int width, int height )
 }
 
 //-----------------------------------------------------------------------------
-void VideoSourceVLC::mInitSource( const char * path )
+void VideoSourceVLC::init_vlc(const char * path)
 {
     try {
         // VLC pointers
-        libvlc_media_t    *media;
+        libvlc_media_t * vlc_media = nullptr;
 
         // VLC options
         char smem_options[512];
 
-        sprintf( smem_options, "#transcode{vcodec=BGRA}:smem{video-data=%lld,video-prerender-callback=%lld,video-postrender-callback=%lld}",
-                 // We are using transcode because smem only support raw audio and video formats
-                 (long long int)(intptr_t)(void*) this,                               // we pass the pointer of the current object to the static callbacks
-                 (long long int)(intptr_t)(void*) &VideoSourceVLC::prepareRender,  // pointer to the 1st callback called by VLC (static)
-                 (long long int)(intptr_t)(void*) &VideoSourceVLC::handleStream ); // pointer to the 2nd callback called by VLC (static)
+        sprintf(smem_options,
+                "#smem{video-data=%lld,video-prerender-callback=%lld,video-postrender-callback=%lld}",
+                (long long int)(intptr_t)(void*) this,
+                (long long int)(intptr_t)(void*) &VideoSourceVLC::prepareRender,
+                (long long int)(intptr_t)(void*) &VideoSourceVLC::handleStream );
 
         const char * const vlc_args[] = {
-            "-I", "dummy",        // Don't use any interface
-            "--ignore-config",    // Don't use VLC's config
+            "-I", "dummy", // Don't use any interface
+            "--ignore-config", // Don't use VLC's config
             "--extraintf=logger", // Log anything
+            // TODO - what about the options below?
             //"--verbose=2", // Be much more verbose then normal for debugging purpose
             //"--clock-jitter=0",
             //"--file-caching=150",
             "--no-audio",
-            "--sout", smem_options    // Stream to memory
+            "--sout", smem_options // Stream to memory
         };
 
         // We launch VLC
-        _vlc_inst = libvlc_new( sizeof(vlc_args) / sizeof(vlc_args[0]), vlc_args );
+        _vlc_inst = libvlc_new(sizeof(vlc_args) / sizeof(vlc_args[0]), vlc_args);
 
         // If path contains a colon (:), it will be treated as a
         // URL. Else, it will be considered as a local path.
-        if( std::string(path).find(":") == std::string::npos ) {
-            //std::cout<<"opening file "<<path<<std::endl;
-            media = libvlc_media_new_path( _vlc_inst, path );
+        if( std::string(path).find(":") == std::string::npos )
+        {
+            vlc_media = libvlc_media_new_path(_vlc_inst, path);
         }
-        else {
-            //std::cout<<"opening url "<<path<<std::endl;
-            media = libvlc_media_new_location( _vlc_inst, path );
+        else
+        {
+            vlc_media = libvlc_media_new_location(_vlc_inst, path);
         }
 
-        libvlc_media_add_option( media, ":noaudio" );
-        libvlc_media_add_option( media, ":no-video-title-show" );
+        libvlc_media_add_option(vlc_media, ":noaudio");
+        libvlc_media_add_option(vlc_media, ":no-video-title-show");
 
         // Create a media player playing environement
-        _vlc_mp = libvlc_media_player_new_from_media( media );
+        _vlc_mp = libvlc_media_player_new_from_media( vlc_media );
         // No need to keep the media now
-        libvlc_media_release( media );
-
-        //std::cout<<"Media open: "<<path<<std::endl;
+        libvlc_media_release( vlc_media );
     }
-    catch( ... ) {
-        throw std::runtime_error( std::string("Init device failed for the path ").append( path ) );
+    catch( ... )
+    {
+        throw VideoSourceError(std::string("Failed to open ").append(path));
     }
 }
 
