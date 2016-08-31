@@ -197,19 +197,17 @@ void VideoSourceVLC::prepareRender(VideoSourceVLC * p_video_data,
 }
 
 //-----------------------------------------------------------------------------
-void VideoSourceVLC::handleStream( VideoSourceVLC* /*p_video_data*/, uint8_t* /*p_pixel_buffer*/, int /*width*/, int /*height*/,
-                                   int /*pixel_pitch*/, int /*size*/, int64_t /*pts*/ )
+void VideoSourceVLC::handleStream(VideoSourceVLC * p_video_data,
+                                  uint8_t * p_pixel_buffer,
+                                  unsigned int channels,
+                                  unsigned int rate,
+                                  unsigned int nb_samples,
+                                  unsigned int bits_per_sample,
+                                  size_t size,
+                                  int64_t pts)
 {
-    ///\todo create mutex guard
-    //std::cout<<"VideoSourceVLC::handleStream"<<std::endl;
-    //std::cout<<"pixel_pitch"<<pixel_pitch<<std::endl;
-    //std::cout<<"size"<<size<<std::endl;
-    //std::cout<<"pts"<<pts<<std::endl;
-    // called after video rendered
-    // p_video_data is the echo of the "this" pointer
-    //p_video_data->mReadRGBFrame( p_video_data->m_videoBuffer );
-    //p_video_data->m_pixWidth = width;
-    //p_video_data->m_pixHeight = height;
+    // TODO: explain how data should be handled (see #86)
+    // TODO: Unlock the mutex
 }
 
 }

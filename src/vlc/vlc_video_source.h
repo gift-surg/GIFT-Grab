@@ -96,20 +96,28 @@ protected:
                               size_t size);
 
     //!
-    //! \brief Callback called by VLC.
+    //! \brief \c video-prerender-callback called by VLC.
     //!
     //! This needs to be static, but a pointer to \c this is passed
-    //! as parameter and echoed as "p_video_data"
+    //! as parameter.
+    //!
     //! \param p_video_data
     //! \param p_pixel_buffer
-    //! \param width
-    //! \param height
-    //! \param pixel_pitch
+    //! \param channels
+    //! \param rate
+    //! \param nb_samples
+    //! \param bits_per_sample
     //! \param size
     //! \param pts
     //!
-    static void handleStream( VideoSourceVLC * p_video_data, uint8_t * p_pixel_buffer, int width,
-                              int height, int pixel_pitch, int size, int64_t pts );
+    static void handleStream(VideoSourceVLC * p_video_data,
+                             uint8_t * p_pixel_buffer,
+                             unsigned int channels,
+                             unsigned int rate,
+                             unsigned int nb_samples,
+                             unsigned int bits_per_sample,
+                             size_t size,
+                             int64_t pts);
 
     //!
     //! \brief Wraps low-level calls needed by VLC for initialising
