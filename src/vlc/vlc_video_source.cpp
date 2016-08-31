@@ -112,9 +112,15 @@ void VideoSourceVLC::set_sub_frame(int x, int y, int width, int height)
     {
         std::string psz_geometry = encode_psz_geometry(x, y, width, height);
 
-        if (libvlc_video_set_crop_geometry(_vlc_mp, psz_geometry.c_str()) != 0)
+        try
+        {
+            libvlc_video_set_crop_geometry(_vlc_mp, psz_geometry.c_str());
+        }
+        catch (...)
+        {
             throw VideoSourceError(
                 std::string("Could not set sub frame to: ").append(psz_geometry));
+        }
     }
 }
 
@@ -123,9 +129,15 @@ void VideoSourceVLC::get_full_frame()
 {
     std::string psz_geometry = encode_psz_geometry(_full.x, _full.y,
                                                    _full.width, _full.height);
-    if (libvlc_video_set_crop_geometry(_vlc_mp, psz_geometry.c_str()) != 0)
+    try
+    {
+        libvlc_video_set_crop_geometry(_vlc_mp, psz_geometry.c_str());
+    }
+    catch (...)
+    {
         throw VideoSourceError(
             std::string("Could not set full frame"));
+    }
 }
 
 
@@ -179,7 +191,7 @@ void VideoSourceVLC::init_vlc(const char * path)
         // No need to keep the media now
         libvlc_media_release( vlc_media );
     }
-    catch( ... )
+    catch (...)
     {
         throw VideoSourceError(std::string("Failed to open ").append(path));
     }
@@ -196,14 +208,14 @@ void VideoSourceVLC::run_vlc()
         // to succeed before any API functions are called on this object
         std::this_thread::sleep_for(std::chrono::milliseconds(350));
         unsigned int width, height;
-        if (libvlc_video_get_size(_vlc_mp, 0, width, height) != 0)
+        if (libvlc_video_get_size(_vlc_mp, 0, &width, &height) != 0)
             throw VideoSourceError("Could not get video dimensions");
         _full.x = 0;
         _full.y = 0;
         _full.width = width;
         _full.height = height;
     }
-    catch( ... )
+    catch (...)
     {
         throw VideoSourceError("Error while running source");
     }
