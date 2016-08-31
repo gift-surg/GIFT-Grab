@@ -35,6 +35,11 @@ protected:
     //!
     libvlc_media_player_t * _vlc_mp;
 
+    //!
+    //! \brief Buffer for frames, has to be allocated before use
+    //!
+    uint8_t * _video_buffer;
+
 public:
     //!
     //! \brief Initialise video source using given \c path
@@ -102,11 +107,6 @@ private:
     //! \brief Frame height
     //!
     uint32_t                           m_pixHeight;
-
-    //!
-    //! \brief Buffer for frames, has to be allocated before use
-    //!
-    uint8_t *                          m_videoBuffer;
 
     //!
     //! \brief Wraps low-level calls needed by VLC for initialising

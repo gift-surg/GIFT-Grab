@@ -58,7 +58,7 @@ bool VideoSourceVLC::get_frame( VideoFrame_BGRA & frame )
 {
     ///\todo mutex
 
-    if( this->m_pixWidth==0 || this->m_pixHeight==0 || !this->m_videoBuffer ) {
+    if( this->m_pixWidth==0 || this->m_pixHeight==0 || !this->_video_buffer ) {
         //std::cerr<<"Size not set yet in VideoSourceVLC::get_next_frame"<<std::endl;
         return false;
     }
@@ -69,7 +69,7 @@ bool VideoSourceVLC::get_frame( VideoFrame_BGRA & frame )
 
     //Allocate and fill the image
     if( this->m_pixWidth*this->m_pixHeight*4 == this->m_size ) {
-        frame = VideoFrame_BGRA(this->m_videoBuffer, this->m_pixWidth, this->m_pixHeight);
+        frame = VideoFrame_BGRA(this->_video_buffer, this->m_pixWidth, this->m_pixHeight);
     }
     else
     {
@@ -184,7 +184,7 @@ void VideoSourceVLC::prepareRender( VideoSourceVLC* p_video_data, uint8_t** pp_p
     // called before video rendered
     // p_video_data is the echo of the "this" pointer
     if( size != p_video_data->m_size ) {
-        p_video_data->m_videoBuffer = new uint8_t[size];
+        p_video_data->_video_buffer = new uint8_t[size];
         p_video_data->m_size = size;
         unsigned int width,height;
         libvlc_video_get_size( p_video_data->_vlc_mp, 0, &width, &height );
@@ -192,7 +192,7 @@ void VideoSourceVLC::prepareRender( VideoSourceVLC* p_video_data, uint8_t** pp_p
         p_video_data->m_pixHeight = height;
     }
 
-    *pp_pixel_buffer = p_video_data->m_videoBuffer;
+    *pp_pixel_buffer = p_video_data->_video_buffer;
 }
 
 //-----------------------------------------------------------------------------
