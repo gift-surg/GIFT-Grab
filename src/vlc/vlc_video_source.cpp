@@ -60,27 +60,15 @@ bool VideoSourceVLC::get_frame(VideoFrame_BGRA & frame)
 
     ///\todo mutex
 
-    if(this->_cols==0 || this->_rows==0 || !this->_video_buffer) {
-        //std::cerr<<"Size not set yet in VideoSourceVLC::get_next_frame"<<std::endl;
+    if (_cols == 0 || _rows == 0 || _video_buffer == nullptr)
         return false;
-    }
 
-    //std::cout<<"m_pixWidth: "<<m_pixWidth<<std::endl;
-    //std::cout<<"m_pixHeight: "<<m_pixHeight<<std::endl;
-    //std::cout<<"m_size: "<<m_size<<std::endl;
-
-    //Allocate and fill the image
-    if(this->_cols * this->_rows*4 == this->_data_length)
-    {
+    // allocate and fill the image
+    if (_cols * _rows * 4 == this->_data_length)
         frame = VideoFrame_BGRA(this->_video_buffer, this->_cols, this->_rows);
-    }
     else
-    {
-        throw std::runtime_error("get_next_frame not implemented for padded images");
-    }
+        throw VideoSourceError("VLC video source does not support padded images");
 
-    //std::cout<<"VideoSourceVLC::get_next_frame"<<std::endl;
-    //throw std::runtime_error("get_next_frame to be implemented");
     return true;
 }
 
