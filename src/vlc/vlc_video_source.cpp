@@ -54,6 +54,10 @@ bool VideoSourceVLC::get_frame_dimensions(int & width, int & height)
 
 bool VideoSourceVLC::get_frame(VideoFrame_BGRA & frame)
 {
+    throw VideoSourceError("VLC video source supports only I420 colour space");
+
+    // TODO
+
     ///\todo mutex
 
     if(this->_cols==0 || this->_rows==0 || !this->_video_buffer) {
