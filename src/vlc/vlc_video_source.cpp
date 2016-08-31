@@ -81,10 +81,18 @@ bool VideoSourceVLC::get_frame( VideoFrame_BGRA & frame )
     return true;
 }
 
-bool get_frame(VideoFrame_I420 & frame)
+bool VideoSourceVLC::get_frame(VideoFrame_I420 & frame)
 {
-    // TODO
-    throw gg::VideoSourceError("get_frame(VideoFrame_I420 & frame) not implemented for VLC");
+    if (_data_length > 0)
+    {
+        // TODO manage data?
+        frame = VideoFrame_I420(_video_buffer, _data_length, _cols, _rows, false);
+        return true;
+    }
+    else
+        return false;
+
+    // TODO #86
 }
 
 //-----------------------------------------------------------------------------
