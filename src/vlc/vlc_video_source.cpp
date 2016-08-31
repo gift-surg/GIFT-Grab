@@ -175,6 +175,9 @@ void VideoSourceVLC::run_vlc()
     {
         // play the media_player
         libvlc_media_player_play( _vlc_mp );
+        // empirically determined value that allows for initialisation
+        // to succeed before any API functions are called on this object
+        std::this_thread::sleep_for(std::chrono::milliseconds(350));
     }
     catch( ... )
     {
