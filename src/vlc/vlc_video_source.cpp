@@ -33,10 +33,10 @@ VideoSourceVLC::~VideoSourceVLC()
     if( _vlc_mp ) {
         libvlc_media_player_release( this->_vlc_mp );
     }
-    // the following lines was not working a few years ago (core dump if several streams are open) - \todo recheck if we want it back
-    //if ( m_vlcInstance ){
-    //   libvlc_release ( m_vlcInstance );
-    //}
+
+    // free engine
+    if ( _vlc_inst )
+        libvlc_release( this->_vlc_inst );
 }
 
 
