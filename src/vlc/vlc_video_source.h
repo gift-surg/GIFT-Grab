@@ -80,7 +80,7 @@ public:
 
     void set_sub_frame( int x, int y, int width, int height );
 
-private:
+protected:
     //!
     //! \brief \c video-prerender-callback called by VLC.
     //!
