@@ -75,7 +75,7 @@ private:
     //! \param pts
     //!
     static void handleStream( VideoSourceVLC * p_video_data, uint8_t * p_pixel_buffer, int width,
-			      int height, int pixel_pitch, int size, int64_t pts );
+                              int height, int pixel_pitch, int size, int64_t pts );
 
     //!
     //! \brief Total amount of memory allocated for frames
