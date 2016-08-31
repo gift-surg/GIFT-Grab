@@ -8,18 +8,16 @@ namespace gg
 {
 
 //-----------------------------------------------------------------------------
-VideoSourceVLC::VideoSourceVLC( const std::string path )
+VideoSourceVLC::VideoSourceVLC(const std::string path)
     : _vlc_inst(nullptr)
     , _vlc_mp(nullptr)
-    , _data_length( 0 )
-    , _cols( 0 )
-    , _rows( 0 )
+    , _video_buffer(nullptr)
+    , _data_length(0)
+    , _cols(0)
+    , _rows(0)
 {
-    this->init_vlc( path.c_str() );
+    this->init_vlc(path.c_str());
     this->run_vlc();
-    //std::cout<<"sleeping"<<std::endl;
-    //std::this_thread::sleep_for(std::chrono::seconds(1));
-    //std::cout<<"done sleeping"<<std::endl;
 }
 
 

@@ -61,7 +61,11 @@ public:
     //!
     //! \brief Initialise video source using given \c path
     //! and start streaming
+    //!
     //! \param path as in list provided in class description
+    //!
+    //! \throw gg::VideoSourceError with a detailed message
+    //! in case \c path cannot be opened
     //!
     VideoSourceVLC(const std::string path);
 
