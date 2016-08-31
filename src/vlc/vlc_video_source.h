@@ -7,6 +7,10 @@
 namespace gg
 {
 
+//!
+//! \brief Nicely encapsulates video frame dimensions for use
+//! when (re)setting region of interest.
+//!
 struct FrameBox
 {
     unsigned int x;

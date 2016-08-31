@@ -107,6 +107,8 @@ double VideoSourceVLC::get_frame_rate()
 
 void VideoSourceVLC::set_sub_frame(int x, int y, int width, int height)
 {
+    // TODO mutex?
+
     if (x >= _full.x and x + width <= _full.x + _full.width and
         y >= _full.y and y + height <= _full.y + _full.height)
     {
@@ -127,6 +129,8 @@ void VideoSourceVLC::set_sub_frame(int x, int y, int width, int height)
 
 void VideoSourceVLC::get_full_frame()
 {
+    // TODO mutex?
+
     std::string psz_geometry = encode_psz_geometry(_full.x, _full.y,
                                                    _full.width, _full.height);
     try
