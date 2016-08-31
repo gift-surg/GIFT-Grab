@@ -7,6 +7,14 @@
 namespace gg
 {
 
+struct FrameBox
+{
+    unsigned int x;
+    unsigned int y;
+    unsigned int width;
+    unsigned int height;
+};
+
 //!
 //! \brief This class uses VLC to import video streams that can
 //! come from files, devices, network, etc., pointed to by a
@@ -49,6 +57,13 @@ protected:
     //! \brief Frame height
     //!
     uint32_t _rows;
+
+    //!
+    //! \brief This keeps the full frame box specs
+    //! \sa set_sub_frame
+    //! \sa get_full_frame
+    //!
+    FrameBox _full;
 
 public:
     //!

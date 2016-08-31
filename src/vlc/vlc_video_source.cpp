@@ -105,9 +105,19 @@ double VideoSourceVLC::get_frame_rate()
 }
 
 
-void VideoSourceVLC::set_sub_frame( int x, int y, int width, int height )
+void VideoSourceVLC::set_sub_frame(int x, int y, int width, int height)
 {
-    throw VideoSourceError("set_sub_frame not implemented");
+    if (x >= _full.x and x + width <= _full.x + _full.width and
+        y >= _full.y and y + height <= _full.y + _full.height)
+    {
+        std::string psz_geometry;
+        psz_geometry.append(width).append("x").append(height)
+                    .append("+").append(x).append("+").append(y);
+
+        if (libvlc_video_set_crop_geometry(_vlc_mp, psz_geometry.c_str()) != 0)
+            throw VideoSourceError(
+                std::string("Could not set sub frame to: ").append(psz_geometry));
+    }
 }
 
 
@@ -177,6 +187,13 @@ void VideoSourceVLC::run_vlc()
         // empirically determined value that allows for initialisation
         // to succeed before any API functions are called on this object
         std::this_thread::sleep_for(std::chrono::milliseconds(350));
+        unsigned int width, height;
+        if (libvlc_video_get_size(_vlc_mp, 0, width, height) != 0)
+            throw VideoSourceError("Could not get video dimensions");
+        _full.x = 0;
+        _full.y = 0;
+        _full.width = width;
+        _full.height = height;
     }
     catch( ... )
     {
