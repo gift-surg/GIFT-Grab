@@ -82,15 +82,18 @@ public:
 
 private:
     //!
-    //! \brief Callback called by VLC.
+    //! \brief \c video-prerender-callback called by VLC.
     //!
     //! This needs to be static, but a pointer to \c this is passed
-    //! as parameter and echoed as "p_video_data"
+    //! as parameter.
+    //!
     //! \param p_video_data
     //! \param pp_pixel_buffer
     //! \param size
     //!
-    static void prepareRender( VideoSourceVLC *  p_video_data, uint8_t ** pp_pixel_buffer , int size );
+    static void prepareRender(VideoSourceVLC * p_video_data,
+                              uint8_t ** pp_pixel_buffer,
+                              size_t size);
 
     //!
     //! \brief Callback called by VLC.

@@ -177,13 +177,14 @@ void VideoSourceVLC::mRunSource()
 }
 
 //-----------------------------------------------------------------------------
-void VideoSourceVLC::prepareRender( VideoSourceVLC* p_video_data, uint8_t** pp_pixel_buffer, int size )
+void VideoSourceVLC::prepareRender(VideoSourceVLC * p_video_data,
+                                   uint8_t ** pp_pixel_buffer,
+                                   size_t size)
 {
     ///\todo create mutex guard
-    //std::cout<<"VideoSourceVLC::prepareRender"<<std::endl;
-    // called before video rendered
-    // p_video_data is the echo of the "this" pointer
-    if( size != p_video_data->_data_length ) {
+
+    if(size != p_video_data->_data_length)
+    {
         p_video_data->_video_buffer = new uint8_t[size];
         p_video_data->_data_length = size;
         unsigned int width,height;
