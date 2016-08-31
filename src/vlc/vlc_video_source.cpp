@@ -110,14 +110,22 @@ void VideoSourceVLC::set_sub_frame(int x, int y, int width, int height)
     if (x >= _full.x and x + width <= _full.x + _full.width and
         y >= _full.y and y + height <= _full.y + _full.height)
     {
-        std::string psz_geometry;
-        psz_geometry.append(width).append("x").append(height)
-                    .append("+").append(x).append("+").append(y);
+        std::string psz_geometry = encode_psz_geometry(x, y, width, height);
 
         if (libvlc_video_set_crop_geometry(_vlc_mp, psz_geometry.c_str()) != 0)
             throw VideoSourceError(
                 std::string("Could not set sub frame to: ").append(psz_geometry));
     }
+}
+
+
+void VideoSourceVLC::get_full_frame()
+{
+    std::string psz_geometry = encode_psz_geometry(_full.x, _full.y,
+                                                   _full.width, _full.height);
+    if (libvlc_video_set_crop_geometry(_vlc_mp, psz_geometry.c_str()) != 0)
+        throw VideoSourceError(
+            std::string("Could not set full frame"));
 }
 
 
@@ -238,6 +246,15 @@ void VideoSourceVLC::handleStream(VideoSourceVLC * p_video_data,
     p_video_data->_data_length = size;
 
     // TODO: Unlock the mutex
+}
+
+
+std::string VideoSourceVLC::encode_psz_geometry(int x, int y, int width, int height)
+{
+    std::string psz_geometry;
+    psz_geometry.append(width).append("x").append(height)
+                .append("+").append(x).append("+").append(y);
+    return psz_geometry;
 }
 
 }

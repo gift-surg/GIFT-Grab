@@ -93,6 +93,8 @@ public:
 
     void set_sub_frame(int x, int y, int width, int height);
 
+    void get_full_frame();
+
 protected:
     //!
     //! \brief \c video-prerender-callback called by VLC.
@@ -147,6 +149,17 @@ protected:
     //! launch of streaming fails
     //!
     void run_vlc();
+
+    //!
+    //! \brief Generate a string representation of a video frame's
+    //! dimensions, as specified in https://wiki.videolan.org/Crop/
+    //! \param x
+    //! \param y
+    //! \param width
+    //! \param height
+    //! \return
+    //!
+    std::string encode_psz_geometry(int x, int y, int width, int height);
 
     DISALLOW_COPY_AND_ASSIGNMENT(VideoSourceVLC);
 };
