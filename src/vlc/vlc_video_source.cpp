@@ -113,10 +113,7 @@ void VideoSourceVLC::set_sub_frame(int x, int y, int width, int height)
 void VideoSourceVLC::get_full_frame()
 {
     // TODO mutex?
-
-    std::string psz_geometry = encode_psz_geometry(_full.x, _full.y,
-                                                   _full.width, _full.height);
-    libvlc_video_set_crop_geometry(_vlc_mp, psz_geometry.c_str());
+    libvlc_video_set_crop_geometry(_vlc_mp, NULL);
 }
 
 
