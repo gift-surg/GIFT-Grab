@@ -18,7 +18,7 @@ def __file_ext(codec):
     elif codec == Storage.File_XviD:
         return 'avi'
     elif codec == Storage.File_VP9:
-        return 'mp4'
+        return 'webm'
 
 
 def __storage2str(codec):
