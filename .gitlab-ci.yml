@@ -46,6 +46,11 @@ gift-linux:
     - make -j; exit_on_fail
     - ctest; exit_on_fail
     - make install
+    # VP9 support
+    - cmake -D USE_VP9=ON .
+    - make -j; exit_on_fail
+    - ctest; exit_on_fail
+    - make install
     # Epiphan DVI2PCIe Duo support (OpenCV)
     - cmake -D USE_EPIPHAN_DVI2PCIE_DUO=ON .
     - make -j; exit_on_fail
@@ -100,10 +105,13 @@ pypi-packaging:
     # Xvid support (OpenCV should get switched here)
     - pip install -vvv --install-option="--h265" --install-option="--nvenc" --install-option="--xvid" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-xvid; exit_on_fail
+    # VP9 support
+    - pip install -vvv --install-option="--h265" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --upgrade "$PyPI_INSTALLER"
+    - test-giftgrab-vp9; exit_on_fail
     # Epiphan DVI2PCIe Duo support (OpenCV)
-    - pip install -vvv --install-option="--h265" --install-option="--nvenc" --install-option="--xvid" --install-option="--epiphan-dvi2pcie-duo" --upgrade "$PyPI_INSTALLER"
+    - pip install -vvv --install-option="--h265" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --upgrade "$PyPI_INSTALLER"
     # Epiphan DVI2PCIe Duo support (EpiphanSDK)
-    - pip install -vvv --install-option="--h265" --install-option="--nvenc" --install-option="--xvid" --install-option="--epiphan-dvi2pcie-duo" --install-option="--i420" --upgrade "$PyPI_INSTALLER"
+    - pip install -vvv --install-option="--h265" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--i420" --upgrade "$PyPI_INSTALLER"
     - deactivate
   tags:
     - gift-linux
@@ -135,14 +143,16 @@ pypi-packaging-epiphan:
     - pip install PyYAML
     - pip install pytest
     # Epiphan DVI2PCIe Duo support (OpenCV)
-    - pip install -vvv --install-option="--h265" --install-option="--nvenc" --install-option="--xvid" --install-option="--epiphan-dvi2pcie-duo" --upgrade "$PyPI_INSTALLER"
+    - pip install -vvv --install-option="--h265" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-h265; exit_on_fail
     - test-giftgrab-xvid; exit_on_fail
+    - test-giftgrab-vp9; exit_on_fail
     - test-giftgrab-epiphan-dvi2pcieduo-bgr24; exit_on_fail
     # Epiphan DVI2PCIe Duo support (EpiphanSDK)
-    - pip install -vvv --install-option="--h265" --install-option="--nvenc" --install-option="--xvid" --install-option="--epiphan-dvi2pcie-duo" --install-option="--i420" --upgrade "$PyPI_INSTALLER"
+    - pip install -vvv --install-option="--h265" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--i420" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-h265; exit_on_fail
     - test-giftgrab-xvid; exit_on_fail
+    - test-giftgrab-vp9; exit_on_fail
     - test-giftgrab-epiphan-dvi2pcieduo-i420; exit_on_fail
     - deactivate
   tags:
@@ -152,7 +162,7 @@ pypi-packaging-epiphan:
 # Real-time recording ####
 real-time:
   script:
-    - cmake -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D BUILD_PYTHON=ON -D BUILD_TESTS=ON -D USE_H265=ON -D USE_NVENC=ON "$GiftGrab_SOURCE_DIR"
+    - cmake -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D BUILD_PYTHON=ON -D BUILD_TESTS=ON -D USE_H265=ON -D USE_NVENC=ON -D USE_VP9=ON "$GiftGrab_SOURCE_DIR"
     - make -j; exit_on_fail
     # test BGR24 colour space
     - check_epiphan_alive
