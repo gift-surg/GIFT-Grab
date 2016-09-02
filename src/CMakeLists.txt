@@ -27,6 +27,8 @@ OPTION(USE_H265
     "Video encoding with H.265 (requires FFmpeg, pkg-config and x265)" OFF)
 OPTION(USE_XVID
     "Video encoding with Xvid (requires OpenCV)" OFF)
+OPTION(USE_VP9
+    "Video encoding with VP9 (requires FFmpeg, pkg-config and libvpx" OFF)
 OPTION(USE_NVENC
     "Hardware-accelerated video encoding with H.265 (requires FFmpeg, pkg-config and NVENC)" OFF)
 OPTION(BUILD_DOC
@@ -48,7 +50,7 @@ if((USE_EPIPHAN_DVI2PCIE_DUO AND NOT USE_I420) OR
 endif()
 
 # Determine whether FFmpeg needed
-if(USE_H265 OR USE_NVENC)
+if(USE_H265 OR USE_NVENC OR USE_VP9)
     SET(USE_FFMPEG ON CACHE BOOL "OFF ON" FORCE)
 endif()
 
