@@ -181,3 +181,4 @@ real-time:
     - 78-add-ctest-to-ci-scripts
     - 77-use_libvlc-still-appearing-in-cmake
     - 68-publish-giftgrab-on-pypi
+    - 84-switch-to-bsd-compatible-x265-alternative
