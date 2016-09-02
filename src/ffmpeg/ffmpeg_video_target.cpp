@@ -20,7 +20,7 @@ const std::string VideoTargetFFmpeg::_CODEC_NAME_H265_X265 = "libx265";
 
 const std::string VideoTargetFFmpeg::_CODEC_NAME_H265_NVENC = "nvenc_hevc";
 
-const std::string VideoTargetFFmpeg::_CODEC_NAME_VP9_LIBVPX = "libvpx_vp9";
+const std::string VideoTargetFFmpeg::_CODEC_NAME_VP9_LIBVPX = "libvpx-vp9";
 
 
 VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
