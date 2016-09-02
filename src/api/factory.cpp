@@ -169,6 +169,12 @@ IVideoTarget * Factory::writer(Storage type)
 #else
         // nop, see default below
 #endif
+    case File_VP9:
+#ifdef USE_FFMPEG:
+        return new VideoTargetFFmpeg("VP9");
+#else
+        // nop, see default below
+#endif
     default:
         std::string msg;
         msg.append("Video target type ")
