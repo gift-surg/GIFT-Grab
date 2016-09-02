@@ -14,7 +14,7 @@ def pytest_generate_tests(metafunc):
             codec = Storage.File_H265
         elif case_insensitive == 'xvid':
             codec = Storage.File_XviD
-        elif case_insensitive == 'av1':
+        elif case_insensitive == 'vp9':
             codec = Storage.File_VP9
         else:
             raise RuntimeError('Could not recognise codec ' +
