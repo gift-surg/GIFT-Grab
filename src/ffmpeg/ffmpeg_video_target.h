@@ -36,6 +36,21 @@ protected:
     std::string _codec_name;
 
     //!
+    //! \brief For fetching FFmpeg's x265 encoder
+    //!
+    static const std::string _CODEC_NAME_H265_X265;
+
+    //!
+    //! \brief For fetching FFmpeg's NVENC encoder
+    //!
+    static const std::string _CODEC_NAME_H265_NVENC;
+
+    //!
+    //! \brief For fetching FFmpeg's VP9 encoder
+    //!
+    static const std::string _CODEC_NAME_VP9_LIBVPX;
+
+    //!
     //! \brief
     //!
     AVCodec * _codec;
@@ -95,9 +110,9 @@ public:
     //!
     //! \brief Constructor defining what \c codec to
     //! use for encoding
-    //! \param codec
+    //! \param codec `H265` or `VP9`
     //!
-    VideoTargetFFmpeg(const std::string codec = "H265");
+    VideoTargetFFmpeg(const std::string codec);
 
 public:
     void init(const std::string filepath, const float framerate);

@@ -16,6 +16,13 @@
 namespace gg
 {
 
+const std::string VideoTargetFFmpeg::_CODEC_NAME_H265_X265 = "libx265";
+
+const std::string VideoTargetFFmpeg::_CODEC_NAME_H265_NVENC = "nvenc_hevc";
+
+const std::string VideoTargetFFmpeg::_CODEC_NAME_VP9_LIBVPX = "libvpx_vp9";
+
+
 VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
     _codec(NULL),
     _codec_name(""),
@@ -28,7 +35,19 @@ VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
     _stream(NULL),
     _frame_index(0)
 {
-    if (codec != "H265")
+    if (codec == "H265")
+    {
+#ifdef USE_NVENC
+        _codec_name = _CODEC_NAME_H265_NVENC;
+#else
+        _codec_name = _CODEC_NAME_H265_X265;
+#endif
+    }
+    else if (codec == "VP9")
+    {
+        _codec_name = _CODEC_NAME_VP9_LIBVPX;
+    }
+    else
     {
         std::string msg;
         msg.append("Codec ")
@@ -36,11 +55,6 @@ VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
            .append(" not recognised");
         throw VideoTargetError(msg);
     }
-#ifdef USE_NVENC
-    _codec_name = "nvenc_hevc";
-#else
-    _codec_name = "libx265";
-#endif
 
     av_register_all();
 }
@@ -53,15 +67,16 @@ void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
         throw VideoTargetError("Only integer framerates are supported");
     _framerate = (int) framerate;
 
-    check_filetype_support(filepath, "mp4");
+    if (_codec_name == _CODEC_NAME_H265_X265 or
+        _codec_name == _CODEC_NAME_H265_NVENC)
+        check_filetype_support(filepath, "mp4");
+    else if (_codec_name == _CODEC_NAME_VP9_LIBVPX)
+        check_filetype_support(filepath, "webm");
 
     _filepath = filepath;
 
     /* allocate the output media context */
     avformat_alloc_output_context2(&_format_context, NULL, NULL, _filepath.c_str());
-    if (_format_context == NULL)
-        // Use MP4 as default if context cannot be deduced from file extension
-        avformat_alloc_output_context2(&_format_context, NULL, "mp4", NULL);
     if (_format_context == NULL)
         throw VideoTargetError("Could not allocate output media context");
 
