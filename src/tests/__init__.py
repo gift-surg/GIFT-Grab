@@ -25,6 +25,12 @@ def test_xvid():
     if ret: exit(ret)
 
 
+def test_vp9():
+    working_dir = abspath(resource_filename('giftgrab.tests', 'target'))
+    ret = main(['--codec=VP9', working_dir])
+    if ret: exit(ret)
+
+
 def test_epiphan_dvi2pcieduo_bgr24():
     for port in ['SDI', 'DVI']:
         ret = main(['--colour-space=%s' % ('BGR24'),

@@ -394,6 +394,7 @@ description = 'GIFT-Grab was developed as part of the GIFT-Surg project ' +\
 description = '%s\n\n%s' % (summary, description)
 console_scripts = ['test-giftgrab-h265=giftgrab.tests:test_h265',
                    'test-giftgrab-xvid=giftgrab.tests:test_xvid',
+                   'test-giftgrab-vp9=giftgrab.tests:test_vp9',
                    'test-giftgrab-epiphan-dvi2pcieduo-bgr24=giftgrab.tests:test_epiphan_dvi2pcieduo_bgr24',
                    'test-giftgrab-epiphan-dvi2pcieduo-i420=giftgrab.tests:test_epiphan_dvi2pcieduo_i420']
 setup(
