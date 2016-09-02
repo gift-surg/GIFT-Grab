@@ -17,6 +17,8 @@ def __file_ext(codec):
         return 'mp4'
     elif codec == Storage.File_XviD:
         return 'avi'
+    elif codec == Storage.File_VP9:
+        return 'mp4'
 
 
 def __storage2str(codec):
@@ -24,6 +26,8 @@ def __storage2str(codec):
         return 'H265'
     elif codec == Storage.File_XviD:
         return 'Xvid'
+    elif codec == Storage.File_VP9:
+        return 'VP9'
 
 
 @yield_fixture(autouse=True)

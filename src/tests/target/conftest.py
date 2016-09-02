@@ -3,7 +3,7 @@ from pygiftgrab import Storage
 
 def pytest_addoption(parser):
     parser.addoption('--codec', action='store',
-                     help='Codec (H265 or Xvid)')
+                     help='Codec (H265, Xvid, or VP9)')
 
 
 def pytest_generate_tests(metafunc):
@@ -14,6 +14,8 @@ def pytest_generate_tests(metafunc):
             codec = Storage.File_H265
         elif case_insensitive == 'xvid':
             codec = Storage.File_XviD
+        elif case_insensitive == 'av1':
+            codec = Storage.File_VP9
         else:
             raise RuntimeError('Could not recognise codec ' +
                                codec_str)
