@@ -170,7 +170,7 @@ IVideoTarget * Factory::writer(Storage type)
         // nop, see default below
 #endif
     case File_VP9:
-#ifdef USE_FFMPEG:
+#ifdef USE_FFMPEG
         return new VideoTargetFFmpeg("VP9");
 #else
         // nop, see default below
