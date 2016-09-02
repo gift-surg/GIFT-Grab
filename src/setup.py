@@ -81,6 +81,7 @@ class GiftGrabInstallCommand(install):
                    ('i420', None, None),
                    ('xvid', None, None),
                    ('h265', None, None),
+                   ('vp9', None, None),
                    ('nvenc', None, None),
                    ('cmake-install-prefix=', None, None)]
 
@@ -97,6 +98,8 @@ class GiftGrabInstallCommand(install):
             str_rep += ' I420,'
         if self.xvid:
             str_rep += ' Xvid,'
+        if self.vp9:
+            str_rep += ' VP9,'
         if self.h265:
             str_rep += ' H265'
             if self.nvenc:
@@ -111,6 +114,7 @@ class GiftGrabInstallCommand(install):
         self.i420 = None
         self.xvid = None
         self.h265 = None
+        self.vp9 = None
         self.nvenc = None
 
 
@@ -214,11 +218,11 @@ class GiftGrabInstallCommand(install):
             self.__check_command(cmd, err_msg)
 
         # check FFmpeg
-        if self.h265 or self.nvenc:
+        if self.h265 or self.nvenc or self.vp9:
             cmd = ['cmake', join(join(self.here, 'cmake'), 'ffmpeg')]
             err_msg = '%s\n%s' % (
                 'FFmpeg does not seem to be installed on your system.',
-                'FFmpeg is needed for H265 support.'
+                'FFmpeg is needed for H265 or VP9 support.'
             )
             self.__check_command(cmd, err_msg)
 
@@ -231,7 +235,7 @@ class GiftGrabInstallCommand(install):
             output_buffer = self.__check_command(cmd, err_msg)
 
             opt = '--enable-muxer=mp4'
-            if opt not in output_buffer:
+            if (self.h265 or self.nvenc) and opt not in output_buffer:
                 err_summary = 'Your FFmpeg does not seem to support MP4.'
                 err_msg = '%s\n%s%s' % (
                     err_summary,
@@ -264,6 +268,28 @@ class GiftGrabInstallCommand(install):
                 self.__print_err_msg(err_msg)
                 raise LibError(err_summary)
 
+            opt = '--enable-libvpx'
+            if self.vp9 and opt not in output_buffer:
+                err_summary = 'Your FFmpeg does not seem to support libvpx.'
+                err_msg = '%s\n%s%s' % (
+                    err_summary,
+                    'Please install FFmpeg with libvpx support ',
+                    '(%s).' % (opt)
+                )
+                self.__print_err_msg(err_msg)
+                raise LibError(err_summary)
+
+            opt = '--enable-muxer=webm'
+            if self.vp9 and opt not in output_buffer:
+                err_summary = 'Your FFmpeg does not seem to support WebM.'
+                err_msg = '%s\n%s%s' % (
+                    err_summary,
+                    'Please install FFmpeg with WebM support ',
+                    '(%s).' % (opt)
+                )
+                self.__print_err_msg(err_msg)
+                raise LibError(err_summary)
+
         # check EpiphanSDK
         if self.i420:
             cmd = ['cmake', join(join(self.here, 'cmake'), 'epiphansdk')]
@@ -285,6 +311,8 @@ class GiftGrabInstallCommand(install):
             cmake_args.append('-DUSE_H265=ON')
             if self.nvenc:
                 cmake_args.append('-DUSE_NVENC=ON')
+        if self.vp9:
+            cmake_args.append('-DUSE_VP9=ON')
         if self.i420:
             cmake_args.append('-DUSE_I420=ON')
         cmake_args.append('-DCMAKE_INSTALL_PREFIX=%s' % (
