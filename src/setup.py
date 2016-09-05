@@ -392,8 +392,17 @@ description = 'GIFT-Grab was developed as part of the GIFT-Surg project ' +\
               'National Institute for Health Research Biomedical Research ' +\
               'Centre UCLH/UCL High Impact Initiative.'
 description = '%s\n\n%s' % (summary, description)
-console_scripts = ['giftgrab-record-epiphan-dvi2pcieduo=giftgrab.utils:record_epiphan_dvi2pcieduo',
-                   'test-giftgrab-h265=giftgrab.tests:test_h265',
+console_scripts = []
+for port in ['sdi', 'dvi']:
+    for colour_space in ['bgr24', 'i420']:
+        for codec in ['xvid', 'h265', 'vp9']:
+             record_script = 'edd-{}-{}-{}'.format(
+                 port, colour_space, codec)
+             record_script += '=giftgrab.utils:record_epiphan_dvi2pcieduo_{}_{}_{}'.format(
+                 port, colour_space, codec)
+             console_scripts.append(record_script)
+console_scripts = console_scripts +\
+                  ['test-giftgrab-h265=giftgrab.tests:test_h265',
                    'test-giftgrab-xvid=giftgrab.tests:test_xvid',
                    'test-giftgrab-vp9=giftgrab.tests:test_vp9',
                    'test-giftgrab-epiphan-dvi2pcieduo-bgr24=giftgrab.tests:test_epiphan_dvi2pcieduo_bgr24',

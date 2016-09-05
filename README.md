@@ -69,6 +69,7 @@ GiftGrab can be either built from source (for the C++ API) **or** installed via 
 * `test-giftgrab-xvid` to test Xvid support
 * `test-giftgrab-epiphan-dvi2pcieduo-bgr24` to test Epiphan DVI2PCIe Duo support, if GiftGrab has **not** been installed with the `--i420` option
 * `test-giftgrab-epiphan-dvi2pcieduo-i420` to test Epiphan DVI2PCIe Duo support, if GiftGrab has been installed with the `--i420` option
+* `edd-<port>-<colour_space>-<codec>` to record 30 frames into a timestamp-named video file, where `<port>` is one of `dvi` or `sdi`; `colour_space` is one of `bgr24` or `i420`; and `codec` is one of `xvid`, `h265`, or `vp9`: e.g. `edd-dvi-i420-vp9` (Note: GIFT-Grab must be built with corresponding support for a particular combination to work!)
 
 Funding
 -------
