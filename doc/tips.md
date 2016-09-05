@@ -29,6 +29,7 @@ Installation instructions:
 1. `mkdir ffmpeg-build` and `cd ffmpeg-build`
 1. If using x265: `../FFmpeg/configure --enable-shared --enable-avresample --enable-libx265 --enable-gpl --enable-muxer=mp4`
 1. If using NVENC: `../FFmpeg/configure --enable-shared --enable-avresample --enable-nvenc --enable-nonfree --enable-gpl --enable-muxer=mp4`
+1. If using libvpx: `../FFmpeg/configure --enable-shared --enable-avresample --enable-libvpx --enable-muxer=webm`
 1. `make -j` and `make install`
 
 **Note:** In case you install FFmpeg in a non-standard location, you will need to appropriately augment your `PKG_CONFIG_PATH` for GiftGrab to be able to locate FFmpeg.
@@ -52,3 +53,8 @@ Installation instructions:
 1. `cd ..` and `mkdir x265-build` and `cd x265-build`
 1. `cmake -D ENABLE_SHARED:bool=on ../x265/source/`
 1. `make -j` and `make install`
+
+libvpx
+------
+
+Install by `apt-get install libvpx-dev`.

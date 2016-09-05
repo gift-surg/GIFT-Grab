@@ -21,6 +21,7 @@ Optional (depending on desired features, see "How to use" below):
 * [NVENC](https://developer.nvidia.com/nvidia-video-codec-sdk) (tested with 6.0.1)
 * [A GPU supporting NVENC](https://developer.nvidia.com/nvidia-video-codec-sdk)
 * [x265](http://x265.org/)
+* [libvpx](https://www.webmproject.org/code/)
 * EpiphanSDK
 * [Python](https://www.python.org/) (tested with 2.7)
 * [Boost.Python](http://www.boost.org/doc/libs/release/libs/python/)
@@ -39,6 +40,7 @@ Supported video formats
 
 * [XviD](https://www.xvid.com/) (saved as [AVI](https://msdn.microsoft.com/en-us/library/windows/desktop/dd318189(v=vs.85).aspx))
 * [HEVC/H.265](http://www.itu.int/ITU-T/recommendations/rec.aspx?rec=11885) (saved as [MP4](http://www.iso.org/iso/catalogue_detail.htm?csnumber=38538))
+* [VP9](http://www.webmproject.org/vp9/) saved as [WebM](https://www.webmproject.org/users/)
 
 How to use
 ----------
@@ -51,6 +53,7 @@ GiftGrab can be either built from source (for the C++ API) **or** installed via 
 * `-D USE_XVID=ON` for Xvid support (requires OpenCV).
 * `-D USE_H265=ON` for H.265 (HEVC) support (requires FFmpeg, pkg-config and x265).
 * `-D USE_H265=ON -D USE_NVENC=ON` for hardware-accelerated H.265 support (requires a supported GPU, FFmpeg, pkg-config and NVENC).
+* `-D USE_VP9=ON` for VP9 support (requires FFmpeg, pkg-config and libvpx).
 * `-D BUILD_PYTHON=ON` for GiftGrab Python API (requires Python and Boost.Python).
 * To quickly see whether GiftGrab works on your system, turn on tests with `-D BUILD_TESTS=ON -D BUILD_PYTHON=ON` (requires Python, Boost.Python, and pytest). Then run `ctest` or `make test` in the build directory.
 
@@ -62,6 +65,7 @@ GiftGrab can be either built from source (for the C++ API) **or** installed via 
 * `--install-option="--xvid"` for Xvid support (requires OpenCV).
 * `--install-option="--h265"` for H.265 (HEVC) support (requires FFmpeg, pkg-config and x265).
 * `--install-option="--h265" --install-option="--nvenc"` for hardware-accelerated H.265 support (requires a supported GPU, FFmpeg, pkg-config and NVENC).
+* `--install-option="--vp9"` for VP9 support (requires FFmpeg, pkg-config and libvpx).
 
 **To quickly test whether the GiftGrab Python API works** run:
 
