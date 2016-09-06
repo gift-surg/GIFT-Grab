@@ -192,6 +192,7 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
             // nop
             ret = 0;
 #else
+#ifdef USE_X265
             /* TODO will this work in real-time with a framegrabber ?
              * "slow" produces 2x larger file compared to "ultrafast",
              * but with a substantial visual quality degradation
@@ -200,6 +201,10 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
              * while file size is reasonable
              */
             ret = av_opt_set(_stream->codec->priv_data, "preset", "fast", 0);
+#else
+            // nop for kvazaar
+            ret = 0;
+#endif
 #endif
             if (ret != 0)
                 throw VideoTargetError("Could not set codec-specific options");
