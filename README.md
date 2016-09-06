@@ -20,7 +20,7 @@ Optional (depending on desired features, see "How to use" below):
 * [FFmpeg](https://ffmpeg.org/) (tested with 3.0.1)
 * [NVENC](https://developer.nvidia.com/nvidia-video-codec-sdk) (tested with 6.0.1)
 * [A GPU supporting NVENC](https://developer.nvidia.com/nvidia-video-codec-sdk)
-* [x265](http://x265.org/)
+* [kvazaar](https://github.com/ultravideo/kvazaar)
 * [libvpx](https://www.webmproject.org/code/)
 * EpiphanSDK
 * [Python](https://www.python.org/) (tested with 2.7)
@@ -51,7 +51,7 @@ GIFT-Grab can be either built from source (for the C++ API) **or** installed via
 
 * `-D USE_EPIPHAN_DVI2PCIE_DUO=ON` for Epiphan DVI2PCIe Duo support (requires OpenCV). Append `-D USE_I420=ON` to capture at 60 fps (requires EpiphanSDK).
 * `-D USE_XVID=ON` for Xvid support (requires OpenCV).
-* `-D USE_H265=ON` for H.265 (HEVC) support (requires FFmpeg, pkg-config and x265).
+* `-D USE_H265=ON` for H.265 (HEVC) support (requires FFmpeg, pkg-config and kvazaar).
 * `-D USE_H265=ON -D USE_NVENC=ON` for hardware-accelerated H.265 support (requires a supported GPU, FFmpeg, pkg-config and NVENC).
 * `-D USE_VP9=ON` for VP9 support (requires FFmpeg, pkg-config and libvpx).
 * `-D BUILD_PYTHON=ON` for GIFT-Grab Python API (requires Python and Boost.Python).
@@ -63,7 +63,7 @@ GIFT-Grab can be either built from source (for the C++ API) **or** installed via
 
 * `--install-option="--epiphan-dvi2pcie-duo"` for Epiphan DVI2PCIe Duo support (requires OpenCV). Add `--install-option="--i420"` to capture at 60 fps (requires EpiphanSDK).
 * `--install-option="--xvid"` for Xvid support (requires OpenCV).
-* `--install-option="--h265"` for H.265 (HEVC) support (requires FFmpeg, pkg-config and x265).
+* `--install-option="--h265"` for H.265 (HEVC) support (requires FFmpeg, pkg-config and kvazaar).
 * `--install-option="--h265" --install-option="--nvenc"` for hardware-accelerated H.265 support (requires a supported GPU, FFmpeg, pkg-config and NVENC).
 * `--install-option="--vp9"` for VP9 support (requires FFmpeg, pkg-config and libvpx).
 
