@@ -27,7 +27,7 @@ Installation instructions:
 1. `git clone https://github.com/FFmpeg/FFmpeg.git`
 1. `git checkout n3.0.1`
 1. `mkdir ffmpeg-build` and `cd ffmpeg-build`
-1. If using x265: `../FFmpeg/configure --enable-shared --enable-avresample --enable-libx265 --enable-gpl --enable-muxer=mp4`
+1. If using kvazaar: `../FFmpeg/configure --enable-shared --enable-avresample --enable-libkvazaar --enable-muxer=mp4`
 1. If using NVENC: `../FFmpeg/configure --enable-shared --enable-avresample --enable-nvenc --enable-nonfree --enable-muxer=mp4`
 1. If using libvpx: `../FFmpeg/configure --enable-shared --enable-avresample --enable-libvpx --enable-muxer=webm`
 1. `make -j` and `make install`
@@ -42,16 +42,16 @@ Installation instructions:
 1. Download the [SDK](https://developer.nvidia.com/video-sdk-601)
 1. Extract its contents and copy `nvidia_video_sdk_6.0.1/Samples/common/inc/nvEncodeAPI.h` to a standard system include folder (e.g. `/usr/local/include`)
 
-x265
-----
+kvazaar
+-------
 
 Installation instructions:
 
-1. `hg clone https://bitbucket.org/multicoreware/x265`
-1. `cd x265`
-1. `hg checkout 1.9`
-1. `cd ..` and `mkdir x265-build` and `cd x265-build`
-1. `cmake -D ENABLE_SHARED:bool=on ../x265/source/`
+1. `git clone https://github.com/ultravideo/kvazaar.git`
+1. `cd kvazaar`
+1. `git checkout v0.8.3`
+1. `./autogen.sh`
+1. `./configure`
 1. `make -j` and `make install`
 
 libvpx
