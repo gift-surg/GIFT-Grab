@@ -21,6 +21,7 @@ Optional (depending on desired features, see "How to use" below):
 * [NVENC](https://developer.nvidia.com/nvidia-video-codec-sdk) (tested with 6.0.1)
 * [A GPU supporting NVENC](https://developer.nvidia.com/nvidia-video-codec-sdk)
 * [kvazaar](https://github.com/ultravideo/kvazaar)
+* [x265](http://x265.org/) (tested with 1.9)
 * [libvpx](https://www.webmproject.org/code/)
 * EpiphanSDK
 * [Python](https://www.python.org/) (tested with 2.7)

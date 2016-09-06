@@ -28,6 +28,7 @@ Installation instructions:
 1. `git checkout n3.0.1`
 1. `mkdir ffmpeg-build` and `cd ffmpeg-build`
 1. If using kvazaar: `../FFmpeg/configure --enable-shared --enable-avresample --enable-libkvazaar --enable-muxer=mp4`
+1. If using x265: `../FFmpeg/configure --enable-shared --enable-avresample --enable-libx265 --enable-gpl --enable-muxer=mp4`
 1. If using NVENC: `../FFmpeg/configure --enable-shared --enable-avresample --enable-nvenc --enable-nonfree --enable-muxer=mp4`
 1. If using libvpx: `../FFmpeg/configure --enable-shared --enable-avresample --enable-libvpx --enable-muxer=webm`
 1. `make -j` and `make install`
@@ -60,6 +61,18 @@ Caveats:
    1. Create a file `/etc/ld.so.conf.d/kvazaar.conf`
    1. Put only the following line into it: `/usr/local/lib`
    1. Run `ldconfig`
+
+x265
+----
+
+Installation instructions:
+
+1. `hg clone https://bitbucket.org/multicoreware/x265`
+1. `cd x265`
+1. `hg checkout 1.9`
+1. `cd ..` and `mkdir x265-build` and `cd x265-build`
+1. `cmake -D ENABLE_SHARED:bool=on ../x265/source/`
+1. `make -j` and `make install`
 
 libvpx
 ------
