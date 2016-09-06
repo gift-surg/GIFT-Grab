@@ -24,7 +24,7 @@ ADD_SUBDIRECTORY(cmake/cpp11)
 OPTION(USE_EPIPHAN_DVI2PCIE_DUO
     "Capture video with Epiphan DVI2PCIe Duo" OFF)
 OPTION(USE_H265
-    "Video encoding with H.265 (requires FFmpeg, pkg-config and x265)" OFF)
+    "Video encoding with H.265 (requires FFmpeg, pkg-config and kvazaar)" OFF)
 OPTION(USE_XVID
     "Video encoding with Xvid (requires OpenCV)" OFF)
 OPTION(USE_VP9
