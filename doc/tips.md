@@ -54,6 +54,13 @@ Installation instructions:
 1. `./configure`
 1. `make -j` and `make install`
 
+Caveats:
+
+* If you encounter an error of the form `error while loading shared libraries: libkvazaar.so.3: cannot open shared object file: No such file or directory`:
+   1. Create a file `/etc/ld.so.conf.d/kvazaar.conf`
+   1. Put only the following line into it: `/usr/local/lib`
+   1. Run `ldconfig`
+
 libvpx
 ------
 
