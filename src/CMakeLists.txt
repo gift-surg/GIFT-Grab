@@ -36,7 +36,7 @@ OPTION(BUILD_DOC
 OPTION(BUILD_TESTS
     "Tests (requires pytest)" OFF)
 OPTION(BUILD_PYTHON
-    "GiftGrab Python API (requires Python and Boost.Python)" OFF)
+    "GIFT-Grab Python API (requires Python and Boost.Python)" OFF)
 OPTION(USE_I420
     "Capture video in I420 colour space (requires EpiphanSDK)" OFF)
 OPTION(GENERATE_PERFORMANCE_OUTPUT
