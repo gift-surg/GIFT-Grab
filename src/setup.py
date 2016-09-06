@@ -256,13 +256,13 @@ class GiftGrabInstallCommand(install):
                 self.__print_err_msg(err_msg)
                 raise LibError(err_summary)
 
-            opt = '--enable-libx265'
+            opt = '--enable-libkvazaar'
             if self.h265 and not self.nvenc and \
                opt not in output_buffer:
-                err_summary = 'Your FFmpeg does not seem to support x265.'
+                err_summary = 'Your FFmpeg does not seem to support kvazaar.'
                 err_msg = '%s\n%s%s' % (
                     err_summary,
-                    'Please install FFmpeg with x265 support ',
+                    'Please install FFmpeg with kvazaar support ',
                     '(%s).' % (opt)
                 )
                 self.__print_err_msg(err_msg)
@@ -445,7 +445,7 @@ setup(
              'GPU-accelerated video encoding,'
              'real-time video encoding, codec, Xvid, H.265, HEVC, NVENC,'
              'Epiphan DVI2PCIe Duo, medical imaging,'
-             'FFmpeg, OpenCV, x265'
+             'FFmpeg, OpenCV, kvazaar'
              'GIFT-Surg',
 
     install_requires=['pytest', 'PyYAML'],
