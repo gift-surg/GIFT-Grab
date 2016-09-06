@@ -28,7 +28,7 @@ OPTION(USE_H265
 OPTION(USE_XVID
     "Video encoding with Xvid (requires OpenCV)" OFF)
 OPTION(USE_VP9
-    "Video encoding with VP9 (requires FFmpeg, pkg-config and libvpx" OFF)
+    "Video encoding with VP9 (requires FFmpeg, pkg-config and libvpx)" OFF)
 OPTION(USE_NVENC
     "Hardware-accelerated video encoding with H.265 (requires FFmpeg, pkg-config and NVENC)" OFF)
 OPTION(BUILD_DOC
