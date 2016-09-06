@@ -36,17 +36,26 @@ protected:
     std::string _codec_name;
 
     //!
-    //! \brief For fetching FFmpeg's x265 encoder
+    //! \brief For fetching FFmpeg's HEVC encoder using
+    //! x265
     //!
     static const std::string _CODEC_NAME_H265_X265;
 
     //!
-    //! \brief For fetching FFmpeg's NVENC encoder
+    //! \brief For fetching FFmpeg's HEVC encoder using
+    //! kvazaar
+    //!
+    static const std::string _CODEC_NAME_H265_KVAZAAR;
+
+    //!
+    //! \brief For fetching FFmpeg's HEVC encoder using
+    //! NVIDIA VIDEO CODEC SDK
     //!
     static const std::string _CODEC_NAME_H265_NVENC;
 
     //!
-    //! \brief For fetching FFmpeg's VP9 encoder
+    //! \brief For fetching FFmpeg's VP9 encoder using
+    //! libvpx
     //!
     static const std::string _CODEC_NAME_VP9_LIBVPX;
 
