@@ -7,7 +7,9 @@
 #include "ffmpeg_video_target.h"
 #endif
 #ifdef USE_I420
+#ifdef USE_EPIPHANSDK
 #include "epiphansdk_video_source.h"
+#endif
 #endif
 
 namespace gg {
@@ -17,6 +19,9 @@ IVideoSource * Factory::_sources[2] = { NULL, NULL };
 IVideoSource * Factory::connect(enum Device type) {
 #ifdef USE_I420
     std::string device_id = "";
+#ifndef USE_EPIPHANSDK
+    throw VideoSourceError("I420 colour space supported only with EpiphanSDK");
+#endif
 #else
     int device_id = -1; // default value makes no sense
 #endif
@@ -56,6 +61,7 @@ IVideoSource * Factory::connect(enum Device type) {
     {
         IVideoSource * src = nullptr;
 #ifdef USE_I420
+#ifdef USE_EPIPHANSDK
         try
         {
             src = new VideoSourceEpiphanSDK(device_id,
@@ -65,6 +71,7 @@ IVideoSource * Factory::connect(enum Device type) {
         {
             throw DeviceNotFound(e.what());
         }
+#endif
 #else
 #ifdef USE_OPENCV
         src = new VideoSourceOpenCV(device_id);

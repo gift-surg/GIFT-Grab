@@ -5,7 +5,9 @@
 #include "opencv_video_target.h"
 #endif // USE_OPENCV
 #ifdef USE_I420
+#ifdef USE_EPIPHANSDK
 #include "epiphansdk_video_source.h"
+#endif
 #endif
 #ifdef USE_FFMPEG
 #include "ffmpeg_video_target.h"
@@ -142,6 +144,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .def("rows", &gg::VideoFrame_I420::rows)
         .def("cols", &gg::VideoFrame_I420::cols)
     ;
+#ifdef USE_EPIPHANSDK
     bool (gg::VideoSourceEpiphanSDK::*epiphansdk_get_frame_i420)(gg::VideoFrame_I420 &) = &gg::VideoSourceEpiphanSDK::get_frame;
     class_<gg::VideoSourceEpiphanSDK, bases<IVideoSource>, boost::noncopyable>(
                 "VideoSourceEpiphanSDK", init<const std::string, const V2U_INT32>())
@@ -151,6 +154,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .def("set_sub_frame", &gg::VideoSourceEpiphanSDK::set_sub_frame)
         .def("get_full_frame", &gg::VideoSourceEpiphanSDK::get_full_frame)
     ;
+#endif
 #endif
 
     class_<gg::IVideoTarget, boost::noncopyable>("IVideoTarget", no_init)
