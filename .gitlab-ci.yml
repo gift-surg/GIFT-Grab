@@ -154,6 +154,12 @@ pypi-packaging-epiphan:
     - test-giftgrab-xvid; exit_on_fail
     - test-giftgrab-vp9; exit_on_fail
     - test-giftgrab-epiphan-dvi2pcieduo-bgr24; exit_on_fail
+    - edd-dvi-bgr24-hevc; exit_on_fail
+    - edd-sdi-bgr24-hevc; exit_on_fail
+    - edd-dvi-bgr24-xvid; exit_on_fail
+    - edd-sdi-bgr24-xvid; exit_on_fail
+    - edd-dvi-bgr24-vp9; exit_on_fail
+    - edd-sdi-bgr24-vp9; exit_on_fail
     # Epiphan DVI2PCIe Duo support (EpiphanSDK)
     - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--i420" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-hevc; exit_on_fail
@@ -161,10 +167,15 @@ pypi-packaging-epiphan:
     - test-giftgrab-vp9; exit_on_fail
     - test-giftgrab-epiphan-dvi2pcieduo-i420; exit_on_fail
     - edd-dvi-i420-hevc; exit_on_fail
-    - ls -alh
-    - rm ./*.mp4
-    - rm ./*.avi
-    - rm ./*.webm
+    - edd-sdi-i420-hevc; exit_on_fail
+    - edd-dvi-i420-xvid; exit_on_fail
+    - edd-sdi-i420-xvid; exit_on_fail
+    - edd-dvi-i420-vp9; exit_on_fail
+    - edd-sdi-i420-vp9; exit_on_fail
+    - ls -alh ./*.mp4
+    - ls -alh ./*.avi
+    - ls -alh ./*.webm
+    - rm -f ./*.mp4 ./*.avi ./*.webm
     - deactivate
   tags:
     - gift-pypi
