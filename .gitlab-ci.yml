@@ -33,10 +33,12 @@ gift-linux:
     - ctest; exit_on_fail
     - make install
     # H265 support with x265
-    - cmake -D USE_H265=ON -D ENABLE_GPL=ON -D USE_X265=ON .
+    - cmake -D ENABLE_GPL=ON -D USE_X265=ON .
     - make -j; exit_on_fail
     - ctest; exit_on_fail
     - make install
+    # turn x265 off explicitly for combination testing
+    - cmake -D ENABLE_GPL=OFF -D USE_X265=OFF .
     # hardware-accelerated H265
     - cmake -D USE_NVENC=ON .
     - make -j; exit_on_fail
