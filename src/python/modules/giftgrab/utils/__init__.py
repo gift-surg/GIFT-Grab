@@ -70,7 +70,7 @@ def record_epiphan_dvi2pcieduo_sdi_bgr24_xvid():
                                  codec)
 
 
-def record_epiphan_dvi2pcieduo_sdi_bgr24_h265():
+def record_epiphan_dvi2pcieduo_sdi_bgr24_hevc():
     port = gg.Device.DVI2PCIeDuo_SDI
     frame = gg.VideoFrame_BGRA(True)
     codec = gg.Storage.File_H265
@@ -100,7 +100,7 @@ def record_epiphan_dvi2pcieduo_sdi_i420_xvid():
                                  codec)
 
 
-def record_epiphan_dvi2pcieduo_sdi_i420_h265():
+def record_epiphan_dvi2pcieduo_sdi_i420_hevc():
     port = gg.Device.DVI2PCIeDuo_SDI
     frame = gg.VideoFrame_I420(True)
     codec = gg.Storage.File_H265
@@ -130,7 +130,7 @@ def record_epiphan_dvi2pcieduo_dvi_bgr24_xvid():
                                  codec)
 
 
-def record_epiphan_dvi2pcieduo_dvi_bgr24_h265():
+def record_epiphan_dvi2pcieduo_dvi_bgr24_hevc():
     port = gg.Device.DVI2PCIeDuo_DVI
     frame = gg.VideoFrame_BGRA(True)
     codec = gg.Storage.File_H265
@@ -160,7 +160,7 @@ def record_epiphan_dvi2pcieduo_dvi_i420_xvid():
                                  codec)
 
 
-def record_epiphan_dvi2pcieduo_dvi_i420_h265():
+def record_epiphan_dvi2pcieduo_dvi_i420_hevc():
     port = gg.Device.DVI2PCIeDuo_DVI
     frame = gg.VideoFrame_I420(True)
     codec = gg.Storage.File_H265
