@@ -47,6 +47,15 @@ OPTION(GENERATE_PERFORMANCE_OUTPUT
     "Performance benchmark reports (requires Boost.Timer and Boost.System)" OFF)
 MARK_AS_ADVANCED(GENERATE_PERFORMANCE_OUTPUT)
 
+# Inferred options off by default, and advanced
+# (i.e. not shown to user)
+SET(USE_EPIPHANSDK OFF CACHE BOOL "ON OFF" FORCE)
+MARK_AS_ADVANCED(USE_EPIPHANSDK)
+SET(USE_FFMPEG OFF CACHE BOOL "ON OFF" FORCE)
+MARK_AS_ADVANCED(USE_FFMPEG)
+SET(USE_OPENCV OFF CACHE BOOL "ON OFF" FORCE)
+MARK_AS_ADVANCED(USE_OPENCV)
+
 # Check GPL explicitly enabled for relevant components
 if(USE_X265 AND NOT ENABLE_GPL)
     MESSAGE(FATAL_ERROR
