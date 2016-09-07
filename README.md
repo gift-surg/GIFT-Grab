@@ -20,12 +20,12 @@ Optional (depending on desired features, see "How to use" below):
 * [FFmpeg](https://ffmpeg.org/) (tested with 3.0.1)
 * [NVENC](https://developer.nvidia.com/nvidia-video-codec-sdk) (tested with 6.0.1)
 * [A GPU supporting NVENC](https://developer.nvidia.com/nvidia-video-codec-sdk)
-* [kvazaar](https://github.com/ultravideo/kvazaar)
+* [kvazaar](https://github.com/ultravideo/kvazaar) (tested with 0.8.3)
 * [x265](http://x265.org/) (tested with 1.9, **note that x265 is a GPL library, so GPL needs to be enabled - see below - when building GIFT-Grab with x265 support**)
-* [libvpx](https://www.webmproject.org/code/)
+* [libvpx](https://www.webmproject.org/code/) (tested with 1.3.0)
 * EpiphanSDK
 * [Python](https://www.python.org/) (tested with 2.7)
-* [Boost.Python](http://www.boost.org/doc/libs/release/libs/python/)
+* [Boost.Python](http://www.boost.org/doc/libs/release/libs/python/) (tested with 1.54.0)
 * [pkg-config](https://www.freedesktop.org/wiki/Software/pkg-config/)
 * [pytest](http://doc.pytest.org/en/latest/)
 
