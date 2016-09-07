@@ -24,7 +24,11 @@ ADD_SUBDIRECTORY(cmake/cpp11)
 OPTION(USE_EPIPHAN_DVI2PCIE_DUO
     "Capture video with Epiphan DVI2PCIe Duo" OFF)
 OPTION(USE_H265
-    "Video encoding with H.265 (requires FFmpeg, pkg-config and kvazaar)" OFF)
+    "Video encoding with H.265 (requires FFmpeg, pkg-config and kvazaar [default] or x265 [turn USE_X265 on])" OFF)
+OPTION(USE_X265
+    "Use x265 instead of kvazaar for H.265 video encoding (requires ENABLE_GPL as well)" OFF)
+OPTION(ENABLE_GPL
+    "Enable GPL libraries" OFF)
 OPTION(USE_XVID
     "Video encoding with Xvid (requires OpenCV)" OFF)
 OPTION(USE_VP9
@@ -42,6 +46,12 @@ OPTION(USE_I420
 OPTION(GENERATE_PERFORMANCE_OUTPUT
     "Performance benchmark reports (requires Boost.Timer and Boost.System)" OFF)
 MARK_AS_ADVANCED(GENERATE_PERFORMANCE_OUTPUT)
+
+# Check GPL explicitly enabled for relevant components
+if(USE_X265 AND NOT ENABLE_GPL)
+    MESSAGE(FATAL_ERROR
+        "x265 is a GPL library: you must explicitly enable GPL (ENABLE_GPL=ON) to build GIFT-Grab with x256 support")
+endif(USE_X265 AND NOT ENABLE_GPL)
 
 # Determine whether OpenCV needed
 if((USE_EPIPHAN_DVI2PCIE_DUO AND NOT USE_I420) OR
@@ -106,6 +116,11 @@ if(USE_FFMPEG)
     LIST(APPEND HEADERS ffmpeg/ffmpeg_video_target.h)
     LIST(APPEND SOURCES ffmpeg/ffmpeg_video_target.cpp)
 endif(USE_FFMPEG)
+
+# X265
+if(USE_X265)
+    ADD_DEFINITIONS(-DUSE_X265)
+endif(USE_X265)
 
 # Support for I420 (YUV420p) colour space
 if(USE_I420)

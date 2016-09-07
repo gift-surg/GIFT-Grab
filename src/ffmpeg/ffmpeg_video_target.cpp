@@ -42,7 +42,11 @@ VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
 #ifdef USE_NVENC
         _codec_name = _CODEC_NAME_H265_NVENC;
 #else
+#ifdef USE_X265
+        _codec_name = _CODEC_NAME_H265_X265;
+#else
         _codec_name = _CODEC_NAME_H265_KVAZAAR;
+#endif
 #endif
     }
     else if (codec == "VP9")
