@@ -160,6 +160,11 @@ pypi-packaging-epiphan:
     - test-giftgrab-xvid; exit_on_fail
     - test-giftgrab-vp9; exit_on_fail
     - test-giftgrab-epiphan-dvi2pcieduo-i420; exit_on_fail
+    - edd-dvi-i420-hevc; exit_on_fail
+    - ls -alh
+    - rm ./*.mp4
+    - rm ./*.avi
+    - rm ./*.webm
     - deactivate
   tags:
     - gift-pypi
