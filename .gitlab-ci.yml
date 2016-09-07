@@ -168,8 +168,6 @@ pypi-packaging-epiphan:
     - test-giftgrab-epiphan-dvi2pcieduo-i420; exit_on_fail
     - edd-dvi-i420-hevc; exit_on_fail
     - edd-sdi-i420-hevc; exit_on_fail
-    - edd-dvi-i420-xvid; exit_on_fail
-    - edd-sdi-i420-xvid; exit_on_fail
     - edd-dvi-i420-vp9; exit_on_fail
     - edd-sdi-i420-vp9; exit_on_fail
     - ls -alh ./*.mp4
