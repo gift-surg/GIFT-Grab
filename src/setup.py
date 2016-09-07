@@ -80,7 +80,7 @@ class GiftGrabInstallCommand(install):
                   [('epiphan-dvi2pcie-duo', None, None),
                    ('i420', None, None),
                    ('xvid', None, None),
-                   ('h265', None, None),
+                   ('hevc', None, None),
                    ('x265', None, None),
                    ('enable-gpl', None, None),
                    ('vp9', None, None),
@@ -102,8 +102,8 @@ class GiftGrabInstallCommand(install):
             str_rep += ' Xvid,'
         if self.vp9:
             str_rep += ' VP9,'
-        if self.h265:
-            str_rep += ' H265'
+        if self.hevc:
+            str_rep += ' HEVC'
             if self.nvenc:
                 str_rep += ' (NVENC)'
             elif self.x265 and self.enable_gpl:
@@ -117,7 +117,7 @@ class GiftGrabInstallCommand(install):
         self.epiphan_dvi2pcie_duo = None
         self.i420 = None
         self.xvid = None
-        self.h265 = None
+        self.hevc = None
         self.x265 = None
         self.enable_gpl = None
         self.vp9 = None
@@ -224,11 +224,11 @@ class GiftGrabInstallCommand(install):
             self.__check_command(cmd, err_msg)
 
         # check FFmpeg
-        if self.h265 or self.vp9:
+        if self.hevc or self.vp9:
             cmd = ['cmake', join(join(self.here, 'cmake'), 'ffmpeg')]
             err_msg = '%s\n%s' % (
                 'FFmpeg does not seem to be installed on your system.',
-                'FFmpeg is needed for H265 or VP9 support.'
+                'FFmpeg is needed for HEVC or VP9 support.'
             )
             self.__check_command(cmd, err_msg)
 
@@ -240,7 +240,7 @@ class GiftGrabInstallCommand(install):
             )
             output_buffer = self.__check_command(cmd, err_msg)
 
-            if self.h265:
+            if self.hevc:
                 opt = '--enable-muxer=mp4'
                 if opt not in output_buffer:
                     err_summary = 'Your FFmpeg does not seem to support MP4.'
@@ -331,8 +331,8 @@ class GiftGrabInstallCommand(install):
             cmake_args.append('-DUSE_EPIPHAN_DVI2PCIE_DUO=ON')
         if self.xvid:
             cmake_args.append('-DUSE_XVID=ON')
-        if self.h265:
-            cmake_args.append('-DUSE_H265=ON')
+        if self.hevc:
+            cmake_args.append('-DUSE_HEVC=ON')
             if self.nvenc:
                 cmake_args.append('-DUSE_NVENC=ON')
             elif self.x265:
@@ -422,14 +422,14 @@ description = '%s\n\n%s' % (summary, description)
 console_scripts = []
 for port in ['sdi', 'dvi']:
     for colour_space in ['bgr24', 'i420']:
-        for codec in ['xvid', 'h265', 'vp9']:
+        for codec in ['xvid', 'hevc', 'vp9']:
              record_script = 'edd-{}-{}-{}'.format(
                  port, colour_space, codec)
              record_script += '=giftgrab.utils:record_epiphan_dvi2pcieduo_{}_{}_{}'.format(
                  port, colour_space, codec)
              console_scripts.append(record_script)
 console_scripts = console_scripts +\
-                  ['test-giftgrab-h265=giftgrab.tests:test_h265',
+                  ['test-giftgrab-hevc=giftgrab.tests:test_hevc',
                    'test-giftgrab-xvid=giftgrab.tests:test_xvid',
                    'test-giftgrab-vp9=giftgrab.tests:test_vp9',
                    'test-giftgrab-epiphan-dvi2pcieduo-bgr24=giftgrab.tests:test_epiphan_dvi2pcieduo_bgr24',
