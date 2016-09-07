@@ -81,6 +81,8 @@ class GiftGrabInstallCommand(install):
                    ('i420', None, None),
                    ('xvid', None, None),
                    ('h265', None, None),
+                   ('x265', None, None),
+                   ('enable-gpl', None, None),
                    ('vp9', None, None),
                    ('nvenc', None, None),
                    ('cmake-install-prefix=', None, None)]
@@ -104,6 +106,8 @@ class GiftGrabInstallCommand(install):
             str_rep += ' H265'
             if self.nvenc:
                 str_rep += ' (NVENC)'
+            elif self.x265 and self.enable_gpl:
+                str_rep += ' (x265)'
         if not str_rep: str_rep = 'no features'
         return str_rep.rstrip(',')
 
@@ -114,6 +118,8 @@ class GiftGrabInstallCommand(install):
         self.i420 = None
         self.xvid = None
         self.h265 = None
+        self.x265 = None
+        self.enable_gpl = None
         self.vp9 = None
         self.nvenc = None
 
@@ -218,7 +224,7 @@ class GiftGrabInstallCommand(install):
             self.__check_command(cmd, err_msg)
 
         # check FFmpeg
-        if self.h265 or self.nvenc or self.vp9:
+        if self.h265 or self.vp9:
             cmd = ['cmake', join(join(self.here, 'cmake'), 'ffmpeg')]
             err_msg = '%s\n%s' % (
                 'FFmpeg does not seem to be installed on your system.',
@@ -234,61 +240,79 @@ class GiftGrabInstallCommand(install):
             )
             output_buffer = self.__check_command(cmd, err_msg)
 
-            opt = '--enable-muxer=mp4'
-            if (self.h265 or self.nvenc) and opt not in output_buffer:
-                err_summary = 'Your FFmpeg does not seem to support MP4.'
-                err_msg = '%s\n%s%s' % (
-                    err_summary,
-                    'Please install FFmpeg with MP4 support ',
-                    '(%s).' % (opt)
-                )
-                self.__print_err_msg(err_msg)
-                raise LibError(err_summary)
+            if self.h265:
+                opt = '--enable-muxer=mp4'
+                if opt not in output_buffer:
+                    err_summary = 'Your FFmpeg does not seem to support MP4.'
+                    err_msg = '%s\n%s%s' % (
+                        err_summary,
+                        'Please install FFmpeg with MP4 support ',
+                        '(%s).' % (opt)
+                    )
+                    self.__print_err_msg(err_msg)
+                    raise LibError(err_summary)
 
-            opt = '--enable-nvenc'
-            if self.nvenc and opt not in output_buffer:
-                err_summary = 'Your FFmpeg does not seem to support NVENC.'
-                err_msg = '%s\n%s%s' % (
-                    err_summary,
-                    'Please install FFmpeg with NVENC support ',
-                    '(%s).' % (opt)
-                )
-                self.__print_err_msg(err_msg)
-                raise LibError(err_summary)
+                if self.nvenc:
+                    opt = '--enable-nvenc'
+                    if opt not in output_buffer:
+                        err_summary = 'Your FFmpeg does not seem to support NVENC.'
+                        err_msg = '%s\n%s%s' % (
+                            err_summary,
+                            'Please install FFmpeg with NVENC support ',
+                            '(%s).' % (opt)
+                        )
+                        self.__print_err_msg(err_msg)
+                        raise LibError(err_summary)
+                elif self.x265:
+                    if not self.enable_gpl:
+                        err_msg = 'You must enable GPL for x265 support'
+                        self.__print_err_msg(err_msg)
+                        raise LibError(err_msg)
+                    else:
+                        opt = '--enable-libx265'
+                        if opt not in output_buffer:
+                            err_summary = 'Your FFmpeg does not seem to support x265.'
+                            err_msg = '%s\n%s%s' % (
+                                err_summary,
+                                'Please install FFmpeg with x265 support ',
+                                '(%s).' % (opt)
+                            )
+                            self.__print_err_msg(err_msg)
+                            raise LibError(err_summary)
+                else:
+                    opt = '--enable-libkvazaar'
+                    if opt not in output_buffer:
+                        err_summary = 'Your FFmpeg does not seem to support kvazaar.'
+                        err_msg = '%s\n%s%s' % (
+                            err_summary,
+                            'Please install FFmpeg with kvazaar support ',
+                            '(%s).' % (opt)
+                        )
+                        self.__print_err_msg(err_msg)
+                        raise LibError(err_summary)
 
-            opt = '--enable-libkvazaar'
-            if self.h265 and not self.nvenc and \
-               opt not in output_buffer:
-                err_summary = 'Your FFmpeg does not seem to support kvazaar.'
-                err_msg = '%s\n%s%s' % (
-                    err_summary,
-                    'Please install FFmpeg with kvazaar support ',
-                    '(%s).' % (opt)
-                )
-                self.__print_err_msg(err_msg)
-                raise LibError(err_summary)
+            if self.vp9:
+                opt = '--enable-muxer=webm'
+                if opt not in output_buffer:
+                    err_summary = 'Your FFmpeg does not seem to support WebM.'
+                    err_msg = '%s\n%s%s' % (
+                        err_summary,
+                        'Please install FFmpeg with WebM support ',
+                        '(%s).' % (opt)
+                    )
+                    self.__print_err_msg(err_msg)
+                    raise LibError(err_summary)
 
-            opt = '--enable-libvpx'
-            if self.vp9 and opt not in output_buffer:
-                err_summary = 'Your FFmpeg does not seem to support libvpx.'
-                err_msg = '%s\n%s%s' % (
-                    err_summary,
-                    'Please install FFmpeg with libvpx support ',
-                    '(%s).' % (opt)
-                )
-                self.__print_err_msg(err_msg)
-                raise LibError(err_summary)
-
-            opt = '--enable-muxer=webm'
-            if self.vp9 and opt not in output_buffer:
-                err_summary = 'Your FFmpeg does not seem to support WebM.'
-                err_msg = '%s\n%s%s' % (
-                    err_summary,
-                    'Please install FFmpeg with WebM support ',
-                    '(%s).' % (opt)
-                )
-                self.__print_err_msg(err_msg)
-                raise LibError(err_summary)
+                opt = '--enable-libvpx'
+                if opt not in output_buffer:
+                    err_summary = 'Your FFmpeg does not seem to support libvpx.'
+                    err_msg = '%s\n%s%s' % (
+                        err_summary,
+                        'Please install FFmpeg with libvpx support ',
+                        '(%s).' % (opt)
+                    )
+                    self.__print_err_msg(err_msg)
+                    raise LibError(err_summary)
 
         # check EpiphanSDK
         if self.i420:
@@ -311,6 +335,9 @@ class GiftGrabInstallCommand(install):
             cmake_args.append('-DUSE_H265=ON')
             if self.nvenc:
                 cmake_args.append('-DUSE_NVENC=ON')
+            elif self.x265:
+                cmake_args.append('-DENABLE_GPL=ON')
+                cmake_args.append('-DUSE_X265=ON')
         if self.vp9:
             cmake_args.append('-DUSE_VP9=ON')
         if self.i420:
