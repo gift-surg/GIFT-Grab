@@ -40,7 +40,7 @@ Supported video formats
 -----------------------
 
 * [XviD](https://www.xvid.com/) (saved as [AVI](https://msdn.microsoft.com/en-us/library/windows/desktop/dd318189(v=vs.85).aspx))
-* [HEVC/H.265](http://www.itu.int/ITU-T/recommendations/rec.aspx?rec=11885) (saved as [MP4](http://www.iso.org/iso/catalogue_detail.htm?csnumber=38538))
+* [HEVC (H.265)](http://www.itu.int/ITU-T/recommendations/rec.aspx?rec=11885) (saved as [MP4](http://www.iso.org/iso/catalogue_detail.htm?csnumber=38538))
 * [VP9](http://www.webmproject.org/vp9/) (saved as [WebM](https://www.webmproject.org/users/))
 
 How to use
@@ -54,9 +54,9 @@ Features can be customised as per the combinations listed below. Please note tha
 
 * `-D USE_EPIPHAN_DVI2PCIE_DUO=ON` for Epiphan DVI2PCIe Duo support (requires OpenCV). Append `-D USE_I420=ON` to capture at 60 fps (requires EpiphanSDK).
 * `-D USE_XVID=ON` for Xvid support (requires OpenCV).
-* `-D USE_H265=ON` for H.265 (HEVC) support (requires FFmpeg, pkg-config and kvazaar).
-* `-D USE_H265=ON -D ENABLE_GPL=ON -D USE_X265=ON` to use x265 instead of kvazaar for H.265 support (requires FFmpeg, pkg-config and x265).
-* `-D USE_H265=ON -D USE_NVENC=ON` for hardware-accelerated H.265 support (requires a supported GPU, FFmpeg, pkg-config and NVENC).
+* `-D USE_HEVC=ON` for HEVC support (requires FFmpeg, pkg-config and kvazaar).
+* `-D USE_HEVC=ON -D ENABLE_GPL=ON -D USE_X265=ON` to use x265 instead of kvazaar for HEVC support (requires FFmpeg, pkg-config and x265).
+* `-D USE_HEVC=ON -D USE_NVENC=ON` for hardware-accelerated HEVC support (requires a supported GPU, FFmpeg, pkg-config and NVENC).
 * `-D USE_VP9=ON` for VP9 support (requires FFmpeg, pkg-config and libvpx).
 * `-D BUILD_PYTHON=ON` for GIFT-Grab Python API (requires Python and Boost.Python).
 * To quickly see whether GIFT-Grab works on your system, turn on tests with `-D BUILD_TESTS=ON -D BUILD_PYTHON=ON` (requires Python, Boost.Python, and pytest). Then run `ctest` or `make test` in the build directory.
@@ -67,21 +67,21 @@ Features can be customised as per the combinations listed below. Please note tha
 
 * `--install-option="--epiphan-dvi2pcie-duo"` for Epiphan DVI2PCIe Duo support (requires OpenCV). Add `--install-option="--i420"` to capture at 60 fps (requires EpiphanSDK).
 * `--install-option="--xvid"` for Xvid support (requires OpenCV).
-* `--install-option="--h265"` for H.265 (HEVC) support (requires FFmpeg, pkg-config and kvazaar).
-* `--install-option="--h265" --install-option="--enable-gpl" --install-option="--x265"` to use x265 instead of kvazaar for H.265 support (requires FFmpeg, pkg-config and x265).
-* `--install-option="--h265" --install-option="--nvenc"` for hardware-accelerated H.265 support (requires a supported GPU, FFmpeg, pkg-config and NVENC).
+* `--install-option="--hevc"` for HEVC support (requires FFmpeg, pkg-config and kvazaar).
+* `--install-option="--hevc" --install-option="--enable-gpl" --install-option="--x265"` to use x265 instead of kvazaar for HEVC support (requires FFmpeg, pkg-config and x265).
+* `--install-option="--hevc" --install-option="--nvenc"` for hardware-accelerated HEVC support (requires a supported GPU, FFmpeg, pkg-config and NVENC).
 * `--install-option="--vp9"` for VP9 support (requires FFmpeg, pkg-config and libvpx).
 
 **To quickly test whether the GIFT-Grab Python API works** run:
 
-* `test-giftgrab-h265` to test H.265 (HEVC) support
+* `test-giftgrab-hevc` to test HEVC support
 * `test-giftgrab-xvid` to test Xvid support
 * `test-giftgrab-epiphan-dvi2pcieduo-bgr24` to test Epiphan DVI2PCIe Duo support, if GIFT-Grab has **not** been installed with the `--i420` option
 * `test-giftgrab-epiphan-dvi2pcieduo-i420` to test Epiphan DVI2PCIe Duo support, if GIFT-Grab has been installed with the `--i420` option
 * `edd-<port>-<colour_space>-<codec>` (e.g. `edd-dvi-i420-vp9`) to record 30 frames into a timestamp-named video file, where:
    * `<port>` is one of `dvi` or `sdi`
    * `<colour_space>` is one of `bgr24` or `i420` (if GIFT-Grab was built with I420 colour space support)
-   * `<codec>` is one of `xvid`, `h265`, or `vp9` (provided GIFT-Grab was built with support for specified option)
+   * `<codec>` is one of `xvid`, `hevc`, or `vp9` (provided GIFT-Grab was built with support for specified option)
 
 Funding
 -------
