@@ -4,14 +4,14 @@ FILE(COPY
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-# H265 tests
-if(USE_H265)
-    SET(NAME_TEST Test_H265)
+# HEVC tests
+if(USE_HEVC)
+    SET(NAME_TEST Test_HEVC)
     ADD_TEST(NAME ${NAME_TEST}
         COMMAND py.test --codec=H265 test_unit.py
     )
     LIST(APPEND TESTS_LIST ${NAME_TEST})
-endif(USE_H265)
+endif(USE_HEVC)
 
 # Xvid tests
 if(USE_XVID)
