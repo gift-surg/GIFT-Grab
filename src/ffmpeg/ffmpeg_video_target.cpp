@@ -37,7 +37,7 @@ VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
     _stream(NULL),
     _frame_index(0)
 {
-    if (codec == "H265")
+    if (codec == "HEVC")
     {
 #ifdef USE_NVENC
         _codec_name = _CODEC_NAME_HEVC_NVENC;

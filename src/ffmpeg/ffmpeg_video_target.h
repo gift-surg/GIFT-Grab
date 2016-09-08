@@ -119,7 +119,7 @@ public:
     //!
     //! \brief Constructor defining what \c codec to
     //! use for encoding
-    //! \param codec `H265` or `VP9`
+    //! \param codec `HEVC` or `VP9`
     //!
     VideoTargetFFmpeg(const std::string codec);
 
