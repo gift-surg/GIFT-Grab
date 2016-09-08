@@ -8,7 +8,7 @@ FILE(COPY
 if(USE_HEVC)
     SET(NAME_TEST Test_HEVC)
     ADD_TEST(NAME ${NAME_TEST}
-        COMMAND py.test --codec=H265 test_unit.py
+        COMMAND py.test --codec=HEVC test_unit.py
     )
     LIST(APPEND TESTS_LIST ${NAME_TEST})
 endif(USE_HEVC)

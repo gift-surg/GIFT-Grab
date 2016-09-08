@@ -19,7 +19,7 @@ def __extension(codec):
     """
     if codec == gg.Storage.File_XviD:
         return '.avi'
-    elif codec == gg.Storage.File_H265:
+    elif codec == gg.Storage.File_HEVC:
         return '.mp4'
     elif codec == gg.Storage.File_VP9:
         return '.webm'
@@ -73,7 +73,7 @@ def record_epiphan_dvi2pcieduo_sdi_bgr24_xvid():
 def record_epiphan_dvi2pcieduo_sdi_bgr24_hevc():
     port = gg.Device.DVI2PCIeDuo_SDI
     frame = gg.VideoFrame_BGRA(True)
-    codec = gg.Storage.File_H265
+    codec = gg.Storage.File_HEVC
     __record_epiphan_dvi2pcieduo(port,
                                  frame,
                                  num_frames,
@@ -103,7 +103,7 @@ def record_epiphan_dvi2pcieduo_sdi_i420_xvid():
 def record_epiphan_dvi2pcieduo_sdi_i420_hevc():
     port = gg.Device.DVI2PCIeDuo_SDI
     frame = gg.VideoFrame_I420(True)
-    codec = gg.Storage.File_H265
+    codec = gg.Storage.File_HEVC
     __record_epiphan_dvi2pcieduo(port,
                                  frame,
                                  num_frames,
@@ -133,7 +133,7 @@ def record_epiphan_dvi2pcieduo_dvi_bgr24_xvid():
 def record_epiphan_dvi2pcieduo_dvi_bgr24_hevc():
     port = gg.Device.DVI2PCIeDuo_DVI
     frame = gg.VideoFrame_BGRA(True)
-    codec = gg.Storage.File_H265
+    codec = gg.Storage.File_HEVC
     __record_epiphan_dvi2pcieduo(port,
                                  frame,
                                  num_frames,
@@ -163,7 +163,7 @@ def record_epiphan_dvi2pcieduo_dvi_i420_xvid():
 def record_epiphan_dvi2pcieduo_dvi_i420_hevc():
     port = gg.Device.DVI2PCIeDuo_DVI
     frame = gg.VideoFrame_I420(True)
-    codec = gg.Storage.File_H265
+    codec = gg.Storage.File_HEVC
     __record_epiphan_dvi2pcieduo(port,
                                  frame,
                                  num_frames,

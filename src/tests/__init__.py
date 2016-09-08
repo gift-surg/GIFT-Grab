@@ -15,7 +15,7 @@ epiphan_dvi2pcieduo_config_dir = abspath(
 
 def test_hevc():
     working_dir = abspath(resource_filename('giftgrab.tests', 'target'))
-    ret = main(['--codec=H265', working_dir])
+    ret = main(['--codec=HEVC', working_dir])
     if ret: exit(ret)
 
 

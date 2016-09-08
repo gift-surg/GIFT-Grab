@@ -291,7 +291,7 @@ class Recorder(Thread):
         while attempts < self.max_num_attempts:
             attempts += 1
             try:
-                self.file = pygiftgrab.Factory.writer(pygiftgrab.Storage.File_H265)
+                self.file = pygiftgrab.Factory.writer(pygiftgrab.Storage.File_HEVC)
             except RuntimeError as e:
                 logging.error(
                     'Attempt #' + str(attempts) + ' of ' +

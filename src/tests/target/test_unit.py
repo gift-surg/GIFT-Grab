@@ -13,7 +13,7 @@ frame_rate = 60
 
 
 def __file_ext(codec):
-    if codec == Storage.File_H265:
+    if codec == Storage.File_HEVC:
         return 'mp4'
     elif codec == Storage.File_XviD:
         return 'avi'
@@ -22,8 +22,8 @@ def __file_ext(codec):
 
 
 def __storage2str(codec):
-    if codec == Storage.File_H265:
-        return 'H265'
+    if codec == Storage.File_HEVC:
+        return 'HEVC'
     elif codec == Storage.File_XviD:
         return 'Xvid'
     elif codec == Storage.File_VP9:
