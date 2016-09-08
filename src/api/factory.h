@@ -20,7 +20,7 @@ enum Device {
 enum Storage
 {
     File_XviD,
-    File_H265,
+    File_HEVC,
     File_VP9
 };
 

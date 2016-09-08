@@ -170,9 +170,9 @@ IVideoTarget * Factory::writer(Storage type)
 #ifdef USE_OPENCV
         return new VideoTargetOpenCV("XVID");
 #endif // USE_OPENCV
-    case File_H265:
+    case File_HEVC:
 #ifdef USE_FFMPEG
-        return new VideoTargetFFmpeg("H265");
+        return new VideoTargetFFmpeg("HEVC");
 #else
         // nop, see default below
 #endif

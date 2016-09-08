@@ -111,7 +111,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     ;
 
     enum_<gg::Storage>("Storage")
-        .value("File_H265", gg::Storage::File_H265)
+        .value("File_HEVC", gg::Storage::File_HEVC)
         .value("File_XviD", gg::Storage::File_XviD)
         .value("File_VP9", gg::Storage::File_VP9)
     ;
