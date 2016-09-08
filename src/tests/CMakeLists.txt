@@ -10,9 +10,9 @@ else(USE_I420)
 endif(USE_I420)
 
 # common configuration
-if(USE_HEVC OR USE_XVID)
+if(USE_HEVC OR USE_XVID OR USE_VP9)
     SUBDIRS(target)
-endif(USE_HEVC OR USE_XVID)
+endif(USE_HEVC OR USE_XVID OR USE_VP9)
 
 # Epiphan DVI2PCIe Duo tests
 if(USE_EPIPHAN_DVI2PCIE_DUO)
