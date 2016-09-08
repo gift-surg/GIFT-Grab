@@ -16,11 +16,11 @@
 namespace gg
 {
 
-const std::string VideoTargetFFmpeg::_CODEC_NAME_H265_X265 = "libx265";
+const std::string VideoTargetFFmpeg::_CODEC_NAME_HEVC_X265 = "libx265";
 
-const std::string VideoTargetFFmpeg::_CODEC_NAME_H265_KVAZAAR = "libkvazaar";
+const std::string VideoTargetFFmpeg::_CODEC_NAME_HEVC_KVAZAAR = "libkvazaar";
 
-const std::string VideoTargetFFmpeg::_CODEC_NAME_H265_NVENC = "nvenc_hevc";
+const std::string VideoTargetFFmpeg::_CODEC_NAME_HEVC_NVENC = "nvenc_hevc";
 
 const std::string VideoTargetFFmpeg::_CODEC_NAME_VP9_LIBVPX = "libvpx-vp9";
 
@@ -40,12 +40,12 @@ VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
     if (codec == "H265")
     {
 #ifdef USE_NVENC
-        _codec_name = _CODEC_NAME_H265_NVENC;
+        _codec_name = _CODEC_NAME_HEVC_NVENC;
 #else
 #ifdef USE_X265
-        _codec_name = _CODEC_NAME_H265_X265;
+        _codec_name = _CODEC_NAME_HEVC_X265;
 #else
-        _codec_name = _CODEC_NAME_H265_KVAZAAR;
+        _codec_name = _CODEC_NAME_HEVC_KVAZAAR;
 #endif
 #endif
     }
@@ -73,8 +73,8 @@ void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
         throw VideoTargetError("Only integer framerates are supported");
     _framerate = (int) framerate;
 
-    if (_codec_name == _CODEC_NAME_H265_X265 or
-        _codec_name == _CODEC_NAME_H265_NVENC)
+    if (_codec_name == _CODEC_NAME_HEVC_X265 or
+        _codec_name == _CODEC_NAME_HEVC_NVENC)
         check_filetype_support(filepath, "mp4");
     else if (_codec_name == _CODEC_NAME_VP9_LIBVPX)
         check_filetype_support(filepath, "webm");
@@ -214,7 +214,7 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
                 throw VideoTargetError("Could not set codec-specific options");
 
             /* Resolution must be a multiple of two, as required
-             * by H264 and H265. Introduce a one-pixel padding for
+             * by H264 and HEVC. Introduce a one-pixel padding for
              * non-complying dimension(s).
              */
             _stream->codec->width +=

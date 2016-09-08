@@ -39,19 +39,19 @@ protected:
     //! \brief For fetching FFmpeg's HEVC encoder using
     //! x265
     //!
-    static const std::string _CODEC_NAME_H265_X265;
+    static const std::string _CODEC_NAME_HEVC_X265;
 
     //!
     //! \brief For fetching FFmpeg's HEVC encoder using
     //! kvazaar
     //!
-    static const std::string _CODEC_NAME_H265_KVAZAAR;
+    static const std::string _CODEC_NAME_HEVC_KVAZAAR;
 
     //!
     //! \brief For fetching FFmpeg's HEVC encoder using
     //! NVIDIA VIDEO CODEC SDK
     //!
-    static const std::string _CODEC_NAME_H265_NVENC;
+    static const std::string _CODEC_NAME_HEVC_NVENC;
 
     //!
     //! \brief For fetching FFmpeg's VP9 encoder using
