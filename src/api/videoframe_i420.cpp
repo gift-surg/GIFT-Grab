@@ -10,15 +10,27 @@ VideoFrame_I420::VideoFrame_I420(bool manage_data)
 
 }
 
-#ifdef USE_OPENCV
 VideoFrame_I420::VideoFrame_I420(const size_t cols, const size_t rows)
     : gg::VideoFrame(true)
 {
+#ifdef USE_OPENCV
     cv::Mat buffer = cv::Mat::zeros(rows, cols, CV_8UC4);
     cv::cvtColor(buffer, buffer, CV_BGRA2YUV_I420);
     init_from_pointer(buffer.data, buffer.total(), cols, rows);
-}
+#else
+    size_t cols_half = cols % 2 == 1 ? (cols + 1) / 2 : cols / 2;
+    size_t rows_half = rows % 2 == 1 ? (rows + 1) / 2 : rows / 2;
+    size_t padding = 100;
+    // -------------- Y plane -------- U, V plane   ----
+    size_t length = (cols + 2 * padding) * (rows + 2 * padding) +
+                    (cols_half + padding) * (rows_half + padding);
+    _data = new unsigned char[length];
+    _data_length = length;
+    memset(_data, 0, _data_length * sizeof(unsigned char));
+    _cols = cols;
+    _rows = rows;
 #endif // USE_OPENCV
+}
 
 VideoFrame_I420::VideoFrame_I420(unsigned char * data, const size_t length,
                                  const size_t cols, const size_t rows,

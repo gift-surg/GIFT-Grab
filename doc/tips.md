@@ -27,8 +27,10 @@ Installation instructions:
 1. `git clone https://github.com/FFmpeg/FFmpeg.git`
 1. `git checkout n3.0.1`
 1. `mkdir ffmpeg-build` and `cd ffmpeg-build`
+1. If using kvazaar: `../FFmpeg/configure --enable-shared --enable-avresample --enable-libkvazaar --enable-muxer=mp4`
 1. If using x265: `../FFmpeg/configure --enable-shared --enable-avresample --enable-libx265 --enable-gpl --enable-muxer=mp4`
-1. If using NVENC: `../FFmpeg/configure --enable-shared --enable-avresample --enable-nvenc --enable-nonfree --enable-gpl --enable-muxer=mp4`
+1. If using NVENC: `../FFmpeg/configure --enable-shared --enable-avresample --enable-nvenc --enable-nonfree --enable-muxer=mp4`
+1. If using libvpx: `../FFmpeg/configure --enable-shared --enable-avresample --enable-libvpx --enable-muxer=webm`
 1. `make -j` and `make install`
 
 **Note:** In case you install FFmpeg in a non-standard location, you will need to appropriately augment your `PKG_CONFIG_PATH` for GiftGrab to be able to locate FFmpeg.
@@ -41,6 +43,25 @@ Installation instructions:
 1. Download the [SDK](https://developer.nvidia.com/video-sdk-601)
 1. Extract its contents and copy `nvidia_video_sdk_6.0.1/Samples/common/inc/nvEncodeAPI.h` to a standard system include folder (e.g. `/usr/local/include`)
 
+kvazaar
+-------
+
+Installation instructions:
+
+1. `git clone https://github.com/ultravideo/kvazaar.git`
+1. `cd kvazaar`
+1. `git checkout v0.8.3`
+1. `./autogen.sh`
+1. `./configure`
+1. `make -j` and `make install`
+
+Caveats:
+
+* If you encounter an error of the form `error while loading shared libraries: libkvazaar.so.3: cannot open shared object file: No such file or directory`:
+   1. Create a file `/etc/ld.so.conf.d/kvazaar.conf`
+   1. Put only the following line into it: `/usr/local/lib`
+   1. Run `ldconfig`
+
 x265
 ----
 
@@ -52,3 +73,8 @@ Installation instructions:
 1. `cd ..` and `mkdir x265-build` and `cd x265-build`
 1. `cmake -D ENABLE_SHARED:bool=on ../x265/source/`
 1. `make -j` and `make install`
+
+libvpx
+------
+
+Install by `apt-get install libvpx-dev`.

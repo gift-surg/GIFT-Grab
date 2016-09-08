@@ -80,7 +80,10 @@ class GiftGrabInstallCommand(install):
                   [('epiphan-dvi2pcie-duo', None, None),
                    ('i420', None, None),
                    ('xvid', None, None),
-                   ('h265', None, None),
+                   ('hevc', None, None),
+                   ('x265', None, None),
+                   ('enable-gpl', None, None),
+                   ('vp9', None, None),
                    ('nvenc', None, None),
                    ('cmake-install-prefix=', None, None)]
 
@@ -97,10 +100,14 @@ class GiftGrabInstallCommand(install):
             str_rep += ' I420,'
         if self.xvid:
             str_rep += ' Xvid,'
-        if self.h265:
-            str_rep += ' H265'
+        if self.vp9:
+            str_rep += ' VP9,'
+        if self.hevc:
+            str_rep += ' HEVC'
             if self.nvenc:
                 str_rep += ' (NVENC)'
+            elif self.x265 and self.enable_gpl:
+                str_rep += ' (x265)'
         if not str_rep: str_rep = 'no features'
         return str_rep.rstrip(',')
 
@@ -110,7 +117,10 @@ class GiftGrabInstallCommand(install):
         self.epiphan_dvi2pcie_duo = None
         self.i420 = None
         self.xvid = None
-        self.h265 = None
+        self.hevc = None
+        self.x265 = None
+        self.enable_gpl = None
+        self.vp9 = None
         self.nvenc = None
 
 
@@ -214,11 +224,11 @@ class GiftGrabInstallCommand(install):
             self.__check_command(cmd, err_msg)
 
         # check FFmpeg
-        if self.h265 or self.nvenc:
+        if self.hevc or self.vp9:
             cmd = ['cmake', join(join(self.here, 'cmake'), 'ffmpeg')]
             err_msg = '%s\n%s' % (
                 'FFmpeg does not seem to be installed on your system.',
-                'FFmpeg is needed for H265 support.'
+                'FFmpeg is needed for HEVC or VP9 support.'
             )
             self.__check_command(cmd, err_msg)
 
@@ -230,39 +240,79 @@ class GiftGrabInstallCommand(install):
             )
             output_buffer = self.__check_command(cmd, err_msg)
 
-            opt = '--enable-muxer=mp4'
-            if opt not in output_buffer:
-                err_summary = 'Your FFmpeg does not seem to support MP4.'
-                err_msg = '%s\n%s%s' % (
-                    err_summary,
-                    'Please install FFmpeg with MP4 support ',
-                    '(%s).' % (opt)
-                )
-                self.__print_err_msg(err_msg)
-                raise LibError(err_summary)
+            if self.hevc:
+                opt = '--enable-muxer=mp4'
+                if opt not in output_buffer:
+                    err_summary = 'Your FFmpeg does not seem to support MP4.'
+                    err_msg = '%s\n%s%s' % (
+                        err_summary,
+                        'Please install FFmpeg with MP4 support ',
+                        '(%s).' % (opt)
+                    )
+                    self.__print_err_msg(err_msg)
+                    raise LibError(err_summary)
 
-            opt = '--enable-nvenc'
-            if self.nvenc and opt not in output_buffer:
-                err_summary = 'Your FFmpeg does not seem to support NVENC.'
-                err_msg = '%s\n%s%s' % (
-                    err_summary,
-                    'Please install FFmpeg with NVENC support ',
-                    '(%s).' % (opt)
-                )
-                self.__print_err_msg(err_msg)
-                raise LibError(err_summary)
+                if self.nvenc:
+                    opt = '--enable-nvenc'
+                    if opt not in output_buffer:
+                        err_summary = 'Your FFmpeg does not seem to support NVENC.'
+                        err_msg = '%s\n%s%s' % (
+                            err_summary,
+                            'Please install FFmpeg with NVENC support ',
+                            '(%s).' % (opt)
+                        )
+                        self.__print_err_msg(err_msg)
+                        raise LibError(err_summary)
+                elif self.x265:
+                    if not self.enable_gpl:
+                        err_msg = 'You must enable GPL for x265 support'
+                        self.__print_err_msg(err_msg)
+                        raise LibError(err_msg)
+                    else:
+                        opt = '--enable-libx265'
+                        if opt not in output_buffer:
+                            err_summary = 'Your FFmpeg does not seem to support x265.'
+                            err_msg = '%s\n%s%s' % (
+                                err_summary,
+                                'Please install FFmpeg with x265 support ',
+                                '(%s).' % (opt)
+                            )
+                            self.__print_err_msg(err_msg)
+                            raise LibError(err_summary)
+                else:
+                    opt = '--enable-libkvazaar'
+                    if opt not in output_buffer:
+                        err_summary = 'Your FFmpeg does not seem to support kvazaar.'
+                        err_msg = '%s\n%s%s' % (
+                            err_summary,
+                            'Please install FFmpeg with kvazaar support ',
+                            '(%s).' % (opt)
+                        )
+                        self.__print_err_msg(err_msg)
+                        raise LibError(err_summary)
 
-            opt = '--enable-libx265'
-            if self.h265 and not self.nvenc and \
-               opt not in output_buffer:
-                err_summary = 'Your FFmpeg does not seem to support x265.'
-                err_msg = '%s\n%s%s' % (
-                    err_summary,
-                    'Please install FFmpeg with x265 support ',
-                    '(%s).' % (opt)
-                )
-                self.__print_err_msg(err_msg)
-                raise LibError(err_summary)
+            if self.vp9:
+                opt = '--enable-muxer=webm'
+                if opt not in output_buffer:
+                    err_summary = 'Your FFmpeg does not seem to support WebM.'
+                    err_msg = '%s\n%s%s' % (
+                        err_summary,
+                        'Please install FFmpeg with WebM support ',
+                        '(%s).' % (opt)
+                    )
+                    self.__print_err_msg(err_msg)
+                    raise LibError(err_summary)
+
+                opt = '--enable-libvpx'
+                if opt not in output_buffer:
+                    err_summary = 'Your FFmpeg does not seem to support libvpx.'
+                    err_msg = '%s\n%s%s' % (
+                        err_summary,
+                        'Please install FFmpeg with libvpx support ',
+                        '(%s).' % (opt)
+                    )
+                    self.__print_err_msg(err_msg)
+                    raise LibError(err_summary)
 
         # check EpiphanSDK
         if self.i420:
@@ -281,10 +331,15 @@ class GiftGrabInstallCommand(install):
             cmake_args.append('-DUSE_EPIPHAN_DVI2PCIE_DUO=ON')
         if self.xvid:
             cmake_args.append('-DUSE_XVID=ON')
-        if self.h265:
-            cmake_args.append('-DUSE_H265=ON')
+        if self.hevc:
+            cmake_args.append('-DUSE_HEVC=ON')
             if self.nvenc:
                 cmake_args.append('-DUSE_NVENC=ON')
+            elif self.x265:
+                cmake_args.append('-DENABLE_GPL=ON')
+                cmake_args.append('-DUSE_X265=ON')
+        if self.vp9:
+            cmake_args.append('-DUSE_VP9=ON')
         if self.i420:
             cmake_args.append('-DUSE_I420=ON')
         cmake_args.append('-DCMAKE_INSTALL_PREFIX=%s' % (
@@ -364,8 +419,19 @@ description = 'GIFT-Grab was developed as part of the GIFT-Surg project ' +\
               'National Institute for Health Research Biomedical Research ' +\
               'Centre UCLH/UCL High Impact Initiative.'
 description = '%s\n\n%s' % (summary, description)
-console_scripts = ['test-giftgrab-h265=giftgrab.tests:test_h265',
+console_scripts = []
+for port in ['sdi', 'dvi']:
+    for colour_space in ['bgr24', 'i420']:
+        for codec in ['xvid', 'hevc', 'vp9']:
+             record_script = 'edd-{}-{}-{}'.format(
+                 port, colour_space, codec)
+             record_script += '=giftgrab.utils:record_epiphan_dvi2pcieduo_{}_{}_{}'.format(
+                 port, colour_space, codec)
+             console_scripts.append(record_script)
+console_scripts = console_scripts +\
+                  ['test-giftgrab-hevc=giftgrab.tests:test_hevc',
                    'test-giftgrab-xvid=giftgrab.tests:test_xvid',
+                   'test-giftgrab-vp9=giftgrab.tests:test_vp9',
                    'test-giftgrab-epiphan-dvi2pcieduo-bgr24=giftgrab.tests:test_epiphan_dvi2pcieduo_bgr24',
                    'test-giftgrab-epiphan-dvi2pcieduo-i420=giftgrab.tests:test_epiphan_dvi2pcieduo_i420']
 setup(
@@ -404,9 +470,9 @@ setup(
              'multi-channel video capture, multi-channel video encoding,'
              'hardware-accelerated video encoding,'
              'GPU-accelerated video encoding,'
-             'real-time video encoding, codec, Xvid, H.265, HEVC, NVENC,'
+             'real-time video encoding, codec, Xvid, H.265, HEVC, VP9,'
              'Epiphan DVI2PCIe Duo, medical imaging,'
-             'FFmpeg, OpenCV, x265'
+             'FFmpeg, OpenCV, kvazaar, x265, NVENC'
              'GIFT-Surg',
 
     install_requires=['pytest', 'PyYAML'],

@@ -15,7 +15,6 @@ public:
     //!
     VideoFrame_I420(bool manage_data = false);
 
-#ifdef USE_OPENCV
     //!
     //! \brief Allocates memory for specified dimensions, and
     //! sets all pixels to black
@@ -23,7 +22,6 @@ public:
     //! \param rows
     //!
     VideoFrame_I420(const size_t cols, const size_t rows);
-#endif // USE_OPENCV
 
     //!
     //! \brief Initialise a frame from passed \c data.

@@ -1,14 +1,10 @@
 variables:
   CI_SCRIPTS_DIR: "./ci"
-  PATH_ROOT: "/home/gitlab-runner/environments/giftgrab"
   SCRATCH_DIR: "/home/gitlab-runner/giftgrab-scratch"
 
 before_script:
   - rm -rf $SCRATCH_DIR
   - mkdir $SCRATCH_DIR
-  - export PKG_CONFIG_PATH="$PATH_ROOT/opt/ffmpeg/3.0.1/lib/pkgconfig:$PKG_CONFIG_PATH"
-  - export LD_LIBRARY_PATH="$PATH_ROOT/opt/x265/1.9/lib:$PATH_ROOT/opt/ffmpeg/3.0.1/lib:$LD_LIBRARY_PATH"
-  - export PATH="$PATH_ROOT/usr/local/bin:$PATH_ROOT/opt:$PATH"
   - export GiftGrab_SOURCE_DIR="$(pwd)/src"
   - export GiftGrab_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab"
   - export INSTALL_DIR="$SCRATCH_DIR/install"
@@ -31,18 +27,30 @@ gift-linux:
     - make -j; exit_on_fail
     # no ctest: no features activated to be tested yet
     - make install
-    # H265 support
-    - cmake -D USE_H265=ON .
+    # HEVC support
+    - cmake -D USE_HEVC=ON .
     - make -j; exit_on_fail
     - ctest; exit_on_fail
     - make install
-    # hardware-accelerated H265
+    # HEVC support with x265
+    - cmake -D ENABLE_GPL=ON -D USE_X265=ON .
+    - make -j; exit_on_fail
+    - ctest; exit_on_fail
+    - make install
+    # turn x265 off explicitly for combination testing
+    - cmake -D ENABLE_GPL=OFF -D USE_X265=OFF .
+    # hardware-accelerated HEVC
     - cmake -D USE_NVENC=ON .
     - make -j; exit_on_fail
     - ctest; exit_on_fail
     - make install
     # Xvid support (OpenCV should get switched here)
     - cmake -D USE_XVID=ON .
+    - make -j; exit_on_fail
+    - ctest; exit_on_fail
+    - make install
+    # VP9 support
+    - cmake -D USE_VP9=ON .
     - make -j; exit_on_fail
     - ctest; exit_on_fail
     - make install
@@ -91,19 +99,25 @@ pypi-packaging:
     - if [ -z "$PyPI_INSTALLER" ]; then exit 1; fi
     # Python and tests (currently all python)
     - pip install -vvv --upgrade "$PyPI_INSTALLER"
-    # H265 support
-    - pip install -vvv --install-option="--h265" --upgrade "$PyPI_INSTALLER"
-    - test-giftgrab-h265; exit_on_fail
-    # hardware-accelerated H265
-    - pip install -vvv --install-option="--h265" --install-option="--nvenc" --upgrade "$PyPI_INSTALLER"
-    - test-giftgrab-h265; exit_on_fail
+    # HEVC support
+    - pip install -vvv --install-option="--hevc" --upgrade "$PyPI_INSTALLER"
+    - test-giftgrab-hevc; exit_on_fail
+    # HEVC support with x265
+    - pip install -vvv --install-option="--hevc" --install-option="--enable-gpl" --install-option="--x265" --upgrade "$PyPI_INSTALLER"
+    - test-giftgrab-hevc; exit_on_fail
+    # hardware-accelerated HEVC
+    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --upgrade "$PyPI_INSTALLER"
+    - test-giftgrab-hevc; exit_on_fail
     # Xvid support (OpenCV should get switched here)
-    - pip install -vvv --install-option="--h265" --install-option="--nvenc" --install-option="--xvid" --upgrade "$PyPI_INSTALLER"
+    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--xvid" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-xvid; exit_on_fail
+    # VP9 support
+    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --upgrade "$PyPI_INSTALLER"
+    - test-giftgrab-vp9; exit_on_fail
     # Epiphan DVI2PCIe Duo support (OpenCV)
-    - pip install -vvv --install-option="--h265" --install-option="--nvenc" --install-option="--xvid" --install-option="--epiphan-dvi2pcie-duo" --upgrade "$PyPI_INSTALLER"
+    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --upgrade "$PyPI_INSTALLER"
     # Epiphan DVI2PCIe Duo support (EpiphanSDK)
-    - pip install -vvv --install-option="--h265" --install-option="--nvenc" --install-option="--xvid" --install-option="--epiphan-dvi2pcie-duo" --install-option="--i420" --upgrade "$PyPI_INSTALLER"
+    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--i420" --upgrade "$PyPI_INSTALLER"
     - deactivate
   tags:
     - gift-linux
@@ -135,15 +149,31 @@ pypi-packaging-epiphan:
     - pip install PyYAML
     - pip install pytest
     # Epiphan DVI2PCIe Duo support (OpenCV)
-    - pip install -vvv --install-option="--h265" --install-option="--nvenc" --install-option="--xvid" --install-option="--epiphan-dvi2pcie-duo" --upgrade "$PyPI_INSTALLER"
-    - test-giftgrab-h265; exit_on_fail
+    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --upgrade "$PyPI_INSTALLER"
+    - test-giftgrab-hevc; exit_on_fail
     - test-giftgrab-xvid; exit_on_fail
+    - test-giftgrab-vp9; exit_on_fail
     - test-giftgrab-epiphan-dvi2pcieduo-bgr24; exit_on_fail
+    - edd-dvi-bgr24-hevc; exit_on_fail
+    - edd-sdi-bgr24-hevc; exit_on_fail
+    - edd-dvi-bgr24-xvid; exit_on_fail
+    - edd-sdi-bgr24-xvid; exit_on_fail
+    - edd-dvi-bgr24-vp9; exit_on_fail
+    - edd-sdi-bgr24-vp9; exit_on_fail
     # Epiphan DVI2PCIe Duo support (EpiphanSDK)
-    - pip install -vvv --install-option="--h265" --install-option="--nvenc" --install-option="--xvid" --install-option="--epiphan-dvi2pcie-duo" --install-option="--i420" --upgrade "$PyPI_INSTALLER"
-    - test-giftgrab-h265; exit_on_fail
+    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--i420" --upgrade "$PyPI_INSTALLER"
+    - test-giftgrab-hevc; exit_on_fail
     - test-giftgrab-xvid; exit_on_fail
+    - test-giftgrab-vp9; exit_on_fail
     - test-giftgrab-epiphan-dvi2pcieduo-i420; exit_on_fail
+    - edd-dvi-i420-hevc; exit_on_fail
+    - edd-sdi-i420-hevc; exit_on_fail
+    - edd-dvi-i420-vp9; exit_on_fail
+    - edd-sdi-i420-vp9; exit_on_fail
+    - ls -alh ./*.mp4
+    - ls -alh ./*.avi
+    - ls -alh ./*.webm
+    - rm -f ./*.mp4 ./*.avi ./*.webm
     - deactivate
   tags:
     - gift-pypi
@@ -152,7 +182,7 @@ pypi-packaging-epiphan:
 # Real-time recording ####
 real-time:
   script:
-    - cmake -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D BUILD_PYTHON=ON -D BUILD_TESTS=ON -D USE_H265=ON -D USE_NVENC=ON "$GiftGrab_SOURCE_DIR"
+    - cmake -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D BUILD_PYTHON=ON -D BUILD_TESTS=ON -D USE_HEVC=ON -D USE_NVENC=ON -D USE_VP9=ON "$GiftGrab_SOURCE_DIR"
     - make -j; exit_on_fail
     # test BGR24 colour space
     - check_epiphan_alive
@@ -181,3 +211,4 @@ real-time:
     - 78-add-ctest-to-ci-scripts
     - 77-use_libvlc-still-appearing-in-cmake
     - 68-publish-giftgrab-on-pypi
+    - 84-switch-to-bsd-compatible-x265-alternative

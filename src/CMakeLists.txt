@@ -23,23 +23,44 @@ ADD_SUBDIRECTORY(cmake/cpp11)
 # Configurable options, depending on desired functionality
 OPTION(USE_EPIPHAN_DVI2PCIE_DUO
     "Capture video with Epiphan DVI2PCIe Duo" OFF)
-OPTION(USE_H265
-    "Video encoding with H.265 (requires FFmpeg, pkg-config and x265)" OFF)
+OPTION(USE_HEVC
+    "Video encoding with HEVC (requires FFmpeg, pkg-config and kvazaar [default] or x265 [turn USE_X265 on])" OFF)
+OPTION(USE_X265
+    "Use x265 instead of kvazaar for HEVC video encoding (requires ENABLE_GPL as well)" OFF)
+OPTION(ENABLE_GPL
+    "Enable GPL libraries" OFF)
 OPTION(USE_XVID
     "Video encoding with Xvid (requires OpenCV)" OFF)
+OPTION(USE_VP9
+    "Video encoding with VP9 (requires FFmpeg, pkg-config and libvpx)" OFF)
 OPTION(USE_NVENC
-    "Hardware-accelerated video encoding with H.265 (requires FFmpeg, pkg-config and NVENC)" OFF)
+    "Hardware-accelerated video encoding with HEVC (requires FFmpeg, pkg-config and NVENC)" OFF)
 OPTION(BUILD_DOC
     "Source code documentation (requires Doxygen)" OFF)
 OPTION(BUILD_TESTS
     "Tests (requires pytest)" OFF)
 OPTION(BUILD_PYTHON
-    "GiftGrab Python API (requires Python and Boost.Python)" OFF)
+    "GIFT-Grab Python API (requires Python and Boost.Python)" OFF)
 OPTION(USE_I420
     "Capture video in I420 colour space (requires EpiphanSDK)" OFF)
 OPTION(GENERATE_PERFORMANCE_OUTPUT
     "Performance benchmark reports (requires Boost.Timer and Boost.System)" OFF)
 MARK_AS_ADVANCED(GENERATE_PERFORMANCE_OUTPUT)
+
+# Inferred options off by default, and advanced
+# (i.e. not shown to user)
+SET(USE_EPIPHANSDK OFF CACHE BOOL "ON OFF" FORCE)
+MARK_AS_ADVANCED(USE_EPIPHANSDK)
+SET(USE_FFMPEG OFF CACHE BOOL "ON OFF" FORCE)
+MARK_AS_ADVANCED(USE_FFMPEG)
+SET(USE_OPENCV OFF CACHE BOOL "ON OFF" FORCE)
+MARK_AS_ADVANCED(USE_OPENCV)
+
+# Check GPL explicitly enabled for relevant components
+if(USE_X265 AND NOT ENABLE_GPL)
+    MESSAGE(FATAL_ERROR
+        "x265 is a GPL library: you must explicitly enable GPL (ENABLE_GPL=ON) to build GIFT-Grab with x265 support")
+endif(USE_X265 AND NOT ENABLE_GPL)
 
 # Determine whether OpenCV needed
 if((USE_EPIPHAN_DVI2PCIE_DUO AND NOT USE_I420) OR
@@ -47,8 +68,12 @@ if((USE_EPIPHAN_DVI2PCIE_DUO AND NOT USE_I420) OR
     SET(USE_OPENCV ON CACHE BOOL "OFF ON" FORCE)
 endif()
 
+if(USE_EPIPHAN_DVI2PCIE_DUO AND USE_I420)
+    SET(USE_EPIPHANSDK ON CACHE BOOL "OFF ON" FORCE)
+endif(USE_EPIPHAN_DVI2PCIE_DUO AND USE_I420)
+
 # Determine whether FFmpeg needed
-if(USE_H265 OR USE_NVENC)
+if(USE_HEVC OR USE_VP9)
     SET(USE_FFMPEG ON CACHE BOOL "OFF ON" FORCE)
 endif()
 
@@ -105,9 +130,13 @@ if(USE_FFMPEG)
     LIST(APPEND SOURCES ffmpeg/ffmpeg_video_target.cpp)
 endif(USE_FFMPEG)
 
+# X265
+if(USE_X265)
+    ADD_DEFINITIONS(-DUSE_X265)
+endif(USE_X265)
+
 # Support for I420 (YUV420p) colour space
 if(USE_I420)
-    SET(USE_EPIPHANSDK ON CACHE BOOL "OFF ON" FORCE)
     ADD_DEFINITIONS(-DUSE_I420)
 
     LIST(APPEND HEADERS api/videoframe_i420.h)
@@ -119,6 +148,7 @@ if(USE_EPIPHANSDK)
     ADD_SUBDIRECTORY(cmake/epiphansdk)
     INCLUDE_DIRECTORIES(${EpiphanSDK_INCLUDE_DIRS})
     LIST(APPEND LIBS ${EpiphanSDK_LIBS})
+    ADD_DEFINITIONS(-DUSE_EPIPHANSDK)
 
     INCLUDE_DIRECTORIES(epiphansdk)
     LIST(APPEND HEADERS epiphansdk/epiphansdk_video_source.h)

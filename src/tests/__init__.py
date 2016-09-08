@@ -13,15 +13,21 @@ epiphan_dvi2pcieduo_config_dir = abspath(
                       join('epiphan', 'dvi2pcieduo', 'data')))
 
 
-def test_h265():
+def test_hevc():
     working_dir = abspath(resource_filename('giftgrab.tests', 'target'))
-    ret = main(['--codec=H265', working_dir])
+    ret = main(['--codec=HEVC', working_dir])
     if ret: exit(ret)
 
 
 def test_xvid():
     working_dir = abspath(resource_filename('giftgrab.tests', 'target'))
     ret = main(['--codec=XviD', working_dir])
+    if ret: exit(ret)
+
+
+def test_vp9():
+    working_dir = abspath(resource_filename('giftgrab.tests', 'target'))
+    ret = main(['--codec=VP9', working_dir])
     if ret: exit(ret)
 
 

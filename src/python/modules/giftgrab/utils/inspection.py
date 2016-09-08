@@ -41,7 +41,7 @@ def duration(file_path):
     ffprobe_output = check_output(['ffprobe',
                                    '-v', 'error',
                                    '-of', 'flat=s=_',
-                                   '-show_entries', 'stream=duration',
+                                   '-show_entries', 'format=duration',
                                    file_path])
     duration_str = ffprobe_output.split('=')[1].strip()[1:-1]
     dur = -1

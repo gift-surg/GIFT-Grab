@@ -1,4 +1,5 @@
 #include "epiphansdk_video_source.h"
+#include <iostream>
 
 namespace gg
 {
