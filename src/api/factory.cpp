@@ -21,10 +21,10 @@ IVideoSource * Factory::_sources[2] = { NULL, NULL };
 
 IVideoSource * Factory::connect(enum Device type) {
 #ifdef USE_I420
-    std::string device_id = "";
-#ifndef USE_EPIPHANSDK
-    throw VideoSourceError("I420 colour space supported only with EpiphanSDK");
+#if !defined(USE_EPIPHANSDK) && !defined(USE_LIBVLC)
+    throw VideoSourceError("I420 colour space supported only with EpiphanSDK or libVLC");
 #endif
+    std::string device_id = "";
 #else
     int device_id = -1; // default value makes no sense
 #endif
@@ -32,17 +32,19 @@ IVideoSource * Factory::connect(enum Device type) {
     switch (type) {
     case DVI2PCIeDuo_DVI:
 #ifdef USE_I420
+
 #ifdef USE_EPIPHANSDK
 #ifdef EpiphanSDK_DVI
         device_id = EpiphanSDK_DVI;
 #else
         throw DeviceNotFound("EpiphanSDK_DVI macro not defined");
 #endif
-#endif
-
+#else
 #ifdef USE_LIBVLC
         device_id = "v4l2:///dev/video0"; // always /dev/video0
 #endif
+#endif
+
 #else
         device_id = 0; // always /dev/video0
 #endif
