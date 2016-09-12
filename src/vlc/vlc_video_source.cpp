@@ -208,9 +208,8 @@ void VideoSourceVLC::run_vlc()
 
 void VideoSourceVLC::stop_vlc()
 {
-    if (libvlc_media_player_is_playing(_vlc_mp) == 1)
-        // stop playing
-        libvlc_media_player_stop(_vlc_mp);
+    // stop playing
+    libvlc_media_player_stop(_vlc_mp);
 }
 
 
