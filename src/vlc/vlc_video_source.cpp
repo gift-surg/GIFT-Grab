@@ -248,7 +248,9 @@ void VideoSourceVLC::prepareRender(VideoSourceVLC * p_video_data,
     p_video_data->_rows = height;
 
     if (size > p_video_data->_data_length)
-        p_video_data->_video_buffer = realloc(p_video_data->_video_buffer, size * sizeof(uint8_t));
+        p_video_data->_video_buffer = reinterpret_cast<uint8_t *>(
+                    realloc(p_video_data->_video_buffer, size * sizeof(uint8_t))
+                    );
     p_video_data->_data_length = size;
 
     *pp_pixel_buffer = p_video_data->_video_buffer;
