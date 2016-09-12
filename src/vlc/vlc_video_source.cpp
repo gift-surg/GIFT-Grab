@@ -266,12 +266,6 @@ void VideoSourceVLC::handleStream(VideoSourceVLC * p_video_data,
                                   size_t size)
 {
     // TODO: explain how data should be handled (see #86)
-
-    p_video_data->_cols = cols;
-    p_video_data->_rows = rows;
-    p_video_data->_video_buffer = p_pixel_buffer;
-    p_video_data->_data_length = size;
-
     // TODO: Unlock the mutex
 }
 
