@@ -172,12 +172,12 @@ void VideoSourceVLC::init_vlc()
 
     // If path contains a colon (:), it will be treated as a
     // URL. Else, it will be considered as a local path.
-    if (std::string(path).find(":") == std::string::npos)
+    if (_path.find(":") == std::string::npos)
         vlc_media = libvlc_media_new_path(_vlc_inst, _path.c_str());
     else
         vlc_media = libvlc_media_new_location(_vlc_inst, _path.c_str());
     if (vlc_media == nullptr)
-        throw VideoSourceError(std::string("Could not open ").append(path));
+        throw VideoSourceError(std::string("Could not open ").append(_path));
 
     libvlc_media_add_option(vlc_media, ":noaudio");
     libvlc_media_add_option(vlc_media, ":no-video-title-show");
