@@ -184,7 +184,7 @@ void VideoSourceVLC::init_vlc()
     // Create a media player playing environement
     _vlc_mp = libvlc_media_player_new_from_media(vlc_media);
     if (_vlc_mp == nullptr)
-        throw VideoSourceError("Could create VLC media player");
+        throw VideoSourceError("Could not create VLC media player");
 
     // No need to keep the media now
     libvlc_media_release( vlc_media );
