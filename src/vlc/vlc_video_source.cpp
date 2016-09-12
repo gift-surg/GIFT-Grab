@@ -217,12 +217,10 @@ void VideoSourceVLC::stop_vlc()
 void VideoSourceVLC::release_vlc()
 {
     // free media player
-    if (_vlc_mp)
-        libvlc_media_player_release(_vlc_mp);
+    libvlc_media_player_release(_vlc_mp);
 
     // free engine
-    if (_vlc_inst)
-        libvlc_release(_vlc_inst);
+    libvlc_release(_vlc_inst);
 
     // free buffer
     if (_video_buffer != nullptr)
