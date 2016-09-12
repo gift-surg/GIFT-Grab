@@ -22,7 +22,8 @@ VideoSourceVLC::VideoSourceVLC(const std::string path)
 
 VideoSourceVLC::~VideoSourceVLC()
 {
-    // TODO
+    stop_vlc();
+    release_vlc();
 }
 
 
