@@ -22,20 +22,7 @@ VideoSourceVLC::VideoSourceVLC(const std::string path)
 
 VideoSourceVLC::~VideoSourceVLC()
 {
-    // stop playing
-    libvlc_media_player_stop(_vlc_mp);
-
-    // free media player
-    if (_vlc_mp)
-        libvlc_media_player_release(_vlc_mp);
-
-    // free engine
-    if (_vlc_inst)
-        libvlc_release(_vlc_inst);
-
-    // free buffer
-    if (_video_buffer != nullptr)
-        delete[] _video_buffer;
+    // TODO
 }
 
 
@@ -187,6 +174,30 @@ void VideoSourceVLC::run_vlc()
     _full.y = 0;
     _full.width = width;
     _full.height = height;
+}
+
+
+void VideoSourceVLC::stop_vlc()
+{
+    if (libvlc_media_player_is_playing(_vlc_mp) == 1)
+        // stop playing
+        libvlc_media_player_stop(_vlc_mp);
+}
+
+
+void VideoSourceVLC::release_vlc()
+{
+    // free media player
+    if (_vlc_mp)
+        libvlc_media_player_release(_vlc_mp);
+
+    // free engine
+    if (_vlc_inst)
+        libvlc_release(_vlc_inst);
+
+    // free buffer
+    if (_video_buffer != nullptr)
+        delete[] _video_buffer;
 }
 
 

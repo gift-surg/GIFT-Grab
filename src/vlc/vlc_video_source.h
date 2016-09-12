@@ -155,6 +155,23 @@ protected:
     void run_vlc();
 
     //!
+    //! \brief Stop VLC engine, if already running
+    //!
+    //! \throw gg::VideoSourceError with a detailed message in case
+    //! stopping of streaming fails
+    //!
+    void stop_vlc();
+
+    //!
+    //! \brief Release all resources related to a stopped VLC
+    //! engine
+    //!
+    //! \throw gg::VideoSourceError with a detailed message in case
+    //! release of VLC engine fails
+    //!
+    void release_vlc();
+
+    //!
     //! \brief Generate a string representation of a video frame's
     //! dimensions, as specified in https://wiki.videolan.org/Crop/
     //! \param x
