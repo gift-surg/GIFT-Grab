@@ -242,17 +242,17 @@ void VideoSourceVLC::prepareRender(VideoSourceVLC * p_video_data,
                                    size_t size)
 {
     ///\todo create mutex guard
-
-    unsigned int width, height;
-    if (libvlc_video_get_size(p_video_data->_vlc_mp, 0, &width, &height) != 0)
-        return;
-    p_video_data->_cols = width;
-    p_video_data->_rows = height;
-
     if (size > p_video_data->_data_length)
-        p_video_data->_video_buffer = reinterpret_cast<uint8_t *>(
-                    realloc(p_video_data->_video_buffer, size * sizeof(uint8_t))
-                    );
+    {
+        if (p_video_data->_data_length == 0)
+            p_video_data->_video_buffer = reinterpret_cast<uint8_t *>(
+                        malloc(size * sizeof(uint8_t))
+                        );
+        else
+            p_video_data->_video_buffer = reinterpret_cast<uint8_t *>(
+                        realloc(p_video_data->_video_buffer, size * sizeof(uint8_t))
+                        );
+    }
     p_video_data->_data_length = size;
 
     *pp_pixel_buffer = p_video_data->_video_buffer;
@@ -267,6 +267,8 @@ void VideoSourceVLC::handleStream(VideoSourceVLC * p_video_data,
                                   size_t size)
 {
     // TODO: explain how data should be handled (see #86)
+    p_video_data->_cols = cols;
+    p_video_data->_rows = rows;
     // TODO: Unlock the mutex
 }
 
