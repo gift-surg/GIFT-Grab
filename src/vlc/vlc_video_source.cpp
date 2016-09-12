@@ -141,10 +141,9 @@ void VideoSourceVLC::init_vlc()
                 "%stranscode{vcodec=I420,vfilter=croppadd{",
                 smem_options);
         sprintf(smem_options,
-                "%scroptop=%d,cropbottom=%d,cropleft=%d,cropright=%d}}:",
+                "%scroptop=%u,cropbottom=%u,cropleft=%u,cropright=%u}}:",
                 smem_options,
                 croptop, cropbottom, cropleft, cropright);
-        // TODO %d OK?
     }
     sprintf(smem_options,
             "%ssmem{video-data=%lld,video-prerender-callback=%lld,video-postrender-callback=%lld}",
