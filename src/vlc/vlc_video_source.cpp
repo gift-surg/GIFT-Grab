@@ -238,11 +238,22 @@ void VideoSourceVLC::release_vlc()
 
     // free sub-frame
     if (_sub != nullptr)
+    {
         delete _sub;
+        _sub = nullptr;
+    }
 
     // delete VLC pointers
-    if (_vlc_mp) delete _vlc_mp;
-    if (_vlc_inst) delete _vlc_inst;
+    if (_vlc_mp)
+    {
+        delete _vlc_mp;
+        _vlc_mp = nullptr;
+    }
+    if (_vlc_inst)
+    {
+        delete _vlc_inst;
+        _vlc_inst = nullptr;
+    }
 }
 
 
