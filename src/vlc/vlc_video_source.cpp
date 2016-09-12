@@ -232,6 +232,17 @@ void VideoSourceVLC::release_vlc()
     // free buffer
     if (_video_buffer != nullptr)
         delete[] _video_buffer;
+    _data_length = 0;
+    _cols = 0;
+    _rows = 0;
+
+    // free sub-frame
+    if (_sub != nullptr)
+        delete _sub;
+
+    // delete VLC pointers
+    if (_vlc_mp) delete _vlc_mp;
+    if (_vlc_inst) delete _vlc_inst;
 }
 
 
