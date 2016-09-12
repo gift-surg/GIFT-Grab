@@ -15,8 +15,9 @@ VideoSourceVLC::VideoSourceVLC(const std::string path)
     , _cols(0)
     , _rows(0)
     , _sub(nullptr)
+    , _path(path)
 {
-    this->init_vlc(path.c_str());
+    this->init_vlc();
     this->run_vlc();
 }
 
@@ -93,8 +94,15 @@ void VideoSourceVLC::set_sub_frame(int x, int y, int width, int height)
     if (x >= _full.x and x + width <= _full.x + _full.width and
         y >= _full.y and y + height <= _full.y + _full.height)
     {
-        std::string psz_geometry = encode_psz_geometry(x, y, width, height);
-        libvlc_video_set_crop_geometry(_vlc_mp, psz_geometry.c_str());
+        stop_vlc();
+        release_vlc();
+        if (_sub == nullptr) _sub = new FrameBox;
+        _sub->x = x;
+        _sub->y = y;
+        _sub->width = width;
+        _sub->height = height;
+        init_vlc();
+        run_vlc();
     }
 }
 
@@ -102,11 +110,19 @@ void VideoSourceVLC::set_sub_frame(int x, int y, int width, int height)
 void VideoSourceVLC::get_full_frame()
 {
     // TODO mutex?
-    libvlc_video_set_crop_geometry(_vlc_mp, NULL);
+    stop_vlc();
+    release_vlc();
+    if (_sub)
+    {
+        delete _sub;
+        _sub = nullptr;
+    }
+    init_vlc();
+    run_vlc();
 }
 
 
-void VideoSourceVLC::init_vlc(const char * path)
+void VideoSourceVLC::init_vlc()
 {
     // VLC pointers
     libvlc_media_t * vlc_media = nullptr;
@@ -157,9 +173,9 @@ void VideoSourceVLC::init_vlc(const char * path)
     // If path contains a colon (:), it will be treated as a
     // URL. Else, it will be considered as a local path.
     if (std::string(path).find(":") == std::string::npos)
-        vlc_media = libvlc_media_new_path(_vlc_inst, path);
+        vlc_media = libvlc_media_new_path(_vlc_inst, _path.c_str());
     else
-        vlc_media = libvlc_media_new_location(_vlc_inst, path);
+        vlc_media = libvlc_media_new_location(_vlc_inst, _path.c_str());
     if (vlc_media == nullptr)
         throw VideoSourceError(std::string("Could not open ").append(path));
 

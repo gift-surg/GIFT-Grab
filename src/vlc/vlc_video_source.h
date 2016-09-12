@@ -31,6 +31,12 @@ class VideoSourceVLC : public IVideoSource
 {
 protected:
     //!
+    //! \brief Resource locator path, as in the list provided
+    //! within the class description
+    //!
+    std::string _path;
+
+    //!
     //! \brief VLC engine
     //!
     libvlc_instance_t * _vlc_inst;
@@ -146,12 +152,10 @@ protected:
     //! \brief Initialise VLC low-level configuration for opening
     //! video source specified in \c path
     //!
-    //! \param path as in list provided in class description
-    //!
     //! \throw gg::VideoSourceError with a detailed message in case
     //! initialisation fails
     //!
-    void init_vlc(const char * path);
+    void init_vlc();
 
     //!
     //! \brief Start streaming from previously configured video
