@@ -183,17 +183,6 @@ protected:
     //!
     void release_vlc();
 
-    //!
-    //! \brief Generate a string representation of a video frame's
-    //! dimensions, as specified in https://wiki.videolan.org/Crop/
-    //! \param x
-    //! \param y
-    //! \param width
-    //! \param height
-    //! \return
-    //!
-    std::string encode_psz_geometry(int x, int y, int width, int height);
-
     DISALLOW_COPY_AND_ASSIGNMENT(VideoSourceVLC);
 };
 

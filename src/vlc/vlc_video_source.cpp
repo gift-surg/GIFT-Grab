@@ -270,15 +270,4 @@ void VideoSourceVLC::handleStream(VideoSourceVLC * p_video_data,
     // TODO: Unlock the mutex
 }
 
-
-std::string VideoSourceVLC::encode_psz_geometry(int x, int y, int width, int height)
-{
-    std::string psz_geometry;
-    psz_geometry.append(std::to_string(width)).append("x")
-                .append(std::to_string(height))
-                .append("+").append(std::to_string(x))
-                .append("+").append(std::to_string(y));
-    return psz_geometry;
-}
-
 }
