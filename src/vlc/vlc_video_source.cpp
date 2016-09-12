@@ -112,11 +112,6 @@ void VideoSourceVLC::get_full_frame()
     // TODO mutex?
     stop_vlc();
     release_vlc();
-    if (_sub)
-    {
-        delete _sub;
-        _sub = nullptr;
-    }
     init_vlc();
     run_vlc();
 }
