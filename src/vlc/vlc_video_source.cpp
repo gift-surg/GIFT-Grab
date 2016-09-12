@@ -14,6 +14,7 @@ VideoSourceVLC::VideoSourceVLC(const std::string path)
     , _data_length(0)
     , _cols(0)
     , _rows(0)
+    , _sub(nullptr)
 {
     this->init_vlc(path.c_str());
     this->run_vlc();
@@ -113,8 +114,25 @@ void VideoSourceVLC::init_vlc(const char * path)
     // VLC options
     char smem_options[512];
 
+    sprintf(smem_options, "#");
+    if (_sub != nullptr)
+    {
+        unsigned int croptop = _sub->y,
+                     cropbottom = _full.height - (_sub->y + _sub->height),
+                     cropleft = _sub->x,
+                     cropright = _full.width - (_sub->x + _sub->width);
+        sprintf(smem_options,
+                "%stranscode{vcodec=I420,vfilter=croppadd{",
+                smem_options);
+        sprintf(smem_options,
+                "%scroptop=%d,cropbottom=%d,cropleft=%d,cropright=%d}}:",
+                smem_options,
+                croptop, cropbottom, cropleft, cropright);
+        // TODO %d OK?
+    }
     sprintf(smem_options,
-            "#smem{video-data=%lld,video-prerender-callback=%lld,video-postrender-callback=%lld}",
+            "%ssmem{video-data=%lld,video-prerender-callback=%lld,video-postrender-callback=%lld}",
+            smem_options,
             (long long int)(intptr_t)(void*) this,
             (long long int)(intptr_t)(void*) &VideoSourceVLC::prepareRender,
             (long long int)(intptr_t)(void*) &VideoSourceVLC::handleStream );

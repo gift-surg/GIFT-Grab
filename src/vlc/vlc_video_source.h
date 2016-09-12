@@ -69,6 +69,14 @@ protected:
     //!
     FrameBox _full;
 
+    //!
+    //! \brief If this is not null, it means video is
+    //! being cropped
+    //! \sa set_sub_frame
+    //! \sa get_full_frame
+    //!
+    FrameBox * _sub;
+
 public:
     //!
     //! \brief Initialise video source using given \c path
