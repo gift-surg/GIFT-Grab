@@ -41,7 +41,7 @@ IVideoSource * Factory::connect(enum Device type) {
 #endif
 #else
 #ifdef USE_LIBVLC
-        device_id = "v4l2:///dev/video0"; // always /dev/video0
+        device_id = "v4l2:///dev/video0:chroma=I420"; // always /dev/video0
 #endif
 #endif
 
@@ -60,7 +60,7 @@ IVideoSource * Factory::connect(enum Device type) {
 #endif
 
 #ifdef USE_LIBVLC
-        device_id = "v4l2:///dev/video1"; // always /dev/video1
+        device_id = "v4l2:///dev/video1:chroma=I420"; // always /dev/video1
 #endif
 #else
         device_id = 1; // always /dev/video1
