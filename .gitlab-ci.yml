@@ -125,6 +125,12 @@ pypi-packaging:
 
 pypi-packaging-epiphan:
   script:
+    # for custom FFmpeg:
+    - export STORZ_STACK_GIFTGRAB_ENV_ROOT=/home/gitlab-runner/environments/giftgrab/usr/local
+    - export PKG_CONFIG_PATH="$STORZ_STACK_GIFTGRAB_ENV_ROOT/lib/pkgconfig":$PKG_CONFIG_PATH
+    # for custom libVLC
+    - export LIBVLC_INCLUDE_PATH="$STORZ_STACK_GIFTGRAB_ENV_ROOT/include"
+    - export LIBVLC_LIBRARY_PATH="$STORZ_STACK_GIFTGRAB_ENV_ROOT/lib"
     - GiftGrab_PyPI_BUILD_DIR="$SCRATCH_DIR/pypi"
     - GiftGrab_PyPI_INSTALL_DIR="$GiftGrab_PyPI_BUILD_DIR/install"
     - GiftGrab_venv=venv
@@ -182,6 +188,12 @@ pypi-packaging-epiphan:
 # Real-time recording ####
 real-time:
   script:
+    # for custom FFmpeg:
+    - export STORZ_STACK_GIFTGRAB_ENV_ROOT=/home/gitlab-runner/environments/giftgrab/usr/local
+    - export PKG_CONFIG_PATH="$STORZ_STACK_GIFTGRAB_ENV_ROOT/lib/pkgconfig":$PKG_CONFIG_PATH
+    # for custom libVLC
+    - export LIBVLC_INCLUDE_PATH="$STORZ_STACK_GIFTGRAB_ENV_ROOT/include"
+    - export LIBVLC_LIBRARY_PATH="$STORZ_STACK_GIFTGRAB_ENV_ROOT/lib"
     - cmake -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D BUILD_PYTHON=ON -D BUILD_TESTS=ON -D USE_HEVC=ON -D USE_NVENC=ON -D USE_VP9=ON "$GiftGrab_SOURCE_DIR"
     - make -j; exit_on_fail
     # test BGR24 colour space
