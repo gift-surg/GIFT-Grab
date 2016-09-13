@@ -159,7 +159,7 @@ pypi-packaging-epiphan:
     - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-hevc; exit_on_fail
     - test-giftgrab-xvid; exit_on_fail
-    - test-giftgrab-vp9; exit_on_fail
+    #- test-giftgrab-vp9; exit_on_fail
     - test-giftgrab-epiphan-dvi2pcieduo-bgr24; exit_on_fail
     - edd-dvi-bgr24-hevc; exit_on_fail
     - edd-sdi-bgr24-hevc; exit_on_fail
@@ -171,7 +171,7 @@ pypi-packaging-epiphan:
     - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--i420" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-hevc; exit_on_fail
     - test-giftgrab-xvid; exit_on_fail
-    - test-giftgrab-vp9; exit_on_fail
+    #- test-giftgrab-vp9; exit_on_fail
     - test-giftgrab-epiphan-dvi2pcieduo-i420; exit_on_fail
     - edd-dvi-i420-hevc; exit_on_fail
     - edd-sdi-i420-hevc; exit_on_fail
