@@ -127,6 +127,7 @@ pypi-packaging-epiphan:
   script:
     # for custom FFmpeg:
     - export STORZ_STACK_GIFTGRAB_ENV_ROOT=/home/gitlab-runner/environments/giftgrab/usr/local
+    - export PATH="$STORZ_STACK_GIFTGRAB_ENV_ROOT/bin":$PATH
     - export PKG_CONFIG_PATH="$STORZ_STACK_GIFTGRAB_ENV_ROOT/lib/pkgconfig":$PKG_CONFIG_PATH
     # for custom libVLC
     - export LIBVLC_INCLUDE_PATH="$STORZ_STACK_GIFTGRAB_ENV_ROOT/include"
@@ -190,6 +191,7 @@ real-time:
   script:
     # for custom FFmpeg:
     - export STORZ_STACK_GIFTGRAB_ENV_ROOT=/home/gitlab-runner/environments/giftgrab/usr/local
+    - export PATH="$STORZ_STACK_GIFTGRAB_ENV_ROOT/bin":$PATH
     - export PKG_CONFIG_PATH="$STORZ_STACK_GIFTGRAB_ENV_ROOT/lib/pkgconfig":$PKG_CONFIG_PATH
     # for custom libVLC
     - export LIBVLC_INCLUDE_PATH="$STORZ_STACK_GIFTGRAB_ENV_ROOT/include"
