@@ -314,12 +314,12 @@ class GiftGrabInstallCommand(install):
                     self.__print_err_msg(err_msg)
                     raise LibError(err_summary)
 
-        # check EpiphanSDK
+        # check libVLC
         if self.i420:
-            cmd = ['cmake', join(join(self.here, 'cmake'), 'epiphansdk')]
+            cmd = ['cmake', join(join(self.here, 'cmake'), 'libvlc')]
             err_msg = '%s\n%s' % (
-                'EpiphanSDK does not seem to be installed on your system.',
-                'EpiphanSDK is needed for I420 colour space support.'
+                'libVLC does not seem to be installed on your system.',
+                'libVLC is needed for I420 colour space support.'
             )
             self.__check_command(cmd, err_msg)
 

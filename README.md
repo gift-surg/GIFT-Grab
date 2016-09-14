@@ -53,7 +53,7 @@ Features can be customised as per the combinations listed below. Please note tha
 
 **Build GIFT-Grab from source** using CMake. Use the following options to customise features as desired (all options are disabled by default):
 
-* `-D USE_EPIPHAN_DVI2PCIE_DUO=ON` for Epiphan DVI2PCIe Duo support (requires OpenCV). Append `-D USE_I420=ON` to capture at 60 fps (requires EpiphanSDK).
+* `-D USE_EPIPHAN_DVI2PCIE_DUO=ON` for Epiphan DVI2PCIe Duo support (requires OpenCV). Append `-D USE_I420=ON` to capture at 60 fps (requires libVLC).
 * `-D USE_XVID=ON` for Xvid support (requires OpenCV).
 * `-D USE_HEVC=ON` for HEVC support (requires FFmpeg, pkg-config and kvazaar).
 * `-D USE_HEVC=ON -D ENABLE_GPL=ON -D USE_X265=ON` to use x265 instead of kvazaar for HEVC support (requires FFmpeg, pkg-config and x265).
@@ -66,7 +66,7 @@ Features can be customised as per the combinations listed below. Please note tha
 
 **To install from the Python Packaging Index** simply run `pip install giftgrab`. Note that all features are disabled by default. Enable them by appending the following to the command:
 
-* `--install-option="--epiphan-dvi2pcie-duo"` for Epiphan DVI2PCIe Duo support (requires OpenCV). Add `--install-option="--i420"` to capture at 60 fps (requires EpiphanSDK).
+* `--install-option="--epiphan-dvi2pcie-duo"` for Epiphan DVI2PCIe Duo support (requires OpenCV). Add `--install-option="--i420"` to capture at 60 fps (requires libVLC).
 * `--install-option="--xvid"` for Xvid support (requires OpenCV).
 * `--install-option="--hevc"` for HEVC support (requires FFmpeg, pkg-config and kvazaar).
 * `--install-option="--hevc" --install-option="--enable-gpl" --install-option="--x265"` to use x265 instead of kvazaar for HEVC support (requires FFmpeg, pkg-config and x265).

@@ -42,7 +42,7 @@ OPTION(BUILD_TESTS
 OPTION(BUILD_PYTHON
     "GIFT-Grab Python API (requires Python and Boost.Python)" OFF)
 OPTION(USE_I420
-    "Capture video in I420 colour space (requires EpiphanSDK)" OFF)
+    "Capture video in I420 colour space (requires libVLC)" OFF)
 OPTION(GENERATE_PERFORMANCE_OUTPUT
     "Performance benchmark reports (requires Boost.Timer and Boost.System)" OFF)
 MARK_AS_ADVANCED(GENERATE_PERFORMANCE_OUTPUT)
