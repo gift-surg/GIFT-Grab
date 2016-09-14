@@ -80,10 +80,7 @@ bool VideoSourceVLC::get_frame(VideoFrame_I420 & frame)
 
 double VideoSourceVLC::get_frame_rate()
 {
-    //return libvlc_media_player_get_rate( m_mp );
     return libvlc_media_player_get_fps(_vlc_mp);
-    //throw std::runtime_error("get_frame_rate to be implemented");
-    //return 0.0;
 }
 
 
