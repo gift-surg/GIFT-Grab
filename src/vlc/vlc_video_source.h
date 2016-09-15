@@ -183,6 +183,11 @@ protected:
     //!
     void release_vlc();
 
+    //!
+    //! \brief Release used resources, e.g. buffers
+    //!
+    void clear();
+
     DISALLOW_COPY_AND_ASSIGNMENT(VideoSourceVLC);
 };
 

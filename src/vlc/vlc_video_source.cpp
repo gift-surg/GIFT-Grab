@@ -26,6 +26,7 @@ VideoSourceVLC::~VideoSourceVLC()
 {
     stop_vlc();
     release_vlc();
+    clear();
 }
 
 
@@ -219,12 +220,7 @@ void VideoSourceVLC::release_vlc()
     // free engine
     libvlc_release(_vlc_inst);
 
-    // free buffer
-    if (_video_buffer != nullptr)
-        delete[] _video_buffer;
-    _data_length = 0;
-    _cols = 0;
-    _rows = 0;
+    clear();
 
     // free sub-frame
     if (_sub != nullptr)
@@ -232,6 +228,17 @@ void VideoSourceVLC::release_vlc()
         delete _sub;
         _sub = nullptr;
     }
+}
+
+
+void VideoSourceVLC::clear()
+{
+    // free buffer
+    if (_video_buffer != nullptr)
+        delete[] _video_buffer;
+    _data_length = 0;
+    _cols = 0;
+    _rows = 0;
 }
 
 
