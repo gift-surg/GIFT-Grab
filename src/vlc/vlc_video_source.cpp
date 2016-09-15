@@ -33,8 +33,7 @@ VideoSourceVLC::~VideoSourceVLC()
 
 bool VideoSourceVLC::get_frame_dimensions(int & width, int & height)
 {
-    ///\todo mutex
-
+    std::lock_guard<std::mutex> data_lock_guard(_data_lock);
     if(this->_cols == 0 || this->_rows == 0)
         return false;
 
@@ -47,10 +46,6 @@ bool VideoSourceVLC::get_frame_dimensions(int & width, int & height)
 bool VideoSourceVLC::get_frame(VideoFrame_BGRA & frame)
 {
     throw VideoSourceError("VLC video source supports only I420 colour space");
-
-    // TODO
-
-    ///\todo mutex
 
     std::lock_guard<std::mutex> data_lock_guard(_data_lock);
     if (_cols == 0 || _rows == 0 || _video_buffer == nullptr)
@@ -90,8 +85,6 @@ double VideoSourceVLC::get_frame_rate()
 
 void VideoSourceVLC::set_sub_frame(int x, int y, int width, int height)
 {
-    // TODO mutex?
-
     if (x >= _full.x and x + width <= _full.x + _full.width and
         y >= _full.y and y + height <= _full.y + _full.height)
     {
@@ -106,7 +99,6 @@ void VideoSourceVLC::set_sub_frame(int x, int y, int width, int height)
 
 void VideoSourceVLC::get_full_frame()
 {
-    // TODO mutex?
     stop_vlc();
     release_vlc();
     reset_crop();
@@ -292,10 +284,10 @@ void VideoSourceVLC::handleStream(VideoSourceVLC * p_video_data,
                                   size_t colour_depth,
                                   size_t size)
 {
+    std::lock_guard<std::mutex> data_lock_guard(_data_lock);
     // TODO: explain how data should be handled (see #86)
     p_video_data->_cols = cols;
     p_video_data->_rows = rows;
-    // TODO: Unlock the mutex
 }
 
 }
