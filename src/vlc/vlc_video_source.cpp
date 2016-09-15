@@ -222,12 +222,7 @@ void VideoSourceVLC::release_vlc()
 
     clear();
 
-    // free sub-frame
-    if (_sub != nullptr)
-    {
-        delete _sub;
-        _sub = nullptr;
-    }
+    reset_crop();
 }
 
 
@@ -239,6 +234,19 @@ void VideoSourceVLC::clear()
     _data_length = 0;
     _cols = 0;
     _rows = 0;
+
+    reset_crop();
+}
+
+
+void VideoSourceVLC::reset_crop()
+{
+    // free sub-frame
+    if (_sub != nullptr)
+    {
+        delete _sub;
+        _sub = nullptr;
+    }
 }
 
 

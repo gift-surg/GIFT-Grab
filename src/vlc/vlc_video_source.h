@@ -188,6 +188,11 @@ protected:
     //!
     void clear();
 
+    //!
+    //! \brief Reset video cropping, i.e. set full video frame
+    //!
+    void reset_crop();
+
     DISALLOW_COPY_AND_ASSIGNMENT(VideoSourceVLC);
 };
 
