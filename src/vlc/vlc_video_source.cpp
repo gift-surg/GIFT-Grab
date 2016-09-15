@@ -94,11 +94,7 @@ void VideoSourceVLC::set_sub_frame(int x, int y, int width, int height)
     {
         stop_vlc();
         release_vlc();
-        if (_sub == nullptr) _sub = new FrameBox;
-        _sub->x = x;
-        _sub->y = y;
-        _sub->width = width;
-        _sub->height = height;
+        set_crop(x, y, width, height);
         init_vlc();
         run_vlc();
     }
@@ -236,6 +232,17 @@ void VideoSourceVLC::clear()
     _rows = 0;
 
     reset_crop();
+}
+
+
+void VideoSourceVLC::set_crop(unsigned int x, unsigned int y,
+                              unsigned int width, unsigned int height)
+{
+    if (_sub == nullptr) _sub = new FrameBox;
+    _sub->x = x;
+    _sub->y = y;
+    _sub->width = width;
+    _sub->height = height;
 }
 
 

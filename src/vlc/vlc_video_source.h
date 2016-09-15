@@ -189,6 +189,16 @@ protected:
     void clear();
 
     //!
+    //! \brief Set video cropping region
+    //! \param x
+    //! \param y
+    //! \param width
+    //! \param height
+    //!
+    void set_crop(unsigned int x, unsigned int y,
+                  unsigned int width, unsigned int height);
+
+    //!
     //! \brief Reset video cropping, i.e. set full video frame
     //!
     void reset_crop();
