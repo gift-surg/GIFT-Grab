@@ -12,7 +12,7 @@ sub_width = 0
 sub_height = 0
 
 
-@yield_fixture(autouse=True)
+@yield_fixture(scope='session', autouse=True)
 def peri_test(port, colour_space):
     # This section runs before each test
     global source

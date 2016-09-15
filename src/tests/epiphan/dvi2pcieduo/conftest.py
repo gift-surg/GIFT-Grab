@@ -1,3 +1,4 @@
+from pytest import fixture
 from pygiftgrab import Device
 from giftgrab.epiphan import BGR24, I420
 
@@ -11,26 +12,29 @@ def pytest_addoption(parser):
                      help='Epiphan DVI2PCIe Duo config files directory')
 
 
-def pytest_generate_tests(metafunc):
-    if 'colour_space' in metafunc.fixturenames:
-        if metafunc.config.option.colour_space == 'BGR24':
-            colour_space = BGR24
-        elif metafunc.config.option.colour_space == 'I420':
-            colour_space = I420
-        else:
-            raise RuntimeError('Could not recognise colour space ' +
-                               metafunc.config.option.colour_space)
-        metafunc.parametrize('colour_space', [colour_space])
+@fixture(scope='session')
+def colour_space(request):
+    colour_space = request.config.getoption('--colour-space')
+    if colour_space == 'BGR24':
+        return BGR24
+    elif colour_space == 'I420':
+        return I420
+    else:
+        raise RuntimeError('Could not recognise colour space ' +
+                           colour_space)
 
-    if 'port' in metafunc.fixturenames:
-        if metafunc.config.option.port == 'DVI':
-            port = Device.DVI2PCIeDuo_DVI
-        elif metafunc.config.option.port == 'SDI':
-            port = Device.DVI2PCIeDuo_SDI
-        else:
-            raise RuntimeError('Could not recognise Epiphan DVI2PCIe Duo port ' +
-                               metafunc.config.option.port)
-        metafunc.parametrize('port', [port])
+@fixture(scope='session')
+def port(request):
+    port = request.config.getoption('--port')
+    if port == 'DVI':
+        return Device.DVI2PCIeDuo_DVI
+    elif port == 'SDI':
+        return Device.DVI2PCIeDuo_SDI
+    else:
+        raise RuntimeError('Could not recognise Epiphan DVI2PCIe Duo port ' +
+                           port)
 
-    if 'config_dir' in metafunc.fixturenames:
-        metafunc.parametrize('config_dir', [metafunc.config.option.config_dir])
+@fixture(scope='session')
+def config_dir(request):
+    return request.config.getoption('--config-dir')
+
