@@ -190,14 +190,8 @@ void VideoSourceVLC::run_vlc()
     // empirically determined value that allows for initialisation
     // to succeed before any API functions are called on this object
     std::this_thread::sleep_for(std::chrono::milliseconds(350));
-    unsigned int width, height;
-    if (libvlc_video_get_size(_vlc_mp, 0, &width, &height) != 0)
-        throw VideoSourceError("Could not get video dimensions");
 
-    _full.x = 0;
-    _full.y = 0;
-    _full.width = width;
-    _full.height = height;
+    determine_full();
 }
 
 
@@ -232,6 +226,19 @@ void VideoSourceVLC::clear()
     _rows = 0;
 
     reset_crop();
+}
+
+
+void VideoSourceVLC::determine_full()
+{
+    unsigned int width, height;
+    if (libvlc_video_get_size(_vlc_mp, 0, &width, &height) != 0)
+        throw VideoSourceError("Could not get video dimensions");
+
+    _full.x = 0;
+    _full.y = 0;
+    _full.width = width;
+    _full.height = height;
 }
 
 

@@ -189,6 +189,11 @@ protected:
     void clear();
 
     //!
+    //! \brief Determine and record full frame dimensions
+    //!
+    void determine_full();
+
+    //!
     //! \brief Set video cropping region
     //! \param x
     //! \param y
