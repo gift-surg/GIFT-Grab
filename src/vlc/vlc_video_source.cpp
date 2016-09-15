@@ -52,6 +52,7 @@ bool VideoSourceVLC::get_frame(VideoFrame_BGRA & frame)
 
     ///\todo mutex
 
+    std::lock_guard<std::mutex> data_lock_guard(_data_lock);
     if (_cols == 0 || _rows == 0 || _video_buffer == nullptr)
         return false;
 
@@ -67,6 +68,7 @@ bool VideoSourceVLC::get_frame(VideoFrame_BGRA & frame)
 
 bool VideoSourceVLC::get_frame(VideoFrame_I420 & frame)
 {
+    std::lock_guard<std::mutex> data_lock_guard(_data_lock);
     if (_data_length > 0)
     {
         // TODO manage data?
@@ -215,6 +217,7 @@ void VideoSourceVLC::release_vlc()
 void VideoSourceVLC::clear()
 {
     // free buffer
+    std::lock_guard<std::mutex> data_lock_guard(_data_lock);
     if (_video_buffer != nullptr)
         delete[] _video_buffer;
     _data_length = 0;
@@ -264,7 +267,7 @@ void VideoSourceVLC::prepareRender(VideoSourceVLC * p_video_data,
                                    uint8_t ** pp_pixel_buffer,
                                    size_t size)
 {
-    ///\todo create mutex guard
+    std::lock_guard<std::mutex> data_lock_guard(p_video_data->_data_lock);
     if (size > p_video_data->_data_length)
     {
         if (p_video_data->_data_length == 0)

@@ -3,6 +3,7 @@
 #include "ivideosource.h"
 #include "macros.h"
 #include <vlc/vlc.h>
+#include <mutex>
 
 namespace gg
 {
@@ -45,6 +46,13 @@ protected:
     //! \brief Actual VLC player (streamer)
     //!
     libvlc_media_player_t * _vlc_mp;
+
+    //!
+    //! \brief This mutex will be locked when writing to or
+    //! reading from the data buffer
+    //! \sa _video_buffer
+    //!
+    std::mutex _data_lock;
 
     //!
     //! \brief Buffer for frames, has to be allocated before use
