@@ -17,8 +17,9 @@ VideoSourceVLC::VideoSourceVLC(const std::string path)
     , _sub(nullptr)
     , _path(path)
 {
-    this->init_vlc();
-    this->run_vlc();
+    init_vlc();
+    run_vlc();
+    determine_full();
 }
 
 
@@ -106,6 +107,7 @@ void VideoSourceVLC::get_full_frame()
     // TODO mutex?
     stop_vlc();
     release_vlc();
+    reset_crop();
     init_vlc();
     run_vlc();
 }
@@ -177,7 +179,7 @@ void VideoSourceVLC::init_vlc()
         throw VideoSourceError("Could not create VLC media player");
 
     // No need to keep the media now
-    libvlc_media_release( vlc_media );
+    libvlc_media_release(vlc_media);
 }
 
 
@@ -190,8 +192,6 @@ void VideoSourceVLC::run_vlc()
     // empirically determined value that allows for initialisation
     // to succeed before any API functions are called on this object
     std::this_thread::sleep_for(std::chrono::milliseconds(350));
-
-    determine_full();
 }
 
 
@@ -209,10 +209,6 @@ void VideoSourceVLC::release_vlc()
 
     // free engine
     libvlc_release(_vlc_inst);
-
-    clear();
-
-    reset_crop();
 }
 
 
