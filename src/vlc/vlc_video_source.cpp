@@ -10,6 +10,7 @@ namespace gg
 VideoSourceVLC::VideoSourceVLC(const std::string path)
     : _vlc_inst(nullptr)
     , _vlc_mp(nullptr)
+    , _running(false)
     , _video_buffer(nullptr)
     , _data_length(0)
     , _cols(0)
@@ -179,6 +180,8 @@ void VideoSourceVLC::init_vlc()
 
 void VideoSourceVLC::run_vlc()
 {
+    std::lock_guard<std::mutex> data_lock_guard(_data_lock);
+
     // play the media_player
     if (libvlc_media_player_play(_vlc_mp) != 0)
         throw VideoSourceError("Could not start VLC media player");
@@ -186,13 +189,19 @@ void VideoSourceVLC::run_vlc()
     // empirically determined value that allows for initialisation
     // to succeed before any API functions are called on this object
     std::this_thread::sleep_for(std::chrono::milliseconds(350));
+
+    _running = true;
 }
 
 
 void VideoSourceVLC::stop_vlc()
 {
+    std::lock_guard<std::mutex> data_lock_guard(_data_lock);
+
     // stop playing
     libvlc_media_player_stop(_vlc_mp);
+
+    _running = false;
 }
 
 
@@ -260,20 +269,23 @@ void VideoSourceVLC::prepareRender(VideoSourceVLC * p_video_data,
                                    size_t size)
 {
     std::lock_guard<std::mutex> data_lock_guard(p_video_data->_data_lock);
-    if (size > p_video_data->_data_length)
+    if (p_video_data->_running)
     {
-        if (p_video_data->_data_length == 0)
-            p_video_data->_video_buffer = reinterpret_cast<uint8_t *>(
-                        malloc(size * sizeof(uint8_t))
-                        );
-        else
-            p_video_data->_video_buffer = reinterpret_cast<uint8_t *>(
-                        realloc(p_video_data->_video_buffer, size * sizeof(uint8_t))
-                        );
-    }
-    p_video_data->_data_length = size;
+        if (size > p_video_data->_data_length)
+        {
+            if (p_video_data->_data_length == 0)
+                p_video_data->_video_buffer = reinterpret_cast<uint8_t *>(
+                            malloc(size * sizeof(uint8_t))
+                            );
+            else
+                p_video_data->_video_buffer = reinterpret_cast<uint8_t *>(
+                            realloc(p_video_data->_video_buffer, size * sizeof(uint8_t))
+                            );
+        }
+        p_video_data->_data_length = size;
 
-    *pp_pixel_buffer = p_video_data->_video_buffer;
+        *pp_pixel_buffer = p_video_data->_video_buffer;
+    }
 }
 
 
@@ -286,8 +298,11 @@ void VideoSourceVLC::handleStream(VideoSourceVLC * p_video_data,
 {
     std::lock_guard<std::mutex> data_lock_guard(p_video_data->_data_lock);
     // TODO: explain how data should be handled (see #86)
-    p_video_data->_cols = cols;
-    p_video_data->_rows = rows;
+    if (p_video_data->_running)
+    {
+        p_video_data->_cols = cols;
+        p_video_data->_rows = rows;
+    }
 }
 
 }

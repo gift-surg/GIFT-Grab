@@ -48,6 +48,12 @@ protected:
     libvlc_media_player_t * _vlc_mp;
 
     //!
+    //! \brief Flag indicating whether VLC player running
+    //! \sa _vlc_mp
+    //!
+    bool _running;
+
+    //!
     //! \brief This mutex will be locked when writing to or
     //! reading from the data buffer
     //! \sa _video_buffer
