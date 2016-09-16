@@ -222,7 +222,10 @@ void VideoSourceVLC::clear()
     // free buffer
     std::lock_guard<std::mutex> data_lock_guard(_data_lock);
     if (_video_buffer != nullptr)
+    {
         delete[] _video_buffer;
+        _video_buffer = nullptr;
+    }
     _data_length = 0;
     _cols = 0;
     _rows = 0;
