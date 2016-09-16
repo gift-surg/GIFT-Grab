@@ -86,15 +86,16 @@ double VideoSourceVLC::get_frame_rate()
 
 void VideoSourceVLC::set_sub_frame(int x, int y, int width, int height)
 {
-    if (x >= _full.x and x + width <= _full.x + _full.width and
-        y >= _full.y and y + height <= _full.y + _full.height)
-    {
-        stop_vlc();
-        release_vlc();
-        set_crop(x, y, width, height);
-        init_vlc();
-        run_vlc();
-    }
+    if (_sub == nullptr) // TODO: this is due to issue #101
+        if (x >= _full.x and x + width <= _full.x + _full.width and
+            y >= _full.y and y + height <= _full.y + _full.height)
+        {
+            stop_vlc();
+            release_vlc();
+            set_crop(x, y, width, height);
+            init_vlc();
+            run_vlc();
+        }
 }
 
 
