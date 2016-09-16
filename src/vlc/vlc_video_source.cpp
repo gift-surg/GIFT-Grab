@@ -284,7 +284,7 @@ void VideoSourceVLC::handleStream(VideoSourceVLC * p_video_data,
                                   size_t colour_depth,
                                   size_t size)
 {
-    std::lock_guard<std::mutex> data_lock_guard(_data_lock);
+    std::lock_guard<std::mutex> data_lock_guard(p_video_data->_data_lock);
     // TODO: explain how data should be handled (see #86)
     p_video_data->_cols = cols;
     p_video_data->_rows = rows;
