@@ -180,12 +180,14 @@ void VideoSourceVLC::init_vlc()
 
 void VideoSourceVLC::run_vlc()
 {
-    std::lock_guard<std::mutex> data_lock_guard(_data_lock);
-    _running = true;
+    { // artificial scope for the mutex guard below
+        std::lock_guard<std::mutex> data_lock_guard(_data_lock);
+        _running = true;
 
-    // play the media_player
-    if (libvlc_media_player_play(_vlc_mp) != 0)
-        throw VideoSourceError("Could not start VLC media player");
+        // play the media_player
+        if (libvlc_media_player_play(_vlc_mp) != 0)
+            throw VideoSourceError("Could not start VLC media player");
+    }
 
     // empirically determined value that allows for initialisation
     // to succeed before any API functions are called on this object
