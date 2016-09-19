@@ -150,7 +150,7 @@ void VideoSourceVLC::init_vlc()
         {
             sprintf(smem_options, "%scropright=%u", smem_options, cropright);
         }
-        sprintf(smem_options, "%s}:", smem_options);
+        sprintf(smem_options, "%s}}:", smem_options);
     }
     sprintf(smem_options,
             "%ssmem{video-data=%lld,video-prerender-callback=%lld,video-postrender-callback=%lld}",
