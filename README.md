@@ -78,7 +78,7 @@ Features can be customised as per the combinations listed below. Please note tha
 * `test-giftgrab-hevc` to test HEVC support
 * `test-giftgrab-xvid` to test Xvid support
 * `test-giftgrab-epiphan-dvi2pcieduo-bgr24` to test Epiphan DVI2PCIe Duo support, if GIFT-Grab has **not** been installed with the `--i420` option
-* `test-giftgrab-epiphan-dvi2pcieduo-i420` to test Epiphan DVI2PCIe Duo support, if GIFT-Grab has been installed with the `--i420` option
+* **(Experimental)** `test-giftgrab-epiphan-dvi2pcieduo-i420` to test Epiphan DVI2PCIe Duo support, if GIFT-Grab has been installed with the `--i420` option
 * `edd-<port>-<colour_space>-<codec>` (e.g. `edd-dvi-i420-vp9`) to record 30 frames into a timestamp-named video file, where:
    * `<port>` is one of `dvi` or `sdi`
    * `<colour_space>` is one of `bgr24` or `i420` (if GIFT-Grab was built with I420 colour space support)

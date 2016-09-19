@@ -166,7 +166,8 @@ pypi-packaging-epiphan:
     - edd-sdi-bgr24-vp9; exit_on_fail
     # Epiphan DVI2PCIe Duo support (EpiphanSDK)
     - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--i420" --upgrade "$PyPI_INSTALLER"
-    - test-giftgrab-epiphan-dvi2pcieduo-i420; exit_on_fail
+    # TODO: issue #102
+    # - test-giftgrab-epiphan-dvi2pcieduo-i420; exit_on_fail
     - edd-dvi-i420-hevc; exit_on_fail
     - edd-sdi-i420-hevc; exit_on_fail
     - edd-dvi-i420-vp9; exit_on_fail
