@@ -1,4 +1,4 @@
-from pytest import yield_fixture, fail
+from pytest import yield_fixture, fail, mark
 from pygiftgrab import Factory, VideoFrame_BGRA
 from giftgrab.epiphan import BGR24, I420
 
@@ -12,7 +12,7 @@ sub_width = 0
 sub_height = 0
 
 
-@yield_fixture(scope='session', autouse=True)
+@yield_fixture(scope='session')
 def peri_test(port, colour_space):
     # This section runs before each test
     global source
@@ -62,12 +62,16 @@ def peri_test(port, colour_space):
     # assert source is None
 
 
+@mark.unit
+@mark.usefixtures('peri_test')
 def test_get_frame():
     assert source.get_frame(frame)
     assert frame.rows() > 0
     assert frame.cols() > 0
 
 
+@mark.unit
+@mark.usefixtures('peri_test')
 def test_sub_frame():
     source.set_sub_frame(sub_x, sub_y,
                          sub_width, sub_height)
@@ -76,6 +80,8 @@ def test_sub_frame():
     assert frame.rows() == sub_height
 
 
+@mark.unit
+@mark.usefixtures('peri_test')
 def test_full_frame():
     source.set_sub_frame(sub_x, sub_y,
                          sub_width, sub_height)
