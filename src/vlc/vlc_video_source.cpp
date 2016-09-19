@@ -163,10 +163,7 @@ void VideoSourceVLC::init_vlc()
         "-I", "dummy", // Don't use any interface
         "--ignore-config", // Don't use VLC's config
         "--file-logging",
-        // TODO - what about the options below?
         //"--verbose=2", // Be much more verbose then normal for debugging purpose
-        //"--clock-jitter=0",
-        //"--file-caching=150",
         "--no-audio",
         "--sout", smem_options // Stream to memory
     };
