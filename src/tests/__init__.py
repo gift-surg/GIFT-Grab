@@ -35,7 +35,6 @@ def __run_epiphan_tests(colour_space):
     for port in ['SDI', 'DVI']:
         ret = main(['--colour-space=%s' % (colour_space),
                     '--port=%s' % (port),
-                    '--config-dir=%s' % (epiphan_dvi2pcieduo_config_dir),
                     epiphan_dvi2pcieduo_working_dir, '-m', 'unit'])
         if ret: exit(ret)
 
