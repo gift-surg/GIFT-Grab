@@ -130,49 +130,25 @@ void VideoSourceVLC::init_vlc()
         bool add_comma = false;
         if (croptop > 0)
         {
-            sprintf(smem_options,
-                    "%scroptop=%u",
-                    smem_options,
-                    croptop);
+            sprintf(smem_options, "%scroptop=%u", smem_options, croptop);
             if (cropbottom > 0 or cropleft > 0 or cropright > 0)
-                add_comma = true;
-            else
-                add_comma = false;
+                sprintf(smem_options, "%s,", smem_options);
         }
         if (cropbottom > 0)
         {
-            if (add_comma)
-                sprintf(smem_options, "%s,", smem_options);
-            sprintf(smem_options,
-                    "%scropbottom=%u",
-                    smem_options,
-                    cropbottom);
+            sprintf(smem_options, "%scropbottom=%u", smem_options, cropbottom);
             if (cropleft > 0 or cropright > 0)
-                add_comma = true;
-            else
-                add_comma = false;
+                sprintf(smem_options, "%s,", smem_options);
         }
         if (cropleft > 0)
         {
-            if (add_comma)
-                sprintf(smem_options, "%s,", smem_options);
-            sprintf(smem_options,
-                    "%scropleft=%u",
-                    smem_options,
-                    cropleft);
+            sprintf(smem_options, "%scropleft=%u", smem_options, cropleft);
             if (cropright > 0)
-                add_comma = true;
-            else
-                add_comma = false;
+                sprintf(smem_options, "%s,", smem_options);
         }
         if (cropright > 0)
         {
-            if (add_comma)
-                sprintf(smem_options, "%s,", smem_options);
-            sprintf(smem_options,
-                    "%scropright=%u",
-                    smem_options,
-                    cropright);
+            sprintf(smem_options, "%scropright=%u", smem_options, cropright);
         }
         sprintf(smem_options, "%s}:", smem_options);
     }
