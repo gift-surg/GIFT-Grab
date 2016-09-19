@@ -101,7 +101,6 @@ void VideoSourceVLC::set_sub_frame(int x, int y, int width, int height)
 
 void VideoSourceVLC::get_full_frame()
 {
-    return; // TODO: see issue #101
     stop_vlc();
     release_vlc();
     reset_crop();
@@ -199,10 +198,10 @@ void VideoSourceVLC::run_vlc()
 
 void VideoSourceVLC::stop_vlc()
 {
-    std::lock_guard<std::mutex> data_lock_guard(_data_lock);
-
     // stop playing
     libvlc_media_player_stop(_vlc_mp);
+
+    std::lock_guard<std::mutex> data_lock_guard(_data_lock);
 
     _running = false;
 }
