@@ -221,3 +221,4 @@ real-time:
     - 68-publish-giftgrab-on-pypi
     - 84-switch-to-bsd-compatible-x265-alternative
     - 83-revive-libvlc-video-source
+    - 83-revive-libvlc-video-source-fix-stalling-tests
