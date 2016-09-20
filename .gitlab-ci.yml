@@ -9,15 +9,14 @@ before_script:
   - source "$CI_SCRIPTS_DIR/utils.sh"
 
 stages:
-  - build_cmake
+  - install
   - test_cmake
-  - build_pypi
   - test_pypi
 
 ################## Platform: CMake ##################
 ################## Target: All ######################
 linux:
-  stage: build_cmake
+  stage: install
   script:
     # prepare environment
     - export GiftGrab_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab-linux"
@@ -88,7 +87,7 @@ linux:
 ################## Platform: PyPI ##################
 ################## Target: All #####################
 pypi:
-  stage: build_pypi
+  stage: install
   script:
     - GiftGrab_PyPI_BUILD_DIR="$SCRATCH_DIR/pypi"
     - GiftGrab_PyPI_INSTALL_DIR="$GiftGrab_PyPI_BUILD_DIR/install"
