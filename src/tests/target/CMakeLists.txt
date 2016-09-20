@@ -8,7 +8,7 @@ FILE(COPY
 if(USE_HEVC)
     SET(NAME_TEST Test_HEVC)
     ADD_TEST(NAME ${NAME_TEST}
-        COMMAND py.test --codec=HEVC test_unit.py
+        COMMAND py.test --codec=HEVC --colour-space=${COLOUR_SPACE} test_unit.py
     )
     LIST(APPEND TESTS_LIST ${NAME_TEST})
 endif(USE_HEVC)
@@ -17,7 +17,7 @@ endif(USE_HEVC)
 if(USE_XVID)
     SET(NAME_TEST Test_Xvid)
     ADD_TEST(NAME ${NAME_TEST}
-        COMMAND py.test --codec=Xvid test_unit.py
+        COMMAND py.test --codec=Xvid --colour-space=${COLOUR_SPACE} test_unit.py
     )
     LIST(APPEND TESTS_LIST ${NAME_TEST})
 endif(USE_XVID)
@@ -26,7 +26,7 @@ endif(USE_XVID)
 if(USE_VP9)
     SET(NAME_TEST Test_VP9)
     ADD_TEST(NAME ${NAME_TEST}
-        COMMAND py.test --codec=VP9 test_unit.py
+        COMMAND py.test --codec=VP9 --colour-space=${COLOUR_SPACE} test_unit.py
     )
     LIST(APPEND TESTS_LIST ${NAME_TEST})
 endif(USE_VP9)

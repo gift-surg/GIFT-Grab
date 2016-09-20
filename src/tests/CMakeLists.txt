@@ -6,7 +6,7 @@ SET(PYTHONPATH "${CMAKE_SOURCE_DIR}/python/modules:${PYTHONPATH}")
 if(USE_I420)
     SET(COLOUR_SPACE I420)
 else(USE_I420)
-    SET(COLOUR_SPACE BGR24)
+    SET(COLOUR_SPACE BGRA)
 endif(USE_I420)
 
 # common configuration
