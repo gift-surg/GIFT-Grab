@@ -37,9 +37,21 @@ public:
     //!
     //! \brief Constructor that by default will use externally
     //! managed frame data
+    //!
+    //! \param colour
     //! \param manage_data
     //!
-    VideoFrame(bool manage_data=false);
+    VideoFrame(enum ColourSpace colour, bool manage_data=false);
+
+    //!
+    //! \brief Allocates memory for specified dimensions, and
+    //! sets all pixels to black
+    //!
+    //! \param colour
+    //! \param cols
+    //! \param rows
+    //!
+    VideoFrame(enum ColourSpace colour, size_t cols, size_t rows);
 
 #ifdef USE_OPENCV
     //!
@@ -109,6 +121,12 @@ public:
 
 protected:
     //!
+    //! \brief Colour space, i.e. description
+    //! of contained data
+    //!
+    enum ColourSpace _colour;
+
+    //!
     //! \brief Frame data
     //!
     unsigned char*  _data;
@@ -137,6 +155,11 @@ protected:
     bool            _manage_data;
 
 protected:
+    //!
+    //! \brief Allocate any necessary data
+    //!
+    void init();
+
     //!
     //! \brief Free all managed data
     //! \sa ~VideoFrame

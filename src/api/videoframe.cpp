@@ -5,14 +5,26 @@
 namespace gg
 {
 
-VideoFrame::VideoFrame(bool manage_data)
-  : _manage_data(manage_data),
+VideoFrame::VideoFrame(enum ColourSpace colour, bool manage_data)
+  : _colour(colour),
+    _manage_data(manage_data),
     _data(nullptr),
     _data_length(0),
     _rows(0),
     _cols(0)
 {
 
+}
+
+VideoFrame::VideoFrame(ColourSpace colour, size_t cols, size_t rows)
+    : _colour(colour)
+    , _manage_data(true)
+    , _data(nullptr)
+    , _data_length(0)
+    , _cols(cols)
+    , _rows(rows)
+{
+    init();
 }
 
 #ifdef USE_OPENCV
@@ -115,14 +127,37 @@ VideoFrame::~VideoFrame()
     clear();
 }
 
+void VideoFrame::init()
+{
+    if (_manage_data)
+    {
+        switch (_colour)
+        {
+        case BGRA:
+            _data_length = _cols * _rows * 4;
+
+
+            break;
+        case I420:
+            _data_length = (_cols + 2 * 100) * (_rows + 2 * 100) + // Y plane (100 = padding, arbitrary)
+                           ((_cols % 2 == 1 ? (_cols + 1) / 2 : _cols / 2) + padding) * // U,
+                           ((_rows % 2 == 1 ? (_rows + 1) / 2 : _rows / 2) + padding);  // Y plane
+            break;
+        }
+
+        _data = realloc(_data, _data_length * sizeof(unsigned char));
+        memset(_data, 0, _data_length * sizeof(unsigned char));
+    }
+}
+
 void VideoFrame::clear()
 {
     if (_manage_data) {
-        delete [] _data;
-        _data = 0;
+        free(_data);
+        _data = nullptr;
         _data_length = 0;
-        _rows = 0;
         _cols = 0;
+        _rows = 0;
     }
 }
 
