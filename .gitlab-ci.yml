@@ -14,15 +14,15 @@ before_script:
   - cd "$GiftGrab_BUILD_DIR"
 
 stages:
-  - build-cmake
-  - test-cmake
-  - build-pypi
-  - test-pypi
+  - build_cmake
+  - test_cmake
+  - build_pypi
+  - test_pypi
 
 ################## Platform: CMake ##################
 ################## Target: All ######################
 linux:
-  script: build-cmake
+  script: build_cmake
     - pwd
     # bare-bones build
     - cmake -D CMAKE_INSTALL_PREFIX="$INSTALL_DIR" "$GiftGrab_SOURCE_DIR"
@@ -85,7 +85,7 @@ linux:
 ################## Platform: PyPI ##################
 ################## Target: All #####################
 pypi:
-  script: build-pypi
+  script: build_pypi
     - GiftGrab_PyPI_BUILD_DIR="$SCRATCH_DIR/pypi"
     - GiftGrab_PyPI_INSTALL_DIR="$GiftGrab_PyPI_BUILD_DIR/install"
     - GiftGrab_venv=venv
@@ -136,7 +136,7 @@ pypi:
 ################## Platform: PyPI ################################
 ################## Target: All ###################################
 pypi-epiphan-dvi2pcie-duo:
-  script: test-pypi
+  script: test_pypi
     # for custom FFmpeg:
     - export STORZ_STACK_GIFTGRAB_ENV_ROOT=/home/gitlab-runner/environments/giftgrab/usr/local
     # TODO - export PATH="$STORZ_STACK_GIFTGRAB_ENV_ROOT/bin":$PATH
@@ -197,7 +197,7 @@ pypi-epiphan-dvi2pcie-duo:
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 epiphan-dvi2pcie-duo:
-  script: test-cmake
+  script: test_cmake
     # for custom FFmpeg:
     - export STORZ_STACK_GIFTGRAB_ENV_ROOT=/home/gitlab-runner/environments/giftgrab/usr/local
     # TODO - export PATH="$STORZ_STACK_GIFTGRAB_ENV_ROOT/bin":$PATH
