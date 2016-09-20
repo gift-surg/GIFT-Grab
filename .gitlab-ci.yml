@@ -13,8 +13,9 @@ before_script:
   - mkdir -p "$GiftGrab_BUILD_DIR"
   - cd "$GiftGrab_BUILD_DIR"
 
-# Linux ##################
-gift-linux:
+################## Platform: CMake ##################
+################## Target: All ######################
+linux:
   script:
     - pwd
     # bare-bones build
@@ -75,7 +76,9 @@ gift-linux:
   tags:
     - gift-linux
 
-pypi-packaging:
+################## Platform: PyPI ##################
+################## Target: All #####################
+pypi:
   script:
     - GiftGrab_PyPI_BUILD_DIR="$SCRATCH_DIR/pypi"
     - GiftGrab_PyPI_INSTALL_DIR="$GiftGrab_PyPI_BUILD_DIR/install"
@@ -123,7 +126,10 @@ pypi-packaging:
     - gift-linux
     - gift-pypi
 
-pypi-packaging-epiphan:
+################## Device: Epiphan DVI2PCIe Duo ##################
+################## Platform: PyPI ################################
+################## Target: All ###################################
+pypi-epiphan-dvi2pcie-duo:
   script:
     # for custom FFmpeg:
     - export STORZ_STACK_GIFTGRAB_ENV_ROOT=/home/gitlab-runner/environments/giftgrab/usr/local
@@ -179,10 +185,10 @@ pypi-packaging-epiphan:
     - deactivate
   tags:
     - gift-pypi
-    - gift-surg-storz-stack
+    - gift-epiphan-dvi2pcie-duo
 
-# Real-time recording ####
-real-time:
+################## Device: Epiphan DVI2PCIe Duo ##################
+epiphan-dvi2pcie-duo:
   script:
     # for custom FFmpeg:
     - export STORZ_STACK_GIFTGRAB_ENV_ROOT=/home/gitlab-runner/environments/giftgrab/usr/local
@@ -203,7 +209,7 @@ real-time:
     - check_epiphan_alive
     - ctest; exit_on_fail
   tags:
-    - gift-surg-storz-stack
+    - gift-epiphan-dvi2pcie-duo
   only:
     - 31-i420-colour-space-on-epiphan
     - 31-i420-colour-space-on-epiphan-clean-start
