@@ -1,11 +1,10 @@
 from pytest import fixture
-from pygiftgrab import Device
-from giftgrab.epiphan import BGR24, I420
+from pygiftgrab import Device, ColourSpace
 
 
 def pytest_addoption(parser):
     parser.addoption('--colour-space', action='store',
-                     help='Colour space specification (BGR24 or I420)')
+                     help='Colour space specification (BGRA or I420)')
     parser.addoption('--port', action='store',
                      help='Epiphan DVI2PCIe Duo port specification (SDI or DVI)')
     parser.addoption('--config-dir', action='store',
@@ -15,10 +14,10 @@ def pytest_addoption(parser):
 @fixture(scope='session')
 def colour_space(request):
     colour_space = request.config.getoption('--colour-space')
-    if colour_space == 'BGR24':
-        return BGR24
+    if colour_space == 'BGRA':
+        return ColourSpace.BGRA
     elif colour_space == 'I420':
-        return I420
+        return ColourSpace.I420
     else:
         raise RuntimeError('Could not recognise colour space ' +
                            colour_space)

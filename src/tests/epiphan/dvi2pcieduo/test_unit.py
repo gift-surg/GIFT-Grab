@@ -1,6 +1,5 @@
 from pytest import yield_fixture, fail, mark
-from pygiftgrab import Factory, VideoFrame_BGRA
-from giftgrab.epiphan import BGR24, I420
+from pygiftgrab import Factory, VideoFrame
 
 source = None
 frame = None
@@ -17,7 +16,7 @@ def peri_test(port, colour_space):
     # This section runs before each test
     global source
     try:
-        source = Factory.connect(port)
+        source = Factory.connect(port, colour_space)
     except IOError as e:
         raise RuntimeError('Could not connect to Epiphan DVI2PCIe Duo,\n' +
                            'The detailed error was:\n' +
@@ -25,13 +24,7 @@ def peri_test(port, colour_space):
     assert source is not None
 
     global frame
-    if colour_space == BGR24:
-        frame = VideoFrame_BGRA(False)
-    elif colour_space == I420:
-        from pygiftgrab import VideoFrame_I420
-        frame = VideoFrame_I420(False)
-    else:
-        fail('Colour space not defined')
+    frame = VideoFrame(False, colour_space)
 
     global height, width
     assert source.get_frame(frame)

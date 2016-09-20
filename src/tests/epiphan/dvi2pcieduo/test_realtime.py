@@ -6,7 +6,7 @@ import yaml
 from subprocess import check_output
 from os.path import isdir, dirname, isfile, join
 from shutil import rmtree
-from giftgrab.epiphan import parse, dump, BGR24, I420
+from giftgrab.epiphan import parse, dump
 import pygiftgrab
 from giftgrab.utils.inspection import frame_rate, duration, resolution, codec
 
@@ -53,10 +53,10 @@ def test_parse(colour_space, config_dir):
     # files with invalid values
     with pytest.raises(ValueError):
         _ = parse(join(config_dir, 'valueerror1.yml'))
-    if colour_space == BGR24:
+    if colour_space == pygiftgrab.ColourSpace.BGRA:
         with pytest.raises(ValueError):
             _ = parse(join(config_dir, 'valueerror2.yml'))
-    elif colour_space == I420:
+    elif colour_space == pygiftgrab.ColourSpace.I420:
         with pytest.raises(ValueError):
             _ = parse(join(config_dir, 'valueerror3.yml'))
     else:
@@ -71,12 +71,12 @@ def test_parse(colour_space, config_dir):
 @pytest.mark.usefixtures('cleanup')
 def test_frame_grabbing(colour_space, config_dir):
     # test-input & data
-    if colour_space == BGR24:
+    if colour_space == pygiftgrab.ColourSpace.BGRA:
         fs_config_file = join(config_dir, 'sdi.yml')
         us_config_file = join(config_dir, 'dvi.yml')
         fs_frame_rate = 28.0
         us_frame_rate = 14.0
-    elif colour_space == I420:
+    elif colour_space == pygiftgrab.ColourSpace.I420:
         fs_config_file = join(config_dir, 'sdi-i420.yml')
         us_config_file = join(config_dir, 'dvi-i420.yml')
         fs_frame_rate = 40.0
