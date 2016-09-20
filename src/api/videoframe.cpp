@@ -145,7 +145,7 @@ void VideoFrame::init()
             break;
         }
 
-        _data = realloc(_data, _data_length * sizeof(unsigned char));
+        _data = reinterpret_cast<unsigned char*>(realloc(_data, _data_length * sizeof(unsigned char)));
         memset(_data, 0, _data_length * sizeof(unsigned char));
     }
 }
