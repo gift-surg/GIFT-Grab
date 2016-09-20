@@ -124,8 +124,8 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .value("File_VP9", gg::Storage::File_VP9)
     ;
 
-    class_<gg::VideoFrame>("VideoFrame", init<enum ColourSpace, bool>())
-        .def(init<enum ColourSpace, const size_t, const size_t>())
+    class_<gg::VideoFrame>("VideoFrame", init<enum gg::ColourSpace, bool>())
+        .def(init<enum gg::ColourSpace, const size_t, const size_t>())
         .def("rows", &gg::VideoFrame::rows)
         .def("cols", &gg::VideoFrame::cols)
     ;
