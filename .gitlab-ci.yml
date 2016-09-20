@@ -6,12 +6,7 @@ before_script:
   - rm -rf $SCRATCH_DIR
   - mkdir $SCRATCH_DIR
   - export GiftGrab_SOURCE_DIR="$(pwd)/src"
-  - export GiftGrab_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab"
-  - export INSTALL_DIR="$SCRATCH_DIR/install"
   - source "$CI_SCRIPTS_DIR/utils.sh"
-  - rm -rf "$GiftGrab_BUILD_DIR"
-  - mkdir -p "$GiftGrab_BUILD_DIR"
-  - cd "$GiftGrab_BUILD_DIR"
 
 stages:
   - build_cmake
@@ -24,6 +19,13 @@ stages:
 linux:
   stage: build_cmake
   script:
+    # prepare environment
+    - export GiftGrab_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab-linux"
+    - export INSTALL_DIR="$SCRATCH_DIR/install-linux"
+    - rm -rf "$GiftGrab_BUILD_DIR"
+    - mkdir -p "$GiftGrab_BUILD_DIR"
+    - cd "$GiftGrab_BUILD_DIR"
+    # start script
     - pwd
     # bare-bones build
     - cmake -D CMAKE_INSTALL_PREFIX="$INSTALL_DIR" "$GiftGrab_SOURCE_DIR"
@@ -147,7 +149,7 @@ pypi-epiphan-dvi2pcie-duo:
     # for custom libVLC
     - export LIBVLC_INCLUDE_PATH="$STORZ_STACK_GIFTGRAB_ENV_ROOT/include"
     - export LIBVLC_LIBRARY_PATH="$STORZ_STACK_GIFTGRAB_ENV_ROOT/lib"
-    - GiftGrab_PyPI_BUILD_DIR="$SCRATCH_DIR/pypi"
+    - GiftGrab_PyPI_BUILD_DIR="$SCRATCH_DIR/pypi-epiphan-dvi2pcie-duo"
     - GiftGrab_PyPI_INSTALL_DIR="$GiftGrab_PyPI_BUILD_DIR/install"
     - GiftGrab_venv=venv
     - rm -rf "$GiftGrab_PyPI_BUILD_DIR"
@@ -203,6 +205,13 @@ pypi-epiphan-dvi2pcie-duo:
 epiphan-dvi2pcie-duo:
   stage: test_cmake
   script:
+    # prepare environment
+    - export GiftGrab_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab-epiphan-dvi2pcie-duo"
+    - export INSTALL_DIR="$SCRATCH_DIR/install-epiphan-dvi2pcie-duo"
+    - rm -rf "$GiftGrab_BUILD_DIR"
+    - mkdir -p "$GiftGrab_BUILD_DIR"
+    - cd "$GiftGrab_BUILD_DIR"
+    # start script
     # for custom FFmpeg:
     - export STORZ_STACK_GIFTGRAB_ENV_ROOT=/home/gitlab-runner/environments/giftgrab/usr/local
     # TODO - export PATH="$STORZ_STACK_GIFTGRAB_ENV_ROOT/bin":$PATH
