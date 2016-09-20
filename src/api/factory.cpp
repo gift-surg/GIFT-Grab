@@ -10,6 +10,9 @@
 #ifdef USE_EPIPHANSDK
 #include "epiphansdk_video_source.h"
 #endif
+#ifdef USE_LIBVLC
+#include "vlc_video_source.h"
+#endif
 #endif
 
 namespace gg {
@@ -18,10 +21,10 @@ IVideoSource * Factory::_sources[2] = { NULL, NULL };
 
 IVideoSource * Factory::connect(enum Device type) {
 #ifdef USE_I420
-    std::string device_id = "";
-#ifndef USE_EPIPHANSDK
-    throw VideoSourceError("I420 colour space supported only with EpiphanSDK");
+#if !defined(USE_EPIPHANSDK) && !defined(USE_LIBVLC)
+    throw VideoSourceError("I420 colour space supported only with EpiphanSDK or libVLC");
 #endif
+    std::string device_id = "";
 #else
     int device_id = -1; // default value makes no sense
 #endif
@@ -29,21 +32,35 @@ IVideoSource * Factory::connect(enum Device type) {
     switch (type) {
     case DVI2PCIeDuo_DVI:
 #ifdef USE_I420
+
+#ifdef USE_EPIPHANSDK
 #ifdef EpiphanSDK_DVI
         device_id = EpiphanSDK_DVI;
 #else
         throw DeviceNotFound("EpiphanSDK_DVI macro not defined");
 #endif
 #else
+#ifdef USE_LIBVLC
+        device_id = "v4l2:///dev/video0:chroma=I420"; // always /dev/video0
+#endif
+#endif
+
+#else
         device_id = 0; // always /dev/video0
 #endif
         break;
     case DVI2PCIeDuo_SDI:
 #ifdef USE_I420
+#ifdef USE_EPIPHANSDK
 #ifdef EpiphanSDK_SDI
         device_id = EpiphanSDK_SDI;
 #else
         throw DeviceNotFound("EpiphanSDK_SDI macro not defined");
+#endif
+#endif
+
+#ifdef USE_LIBVLC
+        device_id = "v4l2:///dev/video1:chroma=I420"; // always /dev/video1
 #endif
 #else
         device_id = 1; // always /dev/video1
@@ -66,6 +83,17 @@ IVideoSource * Factory::connect(enum Device type) {
         {
             src = new VideoSourceEpiphanSDK(device_id,
                                             V2U_GRABFRAME_FORMAT_I420);
+        }
+        catch (VideoSourceError & e)
+        {
+            throw DeviceNotFound(e.what());
+        }
+#endif
+
+#ifdef USE_LIBVLC
+        try
+        {
+            src = new VideoSourceVLC(device_id);
         }
         catch (VideoSourceError & e)
         {

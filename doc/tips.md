@@ -78,3 +78,13 @@ libvpx
 ------
 
 Install by `apt-get install libvpx-dev`.
+
+libVLC (experimental)
+---------------------
+
+1. Download a [nighly build](http://nightlies.videolan.org/build/source/?C=M;O=D), e.g. `wget http://nightlies.videolan.org/build/source/vlc-3.0.0-20160913-0237-git.tar.xz`
+1. `tar xf vlc-3.0.0-20160913-0237-git.tar.xz`
+1. `mkdir vlc-3-build` and `cd vlc-3-build`
+1. `../vlc-3.0.0-git/bootstrap`
+1. `../vlc-3.0.0-git/configure`
+1. `./compile` and `make install`

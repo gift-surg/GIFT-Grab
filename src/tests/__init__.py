@@ -31,19 +31,22 @@ def test_vp9():
     if ret: exit(ret)
 
 
-def test_epiphan_dvi2pcieduo_bgr24():
+def __run_epiphan_tests(colour_space):
     for port in ['SDI', 'DVI']:
-        ret = main(['--colour-space=%s' % ('BGR24'),
+        ret = main(['--colour-space=%s' % (colour_space),
                     '--port=%s' % (port),
-                    '--config-dir=%s' % (epiphan_dvi2pcieduo_config_dir),
-                    epiphan_dvi2pcieduo_working_dir])
+                    epiphan_dvi2pcieduo_working_dir, '-m', 'unit'])
         if ret: exit(ret)
+
+    ret = main(['--colour-space=%s' % (colour_space),
+                '--config-dir=%s' % (epiphan_dvi2pcieduo_config_dir),
+                epiphan_dvi2pcieduo_working_dir, '-m', 'real_time'])
+    if ret: exit(ret)
+
+
+def test_epiphan_dvi2pcieduo_bgr24():
+    __run_epiphan_tests('BGR24')
 
 
 def test_epiphan_dvi2pcieduo_i420():
-    for port in ['SDI', 'DVI']:
-        ret = main(['--colour-space=%s' % ('I420'),
-                    '--port=%s' % (port),
-                    '--config-dir=%s' % (epiphan_dvi2pcieduo_config_dir),
-                    epiphan_dvi2pcieduo_working_dir])
-        if ret: exit(ret)
+    __run_epiphan_tests('I420')

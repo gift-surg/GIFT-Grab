@@ -1,6 +1,7 @@
 recursive-include api *
 recursive-include cmake *
 recursive-include epiphansdk *
+recursive-include vlc *
 recursive-include ffmpeg *
 recursive-include opencv *
 recursive-include python *

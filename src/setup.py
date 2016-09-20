@@ -223,6 +223,15 @@ class GiftGrabInstallCommand(install):
             )
             self.__check_command(cmd, err_msg)
 
+        # check libVLC
+        if self.epiphan_dvi2pcie_duo and self.i420:
+            cmd = ['cmake', join(join(self.here, 'cmake'), 'libvlc')]
+            err_msg = '%s\n%s' % (
+                'libVLC does not seem to be installed on your system.',
+                'libVLC is needed for I420 colour space support.'
+            )
+            self.__check_command(cmd, err_msg)
+
         # check FFmpeg
         if self.hevc or self.vp9:
             cmd = ['cmake', join(join(self.here, 'cmake'), 'ffmpeg')]
@@ -313,15 +322,6 @@ class GiftGrabInstallCommand(install):
                     )
                     self.__print_err_msg(err_msg)
                     raise LibError(err_summary)
-
-        # check EpiphanSDK
-        if self.i420:
-            cmd = ['cmake', join(join(self.here, 'cmake'), 'epiphansdk')]
-            err_msg = '%s\n%s' % (
-                'EpiphanSDK does not seem to be installed on your system.',
-                'EpiphanSDK is needed for I420 colour space support.'
-            )
-            self.__check_command(cmd, err_msg)
 
         # moment of truth
         cmake_args = []

@@ -39,6 +39,8 @@ def timing_report(file_path):
     return True
 
 
+@pytest.mark.real_time
+@pytest.mark.usefixtures('cleanup')
 def test_parse(colour_space, config_dir):
     # not existing config file
     with pytest.raises(IOError):
@@ -65,6 +67,8 @@ def test_parse(colour_space, config_dir):
         _ = parse(join(config_dir, 'oserror.yml'))
 
 
+@pytest.mark.real_time
+@pytest.mark.usefixtures('cleanup')
 def test_frame_grabbing(colour_space, config_dir):
     # test-input & data
     if colour_space == BGR24:
@@ -99,8 +103,9 @@ def test_frame_grabbing(colour_space, config_dir):
     # test actual output now
     roi = [426, 40, 1064, 1040]
     width_offset = 0
-    if colour_space == I420:
-        width_offset = 4  # see GiftGrab issues #54 and #67
+    # disabling the offset within #83
+    #if colour_space == I420:
+    #    width_offset = 4  # see GiftGrab issues #54 and #67
     fs.start()
     us.start()
     fs.set_sub_frame(roi[0], roi[1], roi[2], roi[3])  # should have no effect
@@ -207,7 +212,7 @@ def test_frame_grabbing(colour_space, config_dir):
     assert dumped_us.timeout_limit == us.timeout_limit
 
 
-@pytest.yield_fixture(autouse=True)
+@pytest.yield_fixture
 def cleanup():
     # This section runs before each test
 

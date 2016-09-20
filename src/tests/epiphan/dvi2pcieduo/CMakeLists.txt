@@ -6,19 +6,16 @@ FILE(COPY
 )
 SET(CONFIG_DIR ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/data)
 
-# SDI port on its own
-SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_SDI)
-ADD_TEST(NAME ${NAME_TEST}
-    COMMAND py.test --port=SDI --colour-space=${COLOUR_SPACE} test_unit.py
-)
-LIST(APPEND TESTS_LIST ${NAME_TEST})
-
-# DVI port on its own
-SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_DVI)
-ADD_TEST(NAME ${NAME_TEST}
-    COMMAND py.test --port=DVI --colour-space=${COLOUR_SPACE} test_unit.py
-)
-LIST(APPEND TESTS_LIST ${NAME_TEST})
+# SDI and DVI ports on their own
+LIST(APPEND PORTS SDI)
+LIST(APPEND PORTS DVI)
+foreach(PORT ${PORTS})
+    SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_${PORT}_${COLOUR_SPACE})
+    ADD_TEST(NAME ${NAME_TEST}
+        COMMAND py.test --port=${PORT} --colour-space=${COLOUR_SPACE} test_unit.py
+    )
+    LIST(APPEND TESTS_LIST ${NAME_TEST})
+endforeach(PORT)
 
 # Both ports in real-time
 SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_RealTime_${COLOUR_SPACE})

@@ -8,6 +8,9 @@
 #ifdef USE_EPIPHANSDK
 #include "epiphansdk_video_source.h"
 #endif
+#ifdef USE_LIBVLC
+#include "vlc_video_source.h"
+#endif
 #endif
 #ifdef USE_FFMPEG
 #include "ffmpeg_video_target.h"
@@ -153,6 +156,18 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .def("get_frame_rate", &gg::VideoSourceEpiphanSDK::get_frame_rate)
         .def("set_sub_frame", &gg::VideoSourceEpiphanSDK::set_sub_frame)
         .def("get_full_frame", &gg::VideoSourceEpiphanSDK::get_full_frame)
+    ;
+#endif
+
+#ifdef USE_LIBVLC
+    bool (gg::VideoSourceVLC::*vlc_get_frame_i420)(gg::VideoFrame_I420 &) = &gg::VideoSourceVLC::get_frame;
+    class_<gg::VideoSourceVLC, bases<IVideoSource>, boost::noncopyable>(
+                "VideoSourceVLC", init<const std::string>())
+        .def("get_frame", vlc_get_frame_i420)
+        .def("get_frame_dimensions", &gg::VideoSourceVLC::get_frame_dimensions)
+        .def("get_frame_rate", &gg::VideoSourceVLC::get_frame_rate)
+        .def("set_sub_frame", &gg::VideoSourceVLC::set_sub_frame)
+        .def("get_full_frame", &gg::VideoSourceVLC::get_full_frame)
     ;
 #endif
 #endif

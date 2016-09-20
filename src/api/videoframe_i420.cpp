@@ -54,7 +54,7 @@ void VideoFrame_I420::init_from_pointer(
     if (_manage_data and not _data)
         _data = new unsigned char[length];
     else if (_manage_data and _data_length < length)
-        realloc(_data, length);
+        _data = reinterpret_cast<unsigned char *>(realloc(_data, length));
 
     // TODO - check length vs rows and cols?
     _data_length = length;
