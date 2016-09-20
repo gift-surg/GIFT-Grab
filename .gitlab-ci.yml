@@ -7,6 +7,7 @@ before_script:
   - mkdir $SCRATCH_DIR
   - export GiftGrab_SOURCE_DIR="$(pwd)/src"
   - source "$CI_SCRIPTS_DIR/utils.sh"
+  - env CTEST_OUTPUT_ON_FAILURE=1
 
 stages:
   - install
@@ -27,7 +28,7 @@ linux:
     # start script
     - pwd
     # bare-bones build
-    - cmake -D CMAKE_INSTALL_PREFIX="$INSTALL_DIR" -D CTEST_OUTPUT_ON_FAILURE=ON "$GiftGrab_SOURCE_DIR"
+    - cmake -D CMAKE_INSTALL_PREFIX="$INSTALL_DIR" "$GiftGrab_SOURCE_DIR"
     - make -j; exit_on_fail
     # no ctest: no features activated to be tested yet
     - make install
@@ -218,7 +219,7 @@ epiphan-dvi2pcie-duo:
     # for custom libVLC
     - export LIBVLC_INCLUDE_PATH="$STORZ_STACK_GIFTGRAB_ENV_ROOT/include"
     - export LIBVLC_LIBRARY_PATH="$STORZ_STACK_GIFTGRAB_ENV_ROOT/lib"
-    - cmake -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D BUILD_PYTHON=ON -D BUILD_TESTS=ON -D USE_HEVC=ON -D USE_NVENC=ON -D CTEST_OUTPUT_ON_FAILURE=ON "$GiftGrab_SOURCE_DIR"
+    - cmake -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D BUILD_PYTHON=ON -D BUILD_TESTS=ON -D USE_HEVC=ON -D USE_NVENC=ON "$GiftGrab_SOURCE_DIR"
     - make -j; exit_on_fail
     # test BGR24 colour space
     - check_epiphan_alive
