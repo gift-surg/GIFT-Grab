@@ -14,9 +14,10 @@ def pytest_addoption(parser):
 @fixture(scope='session')
 def colour_space(request):
     colour_space = request.config.getoption('--colour-space')
-    if colour_space == 'BGRA':
+    case_insensitive = colour_space.lower()
+    if case_insensitive == 'bgra':
         return ColourSpace.BGRA
-    elif colour_space == 'I420':
+    elif case_insensitive == 'i420':
         return ColourSpace.I420
     else:
         raise RuntimeError('Could not recognise colour space ' +
@@ -25,9 +26,10 @@ def colour_space(request):
 @fixture(scope='session')
 def port(request):
     port = request.config.getoption('--port')
-    if port == 'DVI':
+    case_insensitive = port.lower()
+    if port == 'dvi':
         return Device.DVI2PCIeDuo_DVI
-    elif port == 'SDI':
+    elif port == 'sdi':
         return Device.DVI2PCIeDuo_SDI
     else:
         raise RuntimeError('Could not recognise Epiphan DVI2PCIe Duo port ' +
