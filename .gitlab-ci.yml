@@ -193,6 +193,7 @@ pypi-epiphan-dvi2pcie-duo:
     - rm -f ./*.mp4 ./*.avi ./*.webm
     - deactivate
   tags:
+    - gift-linux
     - gift-pypi
     - gift-epiphan-dvi2pcie-duo
   only:
@@ -221,6 +222,7 @@ epiphan-dvi2pcie-duo:
     - check_epiphan_alive
     - ctest; exit_on_fail
   tags:
+    - gift-linux
     - gift-epiphan-dvi2pcie-duo
   only:
     - 104-refactor-ci-tests-based-on-device-capability
