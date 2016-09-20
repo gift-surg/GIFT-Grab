@@ -1,13 +1,13 @@
 variables:
   CI_SCRIPTS_DIR: "./ci"
   SCRATCH_DIR: "/home/gitlab-runner/giftgrab-scratch"
+  CTEST_OUTPUT_ON_FAILURE: "1"
 
 before_script:
   - rm -rf $SCRATCH_DIR
   - mkdir $SCRATCH_DIR
   - export GiftGrab_SOURCE_DIR="$(pwd)/src"
   - source "$CI_SCRIPTS_DIR/utils.sh"
-  - env CTEST_OUTPUT_ON_FAILURE=1
 
 stages:
   - install
