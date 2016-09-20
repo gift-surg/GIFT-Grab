@@ -124,6 +124,11 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .value("File_VP9", gg::Storage::File_VP9)
     ;
 
+    class_<gg::VideoFrame>("VideoFrame", init<bool>())
+        .def("rows", &gg::VideoFrame::rows)
+        .def("cols", &gg::VideoFrame::cols)
+    ;
+
     class_<VideoFrame_BGRA>("VideoFrame_BGRA", init<bool>())
         .def(init<const size_t, const size_t>())
         .def("rows", &VideoFrame_BGRA::rows)
