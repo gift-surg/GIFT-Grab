@@ -1,7 +1,7 @@
 from pytest import fail, yield_fixture, raises
 from subprocess import check_call
 from os import devnull, remove, listdir
-from pygiftgrab import Storage, Factory, VideoFrame_BGRA
+from pygiftgrab import Storage, Factory, VideoFrame
 from giftgrab.utils import inspection
 
 
@@ -31,11 +31,11 @@ def __storage2str(codec):
 
 
 @yield_fixture(autouse=True)
-def peri_test(codec):
+def peri_test(codec, colour_space):
     # This section runs before each test
 
     global target, frame
-    frame = VideoFrame_BGRA(400, 640)
+    frame = VideoFrame(colour_space, 400, 640)
     target = Factory.writer(codec)
     if target is None:
         raise RuntimeError('No ' + __storage2str(codec) + ' writer returned')
@@ -70,10 +70,10 @@ def test_frame_rate(codec):
     assert inspection.frame_rate(file_name) == _frame_rate
 
 
-def test_resolution(codec):
+def test_resolution(codec, colour_space):
     rows = 1080
     cols = 1920
-    frame1920x1080 = VideoFrame_BGRA(rows, cols)
+    frame1920x1080 = VideoFrame(colour_space, rows, cols)
     file_name = '%sresolution.%s'\
                 % (tmp_file_prefix, __file_ext(codec))
     target.init(file_name, frame_rate)
