@@ -198,7 +198,7 @@ pypi-epiphan-dvi2pcie-duo:
     - gift-pypi
     - gift-epiphan-dvi2pcie-duo
   only:
-    - 104-refactor-ci-tests-based-on-device-capability
+    - 47-dry-for-video-frames-with-different-colour-spaces
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 epiphan-dvi2pcie-duo:
@@ -233,4 +233,4 @@ epiphan-dvi2pcie-duo:
     - gift-linux
     - gift-epiphan-dvi2pcie-duo
   only:
-    - 104-refactor-ci-tests-based-on-device-capability
+    - 47-dry-for-video-frames-with-different-colour-spaces
