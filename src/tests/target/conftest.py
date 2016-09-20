@@ -33,3 +33,4 @@ def pytest_generate_tests(metafunc):
         else:
             raise RuntimeError('Could not recognise colour space ' +
                                colour_space_str)
+        metafunc.parametrize('colour_space', [colour_space])
