@@ -14,6 +14,17 @@ namespace gg
 {
 
 //!
+//! \brief Supported colour spaces
+//!
+//! For YUV formats, see https://wiki.videolan.org/YUV
+//!
+enum ColourSpace
+{
+    BGRA,
+    I420
+};
+
+//!
 //! \brief A class to represent a video frame
 //!
 //! For efficiency issues, data can be chosen to not be copied.

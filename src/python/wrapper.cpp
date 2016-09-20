@@ -108,6 +108,11 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     register_exception_translator<gg::DeviceOffline>(&translate_DeviceOffline);
     register_exception_translator<gg::VideoTargetError>(&translate_VideoTargetError);
 
+    enum_<gg::ColourSpace>("ColourSpace")
+        .value("BGRA", gg::ColourSpace::BGRA)
+        .value("I420", gg::ColourSpace::I420)
+    ;
+
     enum_<gg::Device>("Device")
         .value("DVI2PCIeDuo_SDI", gg::Device::DVI2PCIeDuo_SDI)
         .value("DVI2PCIeDuo_DVI", gg::Device::DVI2PCIeDuo_DVI)
