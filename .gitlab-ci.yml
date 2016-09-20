@@ -13,10 +13,16 @@ before_script:
   - mkdir -p "$GiftGrab_BUILD_DIR"
   - cd "$GiftGrab_BUILD_DIR"
 
+stages:
+  - build-cmake
+  - test-cmake
+  - build-pypi
+  - test-pypi
+
 ################## Platform: CMake ##################
 ################## Target: All ######################
 linux:
-  script:
+  script: build-cmake
     - pwd
     # bare-bones build
     - cmake -D CMAKE_INSTALL_PREFIX="$INSTALL_DIR" "$GiftGrab_SOURCE_DIR"
@@ -79,7 +85,7 @@ linux:
 ################## Platform: PyPI ##################
 ################## Target: All #####################
 pypi:
-  script:
+  script: build-pypi
     - GiftGrab_PyPI_BUILD_DIR="$SCRATCH_DIR/pypi"
     - GiftGrab_PyPI_INSTALL_DIR="$GiftGrab_PyPI_BUILD_DIR/install"
     - GiftGrab_venv=venv
@@ -130,7 +136,7 @@ pypi:
 ################## Platform: PyPI ################################
 ################## Target: All ###################################
 pypi-epiphan-dvi2pcie-duo:
-  script:
+  script: test-pypi
     # for custom FFmpeg:
     - export STORZ_STACK_GIFTGRAB_ENV_ROOT=/home/gitlab-runner/environments/giftgrab/usr/local
     # TODO - export PATH="$STORZ_STACK_GIFTGRAB_ENV_ROOT/bin":$PATH
@@ -186,10 +192,12 @@ pypi-epiphan-dvi2pcie-duo:
   tags:
     - gift-pypi
     - gift-epiphan-dvi2pcie-duo
+  only:
+    - 104-refactor-ci-tests-based-on-device-capability
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 epiphan-dvi2pcie-duo:
-  script:
+  script: test-cmake
     # for custom FFmpeg:
     - export STORZ_STACK_GIFTGRAB_ENV_ROOT=/home/gitlab-runner/environments/giftgrab/usr/local
     # TODO - export PATH="$STORZ_STACK_GIFTGRAB_ENV_ROOT/bin":$PATH
@@ -211,21 +219,4 @@ epiphan-dvi2pcie-duo:
   tags:
     - gift-epiphan-dvi2pcie-duo
   only:
-    - 31-i420-colour-space-on-epiphan
-    - 31-i420-colour-space-on-epiphan-clean-start
-    - 48-i420-frame-support-in-video-targets
-    - 48-i420-frame-support-in-video-targets-extend-test-suite-to-i420
-    - 43-test-long-duration-recordings
-    - 60-videoframe_i420-header-not-protected-by-i420-macro
-    - 67-create-user-friendly-tests-activate-storz-ci
-    - 67-create-user-friendly-tests
-    - 65-restructure-cmake-build-process
-    - 66-simplify-file-hierarchy
-    - 70-corrupt-memory-when-reusing-target
-    - 76-tests-not-working-without-opencv
-    - 78-add-ctest-to-ci-scripts
-    - 77-use_libvlc-still-appearing-in-cmake
-    - 68-publish-giftgrab-on-pypi
-    - 84-switch-to-bsd-compatible-x265-alternative
-    - 83-revive-libvlc-video-source
-    - 83-revive-libvlc-video-source-fix-stalling-tests
+    - 104-refactor-ci-tests-based-on-device-capability
