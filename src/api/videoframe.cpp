@@ -140,8 +140,8 @@ void VideoFrame::init()
             break;
         case I420:
             _data_length = (_cols + 2 * 100) * (_rows + 2 * 100) + // Y plane (100 = padding, arbitrary)
-                           ((_cols % 2 == 1 ? (_cols + 1) / 2 : _cols / 2) + padding) * // U,
-                           ((_rows % 2 == 1 ? (_rows + 1) / 2 : _rows / 2) + padding);  // Y plane
+                           ((_cols % 2 == 1 ? (_cols + 1) / 2 : _cols / 2) + 100) * // U, Y plane
+                           ((_rows % 2 == 1 ? (_rows + 1) / 2 : _rows / 2) + 100);  // (100 = padding, arbitrary)
             break;
         }
 
