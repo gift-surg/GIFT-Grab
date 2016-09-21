@@ -65,6 +65,9 @@ bool VideoSourceVLC::get_frame(VideoFrame_BGRA & frame)
 
 bool VideoSourceVLC::get_frame(VideoFrame & frame)
 {
+    if (frame.colour() != ColourSpace::I420)
+        return false;
+
     std::lock_guard<std::mutex> data_lock_guard(_data_lock);
     if (_data_length > 0)
     {

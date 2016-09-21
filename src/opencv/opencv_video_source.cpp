@@ -91,6 +91,9 @@ bool VideoSourceOpenCV::get_frame_dimensions(int &width, int & height)
 
 bool VideoSourceOpenCV::get_frame(gg::VideoFrame & frame)
 {
+    if (frame.colour() != gg::ColourSpace::BGRA)
+        return false;
+
     if (!_cap.isOpened()) return false;
 
     bool has_read = _cap.read(_buffer);
