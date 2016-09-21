@@ -127,6 +127,22 @@ VideoFrame::~VideoFrame()
     clear();
 }
 
+void VideoFrame::init_from_pointer(unsigned char * data, size_t data_length,
+                                   size_t cols, size_t rows)
+{
+    if (_manage_data and _data_length < data_length)
+        _data = reinterpret_cast<unsigned char *>(realloc(_data, data_length * sizeof(unsigned char)));
+
+    // TODO - check length vs rows and cols?
+    _data_length = data_length;
+    _cols = cols;
+    _rows = rows;
+    if (_manage_data)
+        memcpy(_data, data, _data_length);
+    else
+        _data = data;
+}
+
 void VideoFrame::init()
 {
     if (_manage_data)

@@ -74,6 +74,17 @@ public:
     virtual ~VideoFrame();
 
     //!
+    //! \brief Initialise using passed data
+    //! \param data
+    //! \param data_length
+    //! \param cols
+    //! \param rows
+    //! \sa manages_own_data
+    //!
+    void init_from_pointer(unsigned char * data, size_t data_length,
+                           size_t cols, size_t rows);
+
+    //!
     //! \brief Get length of data buffer
     //! \return
     //!
