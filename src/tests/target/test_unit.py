@@ -73,7 +73,7 @@ def test_frame_rate(codec):
 def test_resolution(codec, colour_space):
     rows = 1080
     cols = 1920
-    frame1920x1080 = VideoFrame(colour_space, rows, cols)
+    frame1920x1080 = VideoFrame(colour_space, cols, rows)
     file_name = '%sresolution.%s'\
                 % (tmp_file_prefix, __file_ext(codec))
     target.init(file_name, frame_rate)
