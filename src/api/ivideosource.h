@@ -3,9 +3,6 @@
 
 #include "videoframe.h"
 #include "except.h"
-#ifdef USE_I420
-#include "videoframe_i420.h"
-#endif
 
 //!
 //! \brief This abstract class defines the interface that every video source

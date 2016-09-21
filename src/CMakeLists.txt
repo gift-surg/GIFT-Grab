@@ -140,9 +140,6 @@ endif(USE_X265)
 # Support for I420 (YUV420p) colour space
 if(USE_I420)
     ADD_DEFINITIONS(-DUSE_I420)
-
-    LIST(APPEND HEADERS api/videoframe_i420.h)
-    LIST(APPEND SOURCES api/videoframe_i420.cpp)
 endif(USE_I420)
 
 # libVLC video source

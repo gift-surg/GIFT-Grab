@@ -1,9 +1,6 @@
 #pragma once
 
 #include "videoframe.h"
-#ifdef USE_I420
-#include "videoframe_i420.h"
-#endif
 #include "except.h"
 
 namespace gg
