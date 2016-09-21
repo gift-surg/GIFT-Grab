@@ -89,7 +89,7 @@ bool VideoSourceOpenCV::get_frame_dimensions(int &width, int & height)
     return (width != 0 && height != 0);
 }
 
-bool VideoSourceOpenCV::get_frame(VideoFrame_BGRA & frame)
+bool VideoSourceOpenCV::get_frame(gg::VideoFrame & frame)
 {
     if (!_cap.isOpened()) return false;
 
