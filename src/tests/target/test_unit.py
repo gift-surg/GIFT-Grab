@@ -1,7 +1,7 @@
 from pytest import fail, yield_fixture, raises
 from subprocess import check_call
 from os import devnull, remove, listdir
-from pygiftgrab import Storage, Factory, VideoFrame
+from pygiftgrab import Storage, Factory, VideoFrame, ColourSpace
 from giftgrab.utils import inspection
 
 
@@ -9,6 +9,7 @@ from giftgrab.utils import inspection
 tmp_file_prefix = 'tmp_GiftGrab_test_'
 target = None
 frame = None
+frame_with_colour_mismatch = None
 frame_rate = 60
 
 
@@ -34,8 +35,14 @@ def __storage2str(codec):
 def peri_test(codec, colour_space):
     # This section runs before each test
 
-    global target, frame
+    global target, frame, frame_with_colour_mismatch
     frame = VideoFrame(colour_space, 400, 640)
+    if colour_space == ColourSpace.BGRA:
+        colour_space_with_mismatch = ColourSpace.I420
+    else:
+        colour_space_with_mismatch = ColourSpace.BGRA
+    frame_with_colour_mismatch = VideoFrame(colour_space_with_mismatch,
+                                            400, 640)
     target = Factory.writer(codec)
     if target is None:
         raise RuntimeError('No ' + __storage2str(codec) + ' writer returned')
@@ -57,6 +64,18 @@ def peri_test(codec, colour_space):
     for f in listdir('.'):
         if str(f).startswith(tmp_file_prefix):
             remove(f)
+
+
+def test_append_with_colour_mismatch(codec, colour_space):
+    if codec != Storage.File_XviD:
+        pass
+
+    file_name = '%sappend_with_colour_mismatch.%s'\
+                % (tmp_file_prefix, __file_ext(codec))
+    target.init(file_name, 10)
+    with raises(RuntimeError):
+        target.append(frame_with_colour_mismatch)
+    target.finalise()
 
 
 def test_frame_rate(codec):
