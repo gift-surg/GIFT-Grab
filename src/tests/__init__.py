@@ -15,8 +15,8 @@ epiphan_dvi2pcieduo_config_dir = abspath(
 
 def __run_target_tests(codec, colour_space):
     working_dir = abspath(resource_filename('giftgrab.tests', 'target'))
-    ret = main(['--codec=' % (codec),
-                '--colour-space=' % (colour_space),
+    ret = main(['--codec={}'.format(codec),
+                '--colour-space={}'.format(colour_space),
                 working_dir])
     if ret: exit(ret)
 
