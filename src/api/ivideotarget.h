@@ -26,26 +26,15 @@ public:
 
     //!
     //! \brief Append \c frame to output
-    //! \param frame
+    //! \param frame if there is mismatch between
+    //! the colour space of \c frame and the colour
+    //! space \c this object expects, a conversion
+    //! is performed, which might slow things down
     //! \throw VideoTargetError with a detailed
     //! error message if \c frame cannot be
     //! appended to output for some reason
     //!
-    virtual void append(const VideoFrame_BGRA & frame) = 0;
-
-#ifdef USE_I420
-    //!
-    //! \brief Append I420 \c frame to output
-    //! \param frame
-    //! \sa append
-    //! \throw VideoTargetError by default. Sub-classes
-    //! accepting I420 frames must override this function.
-    //!
-    virtual void append(const VideoFrame_I420 & frame)
-    {
-        throw VideoTargetError("By default, append(VideoFrame_I420 & frame) not implemented");
-    }
-#endif
+    virtual void append(const VideoFrame & frame) = 0;
 
     //!
     //! \brief Finalise writer, e.g. close file
