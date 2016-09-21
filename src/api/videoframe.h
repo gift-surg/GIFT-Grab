@@ -130,6 +130,15 @@ public:
         return _data;
     }
 
+    //!
+    //! \brief Get what colour space \c this frame uses
+    //! \return
+    //!
+    const enum ColourSpace colour() const
+    {
+        return _colour;
+    }
+
 protected:
     //!
     //! \brief Colour space, i.e. description
