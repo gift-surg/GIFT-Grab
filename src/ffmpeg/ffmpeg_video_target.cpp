@@ -102,7 +102,7 @@ void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
     _first_frame = true;
 }
 
-void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
+void VideoTargetFFmpeg::append(const VideoFrame & frame)
 {
     { // START auto_cpu_timer scope
 #ifdef GENERATE_PERFORMANCE_OUTPUT
