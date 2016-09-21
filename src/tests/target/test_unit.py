@@ -68,7 +68,7 @@ def peri_test(codec, colour_space):
 
 def test_append_with_colour_mismatch(codec, colour_space):
     if codec != Storage.File_XviD:
-        pass
+        return
 
     file_name = '%sappend_with_colour_mismatch.%s'\
                 % (tmp_file_prefix, __file_ext(codec))
