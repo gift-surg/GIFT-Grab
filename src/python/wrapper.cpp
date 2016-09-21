@@ -127,11 +127,10 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     ;
 
 #ifdef USE_OPENCV
-    bool (VideoSourceOpenCV::*opencv_get_frame_bgra)(VideoFrame_BGRA &) = &VideoSourceOpenCV::get_frame;
     class_<VideoSourceOpenCV, bases<IVideoSource>, boost::noncopyable>(
                 "VideoSourceOpenCV", init<int>())
         .def(init<char *>())
-        .def("get_frame", opencv_get_frame_bgra)
+        .def("get_frame", &VideoSourceOpenCV::get_frame)
         .def("get_frame_dimensions", &VideoSourceOpenCV::get_frame_dimensions)
         .def("get_frame_rate", &VideoSourceOpenCV::get_frame_rate)
         .def("set_sub_frame", &VideoSourceOpenCV::set_sub_frame)
