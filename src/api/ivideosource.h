@@ -31,23 +31,12 @@ public:
 
     //!
     //! \brief Grab next available \c frame
-    //! \param frame
+    //! \param frame if colour space of \c frame mismatches
+    //! that of \c this object, conversion is performed,
+    //! which might slow things down
     //! \return
     //!
-    virtual bool get_frame(VideoFrame_BGRA & frame) = 0;
-
-#ifdef USE_I420
-    //!
-    //! \brief Grab next available frame using
-    //! I420 colour space
-    //! \param frame
-    //! \return
-    //!
-    virtual bool get_frame(gg::VideoFrame_I420 & frame)
-    {
-        throw gg::VideoSourceError("By default, get_frame(VideoFrame_I420 & frame) not implemented");
-    }
-#endif
+    virtual bool get_frame(gg::VideoFrame & frame) = 0;
 
     //!
     //! \brief Get frame rate of used source
