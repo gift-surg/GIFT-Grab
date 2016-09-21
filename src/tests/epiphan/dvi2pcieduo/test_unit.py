@@ -1,5 +1,5 @@
 from pytest import yield_fixture, fail, mark
-from pygiftgrab import Factory, VideoFrame
+from pygiftgrab import Factory, VideoFrame, ColourSpace
 
 source = None
 frame = None
@@ -26,10 +26,10 @@ def peri_test(port, colour_space):
 
     global frame, frame_with_colour_mismatch
     frame = VideoFrame(colour_space, False)
-    if colour_space == pygiftgrab.ColourSpace.BGRA:
-        mismatch_colour_space = pygiftgrab.ColourSpace.I420
+    if colour_space == ColourSpace.BGRA:
+        mismatch_colour_space = ColourSpace.I420
     else:
-        mismatch_colour_space = pygiftgrab.ColourSpace.BGRA
+        mismatch_colour_space = ColourSpace.BGRA
     frame_with_colour_mismatch = VideoFrame(mismatch_colour_space, False)
 
     global height, width
