@@ -330,7 +330,7 @@ class Recorder(Thread):
         while attempts < self.max_num_attempts:
             attempts += 1
             try:
-                self.device = pygiftgrab.Factory.connect(self.port)
+                self.device = pygiftgrab.Factory.connect(self.port, self.colour_space)
             except IOError as e:
                 logging.error(
                     'Attempt #' + str(attempts) + ' of ' +
