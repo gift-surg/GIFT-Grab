@@ -6,66 +6,131 @@
 #ifdef USE_FFMPEG
 #include "ffmpeg_video_target.h"
 #endif
-#ifdef USE_I420
 #ifdef USE_EPIPHANSDK
 #include "epiphansdk_video_source.h"
 #endif
 #ifdef USE_LIBVLC
 #include "vlc_video_source.h"
 #endif
-#endif
 
 namespace gg {
 
 IVideoSource * Factory::_sources[2] = { NULL, NULL };
 
-IVideoSource * Factory::connect(enum Device type, ColourSpace colour) {
-#ifdef USE_I420
-#if !defined(USE_EPIPHANSDK) && !defined(USE_LIBVLC)
-    throw VideoSourceError("I420 colour space supported only with EpiphanSDK or libVLC");
-#endif
-    std::string device_id = "";
-#else
-    int device_id = -1; // default value makes no sense
-#endif
+IVideoSource * Factory::connect(enum Device type, enum ColourSpace colour) {
+    // if already connected, return
+    if (_sources[(int) type] != nullptr) return _sources[(int) type];
 
-    switch (type) {
+    // otherwise, connect
+    IVideoSource * src = nullptr;
+    switch (type)
+    {
+
+    // Epiphan DVI2PCIe Duo DVI ========================================
     case DVI2PCIeDuo_DVI:
-#ifdef USE_I420
+        switch (colour)
+        {
 
-#ifdef USE_EPIPHANSDK
+        // BGRA ========================================
+        case BGRA:
+#ifdef USE_OPENCV
+            src = new VideoSourceOpenCV(0);
+#else
+            throw VideoSourceError(
+                "BGRA colour space on Epiphan DVI2PCIe Duo supported only with OpenCV");
+#endif
+            break;
+
+        // I420 ========================================
+        case I420:
+#ifdef USE_LIBVLC
+            try
+            {
+                src = new VideoSourceVLC("v4l2:///dev/video0:chroma=I420");
+            }
+            catch (VideoSourceError & e)
+            {
+                throw DeviceNotFound(e.what());
+            }
+#elif defined(USE_EPIPHANSDK)
 #ifdef EpiphanSDK_DVI
-        device_id = EpiphanSDK_DVI;
+            try
+            {
+                src = new VideoSourceEpiphanSDK(EpiphanSDK_DVI,
+                                                V2U_GRABFRAME_FORMAT_I420);
+            }
+            catch (VideoSourceError & e)
+            {
+                throw DeviceNotFound(e.what());
+            }
 #else
-        throw DeviceNotFound("EpiphanSDK_DVI macro not defined");
+            throw DeviceNotFound("EpiphanSDK_DVI macro not defined");
 #endif
 #else
-#ifdef USE_LIBVLC
-        device_id = "v4l2:///dev/video0:chroma=I420"; // always /dev/video0
+            throw VideoSourceError(
+                "I420 colour space on Epiphan DVI2PCIe Duo supported only with Epiphan SDK or libVLC");
 #endif
-#endif
+            break;
 
-#else
-        device_id = 0; // always /dev/video0
-#endif
+        // unsupported colour space ========================================
+        default:
+            throw VideoSourceError("Colour space not supported");
+        }
         break;
+
+    // Epiphan DVI2PCIe Duo SDI ========================================
     case DVI2PCIeDuo_SDI:
-#ifdef USE_I420
-#ifdef USE_EPIPHANSDK
-#ifdef EpiphanSDK_SDI
-        device_id = EpiphanSDK_SDI;
-#else
-        throw DeviceNotFound("EpiphanSDK_SDI macro not defined");
-#endif
-#endif
+        switch (colour)
+        {
 
+        // BGRA ========================================
+        case BGRA:
+#ifdef USE_OPENCV
+            src = new VideoSourceOpenCV(1);
+#else
+            throw VideoSourceError(
+                "BGRA colour space on Epiphan DVI2PCIe Duo supported only with OpenCV");
+#endif
+            break;
+
+        // I420 ========================================
+        case I420:
 #ifdef USE_LIBVLC
-        device_id = "v4l2:///dev/video1:chroma=I420"; // always /dev/video1
+            try
+            {
+                src = new VideoSourceVLC("v4l2:///dev/video1:chroma=I420");
+            }
+            catch (VideoSourceError & e)
+            {
+                throw DeviceNotFound(e.what());
+            }
+#elif defined(USE_EPIPHANSDK)
+#ifdef EpiphanSDK_SDI
+            try
+            {
+                src = new VideoSourceEpiphanSDK(EpiphanSDK_SDI,
+                                                V2U_GRABFRAME_FORMAT_I420);
+            }
+            catch (VideoSourceError & e)
+            {
+                throw DeviceNotFound(e.what());
+            }
+#else
+            throw DeviceNotFound("EpiphanSDK_SDI macro not defined");
 #endif
 #else
-        device_id = 1; // always /dev/video1
+            throw VideoSourceError(
+                "I420 colour space on Epiphan DVI2PCIe Duo supported only with Epiphan SDK or libVLC");
 #endif
+            break;
+
+        // unsupported colour space ========================================
+        default:
+            throw VideoSourceError("Colour space not supported");
+        }
         break;
+
+    // unsupported device ========================================
     default:
         std::string msg;
         msg.append("Device ")
@@ -74,96 +139,32 @@ IVideoSource * Factory::connect(enum Device type, ColourSpace colour) {
         throw DeviceNotFound(msg);
     }
 
-    if (_sources[(int) type] == NULL)
+    if (src != nullptr)
     {
-        IVideoSource * src = nullptr;
-#ifdef USE_I420
-#ifdef USE_EPIPHANSDK
-        try
-        {
-            src = new VideoSourceEpiphanSDK(device_id,
-                                            V2U_GRABFRAME_FORMAT_I420);
-        }
-        catch (VideoSourceError & e)
-        {
-            throw DeviceNotFound(e.what());
-        }
-#endif
-
-#ifdef USE_LIBVLC
-        try
-        {
-            src = new VideoSourceVLC(device_id);
-        }
-        catch (VideoSourceError & e)
-        {
-            throw DeviceNotFound(e.what());
-        }
-#endif
-#else
-#ifdef USE_OPENCV
-        src = new VideoSourceOpenCV(device_id);
-#else
-        std::string msg;
-        msg.append("Device ")
-           .append(std::to_string(type))
-           .append(" not supported");
-        throw VideoSourceError(msg);
-#endif // USE_OPENCV
-#endif
-
         // check querying frame dimensions
         int width = -1, height = -1;
         if (not src->get_frame_dimensions(width, height))
         {
-            std::string error;
-            error.append("Device ")
-#ifdef USE_I420
-                 .append(device_id)
-#else
-                 .append(std::to_string(device_id))
-#endif
-                 .append(" connected, but ")
-                 .append(" does not return frame dimensions.");
-            throw DeviceOffline(error);
+            throw DeviceOffline(
+                "Device connected but does not return frame dimensions");
         }
 
         // check meaningful frame dimensions
         if (width <= 0 or height <= 0)
         {
-            std::string error;
-            error.append("Device ")
-#ifdef USE_I420
-                 .append(device_id)
-#else
-                 .append(std::to_string(device_id))
-#endif
-                 .append(" connected, but ")
-                 .append(" returns meaningless frame dimensions.");
-            throw DeviceOffline(error);
+            throw DeviceOffline(
+                "Device connected but returns meaningless frame dimensions");
         }
 
         // check querying frames
-#ifdef USE_I420
-        VideoFrame_I420 frame;
-#else
-        VideoFrame_BGRA frame;
-#endif
+        VideoFrame frame(colour);
         if (not src->get_frame(frame))
         {
-            std::string error;
-            error.append("Device ")
-#ifdef USE_I420
-                 .append(device_id)
-#else
-                 .append(std::to_string(device_id))
-#endif
-                 .append(" connected, but ")
-                 .append(" does not return frames.");
-            throw DeviceOffline(error);
+            throw DeviceOffline(
+                "Device connected does not return frames");
         }
 
-        // if no exception raised up to here, glory be to GiftGrab
+        // if no exception raised up to here, glory be to GIFT-Grab
         _sources[(int) type] = src;
     }
 
