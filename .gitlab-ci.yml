@@ -129,8 +129,10 @@ pypi:
     - test-giftgrab-vp9-bgra; exit_on_fail
     # Epiphan DVI2PCIe Duo support (OpenCV)
     - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --upgrade "$PyPI_INSTALLER"
-    # Epiphan DVI2PCIe Duo support (EpiphanSDK)
+    # Epiphan DVI2PCIe Duo support (libVLC)
     - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--i420" --upgrade "$PyPI_INSTALLER"
+    - test-giftgrab-hevc-i420; exit_on_fail
+    - test-giftgrab-vp9-i420; exit_on_fail
     - deactivate
   tags:
     - gift-linux
