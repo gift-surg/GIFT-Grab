@@ -428,11 +428,15 @@ for port in ['sdi', 'dvi']:
              record_script += '=giftgrab.utils:record_epiphan_dvi2pcieduo_{}_{}_{}'.format(
                  port, colour_space, codec)
              console_scripts.append(record_script)
+for colour_space in ['bgra', 'i420']:
+    for codec in ['xvid', 'hevc', 'vp9']:
+        target_script = 'test-giftgrab-{}-{}'.format(
+            codec, colour_space)
+        target_script += '=giftgrab.tests:test_{}_{}'.format(
+            codec, colour_space)
+        console_scripts.append(target_script)
 console_scripts = console_scripts +\
-                  ['test-giftgrab-hevc=giftgrab.tests:test_hevc',
-                   'test-giftgrab-xvid=giftgrab.tests:test_xvid',
-                   'test-giftgrab-vp9=giftgrab.tests:test_vp9',
-                   'test-giftgrab-epiphan-dvi2pcieduo-bgr24=giftgrab.tests:test_epiphan_dvi2pcieduo_bgr24',
+                  ['test-giftgrab-epiphan-dvi2pcieduo-bgr24=giftgrab.tests:test_epiphan_dvi2pcieduo_bgr24',
                    'test-giftgrab-epiphan-dvi2pcieduo-i420=giftgrab.tests:test_epiphan_dvi2pcieduo_i420']
 setup(
     name='gift-grab',
