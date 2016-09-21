@@ -28,7 +28,7 @@ void VideoTargetOpenCV::init(const std::string filepath, const float framerate)
     _framerate = framerate;
 }
 
-void VideoTargetOpenCV::append(const VideoFrame_BGRA & frame)
+void VideoTargetOpenCV::append(const VideoFrame & frame)
 {
     // TODO if not init?
     if (not _writer.isOpened())

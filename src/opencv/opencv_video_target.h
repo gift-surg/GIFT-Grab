@@ -51,7 +51,7 @@ public:
 public:
     void init(const std::string filepath, const float framerate);
 
-    void append(const VideoFrame_BGRA & frame);
+    void append(const VideoFrame & frame);
 
     void finalise();
 };
