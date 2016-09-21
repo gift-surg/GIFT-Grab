@@ -1,5 +1,4 @@
-#ifndef __IVIDEOSOURCE_H__
-#define __IVIDEOSOURCE_H__
+#pragma once
 
 #include "videoframe.h"
 #include "except.h"
@@ -105,5 +104,3 @@ protected:
     //!
     unsigned int    _num_burn_frames;
 };
-
-#endif
