@@ -61,7 +61,7 @@ def __record_epiphan_dvi2pcieduo(port,
 num_frames = 30
 
 
-def record_epiphan_dvi2pcieduo_sdi_bgr24_xvid():
+def record_epiphan_dvi2pcieduo_sdi_bgra_xvid():
     port = gg.Device.DVI2PCIeDuo_SDI
     colour_space = gg.ColourSpace.BGRA
     frame = gg.VideoFrame(colour_space, True)
@@ -73,7 +73,7 @@ def record_epiphan_dvi2pcieduo_sdi_bgr24_xvid():
                                  codec)
 
 
-def record_epiphan_dvi2pcieduo_sdi_bgr24_hevc():
+def record_epiphan_dvi2pcieduo_sdi_bgra_hevc():
     port = gg.Device.DVI2PCIeDuo_SDI
     colour_space = gg.ColourSpace.BGRA
     frame = gg.VideoFrame(colour_space, True)
@@ -85,7 +85,7 @@ def record_epiphan_dvi2pcieduo_sdi_bgr24_hevc():
                                  codec)
 
 
-def record_epiphan_dvi2pcieduo_sdi_bgr24_vp9():
+def record_epiphan_dvi2pcieduo_sdi_bgra_vp9():
     port = gg.Device.DVI2PCIeDuo_SDI
     colour_space = gg.ColourSpace.BGRA
     frame = gg.VideoFrame(colour_space, True)
@@ -133,7 +133,7 @@ def record_epiphan_dvi2pcieduo_sdi_i420_vp9():
                                  codec)
 
 
-def record_epiphan_dvi2pcieduo_dvi_bgr24_xvid():
+def record_epiphan_dvi2pcieduo_dvi_bgra_xvid():
     port = gg.Device.DVI2PCIeDuo_DVI
     colour_space = gg.ColourSpace.BGRA
     frame = gg.VideoFrame(colour_space, True)
@@ -145,7 +145,7 @@ def record_epiphan_dvi2pcieduo_dvi_bgr24_xvid():
                                  codec)
 
 
-def record_epiphan_dvi2pcieduo_dvi_bgr24_hevc():
+def record_epiphan_dvi2pcieduo_dvi_bgra_hevc():
     port = gg.Device.DVI2PCIeDuo_DVI
     colour_space = gg.ColourSpace.BGRA
     frame = gg.VideoFrame(colour_space, True)
@@ -157,7 +157,7 @@ def record_epiphan_dvi2pcieduo_dvi_bgr24_hevc():
                                  codec)
 
 
-def record_epiphan_dvi2pcieduo_dvi_bgr24_vp9():
+def record_epiphan_dvi2pcieduo_dvi_bgra_vp9():
     port = gg.Device.DVI2PCIeDuo_DVI
     colour_space = gg.ColourSpace.BGRA
     frame = gg.VideoFrame(colour_space, True)

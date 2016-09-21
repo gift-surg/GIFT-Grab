@@ -58,7 +58,7 @@ def __run_epiphan_tests(colour_space):
     if ret: exit(ret)
 
 
-def test_epiphan_dvi2pcieduo_bgr24():
+def test_epiphan_dvi2pcieduo_bgra():
     __run_epiphan_tests('BGRA')
 
 
