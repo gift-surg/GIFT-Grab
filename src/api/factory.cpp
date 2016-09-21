@@ -157,7 +157,7 @@ IVideoSource * Factory::connect(enum Device type, enum ColourSpace colour) {
         }
 
         // check querying frames
-        VideoFrame frame(colour);
+        VideoFrame frame(colour, true);
         if (not src->get_frame(frame))
         {
             throw DeviceOffline(
