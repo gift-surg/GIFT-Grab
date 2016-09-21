@@ -59,7 +59,7 @@ def __run_epiphan_tests(colour_space):
 
 
 def test_epiphan_dvi2pcieduo_bgr24():
-    __run_epiphan_tests('BGR24')
+    __run_epiphan_tests('BGRA')
 
 
 def test_epiphan_dvi2pcieduo_i420():

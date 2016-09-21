@@ -1,5 +1,5 @@
 port: SDI
-colour_space: BGR24
+colour_space: BGRA
 frame_rate: 29.1
 file_path: /tmp/giftgrab/test-data-fetoscope
 timeout_limit: 20.0
