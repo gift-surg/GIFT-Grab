@@ -27,9 +27,9 @@ def colour_space(request):
 def port(request):
     port = request.config.getoption('--port')
     case_insensitive = port.lower()
-    if port == 'dvi':
+    if case_insensitive == 'dvi':
         return Device.DVI2PCIeDuo_DVI
-    elif port == 'sdi':
+    elif case_insensitive == 'sdi':
         return Device.DVI2PCIeDuo_SDI
     else:
         raise RuntimeError('Could not recognise Epiphan DVI2PCIe Duo port ' +
