@@ -79,7 +79,7 @@ def record_epiphan_dvi2pcieduo_sdi_bgr24_hevc():
     frame = gg.VideoFrame(colour_space, True)
     codec = gg.Storage.File_HEVC
     __record_epiphan_dvi2pcieduo(port,
-                                 colour_space
+                                 colour_space,
                                  frame,
                                  num_frames,
                                  codec)
@@ -91,7 +91,7 @@ def record_epiphan_dvi2pcieduo_sdi_bgr24_vp9():
     frame = gg.VideoFrame(colour_space, True)
     codec = gg.Storage.File_VP9
     __record_epiphan_dvi2pcieduo(port,
-                                 colour_space
+                                 colour_space,
                                  frame,
                                  num_frames,
                                  codec)
@@ -103,7 +103,7 @@ def record_epiphan_dvi2pcieduo_sdi_i420_xvid():
     frame = gg.VideoFrame(colour_space, True)
     codec = gg.Storage.File_XviD
     __record_epiphan_dvi2pcieduo(port,
-                                 colour_space
+                                 colour_space,
                                  frame,
                                  num_frames,
                                  codec)
@@ -115,7 +115,7 @@ def record_epiphan_dvi2pcieduo_sdi_i420_hevc():
     frame = gg.VideoFrame(colour_space, True)
     codec = gg.Storage.File_HEVC
     __record_epiphan_dvi2pcieduo(port,
-                                 colour_space
+                                 colour_space,
                                  frame,
                                  num_frames,
                                  codec)
@@ -127,7 +127,7 @@ def record_epiphan_dvi2pcieduo_sdi_i420_vp9():
     frame = gg.VideoFrame(colour_space, True)
     codec = gg.Storage.File_VP9
     __record_epiphan_dvi2pcieduo(port,
-                                 colour_space
+                                 colour_space,
                                  frame,
                                  num_frames,
                                  codec)
@@ -139,7 +139,7 @@ def record_epiphan_dvi2pcieduo_dvi_bgr24_xvid():
     frame = gg.VideoFrame(colour_space, True)
     codec = gg.Storage.File_XviD
     __record_epiphan_dvi2pcieduo(port,
-                                 colour_space
+                                 colour_space,
                                  frame,
                                  num_frames,
                                  codec)
@@ -151,7 +151,7 @@ def record_epiphan_dvi2pcieduo_dvi_bgr24_hevc():
     frame = gg.VideoFrame(colour_space, True)
     codec = gg.Storage.File_HEVC
     __record_epiphan_dvi2pcieduo(port,
-                                 colour_space
+                                 colour_space,
                                  frame,
                                  num_frames,
                                  codec)
@@ -163,7 +163,7 @@ def record_epiphan_dvi2pcieduo_dvi_bgr24_vp9():
     frame = gg.VideoFrame(colour_space, True)
     codec = gg.Storage.File_VP9
     __record_epiphan_dvi2pcieduo(port,
-                                 colour_space
+                                 colour_space,
                                  frame,
                                  num_frames,
                                  codec)
@@ -175,7 +175,7 @@ def record_epiphan_dvi2pcieduo_dvi_i420_xvid():
     frame = gg.VideoFrame(colour_space, True)
     codec = gg.Storage.File_XviD
     __record_epiphan_dvi2pcieduo(port,
-                                 colour_space
+                                 colour_space,
                                  frame,
                                  num_frames,
                                  codec)
@@ -187,7 +187,7 @@ def record_epiphan_dvi2pcieduo_dvi_i420_hevc():
     frame = gg.VideoFrame(colour_space, True)
     codec = gg.Storage.File_HEVC
     __record_epiphan_dvi2pcieduo(port,
-                                 colour_space
+                                 colour_space,
                                  frame,
                                  num_frames,
                                  codec)
@@ -199,7 +199,7 @@ def record_epiphan_dvi2pcieduo_dvi_i420_vp9():
     frame = gg.VideoFrame(colour_space, True)
     codec = gg.Storage.File_VP9
     __record_epiphan_dvi2pcieduo(port,
-                                 colour_space
+                                 colour_space,
                                  frame,
                                  num_frames,
                                  codec)
