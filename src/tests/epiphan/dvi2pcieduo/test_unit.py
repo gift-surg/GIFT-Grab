@@ -24,7 +24,7 @@ def peri_test(port, colour_space):
     assert source is not None
 
     global frame
-    frame = VideoFrame(False, colour_space)
+    frame = VideoFrame(colour_space, False)
 
     global height, width
     assert source.get_frame(frame)
