@@ -30,10 +30,12 @@ public:
 
     //!
     //! \brief Grab next available \c frame
-    //! \param frame if colour space of \c frame mismatches
-    //! that of \c this object, conversion is performed,
-    //! which might slow things down
-    //! \return
+    //! \param frame the caller is responsible for making
+    //! sure the colour space of \c frame matches that of
+    //! \c this object
+    //! \return \c false if the colour space of \c frame
+    //! mismatches that of \c this object OR if there is
+    //! a problem with the acquisition, \c true otherwise
     //!
     virtual bool get_frame(gg::VideoFrame & frame) = 0;
 

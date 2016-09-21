@@ -26,13 +26,14 @@ public:
 
     //!
     //! \brief Append \c frame to output
-    //! \param frame if there is mismatch between
-    //! the colour space of \c frame and the colour
-    //! space \c this object expects, a conversion
-    //! is performed, which might slow things down
+    //! \param frame the caller is responsible for making
+    //! sure the colour space of \c frame matches that of
+    //! \c this object
     //! \throw VideoTargetError with a detailed
     //! error message if \c frame cannot be
-    //! appended to output for some reason
+    //! appended to output for some reason, including a
+    //! mismatch between the colour space of \c frame and
+    //! that of \c this object expects
     //!
     virtual void append(const VideoFrame & frame) = 0;
 
