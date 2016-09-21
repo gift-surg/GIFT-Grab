@@ -27,17 +27,10 @@ class IVideoSourceWrapper : IVideoSource, wrapper<IVideoSource>
         return this->get_override("get_frame_dimensions")(width, height);
     }
 
-    bool get_frame(VideoFrame_BGRA & frame)
+    bool get_frame(gg::VideoFrame & frame)
     {
         return this->get_override("get_frame")(frame);
     }
-
-#ifdef USE_I420
-    bool get_frame(gg::VideoFrame_I420 & frame)
-    {
-        return this->get_override("get_frame")(frame);
-    }
-#endif
 
     double get_frame_rate()
     {
@@ -62,7 +55,7 @@ class IVideoTargetWrapper : gg::IVideoTarget, wrapper<gg::IVideoTarget>
         this->get_override("init")(filepath, framerate);
     }
 
-    void append(const VideoFrame_BGRA & frame)
+    void append(const gg::VideoFrame & frame)
     {
         this->get_override("append")(frame);
     }
@@ -128,12 +121,6 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .def(init<enum gg::ColourSpace, const size_t, const size_t>())
         .def("rows", &gg::VideoFrame::rows)
         .def("cols", &gg::VideoFrame::cols)
-    ;
-
-    class_<VideoFrame_BGRA>("VideoFrame_BGRA", init<bool>())
-        .def(init<const size_t, const size_t>())
-        .def("rows", &VideoFrame_BGRA::rows)
-        .def("cols", &VideoFrame_BGRA::cols)
     ;
 
     class_<IVideoSource, boost::noncopyable>("IVideoSource", no_init)
