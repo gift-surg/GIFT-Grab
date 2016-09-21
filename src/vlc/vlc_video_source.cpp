@@ -43,7 +43,7 @@ bool VideoSourceVLC::get_frame_dimensions(int & width, int & height)
     return true;
 }
 
-
+/* TODO keeping for colour space conversion
 bool VideoSourceVLC::get_frame(VideoFrame_BGRA & frame)
 {
     throw VideoSourceError("VLC video source supports only I420 colour space");
@@ -60,15 +60,18 @@ bool VideoSourceVLC::get_frame(VideoFrame_BGRA & frame)
 
     return true;
 }
+*/
 
 
-bool VideoSourceVLC::get_frame(VideoFrame_I420 & frame)
+bool VideoSourceVLC::get_frame(VideoFrame & frame)
 {
     std::lock_guard<std::mutex> data_lock_guard(_data_lock);
     if (_data_length > 0)
     {
         // TODO manage data?
-        frame = VideoFrame_I420(_video_buffer, _data_length, _cols, _rows, false);
+        VideoFrame buffer(ColourSpace::I420, false);
+        buffer.init_from_pointer(_video_buffer, _data_length, _cols, _rows);
+        frame = buffer;
         return true;
     }
     else
