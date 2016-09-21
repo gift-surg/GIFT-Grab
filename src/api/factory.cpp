@@ -19,7 +19,7 @@ namespace gg {
 
 IVideoSource * Factory::_sources[2] = { NULL, NULL };
 
-IVideoSource * Factory::connect(enum Device type) {
+IVideoSource * Factory::connect(enum Device type, ColourSpace colour) {
 #ifdef USE_I420
 #if !defined(USE_EPIPHANSDK) && !defined(USE_LIBVLC)
     throw VideoSourceError("I420 colour space supported only with EpiphanSDK or libVLC");
