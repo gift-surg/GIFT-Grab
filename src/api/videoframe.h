@@ -1,5 +1,4 @@
-#ifndef __VIDEOFRAME_H__
-#define __VIDEOFRAME_H__
+#pragma once
 
 #ifdef USE_OPENCV
 #include <opencv2/core/core.hpp>
@@ -188,5 +187,3 @@ protected:
 };
 
 }
-
-#endif
