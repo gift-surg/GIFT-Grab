@@ -3,6 +3,7 @@ from pygiftgrab import Factory, VideoFrame
 
 source = None
 frame = None
+frame_with_colour_mismatch = None
 width = 0
 height = 0
 sub_x = 0
@@ -23,8 +24,13 @@ def peri_test(port, colour_space):
                            e.message)
     assert source is not None
 
-    global frame
+    global frame, frame_with_colour_mismatch
     frame = VideoFrame(colour_space, False)
+    if colour_space == pygiftgrab.ColourSpace.BGRA:
+        mismatch_colour_space = pygiftgrab.ColourSpace.I420
+    else:
+        mismatch_colour_space = pygiftgrab.ColourSpace.BGRA
+    frame_with_colour_mismatch = VideoFrame(mismatch_colour_space, False)
 
     global height, width
     assert source.get_frame(frame)
@@ -61,6 +67,8 @@ def test_get_frame():
     assert source.get_frame(frame)
     assert frame.rows() > 0
     assert frame.cols() > 0
+
+    assert not source.get_frame(frame_with_colour_mismatch)
 
 
 @mark.unit
