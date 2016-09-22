@@ -173,14 +173,18 @@ protected:
     size_t _data_length;
 
     //!
-    //! \brief
+    //! \brief Always use \c set_dimensions() to set
+    //! this
     //! \sa rows()
+    //! \sa set_dimensions()
     //!
     size_t _rows;
 
     //!
-    //! \brief
+    //! \brief Always use \c set_dimensions() to set
+    //! this
     //! \sa cols()
+    //! \sa set_dimensions()
     //!
     size_t _cols;
 

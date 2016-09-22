@@ -8,11 +8,9 @@ VideoFrame::VideoFrame(enum ColourSpace colour, bool manage_data)
   : _colour(colour),
     _manage_data(manage_data),
     _data(nullptr),
-    _data_length(0),
-    _rows(0),
-    _cols(0)
+    _data_length(0)
 {
-
+    set_dimensions(0, 0);
 }
 
 VideoFrame::VideoFrame(ColourSpace colour, size_t cols, size_t rows)
@@ -178,8 +176,7 @@ void VideoFrame::free_memory()
         free(_data);
         _data = nullptr;
         _data_length = 0;
-        _cols = 0;
-        _rows = 0;
+        set_dimensions(0, 0);
     }
 }
 
