@@ -188,11 +188,8 @@ size_t VideoFrame::get_data_length() const
         return _cols * _rows * 4;
 
     case I420:
-        return (
-                    (_cols + 2 * 100) * (_rows + 2 * 100) + // Y plane (100 = padding, arbitrary)
-                    ((_cols % 2 == 1 ? (_cols + 1) / 2 : _cols / 2) + 100) * // U, Y plane
-                    ((_rows % 2 == 1 ? (_rows + 1) / 2 : _rows / 2) + 100)  // (100 = padding, arbitrary)
-               );
+        // 1 for Y plane, 0.5 for UV plane
+        return _cols * _rows * 1.5; // both dimensions always even due to set_dimensions()
 
     default:
         throw BasicException("Colour space indicator not set properly, cannot compute memory requirement");
