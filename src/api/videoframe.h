@@ -50,6 +50,11 @@ public:
     //! \brief Allocates memory for specified dimensions, and
     //! sets all pixels to black
     //!
+    //! \c cols and \c rows are checked in conjunction with \c
+    //! colour requirements. I420 requires even dimensions, so
+    //! in case an odd dimension is provided, it is made even
+    //! by adding a pixel.
+    //!
     //! \param colour
     //! \param cols
     //! \param rows
@@ -80,14 +85,17 @@ public:
     //! \brief Initialise using passed data AND frame specs
     //!
     //! The caller is responsible for ensuring consistency of specs.
-    //! As such, no checks are performed, and this function proceeds
-    //! BLINDLY.
+    //! As such, the only check performed is whether the columns and
+    //! rows are in line with the frame's colour space requirements.
+    //! Other than that, this function proceeds BLINDLY. So use with
+    //! care.
     //!
     //! \param data
     //! \param data_length
     //! \param cols
     //! \param rows
     //! \sa manages_own_data
+    //! \sa VideoFrame(enum ColourSpace, size_t, size_t)
     //!
     void init_from_specs(unsigned char * data, size_t data_length,
                          size_t cols, size_t rows);
@@ -165,14 +173,18 @@ protected:
     size_t _data_length;
 
     //!
-    //! \brief
+    //! \brief Always use \c set_dimensions() to set
+    //! this
     //! \sa rows()
+    //! \sa set_dimensions()
     //!
     size_t _rows;
 
     //!
-    //! \brief
+    //! \brief Always use \c set_dimensions() to set
+    //! this
     //! \sa cols()
+    //! \sa set_dimensions()
     //!
     size_t _cols;
 
@@ -183,6 +195,16 @@ protected:
     bool _manage_data;
 
 protected:
+    //!
+    //! \brief Set dimensions in conjunction with
+    //! colour space requirements
+    //!
+    //! \param cols
+    //! \param rows
+    //! \sa VideoFrame(enum ColourSpace, size_t, size_t)
+    //!
+    void set_dimensions(size_t cols, size_t rows);
+
     //!
     //! \brief Allocate / extend memory and set data
     //! length indicator, ONLY IF managing own data

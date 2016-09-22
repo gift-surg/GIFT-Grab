@@ -118,7 +118,7 @@ void VideoTargetFFmpeg::append(const VideoFrame & frame)
         colour = AV_PIX_FMT_YUV420P;
         break;
     default:
-        // TODO
+        throw VideoTargetError("Only BGRA and I420 colour spaces supported currently");
         break;
     }
 

@@ -8,11 +8,9 @@ VideoFrame::VideoFrame(enum ColourSpace colour, bool manage_data)
   : _colour(colour),
     _manage_data(manage_data),
     _data(nullptr),
-    _data_length(0),
-    _rows(0),
-    _cols(0)
+    _data_length(0)
 {
-
+    set_dimensions(0, 0);
 }
 
 VideoFrame::VideoFrame(ColourSpace colour, size_t cols, size_t rows)
@@ -20,9 +18,8 @@ VideoFrame::VideoFrame(ColourSpace colour, size_t cols, size_t rows)
     , _manage_data(true)
     , _data(nullptr)
     , _data_length(0)
-    , _cols(cols)
-    , _rows(rows)
 {
+    set_dimensions(cols, rows);
     size_t data_length = get_data_length();
     allocate_memory(data_length);
     set_pixels_black();
@@ -142,8 +139,24 @@ void VideoFrame::init_from_specs(unsigned char * data, size_t data_length,
         _data = data;
     }
 
+    set_dimensions(cols, rows);
+}
+
+void VideoFrame::set_dimensions(size_t cols, size_t rows)
+{
     _cols = cols;
     _rows = rows;
+    switch (_colour)
+    {
+    case I420:
+        if (_cols % 2 == 1) ++_cols;
+        if (_rows % 2 == 1) ++_rows;
+        break;
+    case BGRA:
+    default:
+        // nop
+        break;
+    }
 }
 
 void VideoFrame::allocate_memory(size_t data_length)
@@ -163,8 +176,7 @@ void VideoFrame::free_memory()
         free(_data);
         _data = nullptr;
         _data_length = 0;
-        _cols = 0;
-        _rows = 0;
+        set_dimensions(0, 0);
     }
 }
 
@@ -176,11 +188,8 @@ size_t VideoFrame::get_data_length() const
         return _cols * _rows * 4;
 
     case I420:
-        return (
-                    (_cols + 2 * 100) * (_rows + 2 * 100) + // Y plane (100 = padding, arbitrary)
-                    ((_cols % 2 == 1 ? (_cols + 1) / 2 : _cols / 2) + 100) * // U, Y plane
-                    ((_rows % 2 == 1 ? (_rows + 1) / 2 : _rows / 2) + 100)  // (100 = padding, arbitrary)
-               );
+        // 1 for Y plane, 0.5 for UV plane
+        return _cols * _rows * 1.5; // both dimensions always even due to set_dimensions()
 
     default:
         throw BasicException("Colour space indicator not set properly, cannot compute memory requirement");
