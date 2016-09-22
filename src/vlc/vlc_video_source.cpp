@@ -71,10 +71,7 @@ bool VideoSourceVLC::get_frame(VideoFrame & frame)
     std::lock_guard<std::mutex> data_lock_guard(_data_lock);
     if (_data_length > 0)
     {
-        // TODO manage data?
-        VideoFrame buffer(ColourSpace::I420, false);
-        buffer.init_from_specs(_video_buffer, _data_length, _cols, _rows);
-        frame = buffer;
+        frame.init_from_specs(_video_buffer, _data_length, _cols, _rows);
         return true;
     }
     else
