@@ -1,4 +1,5 @@
 ﻿#include "videoframe.h"
+#include <cstring>
 
 namespace gg
 {
