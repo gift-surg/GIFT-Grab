@@ -141,8 +141,7 @@ void VideoFrame::init_from_specs(unsigned char * data, size_t data_length,
         _data = data;
     }
 
-    _cols = cols;
-    _rows = rows;
+    set_dimensions(cols, rows);
 }
 
 void VideoFrame::set_dimensions(size_t cols, size_t rows)

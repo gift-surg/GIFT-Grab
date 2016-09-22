@@ -85,14 +85,17 @@ public:
     //! \brief Initialise using passed data AND frame specs
     //!
     //! The caller is responsible for ensuring consistency of specs.
-    //! As such, no checks are performed, and this function proceeds
-    //! BLINDLY.
+    //! As such, the only check performed is whether the columns and
+    //! rows are in line with the frame's colour space requirements.
+    //! Other than that, this function proceeds BLINDLY. So use with
+    //! care.
     //!
     //! \param data
     //! \param data_length
     //! \param cols
     //! \param rows
     //! \sa manages_own_data
+    //! \sa VideoFrame(enum ColourSpace, size_t, size_t)
     //!
     void init_from_specs(unsigned char * data, size_t data_length,
                          size_t cols, size_t rows);
