@@ -8,6 +8,7 @@
 
 #include <memory>
 #include "maskframe.h"
+#include "except.h"
 
 namespace gg
 {
@@ -27,8 +28,8 @@ enum ColourSpace
 //! \brief A class to represent a video frame
 //!
 //! For efficiency issues, data can be chosen to not be copied.
-//! In that case, the user is responsible for ensuring the data
-//! pointer is valid duing the lifetime of this object.
+//! In that case, the caller is responsible for ensuring the data
+//! pointer is valid during the lifetime of the frame object.
 //!
 class VideoFrame
 {
@@ -37,10 +38,13 @@ public:
     //! \brief Constructor that by default will use externally
     //! managed frame data
     //!
+    //! The frame can later be initialised by \c init_from_specs()
+    //!
     //! \param colour
     //! \param manage_data
+    //! \sa init_from_specs
     //!
-    VideoFrame(enum ColourSpace colour, bool manage_data=false);
+    VideoFrame(enum ColourSpace colour, bool manage_data = false);
 
     //!
     //! \brief Allocates memory for specified dimensions, and
@@ -73,15 +77,20 @@ public:
     virtual ~VideoFrame();
 
     //!
-    //! \brief Initialise using passed data
+    //! \brief Initialise using passed data AND frame specs
+    //!
+    //! The caller is responsible for ensuring consistency of specs.
+    //! As such, no checks are performed, and this function proceeds
+    //! BLINDLY.
+    //!
     //! \param data
     //! \param data_length
     //! \param cols
     //! \param rows
     //! \sa manages_own_data
     //!
-    void init_from_pointer(unsigned char * data, size_t data_length,
-                           size_t cols, size_t rows);
+    void init_from_specs(unsigned char * data, size_t data_length,
+                         size_t cols, size_t rows);
 
     //!
     //! \brief Get length of data buffer
@@ -148,7 +157,7 @@ protected:
     //!
     //! \brief Frame data
     //!
-    unsigned char*  _data;
+    unsigned char * _data;
 
     //!
     //! \brief Frame data length
@@ -159,31 +168,59 @@ protected:
     //! \brief
     //! \sa rows()
     //!
-    size_t          _rows;
+    size_t _rows;
 
     //!
     //! \brief
     //! \sa cols()
     //!
-    size_t          _cols;
+    size_t _cols;
 
     //!
     //! \brief
     //! \sa manages_own_data()
     //!
-    bool            _manage_data;
+    bool _manage_data;
 
 protected:
     //!
-    //! \brief Allocate any necessary data
+    //! \brief Allocate / extend memory and set data
+    //! length indicator, ONLY IF managing own data
+    //! \param data_length passed to avoid allocating
+    //! in case existing memory satisfies the length
+    //! requirement
+    //! \sa _data
+    //! \sa _data_length
+    //! \sa _manage_data
     //!
-    void init();
+    void allocate_memory(size_t data_length);
 
     //!
-    //! \brief Free all managed data
-    //! \sa ~VideoFrame
+    //! \brief Free any managed memory, and set all
+    //! spec variables to 0 or \c nullptr
+    //! \sa _manage_data
+    //! \sa _data
+    //! \sa _data_length
+    //! \sa _cols
+    //! \sa _rows
     //!
-    void clear();
+    void free_memory();
+
+    //!
+    //! \brief Compute how much memory is needed, based
+    //! on column and row specs
+    //! \sa _manage_data
+    //! \sa _cols
+    //! \sa _rows
+    //! \throw BasicException if \c _colour not set
+    //! properly
+    //!
+    size_t get_data_length() const;
+
+    //!
+    //! \brief Set all pixels of frame to black
+    //!
+    void set_pixels_black();
 };
 
 }

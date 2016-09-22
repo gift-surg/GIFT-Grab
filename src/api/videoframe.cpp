@@ -1,4 +1,4 @@
-#include "videoframe.h"
+﻿#include "videoframe.h"
 #include <algorithm>
 #include <cstring>
 
@@ -24,7 +24,9 @@ VideoFrame::VideoFrame(ColourSpace colour, size_t cols, size_t rows)
     , _cols(cols)
     , _rows(rows)
 {
-    init();
+    size_t data_length = get_data_length();
+    allocate_memory(data_length);
+    set_pixels_black();
 }
 
 #ifdef USE_OPENCV
@@ -124,57 +126,71 @@ std::unique_ptr<MaskFrame> VideoFrame::compute_image_mask(int x, int y,
 
 VideoFrame::~VideoFrame()
 {
-    clear();
+    free_memory();
 }
 
-void VideoFrame::init_from_pointer(unsigned char * data, size_t data_length,
-                                   size_t cols, size_t rows)
-{
-    if (_manage_data and _data_length < data_length)
-        _data = reinterpret_cast<unsigned char *>(realloc(_data, data_length * sizeof(unsigned char)));
-
-    // TODO - check length vs rows and cols?
-    _data_length = data_length;
-    _cols = cols;
-    _rows = rows;
-    if (_manage_data)
-        memcpy(_data, data, _data_length);
-    else
-        _data = data;
-}
-
-void VideoFrame::init()
+void VideoFrame::init_from_specs(unsigned char * data, size_t data_length,
+                                 size_t cols, size_t rows)
 {
     if (_manage_data)
     {
-        switch (_colour)
-        {
-        case BGRA:
-            _data_length = _cols * _rows * 4;
+        allocate_memory(data_length);
+        memcpy(_data, data, _data_length * sizeof(unsigned char));
+    }
+    else
+    {
+        _data_length = data_length;
+        _data = data;
+    }
 
+    _cols = cols;
+    _rows = rows;
+}
 
-            break;
-        case I420:
-            _data_length = (_cols + 2 * 100) * (_rows + 2 * 100) + // Y plane (100 = padding, arbitrary)
-                           ((_cols % 2 == 1 ? (_cols + 1) / 2 : _cols / 2) + 100) * // U, Y plane
-                           ((_rows % 2 == 1 ? (_rows + 1) / 2 : _rows / 2) + 100);  // (100 = padding, arbitrary)
-            break;
-        }
-
-        _data = reinterpret_cast<unsigned char*>(realloc(_data, _data_length * sizeof(unsigned char)));
-        memset(_data, 0, _data_length * sizeof(unsigned char));
+void VideoFrame::allocate_memory(size_t data_length)
+{
+    if (_manage_data and data_length > _data_length)
+    {
+        _data_length = data_length;
+        _data = reinterpret_cast<unsigned char*>(
+                    realloc(_data, _data_length * sizeof(unsigned char)));
     }
 }
 
-void VideoFrame::clear()
+void VideoFrame::free_memory()
 {
-    if (_manage_data) {
+    if (_manage_data)
+    {
         free(_data);
         _data = nullptr;
         _data_length = 0;
         _cols = 0;
         _rows = 0;
     }
+}
+
+size_t VideoFrame::get_data_length() const
+{
+    switch (_colour)
+    {
+    case BGRA:
+        return _cols * _rows * 4;
+
+    case I420:
+        return (
+                    (_cols + 2 * 100) * (_rows + 2 * 100) + // Y plane (100 = padding, arbitrary)
+                    ((_cols % 2 == 1 ? (_cols + 1) / 2 : _cols / 2) + 100) * // U, Y plane
+                    ((_rows % 2 == 1 ? (_rows + 1) / 2 : _rows / 2) + 100)  // (100 = padding, arbitrary)
+               );
+
+    default:
+        throw BasicException("Colour space indicator not set properly, cannot compute memory requirement");
+    }
+}
+
+void VideoFrame::set_pixels_black()
+{
+    memset(_data, 0, _data_length * sizeof(unsigned char));
 }
 
 }

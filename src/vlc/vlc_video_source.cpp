@@ -73,7 +73,7 @@ bool VideoSourceVLC::get_frame(VideoFrame & frame)
     {
         // TODO manage data?
         VideoFrame buffer(ColourSpace::I420, false);
-        buffer.init_from_pointer(_video_buffer, _data_length, _cols, _rows);
+        buffer.init_from_specs(_video_buffer, _data_length, _cols, _rows);
         frame = buffer;
         return true;
     }

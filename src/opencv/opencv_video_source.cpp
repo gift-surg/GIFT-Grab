@@ -125,7 +125,7 @@ bool VideoSourceOpenCV::get_frame(gg::VideoFrame & frame)
             data_length = _buffer_bgra.channels() * cols * rows;
         }
 
-        frame.init_from_pointer(data, data_length, cols, rows);
+        frame.init_from_specs(data, data_length, cols, rows);
     }
     return has_read;
 }
