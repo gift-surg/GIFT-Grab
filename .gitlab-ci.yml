@@ -202,6 +202,7 @@ pypi-epiphan-dvi2pcie-duo:
     - gift-epiphan-dvi2pcie-duo
   only:
     - 47-dry-for-video-frames-with-different-colour-spaces
+    - 47-dry-for-video-frames-with-different-colour-spaces-fix-arbitrary-padding
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 epiphan-dvi2pcie-duo:
@@ -237,3 +238,4 @@ epiphan-dvi2pcie-duo:
     - gift-epiphan-dvi2pcie-duo
   only:
     - 47-dry-for-video-frames-with-different-colour-spaces
+    - 47-dry-for-video-frames-with-different-colour-spaces-fix-arbitrary-padding
