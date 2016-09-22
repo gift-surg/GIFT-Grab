@@ -53,7 +53,7 @@ Features can be customised as per the combinations listed below. Please note tha
 
 **Build GIFT-Grab from source** using CMake. Use the following options to customise features as desired (all options are disabled by default):
 
-* `-D USE_EPIPHAN_DVI2PCIE_DUO=ON` for Epiphan DVI2PCIe Duo support (requires OpenCV). Append `-D USE_I420=ON` to capture at 60 fps (requires libVLC).
+* `-D USE_EPIPHAN_DVI2PCIE_DUO=ON` for Epiphan DVI2PCIe Duo support (requires OpenCV and libVLC). OpenCV and libVLC are needed for capturing in the BGRA and [I420](https://wiki.videolan.org/YUV/#I420) colour spaces respectively. Both options are active by default. Append `-D USE_BGRA=OFF` or `-D USE_I420=OFF` to deactivate the respective option.
 * `-D USE_XVID=ON` for Xvid support (requires OpenCV).
 * `-D USE_HEVC=ON` for HEVC support (requires FFmpeg, pkg-config and kvazaar).
 * `-D USE_HEVC=ON -D ENABLE_GPL=ON -D USE_X265=ON` to use x265 instead of kvazaar for HEVC support (requires FFmpeg, pkg-config and x265).
@@ -66,7 +66,7 @@ Features can be customised as per the combinations listed below. Please note tha
 
 **To install from the Python Packaging Index** simply run `pip install giftgrab`. Note that all features are disabled by default. Enable them by appending the following to the command:
 
-* `--install-option="--epiphan-dvi2pcie-duo"` for Epiphan DVI2PCIe Duo support (requires OpenCV). Add `--install-option="--i420"` to capture at 60 fps (requires libVLC).
+* `--install-option="--epiphan-dvi2pcie-duo"` for Epiphan DVI2PCIe Duo support (requires OpenCV and libVLC). OpenCV and libVLC are needed for capturing in the BGRA and [I420](https://wiki.videolan.org/YUV/#I420) colour spaces respectively. Both options are active by default. Append `--install-option="--no-bgra"` or `--install-option="--no-i420"` to deactivate the respective option.
 * `--install-option="--xvid"` for Xvid support (requires OpenCV).
 * `--install-option="--hevc"` for HEVC support (requires FFmpeg, pkg-config and kvazaar).
 * `--install-option="--hevc" --install-option="--enable-gpl" --install-option="--x265"` to use x265 instead of kvazaar for HEVC support (requires FFmpeg, pkg-config and x265).
@@ -76,12 +76,11 @@ Features can be customised as per the combinations listed below. Please note tha
 **To quickly test whether the GIFT-Grab Python API works** run:
 
 * `test-giftgrab-<codec>-<colour_space>` to test support for `<codec>` (one of `xvid`, `hevc`, or `vp9`) in `<colour_space>` (one of `bgra` or `i420`), provided GIFT-Grab was built with support for specified option (Note that currently GIFT-Grab does not support Xvid encoding with I420 frames).
-* `test-giftgrab-epiphan-dvi2pcieduo-bgra` to test Epiphan DVI2PCIe Duo support, if GIFT-Grab has **not** been installed with the `--i420` option
-* **(Experimental)** `test-giftgrab-epiphan-dvi2pcieduo-i420` to test Epiphan DVI2PCIe Duo support, if GIFT-Grab has been installed with the `--i420` option
+* `test-giftgrab-epiphan-dvi2pcieduo-<colour_space>` to test Epiphan DVI2PCIe Duo support where `<colour_space>` is one of `bgra` or `i420`
 * `edd-<port>-<colour_space>-<codec>` (e.g. `edd-dvi-i420-vp9`) to record 30 frames into a timestamp-named video file, where:
    * `<port>` is one of `dvi` or `sdi`
-   * `<colour_space>` is one of `bgra` or `i420` (if GIFT-Grab was built with I420 colour space support)
-   * `<codec>` is one of `xvid`, `hevc`, or `vp9` (provided GIFT-Grab was built with support for specified option)
+   * `<colour_space>` is one of `bgra` or `i420`
+   * `<codec>` is one of `xvid`, `hevc`, or `vp9`
 
 Funding
 -------
