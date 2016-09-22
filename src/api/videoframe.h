@@ -50,6 +50,11 @@ public:
     //! \brief Allocates memory for specified dimensions, and
     //! sets all pixels to black
     //!
+    //! \c cols and \c rows are checked in conjunction with \c
+    //! colour requirements. I420 requires even dimensions, so
+    //! in case an odd dimension is provided, it is made even
+    //! by adding a pixel.
+    //!
     //! \param colour
     //! \param cols
     //! \param rows
@@ -183,6 +188,16 @@ protected:
     bool _manage_data;
 
 protected:
+    //!
+    //! \brief Set dimensions in conjunction with
+    //! colour space requirements
+    //!
+    //! \param cols
+    //! \param rows
+    //! \sa VideoFrame(enum ColourSpace, size_t, size_t)
+    //!
+    void set_dimensions(size_t cols, size_t rows);
+
     //!
     //! \brief Allocate / extend memory and set data
     //! length indicator, ONLY IF managing own data

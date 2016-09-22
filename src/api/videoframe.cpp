@@ -20,9 +20,8 @@ VideoFrame::VideoFrame(ColourSpace colour, size_t cols, size_t rows)
     , _manage_data(true)
     , _data(nullptr)
     , _data_length(0)
-    , _cols(cols)
-    , _rows(rows)
 {
+    set_dimensions(cols, rows);
     size_t data_length = get_data_length();
     allocate_memory(data_length);
     set_pixels_black();
@@ -144,6 +143,23 @@ void VideoFrame::init_from_specs(unsigned char * data, size_t data_length,
 
     _cols = cols;
     _rows = rows;
+}
+
+void VideoFrame::set_dimensions(size_t cols, size_t rows)
+{
+    switch (_colour)
+    {
+    case I420:
+        _cols = cols;
+        if (_cols % 2 == 1) ++_cols;
+        _rows = rows;
+        if (_rows % 2 == 1) ++_rows;
+        break;
+    case BGRA:
+    default:
+        // nop
+        break;
+    }
 }
 
 void VideoFrame::allocate_memory(size_t data_length)
