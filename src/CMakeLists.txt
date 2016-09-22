@@ -41,8 +41,10 @@ OPTION(BUILD_TESTS
     "Tests (requires pytest)" OFF)
 OPTION(BUILD_PYTHON
     "GIFT-Grab Python API (requires Python and Boost.Python)" OFF)
+OPTION(USE_BGRA
+    "Capture video in BGRA colour space (requires OpenCV)" ON)
 OPTION(USE_I420
-    "Capture video in I420 colour space (requires libVLC)" OFF)
+    "Capture video in I420 colour space (requires libVLC)" ON)
 OPTION(GENERATE_PERFORMANCE_OUTPUT
     "Performance benchmark reports (requires Boost.Timer and Boost.System)" OFF)
 MARK_AS_ADVANCED(GENERATE_PERFORMANCE_OUTPUT)
@@ -65,7 +67,7 @@ if(USE_X265 AND NOT ENABLE_GPL)
 endif(USE_X265 AND NOT ENABLE_GPL)
 
 # Determine whether OpenCV needed
-if((USE_EPIPHAN_DVI2PCIE_DUO AND NOT USE_I420) OR
+if((USE_EPIPHAN_DVI2PCIE_DUO AND USE_BGRA) OR
     USE_XVID)
     SET(USE_OPENCV ON CACHE BOOL "OFF ON" FORCE)
 endif()
