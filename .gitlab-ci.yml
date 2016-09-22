@@ -222,7 +222,7 @@ pypi-epiphan-dvi2pcie-duo:
     - ls -alh ./*.avi
     - ls -alh ./*.webm
     - rm -f ./*.mp4 ./*.avi ./*.webm
-   - deactivate
+    - deactivate
   tags:
     - gift-linux
     - gift-pypi
