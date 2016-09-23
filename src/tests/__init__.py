@@ -13,22 +13,36 @@ epiphan_dvi2pcieduo_config_dir = abspath(
                       join('epiphan', 'dvi2pcieduo', 'data')))
 
 
-def test_hevc():
+def __run_target_tests(codec, colour_space):
     working_dir = abspath(resource_filename('giftgrab.tests', 'target'))
-    ret = main(['--codec=HEVC', working_dir])
+    ret = main(['--codec={}'.format(codec),
+                '--colour-space={}'.format(colour_space),
+                working_dir])
     if ret: exit(ret)
 
 
-def test_xvid():
-    working_dir = abspath(resource_filename('giftgrab.tests', 'target'))
-    ret = main(['--codec=XviD', working_dir])
-    if ret: exit(ret)
+def test_hevc_bgra():
+    __run_target_tests('HEVC', 'BGRA')
 
 
-def test_vp9():
-    working_dir = abspath(resource_filename('giftgrab.tests', 'target'))
-    ret = main(['--codec=VP9', working_dir])
-    if ret: exit(ret)
+def test_hevc_i420():
+    __run_target_tests('HEVC', 'I420')
+
+
+def test_xvid_bgra():
+    __run_target_tests('Xvid', 'BGRA')
+
+
+def test_xvid_i420():
+    __run_target_tests('Xvid', 'I420')
+
+
+def test_vp9_bgra():
+    __run_target_tests('VP9', 'BGRA')
+
+
+def test_vp9_i420():
+    __run_target_tests('VP9', 'I420')
 
 
 def __run_epiphan_tests(colour_space):
@@ -44,8 +58,8 @@ def __run_epiphan_tests(colour_space):
     if ret: exit(ret)
 
 
-def test_epiphan_dvi2pcieduo_bgr24():
-    __run_epiphan_tests('BGR24')
+def test_epiphan_dvi2pcieduo_bgra():
+    __run_epiphan_tests('BGRA')
 
 
 def test_epiphan_dvi2pcieduo_i420():

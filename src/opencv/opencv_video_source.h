@@ -35,7 +35,7 @@ public:
 
     bool get_frame_dimensions(int & width, int & height);
 
-    bool get_frame(VideoFrame_BGRA &frame);
+    bool get_frame(gg::VideoFrame &frame);
 
     double get_frame_rate();
 

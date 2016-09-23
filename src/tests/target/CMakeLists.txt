@@ -4,32 +4,31 @@ FILE(COPY
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-# HEVC tests
+# list codecs
 if(USE_HEVC)
-    SET(NAME_TEST Test_HEVC)
-    ADD_TEST(NAME ${NAME_TEST}
-        COMMAND py.test --codec=HEVC test_unit.py
-    )
-    LIST(APPEND TESTS_LIST ${NAME_TEST})
+    LIST(APPEND CODECS HEVC)
 endif(USE_HEVC)
-
-# Xvid tests
 if(USE_XVID)
-    SET(NAME_TEST Test_Xvid)
-    ADD_TEST(NAME ${NAME_TEST}
-        COMMAND py.test --codec=Xvid test_unit.py
-    )
-    LIST(APPEND TESTS_LIST ${NAME_TEST})
+    LIST(APPEND CODECS Xvid)
 endif(USE_XVID)
-
-# VP9 tests
 if(USE_VP9)
-    SET(NAME_TEST Test_VP9)
-    ADD_TEST(NAME ${NAME_TEST}
-        COMMAND py.test --codec=VP9 test_unit.py
-    )
-    LIST(APPEND TESTS_LIST ${NAME_TEST})
+    LIST(APPEND CODECS VP9)
 endif(USE_VP9)
+
+# generate tests
+foreach(CODEC ${CODECS})
+    foreach(COLOUR_SPACE ${COLOUR_SPACES})
+        if(CODEC STREQUAL Xvid AND COLOUR_SPACE STREQUAL I420)
+            # NOP: see #90
+        else(CODEC STREQUAL Xvid AND COLOUR_SPACE STREQUAL I420)
+            SET(NAME_TEST Test_${CODEC}_${COLOUR_SPACE})
+            ADD_TEST(NAME ${NAME_TEST}
+                COMMAND py.test --codec=${CODEC} --colour-space=${COLOUR_SPACE} test_unit.py
+            )
+            LIST(APPEND TESTS_LIST ${NAME_TEST})
+        endif(CODEC STREQUAL Xvid AND COLOUR_SPACE STREQUAL I420)
+    endforeach(COLOUR_SPACE)
+endforeach(CODEC)
 
 # to avoid copying stuff around
 SET_TESTS_PROPERTIES(${TESTS_LIST}

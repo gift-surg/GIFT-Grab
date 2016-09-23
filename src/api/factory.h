@@ -38,8 +38,16 @@ protected:
 
 public:
     //!
-    //! \brief Try to connect to specified device
+    //! \brief Try to connect to specified device for
+    //! capturing video with specified \c colour space
+    //!
+    //! Note that the availability of capturing video
+    //! with specified \c colour space depends on the
+    //! custom build options selected. Cf. documentation
+    //! (README file) for details.
+    //!
     //! \param type
+    //! \param colour
     //! \return pointer to the device's framegrabber.
     //! Client should not delete this pointer on its
     //! own, but should instead call \c disconnect
@@ -50,7 +58,8 @@ public:
     //! OK, but device offline (i.e. getting no frames)
     //! \sa disconnect
     //!
-    static IVideoSource * connect(enum Device type);
+    static IVideoSource * connect(enum Device type,
+                                  enum ColourSpace colour);
 
     //!
     //! \brief Disconnect from specified \c type device,

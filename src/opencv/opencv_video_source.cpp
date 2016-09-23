@@ -50,7 +50,7 @@ double VideoSourceOpenCV::get_frame_rate()
         // Start and end times
         time_t start, end;
 
-        VideoFrame_BGRA buffer(true);
+        gg::VideoFrame buffer(gg::ColourSpace::BGRA, true);
 
         // Start time
         time(&start);
@@ -89,14 +89,17 @@ bool VideoSourceOpenCV::get_frame_dimensions(int &width, int & height)
     return (width != 0 && height != 0);
 }
 
-bool VideoSourceOpenCV::get_frame(VideoFrame_BGRA & frame)
+bool VideoSourceOpenCV::get_frame(gg::VideoFrame & frame)
 {
+    if (frame.colour() != gg::ColourSpace::BGRA)
+        return false;
+
     if (!_cap.isOpened()) return false;
 
     bool has_read = _cap.read(_buffer);
 
     if (has_read) {
-        // Initialize the BGRA buffer, if not only done so.
+        // Initialize the BGRA buffer, only if not already done so.
         if (_buffer_bgra.empty() ||
             _buffer_bgra.rows != _buffer.rows ||
             _buffer_bgra.cols != _buffer.cols) {
@@ -104,14 +107,25 @@ bool VideoSourceOpenCV::get_frame(VideoFrame_BGRA & frame)
         }
         // Convert to BGRA
         cv::cvtColor(_buffer, _buffer_bgra, CV_BGR2BGRA);
+        unsigned char * data = nullptr;
+        size_t data_length = 0;
+        size_t cols = 0, rows = 0;
         if (_get_sub_frame) {
             _buffer_bgra(_sub_frame).copyTo(_buffer_sub_bgra);
-            frame.init_from_opencv_mat(_buffer_sub_bgra);
+            data = _buffer_sub_bgra.data;
+            cols = _buffer_sub_bgra.cols;
+            rows = _buffer_sub_bgra.rows;
+            data_length = _buffer_sub_bgra.channels() * cols * rows;
         }
 
         else {
-            frame.init_from_opencv_mat(_buffer_bgra);
+            data = _buffer_bgra.data;
+            cols = _buffer_bgra.cols;
+            rows = _buffer_bgra.rows;
+            data_length = _buffer_bgra.channels() * cols * rows;
         }
+
+        frame.init_from_specs(data, data_length, cols, rows);
     }
     return has_read;
 }

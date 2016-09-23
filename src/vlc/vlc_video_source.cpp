@@ -44,31 +44,15 @@ bool VideoSourceVLC::get_frame_dimensions(int & width, int & height)
 }
 
 
-bool VideoSourceVLC::get_frame(VideoFrame_BGRA & frame)
+bool VideoSourceVLC::get_frame(VideoFrame & frame)
 {
-    throw VideoSourceError("VLC video source supports only I420 colour space");
-
-    std::lock_guard<std::mutex> data_lock_guard(_data_lock);
-    if (_cols == 0 || _rows == 0 || _video_buffer == nullptr)
+    if (frame.colour() != ColourSpace::I420)
         return false;
 
-    // allocate and fill the image
-    if (_cols * _rows * 4 == this->_data_length)
-        frame = VideoFrame_BGRA(this->_video_buffer, this->_cols, this->_rows);
-    else
-        throw VideoSourceError("VLC video source does not support padded images");
-
-    return true;
-}
-
-
-bool VideoSourceVLC::get_frame(VideoFrame_I420 & frame)
-{
     std::lock_guard<std::mutex> data_lock_guard(_data_lock);
     if (_data_length > 0)
     {
-        // TODO manage data?
-        frame = VideoFrame_I420(_video_buffer, _data_length, _cols, _rows, false);
+        frame.init_from_specs(_video_buffer, _data_length, _cols, _rows);
         return true;
     }
     else

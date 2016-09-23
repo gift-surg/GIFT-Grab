@@ -1,5 +1,4 @@
-#ifndef __VIDEOFRAME_H__
-#define __VIDEOFRAME_H__
+#pragma once
 
 #ifdef USE_OPENCV
 #include <opencv2/core/core.hpp>
@@ -9,16 +8,28 @@
 
 #include <memory>
 #include "maskframe.h"
+#include "except.h"
 
 namespace gg
 {
 
 //!
+//! \brief Supported colour spaces
+//!
+//! For YUV formats, see https://wiki.videolan.org/YUV
+//!
+enum ColourSpace
+{
+    BGRA,
+    I420
+};
+
+//!
 //! \brief A class to represent a video frame
 //!
 //! For efficiency issues, data can be chosen to not be copied.
-//! In that case, the user is responsible for ensuring the data
-//! pointer is valid duing the lifetime of this object.
+//! In that case, the caller is responsible for ensuring the data
+//! pointer is valid during the lifetime of the frame object.
 //!
 class VideoFrame
 {
@@ -26,9 +37,29 @@ public:
     //!
     //! \brief Constructor that by default will use externally
     //! managed frame data
-    //! \param manage_data
     //!
-    VideoFrame(bool manage_data=false);
+    //! The frame can later be initialised by \c init_from_specs()
+    //!
+    //! \param colour
+    //! \param manage_data
+    //! \sa init_from_specs
+    //!
+    VideoFrame(enum ColourSpace colour, bool manage_data = false);
+
+    //!
+    //! \brief Allocates memory for specified dimensions, and
+    //! sets all pixels to black
+    //!
+    //! \c cols and \c rows are checked in conjunction with \c
+    //! colour requirements. I420 requires even dimensions, so
+    //! in case an odd dimension is provided, it is made even
+    //! by adding a pixel.
+    //!
+    //! \param colour
+    //! \param cols
+    //! \param rows
+    //!
+    VideoFrame(enum ColourSpace colour, size_t cols, size_t rows);
 
 #ifdef USE_OPENCV
     //!
@@ -49,6 +80,25 @@ public:
     //! \sa manages_own_data
     //!
     virtual ~VideoFrame();
+
+    //!
+    //! \brief Initialise using passed data AND frame specs
+    //!
+    //! The caller is responsible for ensuring consistency of specs.
+    //! As such, the only check performed is whether the columns and
+    //! rows are in line with the frame's colour space requirements.
+    //! Other than that, this function proceeds BLINDLY. So use with
+    //! care.
+    //!
+    //! \param data
+    //! \param data_length
+    //! \param cols
+    //! \param rows
+    //! \sa manages_own_data
+    //! \sa VideoFrame(enum ColourSpace, size_t, size_t)
+    //!
+    void init_from_specs(unsigned char * data, size_t data_length,
+                         size_t cols, size_t rows);
 
     //!
     //! \brief Get length of data buffer
@@ -96,11 +146,26 @@ public:
         return _data;
     }
 
+    //!
+    //! \brief Get what colour space \c this frame uses
+    //! \return
+    //!
+    const enum ColourSpace colour() const
+    {
+        return _colour;
+    }
+
 protected:
+    //!
+    //! \brief Colour space, i.e. description
+    //! of contained data
+    //!
+    enum ColourSpace _colour;
+
     //!
     //! \brief Frame data
     //!
-    unsigned char*  _data;
+    unsigned char * _data;
 
     //!
     //! \brief Frame data length
@@ -108,129 +173,76 @@ protected:
     size_t _data_length;
 
     //!
-    //! \brief
+    //! \brief Always use \c set_dimensions() to set
+    //! this
     //! \sa rows()
+    //! \sa set_dimensions()
     //!
-    size_t          _rows;
+    size_t _rows;
 
     //!
-    //! \brief
+    //! \brief Always use \c set_dimensions() to set
+    //! this
     //! \sa cols()
+    //! \sa set_dimensions()
     //!
-    size_t          _cols;
+    size_t _cols;
 
     //!
     //! \brief
     //! \sa manages_own_data()
     //!
-    bool            _manage_data;
+    bool _manage_data;
 
 protected:
     //!
-    //! \brief Free all managed data
-    //! \sa ~VideoFrame
+    //! \brief Set dimensions in conjunction with
+    //! colour space requirements
     //!
-    void clear();
+    //! \param cols
+    //! \param rows
+    //! \sa VideoFrame(enum ColourSpace, size_t, size_t)
+    //!
+    void set_dimensions(size_t cols, size_t rows);
+
+    //!
+    //! \brief Allocate / extend memory and set data
+    //! length indicator, ONLY IF managing own data
+    //! \param data_length passed to avoid allocating
+    //! in case existing memory satisfies the length
+    //! requirement
+    //! \sa _data
+    //! \sa _data_length
+    //! \sa _manage_data
+    //!
+    void allocate_memory(size_t data_length);
+
+    //!
+    //! \brief Free any managed memory, and set all
+    //! spec variables to 0 or \c nullptr
+    //! \sa _manage_data
+    //! \sa _data
+    //! \sa _data_length
+    //! \sa _cols
+    //! \sa _rows
+    //!
+    void free_memory();
+
+    //!
+    //! \brief Compute how much memory is needed, based
+    //! on column and row specs
+    //! \sa _manage_data
+    //! \sa _cols
+    //! \sa _rows
+    //! \throw BasicException if \c _colour not set
+    //! properly
+    //!
+    size_t get_data_length() const;
+
+    //!
+    //! \brief Set all pixels of frame to black
+    //!
+    void set_pixels_black();
 };
 
 }
-
-//!
-//! \brief A class to represent a video frame with BGRA pixels
-//!
-//! We set the format to BGRA, simply because this is native to
-//! most GPUs in the wild and should be faster to load than traditional
-//! RGB (due to 4 byte alignment) and RGBA due to less reordering
-//! on the GPU but this is all probably hardware dependent.
-class VideoFrame_BGRA : public gg::VideoFrame
-{
-public:
-    //!
-    //! \brief Constructor that by default will use externally
-    //! managed frame data
-    //! \param manage_data
-    //!
-    VideoFrame_BGRA(bool manage_data=false);
-
-    //!
-    //! \brief Allocates memory for specified dimensions, and
-    //! sets all pixels to black
-    //! \param rows
-    //! \param cols
-    //!
-    VideoFrame_BGRA(const size_t rows, const size_t cols);
-
-#ifdef USE_OPENCV
-    //!
-    //! \brief OpenCV based constructor
-    //! \param mat
-    //! \param manage_data
-    //!
-    VideoFrame_BGRA(const cv::Mat & mat, bool manage_data=false);
-#endif // USE_OPENCV
-
-    //!
-    //! \brief Constructor with full data and parameter specs
-    //! \param data if \c manage_data is set, all data in this
-    //! will be copied; otherwise this \c data will be used (i.e.
-    //! pointer will be copied)
-    //! \param rows
-    //! \param cols
-    //! \param manage_data
-    //!
-    VideoFrame_BGRA(unsigned char * data, size_t rows, size_t cols, bool manage_data=false);
-
-    //!
-    //! \brief Copy data from \c rhs, also setting data management
-    //! \param rhs
-    //! \sa manages_own_data
-    //!
-    VideoFrame_BGRA(const VideoFrame_BGRA & rhs);
-
-public:
-    //!
-    //! \brief operator =
-    //! \param rhs
-    //! \sa VideoFrame(const VideoFrame & rhs)
-    //!
-    void operator=(const VideoFrame_BGRA & rhs);
-
-#ifdef USE_OPENCV
-    //!
-    //! \brief Initialise from passed OpenCV \c mat, based on the
-    //! data management setting
-    //! \param mat
-    //! \sa manages_own_data
-    //!
-    void init_from_opencv_mat(const cv::Mat & mat);
-#endif // USE_OPENCV
-
-    //!
-    //! \brief Initialise from passed \c data, based on the data
-    //! management setting
-    //! \param data
-    //! \param rows
-    //! \param cols
-    //! \sa manages_own_data
-    //!
-    void init_from_pointer(unsigned char * data, size_t rows, size_t cols);
-
-    //!
-    //! \brief Get number of channels, i.e. 4 in BGRA
-    //! \return
-    //!
-    size_t channels() const
-    {
-        return 4;
-    }
-
-private:
-    //!
-    //! \brief
-    //! \param rhs
-    //! \sa VideoFrame(const VideoFrame & rhs)
-    //!
-    void clone(const VideoFrame_BGRA &rhs);
-};
-
-#endif

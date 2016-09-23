@@ -41,8 +41,10 @@ OPTION(BUILD_TESTS
     "Tests (requires pytest)" OFF)
 OPTION(BUILD_PYTHON
     "GIFT-Grab Python API (requires Python and Boost.Python)" OFF)
+OPTION(USE_BGRA
+    "Capture video in BGRA colour space (requires OpenCV)" ON)
 OPTION(USE_I420
-    "Capture video in I420 colour space (requires libVLC)" OFF)
+    "Capture video in I420 colour space (requires libVLC)" ON)
 OPTION(GENERATE_PERFORMANCE_OUTPUT
     "Performance benchmark reports (requires Boost.Timer and Boost.System)" OFF)
 MARK_AS_ADVANCED(GENERATE_PERFORMANCE_OUTPUT)
@@ -64,8 +66,15 @@ if(USE_X265 AND NOT ENABLE_GPL)
         "x265 is a GPL library: you must explicitly enable GPL (ENABLE_GPL=ON) to build GIFT-Grab with x265 support")
 endif(USE_X265 AND NOT ENABLE_GPL)
 
+# Check at least one colour space activated if using Epiphan DVI2PCIe Duo
+if(USE_EPIPHAN_DVI2PCIE_DUO)
+    if(NOT USE_BGRA AND NOT USE_I420)
+        MESSAGE(FATAL_ERROR "At least one colour space must be activated to use Epiphan DVI2PCIe Duo")
+    endif(NOT USE_BGRA AND NOT USE_I420)
+endif(USE_EPIPHAN_DVI2PCIE_DUO)
+
 # Determine whether OpenCV needed
-if((USE_EPIPHAN_DVI2PCIE_DUO AND NOT USE_I420) OR
+if((USE_EPIPHAN_DVI2PCIE_DUO AND USE_BGRA) OR
     USE_XVID)
     SET(USE_OPENCV ON CACHE BOOL "OFF ON" FORCE)
 endif()
@@ -140,9 +149,6 @@ endif(USE_X265)
 # Support for I420 (YUV420p) colour space
 if(USE_I420)
     ADD_DEFINITIONS(-DUSE_I420)
-
-    LIST(APPEND HEADERS api/videoframe_i420.h)
-    LIST(APPEND SOURCES api/videoframe_i420.cpp)
 endif(USE_I420)
 
 # libVLC video source

@@ -1,11 +1,7 @@
-#ifndef __IVIDEOSOURCE_H__
-#define __IVIDEOSOURCE_H__
+#pragma once
 
 #include "videoframe.h"
 #include "except.h"
-#ifdef USE_I420
-#include "videoframe_i420.h"
-#endif
 
 //!
 //! \brief This abstract class defines the interface that every video source
@@ -34,23 +30,14 @@ public:
 
     //!
     //! \brief Grab next available \c frame
-    //! \param frame
-    //! \return
+    //! \param frame the caller is responsible for making
+    //! sure the colour space of \c frame matches that of
+    //! \c this object
+    //! \return \c false if the colour space of \c frame
+    //! mismatches that of \c this object OR if there is
+    //! a problem with the acquisition, \c true otherwise
     //!
-    virtual bool get_frame(VideoFrame_BGRA & frame) = 0;
-
-#ifdef USE_I420
-    //!
-    //! \brief Grab next available frame using
-    //! I420 colour space
-    //! \param frame
-    //! \return
-    //!
-    virtual bool get_frame(gg::VideoFrame_I420 & frame)
-    {
-        throw gg::VideoSourceError("By default, get_frame(VideoFrame_I420 & frame) not implemented");
-    }
-#endif
+    virtual bool get_frame(gg::VideoFrame & frame) = 0;
 
     //!
     //! \brief Get frame rate of used source
@@ -119,5 +106,3 @@ protected:
     //!
     unsigned int    _num_burn_frames;
 };
-
-#endif

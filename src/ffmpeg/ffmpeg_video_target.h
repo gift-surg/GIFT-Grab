@@ -126,11 +126,7 @@ public:
 public:
     void init(const std::string filepath, const float framerate);
 
-    void append(const VideoFrame_BGRA & frame);
-
-#ifdef USE_I420
-    void append(const VideoFrame_I420 & frame);
-#endif
+    void append(const VideoFrame & frame);
 
     void finalise();
 

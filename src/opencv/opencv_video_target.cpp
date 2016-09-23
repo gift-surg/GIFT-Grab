@@ -28,8 +28,11 @@ void VideoTargetOpenCV::init(const std::string filepath, const float framerate)
     _framerate = framerate;
 }
 
-void VideoTargetOpenCV::append(const VideoFrame_BGRA & frame)
+void VideoTargetOpenCV::append(const VideoFrame & frame)
 {
+    if (frame.colour() != ColourSpace::BGRA)
+        throw VideoTargetError("OpenCV video target supports only BGRA");
+
     // TODO if not init?
     if (not _writer.isOpened())
     {

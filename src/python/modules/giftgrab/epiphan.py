@@ -14,8 +14,6 @@ import pygiftgrab
 
 MAX_X = 1920
 MAX_Y = 1080
-BGR24 = 86224  # 8 => B, 6 => G, 2 => R :)
-I420 = 1420  # 1 => I :)
 
 
 class Recorder(Thread):
@@ -47,7 +45,8 @@ class Recorder(Thread):
 
         @param port `pygiftgrab.Device.DVI2PCIeDuo_SDI` or
         `pygiftgrab.Device.DVI2PCIeDuo_DVI`
-        @param colour_space `BGR24` or `I420`
+        @param colour_space `pygiftgrab.ColourSpace.BGRA` or
+        `pygiftgrab.ColourSpace.I420`
         @param frame_rate Epiphan DVI2PCIe Duo supports up to 60 fps
         at ``1920 x 1080``, when using a single port, and 37 fps when using
         both ports (when capturing in the RGB24 colour space)
@@ -78,7 +77,8 @@ class Recorder(Thread):
         self.device = None
         self.black_frame = None
         if self.__create_video_writer() and self.timeout_limit > 0 \
-           and (self.colour_space == BGR24 or self.colour_space == I420):
+           and (self.colour_space == pygiftgrab.ColourSpace.BGRA or \
+                self.colour_space == pygiftgrab.ColourSpace.I420):
             self.is_running = True
 
     def run(self):
@@ -96,10 +96,7 @@ class Recorder(Thread):
                 return
 
             inter_frame_duration = self.__inter_frame_duration()
-            if self.colour_space == BGR24:
-                frame = pygiftgrab.VideoFrame_BGRA(False)
-            elif self.colour_space == I420:
-                frame = pygiftgrab.VideoFrame_I420(False)
+            frame = pygiftgrab.VideoFrame(self.colour_space, False)
             self.resume_recording()  # i.e. start recording
 
             while self.is_running:
@@ -208,18 +205,12 @@ class Recorder(Thread):
                 cols = MAX_X
                 rows = MAX_Y
 
-            if self.colour_space == BGR24:
-                tmp_frame = pygiftgrab.VideoFrame_BGRA(False)
-            elif self.colour_space == I420:
-                tmp_frame = pygiftgrab.VideoFrame_I420(False)
+            tmp_frame = pygiftgrab.VideoFrame(self.colour_space, False)
             got_frame = self.device.get_frame(tmp_frame)
             if got_frame:
                 cols = tmp_frame.cols()
                 rows = tmp_frame.rows()
-            if self.colour_space == BGR24:
-                self.black_frame = pygiftgrab.VideoFrame_BGRA(rows, cols)
-            elif self.colour_space == I420:
-                self.black_frame = pygiftgrab.VideoFrame_I420(cols, rows)
+            self.black_frame = pygiftgrab.VideoFrame(self.colour_space, cols, rows)
         else:
             return
 
@@ -339,7 +330,7 @@ class Recorder(Thread):
         while attempts < self.max_num_attempts:
             attempts += 1
             try:
-                self.device = pygiftgrab.Factory.connect(self.port)
+                self.device = pygiftgrab.Factory.connect(self.port, self.colour_space)
             except IOError as e:
                 logging.error(
                     'Attempt #' + str(attempts) + ' of ' +
@@ -414,9 +405,9 @@ def __colour_space_to_str(epiphan_colour_space):
     @return
     @throw ValueError if invalid value given
     """
-    if epiphan_colour_space == BGR24:
-        return 'BGR24'
-    elif epiphan_colour_space == I420:
+    if epiphan_colour_space == pygiftgrab.ColourSpace.BGRA:
+        return 'BGRA'
+    elif epiphan_colour_space == pygiftgrab.ColourSpace.I420:
         return 'I420'
     else:
         raise ValueError('Could not recognise colour space ' +
@@ -430,10 +421,10 @@ def __str_to_colour_space(epiphan_colour_space):
     @return
     @throw ValueError if invalid string given
     """
-    if epiphan_colour_space == 'BGR24':
-        return BGR24
+    if epiphan_colour_space == 'BGRA':
+        return pygiftgrab.ColourSpace.BGRA
     elif epiphan_colour_space == 'I420':
-        return I420
+        return pygiftgrab.ColourSpace.I420
     else:
         raise ValueError('Could not recognise colour space ' +
                          epiphan_colour_space)
@@ -465,9 +456,9 @@ def parse(file_path):
             raise yaml.YAMLError('Could not parse ' + file_path)
         colour_space = __str_to_colour_space(data['colour_space'])
         frame_rate = data['frame_rate']
-        if colour_space == BGR24:
+        if colour_space == pygiftgrab.ColourSpace.BGRA:
             max_frame_rate = 29
-        elif colour_space == I420:
+        elif colour_space == pygiftgrab.ColourSpace.I420:
             max_frame_rate = 59
         if not 0 < frame_rate <= max_frame_rate:
             raise ValueError('Supporting only up to ' + str(max_frame_rate) +

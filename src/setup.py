@@ -78,7 +78,8 @@ class GiftGrabInstallCommand(install):
 
     user_options = install.user_options + \
                   [('epiphan-dvi2pcie-duo', None, None),
-                   ('i420', None, None),
+                   ('no-bgra', None, None),
+                   ('no-i420', None, None),
                    ('xvid', None, None),
                    ('hevc', None, None),
                    ('x265', None, None),
@@ -96,8 +97,10 @@ class GiftGrabInstallCommand(install):
         str_rep = ''
         if self.epiphan_dvi2pcie_duo:
             str_rep += 'Epiphan DVI2PCIe Duo,'
-        if self.i420:
-            str_rep += ' I420,'
+            if not self.no_bgra:
+                str_rep += ' BGRA,'
+            if not self.no_i420:
+                str_rep += ' I420,'
         if self.xvid:
             str_rep += ' Xvid,'
         if self.vp9:
@@ -115,7 +118,8 @@ class GiftGrabInstallCommand(install):
     def initialize_options(self):
         install.initialize_options(self)
         self.epiphan_dvi2pcie_duo = None
-        self.i420 = None
+        self.no_bgra = None
+        self.no_i420 = None
         self.xvid = None
         self.hevc = None
         self.x265 = None
@@ -213,22 +217,23 @@ class GiftGrabInstallCommand(install):
         self.__check_command(cmd, err_msg)
 
         # check OpenCV
-        if (self.epiphan_dvi2pcie_duo and not self.i420) \
+        if (self.epiphan_dvi2pcie_duo and not self.no_bgra) \
            or self.xvid:
             cmd = ['cmake', join(join(self.here, 'cmake'), 'opencv')]
             err_msg = '%s\n%s%s' % (
                 'OpenCV does not seem to be installed on your system.',
                 'OpenCV is needed for Xvid and Epiphan DVI2PCIe Duo ',
-                '(without EpiphanSDK) support.'
+                'support using the BGRA colour space.'
             )
             self.__check_command(cmd, err_msg)
 
         # check libVLC
-        if self.epiphan_dvi2pcie_duo and self.i420:
+        if self.epiphan_dvi2pcie_duo and not self.no_i420:
             cmd = ['cmake', join(join(self.here, 'cmake'), 'libvlc')]
-            err_msg = '%s\n%s' % (
+            err_msg = '%s\n%s%s' % (
                 'libVLC does not seem to be installed on your system.',
-                'libVLC is needed for I420 colour space support.'
+                'libVLC is needed for Epiphan DVI2PCIe Duo support ',
+                'using the I420 colour space.'
             )
             self.__check_command(cmd, err_msg)
 
@@ -340,8 +345,10 @@ class GiftGrabInstallCommand(install):
                 cmake_args.append('-DUSE_X265=ON')
         if self.vp9:
             cmake_args.append('-DUSE_VP9=ON')
-        if self.i420:
-            cmake_args.append('-DUSE_I420=ON')
+        if self.no_bgra:
+            cmake_args.append('-DUSE_BGRA=OFF')
+        if self.no_i420:
+            cmake_args.append('-DUSE_I420=OFF')
         cmake_args.append('-DCMAKE_INSTALL_PREFIX=%s' % (
                           cmake_install_prefix()))
         cmd = ['cmake', self.here]
@@ -421,18 +428,22 @@ description = 'GIFT-Grab was developed as part of the GIFT-Surg project ' +\
 description = '%s\n\n%s' % (summary, description)
 console_scripts = []
 for port in ['sdi', 'dvi']:
-    for colour_space in ['bgr24', 'i420']:
+    for colour_space in ['bgra', 'i420']:
         for codec in ['xvid', 'hevc', 'vp9']:
              record_script = 'edd-{}-{}-{}'.format(
                  port, colour_space, codec)
              record_script += '=giftgrab.utils:record_epiphan_dvi2pcieduo_{}_{}_{}'.format(
                  port, colour_space, codec)
              console_scripts.append(record_script)
+for colour_space in ['bgra', 'i420']:
+    for codec in ['xvid', 'hevc', 'vp9']:
+        target_script = 'test-giftgrab-{}-{}'.format(
+            codec, colour_space)
+        target_script += '=giftgrab.tests:test_{}_{}'.format(
+            codec, colour_space)
+        console_scripts.append(target_script)
 console_scripts = console_scripts +\
-                  ['test-giftgrab-hevc=giftgrab.tests:test_hevc',
-                   'test-giftgrab-xvid=giftgrab.tests:test_xvid',
-                   'test-giftgrab-vp9=giftgrab.tests:test_vp9',
-                   'test-giftgrab-epiphan-dvi2pcieduo-bgr24=giftgrab.tests:test_epiphan_dvi2pcieduo_bgr24',
+                  ['test-giftgrab-epiphan-dvi2pcieduo-bgra=giftgrab.tests:test_epiphan_dvi2pcieduo_bgra',
                    'test-giftgrab-epiphan-dvi2pcieduo-i420=giftgrab.tests:test_epiphan_dvi2pcieduo_i420']
 setup(
     name='gift-grab',

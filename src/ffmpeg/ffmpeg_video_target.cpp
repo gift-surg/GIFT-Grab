@@ -102,17 +102,29 @@ void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
     _first_frame = true;
 }
 
-void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
+void VideoTargetFFmpeg::append(const VideoFrame & frame)
 {
     { // START auto_cpu_timer scope
 #ifdef GENERATE_PERFORMANCE_OUTPUT
     boost::timer::auto_cpu_timer t(this_class_str + "1-ffmpeg_frame" + timer_format_str);
 #endif
+    AVPixelFormat colour;
+    switch (frame.colour())
+    {
+    case ColourSpace::BGRA:
+        colour = AV_PIX_FMT_BGRA;
+        break;
+    case ColourSpace::I420:
+        colour = AV_PIX_FMT_YUV420P;
+        break;
+    default:
+        throw VideoTargetError("Only BGRA and I420 colour spaces supported currently");
+        break;
+    }
 
-    ffmpeg_frame(frame.data(),
-                 frame.data_length(),
+    ffmpeg_frame(frame.data(), frame.data_length(),
                  frame.cols(), frame.rows(),
-                 AV_PIX_FMT_BGRA, _frame);
+                 colour, _frame);
     } // END auto_cpu_timer scope
 
     { // START auto_cpu_timer scope
@@ -126,30 +138,6 @@ void VideoTargetFFmpeg::append(const VideoFrame_BGRA & frame)
 
     } // END auto_cpu_timer scope
 }
-
-#ifdef USE_I420
-void VideoTargetFFmpeg::append(const VideoFrame_I420 & frame)
-{
-    { // START auto_cpu_timer scope
-#ifdef GENERATE_PERFORMANCE_OUTPUT
-    boost::timer::auto_cpu_timer t(this_class_str + "1-ffmpeg_frame" + timer_format_str);
-#endif
-
-    ffmpeg_frame(frame.data(), frame.data_length(),
-                 frame.cols(), frame.rows(),
-                 AV_PIX_FMT_YUV420P, _frame);
-    } // END auto_cpu_timer scope
-
-    { // START auto_cpu_timer scope
-#ifdef GENERATE_PERFORMANCE_OUTPUT
-    boost::timer::auto_cpu_timer t(this_class_str + "1-encode_and_write" + timer_format_str);
-#endif
-
-    int got_output;
-    encode_and_write(_frame, got_output);
-    } // END auto_cpu_timer scope
-}
-#endif
 
 void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
                                      const size_t data_length,
