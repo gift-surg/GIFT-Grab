@@ -110,7 +110,6 @@ void VideoSourceVLC::init_vlc()
         sprintf(smem_options,
                 "%stranscode{vcodec=I420,vfilter=croppadd{",
                 smem_options);
-        bool add_comma = false;
         if (croptop > 0)
         {
             sprintf(smem_options, "%scroptop=%u", smem_options, croptop);
