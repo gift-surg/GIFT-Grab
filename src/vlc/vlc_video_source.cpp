@@ -9,6 +9,7 @@ namespace gg
 
 VideoSourceVLC::VideoSourceVLC(const std::string path)
     : _vlc_inst(nullptr)
+    , _vlc_media(nullptr)
     , _vlc_mp(nullptr)
     , _running(false)
     , _video_buffer(nullptr)
@@ -74,9 +75,7 @@ void VideoSourceVLC::set_sub_frame(int x, int y, int width, int height)
         y >= _full.y and y + height <= _full.y + _full.height)
     {
         stop_vlc();
-        release_vlc();
         set_crop(x, y, width, height);
-        init_vlc();
         run_vlc();
     }
 }
@@ -85,9 +84,7 @@ void VideoSourceVLC::set_sub_frame(int x, int y, int width, int height)
 void VideoSourceVLC::get_full_frame()
 {
     stop_vlc();
-    release_vlc();
     reset_crop();
-    init_vlc();
     run_vlc();
 }
 
@@ -109,21 +106,30 @@ void VideoSourceVLC::init_vlc()
     if (_vlc_inst == nullptr)
         throw VideoSourceError("Could not create VLC engine");
 
-    // VLC media
-    libvlc_media_t * vlc_media = nullptr;
     // If path contains a colon (:), it will be treated as a
     // URL. Else, it will be considered as a local path.
     if (_path.find(":") == std::string::npos)
-        vlc_media = libvlc_media_new_path(_vlc_inst, _path.c_str());
+        _vlc_media = libvlc_media_new_path(_vlc_inst, _path.c_str());
     else
-        vlc_media = libvlc_media_new_location(_vlc_inst, _path.c_str());
-    if (vlc_media == nullptr)
+        _vlc_media = libvlc_media_new_location(_vlc_inst, _path.c_str());
+    if (_vlc_media == nullptr)
         throw VideoSourceError(std::string("Could not open ").append(_path));
 
+    // Create a media player playing environement
+    _vlc_mp = libvlc_media_player_new_from_media(_vlc_media);
+    if (_vlc_mp == nullptr)
+        throw VideoSourceError("Could not create VLC media player");
+}
+
+
+void VideoSourceVLC::run_vlc()
+{
+    // compose the processing pipeline description
     char pipeline[512];
     sprintf(pipeline, "#");
+    // colour space specification
     sprintf(pipeline, "%stranscode{vcodec=I420", pipeline);
-    if (_sub != nullptr)
+    if (_sub != nullptr) // cropping video?
     {
         unsigned int croptop = _sub->y,
                      cropbottom = _full.height - (_sub->y + _sub->height),
@@ -155,6 +161,7 @@ void VideoSourceVLC::init_vlc()
         sprintf(pipeline, "%s}", pipeline);
     }
     sprintf(pipeline, "%s}:", pipeline);
+    // callbacks
     sprintf(pipeline,
             "%ssmem{video-data=%lld,video-prerender-callback=%lld,video-postrender-callback=%lld}",
             pipeline,
@@ -162,27 +169,16 @@ void VideoSourceVLC::init_vlc()
             (long long int)(intptr_t)(void*) &VideoSourceVLC::prepareRender,
             (long long int)(intptr_t)(void*) &VideoSourceVLC::handleStream );
 
-    char sout_options[1024];
-    sprintf(sout_options, ":sout=%s", pipeline);
-    libvlc_media_add_option(vlc_media, sout_options);
-
-    // Create a media player playing environement
-    _vlc_mp = libvlc_media_player_new_from_media(vlc_media);
-    if (_vlc_mp == nullptr)
-        throw VideoSourceError("Could not create VLC media player");
-
-    // No need to keep the media now
-    libvlc_media_release(vlc_media);
-}
-
-
-void VideoSourceVLC::run_vlc()
-{
     { // artificial scope for the mutex guard below
         std::lock_guard<std::mutex> data_lock_guard(_data_lock);
-        _running = true;
+
+        // activate pipeline in VLC media
+        char sout_options[1024];
+        sprintf(sout_options, ":sout=%s", pipeline);
+        libvlc_media_add_option(_vlc_media, sout_options);
 
         // play the media_player
+        _running = true;
         if (libvlc_media_player_play(_vlc_mp) != 0)
             throw VideoSourceError("Could not start VLC media player");
     }
@@ -206,6 +202,9 @@ void VideoSourceVLC::stop_vlc()
 
 void VideoSourceVLC::release_vlc()
 {
+    // free media
+    libvlc_media_release(_vlc_media);
+
     // free media player
     libvlc_media_player_release(_vlc_mp);
 

@@ -43,6 +43,11 @@ protected:
     libvlc_instance_t * _vlc_inst;
 
     //!
+    //! \brief VLC media
+    //!
+    libvlc_media_t * _vlc_media;
+
+    //!
     //! \brief Actual VLC player (streamer)
     //!
     libvlc_media_player_t * _vlc_mp;
