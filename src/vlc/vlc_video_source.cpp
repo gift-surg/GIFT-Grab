@@ -152,7 +152,8 @@ void VideoSourceVLC::init_vlc()
         "--ignore-config", // Don't use VLC's config
         "--file-logging",
         //"--verbose=2", // Be much more verbose then normal for debugging purpose
-        "--no-audio"
+        "--no-audio",
+        "--no-video-title-show"
     };
 
     // We launch VLC
@@ -174,8 +175,6 @@ void VideoSourceVLC::init_vlc()
             ":sout=%s",
             pipeline);
     libvlc_media_add_option(vlc_media, sout_options);
-    libvlc_media_add_option(vlc_media, ":noaudio");
-    libvlc_media_add_option(vlc_media, ":no-video-title-show");
 
     // Create a media player playing environement
     _vlc_mp = libvlc_media_player_new_from_media(vlc_media);
