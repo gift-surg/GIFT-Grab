@@ -98,51 +98,51 @@ void VideoSourceVLC::init_vlc()
     libvlc_media_t * vlc_media = nullptr;
 
     // VLC options
-    char smem_options[512];
+    char pipeline[512];
 
-    sprintf(smem_options, "#");
-    sprintf(smem_options,
+    sprintf(pipeline, "#");
+    sprintf(pipeline,
             "%stranscode{vcodec=I420",
-            smem_options);
+            pipeline);
     if (_sub != nullptr)
     {
         unsigned int croptop = _sub->y,
                      cropbottom = _full.height - (_sub->y + _sub->height),
                      cropleft = _sub->x,
                      cropright = _full.width - (_sub->x + _sub->width);
-        sprintf(smem_options,
+        sprintf(pipeline,
                 "%s,vfilter=croppadd{",
-                smem_options);
+                pipeline);
         if (croptop > 0)
         {
-            sprintf(smem_options, "%scroptop=%u", smem_options, croptop);
+            sprintf(pipeline, "%scroptop=%u", pipeline, croptop);
             if (cropbottom > 0 or cropleft > 0 or cropright > 0)
-                sprintf(smem_options, "%s,", smem_options);
+                sprintf(pipeline, "%s,", pipeline);
         }
         if (cropbottom > 0)
         {
-            sprintf(smem_options, "%scropbottom=%u", smem_options, cropbottom);
+            sprintf(pipeline, "%scropbottom=%u", pipeline, cropbottom);
             if (cropleft > 0 or cropright > 0)
-                sprintf(smem_options, "%s,", smem_options);
+                sprintf(pipeline, "%s,", pipeline);
         }
         if (cropleft > 0)
         {
-            sprintf(smem_options, "%scropleft=%u", smem_options, cropleft);
+            sprintf(pipeline, "%scropleft=%u", pipeline, cropleft);
             if (cropright > 0)
-                sprintf(smem_options, "%s,", smem_options);
+                sprintf(pipeline, "%s,", pipeline);
         }
         if (cropright > 0)
         {
-            sprintf(smem_options, "%scropright=%u", smem_options, cropright);
+            sprintf(pipeline, "%scropright=%u", pipeline, cropright);
         }
-        sprintf(smem_options, "%s}", smem_options);
+        sprintf(pipeline, "%s}", pipeline);
     }
-    sprintf(smem_options,
+    sprintf(pipeline,
             "%s}:",
-            smem_options);
-    sprintf(smem_options,
+            pipeline);
+    sprintf(pipeline,
             "%ssmem{video-data=%lld,video-prerender-callback=%lld,video-postrender-callback=%lld}",
-            smem_options,
+            pipeline,
             (long long int)(intptr_t)(void*) this,
             (long long int)(intptr_t)(void*) &VideoSourceVLC::prepareRender,
             (long long int)(intptr_t)(void*) &VideoSourceVLC::handleStream );
@@ -152,8 +152,7 @@ void VideoSourceVLC::init_vlc()
         "--ignore-config", // Don't use VLC's config
         "--file-logging",
         //"--verbose=2", // Be much more verbose then normal for debugging purpose
-        "--no-audio",
-        "--sout", smem_options // Stream to memory
+        "--no-audio"
     };
 
     // We launch VLC
@@ -170,6 +169,11 @@ void VideoSourceVLC::init_vlc()
     if (vlc_media == nullptr)
         throw VideoSourceError(std::string("Could not open ").append(_path));
 
+    char sout_options[1024];
+    sprintf(sout_options,
+            ":sout=%s",
+            pipeline);
+    libvlc_media_add_option(vlc_media, sout_options);
     libvlc_media_add_option(vlc_media, ":noaudio");
     libvlc_media_add_option(vlc_media, ":no-video-title-show");
 
