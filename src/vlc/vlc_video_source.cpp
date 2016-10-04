@@ -83,15 +83,14 @@ void VideoSourceVLC::set_sub_frame(int x, int y, int width, int height)
 
 void VideoSourceVLC::get_full_frame()
 {
-    stop_vlc();
-    reset_crop();
-    run_vlc();
+    set_sub_frame(_full.x, _full.y, _full.width, _full.height);
 }
 
 
 void VideoSourceVLC::init_vlc()
 {
-    // VLC options
+    // VLC global options (valid for the lifetime of the program)
+    // see `vlc --help` for the difference between `--option` and `:option`
     const char * const vlc_args[] = {
         "-I", "dummy", // Don't use any interface
         "--ignore-config", // Don't use VLC's config
