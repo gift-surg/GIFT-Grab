@@ -94,25 +94,42 @@ void VideoSourceVLC::get_full_frame()
 
 void VideoSourceVLC::init_vlc()
 {
-    // VLC pointers
-    libvlc_media_t * vlc_media = nullptr;
-
     // VLC options
-    char pipeline[512];
+    const char * const vlc_args[] = {
+        "-I", "dummy", // Don't use any interface
+        "--ignore-config", // Don't use VLC's config
+        "--file-logging",
+        //"--verbose=2", // Be much more verbose then normal for debugging purpose
+        "--no-audio",
+        "--no-video-title-show"
+    };
 
+    // We launch VLC
+    _vlc_inst = libvlc_new(sizeof(vlc_args) / sizeof(vlc_args[0]), vlc_args);
+    if (_vlc_inst == nullptr)
+        throw VideoSourceError("Could not create VLC engine");
+
+    // VLC media
+    libvlc_media_t * vlc_media = nullptr;
+    // If path contains a colon (:), it will be treated as a
+    // URL. Else, it will be considered as a local path.
+    if (_path.find(":") == std::string::npos)
+        vlc_media = libvlc_media_new_path(_vlc_inst, _path.c_str());
+    else
+        vlc_media = libvlc_media_new_location(_vlc_inst, _path.c_str());
+    if (vlc_media == nullptr)
+        throw VideoSourceError(std::string("Could not open ").append(_path));
+
+    char pipeline[512];
     sprintf(pipeline, "#");
-    sprintf(pipeline,
-            "%stranscode{vcodec=I420",
-            pipeline);
+    sprintf(pipeline, "%stranscode{vcodec=I420", pipeline);
     if (_sub != nullptr)
     {
         unsigned int croptop = _sub->y,
                      cropbottom = _full.height - (_sub->y + _sub->height),
                      cropleft = _sub->x,
                      cropright = _full.width - (_sub->x + _sub->width);
-        sprintf(pipeline,
-                "%s,vfilter=croppadd{",
-                pipeline);
+        sprintf(pipeline, "%s,vfilter=croppadd{", pipeline);
         if (croptop > 0)
         {
             sprintf(pipeline, "%scroptop=%u", pipeline, croptop);
@@ -137,9 +154,7 @@ void VideoSourceVLC::init_vlc()
         }
         sprintf(pipeline, "%s}", pipeline);
     }
-    sprintf(pipeline,
-            "%s}:",
-            pipeline);
+    sprintf(pipeline, "%s}:", pipeline);
     sprintf(pipeline,
             "%ssmem{video-data=%lld,video-prerender-callback=%lld,video-postrender-callback=%lld}",
             pipeline,
@@ -147,33 +162,8 @@ void VideoSourceVLC::init_vlc()
             (long long int)(intptr_t)(void*) &VideoSourceVLC::prepareRender,
             (long long int)(intptr_t)(void*) &VideoSourceVLC::handleStream );
 
-    const char * const vlc_args[] = {
-        "-I", "dummy", // Don't use any interface
-        "--ignore-config", // Don't use VLC's config
-        "--file-logging",
-        //"--verbose=2", // Be much more verbose then normal for debugging purpose
-        "--no-audio",
-        "--no-video-title-show"
-    };
-
-    // We launch VLC
-    _vlc_inst = libvlc_new(sizeof(vlc_args) / sizeof(vlc_args[0]), vlc_args);
-    if (_vlc_inst == nullptr)
-        throw VideoSourceError("Could not create VLC engine");
-
-    // If path contains a colon (:), it will be treated as a
-    // URL. Else, it will be considered as a local path.
-    if (_path.find(":") == std::string::npos)
-        vlc_media = libvlc_media_new_path(_vlc_inst, _path.c_str());
-    else
-        vlc_media = libvlc_media_new_location(_vlc_inst, _path.c_str());
-    if (vlc_media == nullptr)
-        throw VideoSourceError(std::string("Could not open ").append(_path));
-
     char sout_options[1024];
-    sprintf(sout_options,
-            ":sout=%s",
-            pipeline);
+    sprintf(sout_options, ":sout=%s", pipeline);
     libvlc_media_add_option(vlc_media, sout_options);
 
     // Create a media player playing environement
