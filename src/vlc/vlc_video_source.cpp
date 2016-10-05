@@ -256,17 +256,10 @@ void VideoSourceVLC::prepareRender(VideoSourceVLC * p_video_data,
     if (p_video_data->_running)
     {
         if (size > p_video_data->_data_length)
-        {
-            if (p_video_data->_data_length == 0)
-                p_video_data->_video_buffer = reinterpret_cast<uint8_t *>(
-                            malloc(size * sizeof(uint8_t))
-                            );
-            else
-                p_video_data->_video_buffer = reinterpret_cast<uint8_t *>(
-                            realloc(p_video_data->_video_buffer, size * sizeof(uint8_t))
-                            );
-        }
-        p_video_data->_data_length = size;
+            p_video_data->_video_buffer = reinterpret_cast<uint8_t *>(
+                        realloc(p_video_data->_video_buffer, size * sizeof(uint8_t))
+                        );
+        p_video_data->_data_length = p_video_data->_video_buffer != nullptr ? size : 0;
 
         *pp_pixel_buffer = p_video_data->_video_buffer;
     }
