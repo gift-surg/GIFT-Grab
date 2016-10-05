@@ -220,14 +220,9 @@ void VideoSourceVLC::clear()
 
 void VideoSourceVLC::determine_full()
 {
-    unsigned int width, height;
-    if (libvlc_video_get_size(_vlc_mp, 0, &width, &height) != 0)
-        throw VideoSourceError("Could not get video dimensions");
-
+    get_frame_dimensions((int&)_full.width, (int&)_full.height);
     _full.x = 0;
     _full.y = 0;
-    _full.width = width;
-    _full.height = height;
 }
 
 
