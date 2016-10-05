@@ -127,9 +127,8 @@ void VideoSourceVLC::run_vlc()
 {
     // compose the processing pipeline description
     char pipeline[512];
-    sprintf(pipeline, "#");
-    // colour space specification
-    sprintf(pipeline, "%stranscode{vcodec=I420", pipeline);
+    // open transcode step
+    sprintf(pipeline, "#transcode{");
     // cropping sub-frame
     unsigned int croptop = 0, cropbottom = 0, cropleft = 0, cropright = 0;
     if (_sub != nullptr) // cropping video?
@@ -139,13 +138,15 @@ void VideoSourceVLC::run_vlc()
         cropleft = std::max(_sub->x, cropleft),
         cropright = std::max(_full.width - (_sub->x + _sub->width), cropright);
     }
-    sprintf(pipeline, "%s,vfilter=croppadd{", pipeline);
+    sprintf(pipeline, "%svfilter=croppadd{", pipeline);
     sprintf(pipeline, "%scroptop=%u,", pipeline, croptop);
     sprintf(pipeline, "%scropbottom=%u,", pipeline, cropbottom);
     sprintf(pipeline, "%scropleft=%u,", pipeline, cropleft);
     sprintf(pipeline, "%scropright=%u", pipeline, cropright);
     sprintf(pipeline, "%s}", pipeline);
-
+    // colour space specification
+    sprintf(pipeline, "%s,vcodec=I420", pipeline);
+    // close transcode step
     sprintf(pipeline, "%s}:", pipeline);
     // callbacks
     sprintf(pipeline,
