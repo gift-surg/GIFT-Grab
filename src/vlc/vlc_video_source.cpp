@@ -128,22 +128,22 @@ void VideoSourceVLC::run_vlc()
     sprintf(pipeline, "#");
     // colour space specification
     sprintf(pipeline, "%stranscode{vcodec=I420", pipeline);
+    // cropping sub-frame
+    unsigned int croptop = 0, cropbottom = 0, cropleft = 0, cropright = 0;
     if (_sub != nullptr) // cropping video?
     {
-        unsigned int zero = 0;
-        unsigned int croptop = std::max(_sub->y, zero),
-                     cropbottom = std::max(_full.height - (_sub->y + _sub->height), zero),
-                     cropleft = std::max(_sub->x, zero),
-                     cropright = std::max(_full.width - (_sub->x + _sub->width), zero);
-        sprintf(pipeline, "%s,vfilter=croppadd{", pipeline);
-
-        sprintf(pipeline, "%scroptop=%u,", pipeline, croptop);
-        sprintf(pipeline, "%scropbottom=%u,", pipeline, cropbottom);
-        sprintf(pipeline, "%scropleft=%u,", pipeline, cropleft);
-        sprintf(pipeline, "%scropright=%u", pipeline, cropright);
-
-        sprintf(pipeline, "%s}", pipeline);
+        croptop = std::max(_sub->y, croptop),
+        cropbottom = std::max(_full.height - (_sub->y + _sub->height), cropbottom),
+        cropleft = std::max(_sub->x, cropleft),
+        cropright = std::max(_full.width - (_sub->x + _sub->width), cropright);
     }
+    sprintf(pipeline, "%s,vfilter=croppadd{", pipeline);
+    sprintf(pipeline, "%scroptop=%u,", pipeline, croptop);
+    sprintf(pipeline, "%scropbottom=%u,", pipeline, cropbottom);
+    sprintf(pipeline, "%scropleft=%u,", pipeline, cropleft);
+    sprintf(pipeline, "%scropright=%u", pipeline, cropright);
+    sprintf(pipeline, "%s}", pipeline);
+
     sprintf(pipeline, "%s}:", pipeline);
     // callbacks
     sprintf(pipeline,
