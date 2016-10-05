@@ -10,6 +10,10 @@ sub_x = 0
 sub_y = 0
 sub_width = 0
 sub_height = 0
+sub2_x = 0
+sub2_y = 0
+sub2_width = 0
+sub2_height = 0
 
 
 @yield_fixture(scope='session')
@@ -46,6 +50,15 @@ def peri_test(port, colour_space):
     assert sub_x + sub_width < width
     assert sub_y + sub_height < height
 
+    global sub2_x, sub2_y, sub2_width, sub2_height
+    sub2_width = width // 5
+    sub2_height = height // 5
+    sub2_x = width // 6
+    sub2_y = height // 6
+    # health checks
+    assert sub2_x + sub2_width < width
+    assert sub2_y + sub2_height < height
+
     # Run test
     yield
 
@@ -79,6 +92,12 @@ def test_sub_frame():
     assert source.get_frame(frame)
     assert frame.cols() == sub_width
     assert frame.rows() == sub_height
+
+    source.set_sub_frame(sub2_x, sub2_y,
+                         sub2_width, sub2_height)
+    assert source.get_frame(frame)
+    assert frame.cols() == sub2_width
+    assert frame.rows() == sub2_height
 
 
 @mark.unit

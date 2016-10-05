@@ -102,7 +102,13 @@ public:
     //! \brief Initialise video source using given \c path
     //! and start streaming
     //!
-    //! \param path as in list provided in class description
+    //! \param path as in list provided in class description.
+    //! Note that due to the way this class is architected,
+    //! it is not suitable for use with files, but only with
+    //! live streams.
+    //!
+    //! \sa get_full_frame
+    //! \sa set_sub_frame
     //!
     //! \throw gg::VideoSourceError with a detailed message
     //! in case \c path cannot be opened

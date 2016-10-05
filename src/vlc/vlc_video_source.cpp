@@ -35,11 +35,11 @@ VideoSourceVLC::~VideoSourceVLC()
 bool VideoSourceVLC::get_frame_dimensions(int & width, int & height)
 {
     std::lock_guard<std::mutex> data_lock_guard(_data_lock);
-    if(this->_cols == 0 || this->_rows == 0)
+    if(_cols == 0 || _rows == 0)
         return false;
 
-    width = this->_cols;
-    height = this->_rows;
+    width = _cols;
+    height = _rows;
     return true;
 }
 
@@ -70,14 +70,11 @@ double VideoSourceVLC::get_frame_rate()
 
 void VideoSourceVLC::set_sub_frame(int x, int y, int width, int height)
 {
-    if (_sub != nullptr) return; // TODO: see issue #101
     if (x >= _full.x and x + width <= _full.x + _full.width and
         y >= _full.y and y + height <= _full.y + _full.height)
     {
         stop_vlc();
-        release_vlc();
         set_crop(x, y, width, height);
-        init_vlc();
         run_vlc();
     }
 }
@@ -86,76 +83,39 @@ void VideoSourceVLC::set_sub_frame(int x, int y, int width, int height)
 void VideoSourceVLC::get_full_frame()
 {
     stop_vlc();
-    release_vlc();
     reset_crop();
-    init_vlc();
     run_vlc();
 }
 
 
 void VideoSourceVLC::init_vlc()
 {
-    // VLC pointers
-    libvlc_media_t * vlc_media = nullptr;
-
-    // VLC options
-    char smem_options[512];
-
-    sprintf(smem_options, "#");
-    if (_sub != nullptr)
-    {
-        unsigned int croptop = _sub->y,
-                     cropbottom = _full.height - (_sub->y + _sub->height),
-                     cropleft = _sub->x,
-                     cropright = _full.width - (_sub->x + _sub->width);
-        sprintf(smem_options,
-                "%stranscode{vcodec=I420,vfilter=croppadd{",
-                smem_options);
-        bool add_comma = false;
-        if (croptop > 0)
-        {
-            sprintf(smem_options, "%scroptop=%u", smem_options, croptop);
-            if (cropbottom > 0 or cropleft > 0 or cropright > 0)
-                sprintf(smem_options, "%s,", smem_options);
-        }
-        if (cropbottom > 0)
-        {
-            sprintf(smem_options, "%scropbottom=%u", smem_options, cropbottom);
-            if (cropleft > 0 or cropright > 0)
-                sprintf(smem_options, "%s,", smem_options);
-        }
-        if (cropleft > 0)
-        {
-            sprintf(smem_options, "%scropleft=%u", smem_options, cropleft);
-            if (cropright > 0)
-                sprintf(smem_options, "%s,", smem_options);
-        }
-        if (cropright > 0)
-        {
-            sprintf(smem_options, "%scropright=%u", smem_options, cropright);
-        }
-        sprintf(smem_options, "%s}}:", smem_options);
-    }
-    sprintf(smem_options,
-            "%ssmem{video-data=%lld,video-prerender-callback=%lld,video-postrender-callback=%lld}",
-            smem_options,
-            (long long int)(intptr_t)(void*) this,
-            (long long int)(intptr_t)(void*) &VideoSourceVLC::prepareRender,
-            (long long int)(intptr_t)(void*) &VideoSourceVLC::handleStream );
-
+    // VLC global options (valid for the lifetime of the program)
+    // see `vlc --help` for the difference between `--option` and `:option`
     const char * const vlc_args[] = {
         "-I", "dummy", // Don't use any interface
         "--ignore-config", // Don't use VLC's config
         "--file-logging",
         //"--verbose=2", // Be much more verbose then normal for debugging purpose
         "--no-audio",
-        "--sout", smem_options // Stream to memory
+        "--no-video-title-show"
     };
 
     // We launch VLC
     _vlc_inst = libvlc_new(sizeof(vlc_args) / sizeof(vlc_args[0]), vlc_args);
     if (_vlc_inst == nullptr)
         throw VideoSourceError("Could not create VLC engine");
+
+    // create VLC media player
+    _vlc_mp = libvlc_media_player_new(_vlc_inst);
+    if (_vlc_mp == nullptr)
+        throw VideoSourceError("Could not create VLC media player");
+}
+
+
+void VideoSourceVLC::run_vlc()
+{
+    libvlc_media_t * vlc_media = nullptr;
 
     // If path contains a colon (:), it will be treated as a
     // URL. Else, it will be considered as a local path.
@@ -166,28 +126,51 @@ void VideoSourceVLC::init_vlc()
     if (vlc_media == nullptr)
         throw VideoSourceError(std::string("Could not open ").append(_path));
 
-    libvlc_media_add_option(vlc_media, ":noaudio");
-    libvlc_media_add_option(vlc_media, ":no-video-title-show");
-
-    // Create a media player playing environement
-    _vlc_mp = libvlc_media_player_new_from_media(vlc_media);
-    if (_vlc_mp == nullptr)
-        throw VideoSourceError("Could not create VLC media player");
-
-    // No need to keep the media now
+    // compose the processing pipeline description
+    char pipeline[512];
+    // open transcode step
+    sprintf(pipeline, "#transcode{");
+    // cropping sub-frame
+    unsigned int croptop = 0, cropbottom = 0, cropleft = 0, cropright = 0;
+    if (_sub != nullptr) // cropping video?
+    {
+        croptop = std::max(_sub->y, croptop),
+        cropbottom = std::max(_full.height - (_sub->y + _sub->height), cropbottom),
+        cropleft = std::max(_sub->x, cropleft),
+        cropright = std::max(_full.width - (_sub->x + _sub->width), cropright);
+    }
+    sprintf(pipeline, "%svfilter=croppadd{", pipeline);
+    sprintf(pipeline, "%scroptop=%u,", pipeline, croptop);
+    sprintf(pipeline, "%scropbottom=%u,", pipeline, cropbottom);
+    sprintf(pipeline, "%scropleft=%u,", pipeline, cropleft);
+    sprintf(pipeline, "%scropright=%u", pipeline, cropright);
+    sprintf(pipeline, "%s}", pipeline);
+    // colour space specification
+    sprintf(pipeline, "%s,vcodec=I420", pipeline);
+    // close transcode step
+    sprintf(pipeline, "%s}:", pipeline);
+    // callbacks
+    sprintf(pipeline,
+            "%ssmem{video-data=%lld,video-prerender-callback=%lld,video-postrender-callback=%lld}",
+            pipeline,
+            (long long int)(intptr_t)(void*) this,
+            (long long int)(intptr_t)(void*) &VideoSourceVLC::prepareRender,
+            (long long int)(intptr_t)(void*) &VideoSourceVLC::handleStream );
+    // activate pipeline in VLC media
+    char sout_options[1024];
+    sprintf(sout_options, ":sout=%s", pipeline);
+    libvlc_media_add_option(vlc_media, sout_options);
+    // set VLC media player's media
+    libvlc_media_player_set_media(_vlc_mp, vlc_media);
+    // release VLC media
     libvlc_media_release(vlc_media);
-}
 
-
-void VideoSourceVLC::run_vlc()
-{
     { // artificial scope for the mutex guard below
         std::lock_guard<std::mutex> data_lock_guard(_data_lock);
-        _running = true;
-
         // play the media_player
         if (libvlc_media_player_play(_vlc_mp) != 0)
             throw VideoSourceError("Could not start VLC media player");
+        _running = true;
     }
 
     // empirically determined value that allows for initialisation
@@ -201,9 +184,10 @@ void VideoSourceVLC::stop_vlc()
     // stop playing
     libvlc_media_player_stop(_vlc_mp);
 
-    std::lock_guard<std::mutex> data_lock_guard(_data_lock);
-
-    _running = false;
+    { // artificial scope for mutex guard below
+        std::lock_guard<std::mutex> data_lock_guard(_data_lock);
+        _running = false;
+    }
 }
 
 
@@ -236,14 +220,9 @@ void VideoSourceVLC::clear()
 
 void VideoSourceVLC::determine_full()
 {
-    unsigned int width, height;
-    if (libvlc_video_get_size(_vlc_mp, 0, &width, &height) != 0)
-        throw VideoSourceError("Could not get video dimensions");
-
+    get_frame_dimensions((int&)_full.width, (int&)_full.height);
     _full.x = 0;
     _full.y = 0;
-    _full.width = width;
-    _full.height = height;
 }
 
 
@@ -277,17 +256,10 @@ void VideoSourceVLC::prepareRender(VideoSourceVLC * p_video_data,
     if (p_video_data->_running)
     {
         if (size > p_video_data->_data_length)
-        {
-            if (p_video_data->_data_length == 0)
-                p_video_data->_video_buffer = reinterpret_cast<uint8_t *>(
-                            malloc(size * sizeof(uint8_t))
-                            );
-            else
-                p_video_data->_video_buffer = reinterpret_cast<uint8_t *>(
-                            realloc(p_video_data->_video_buffer, size * sizeof(uint8_t))
-                            );
-        }
-        p_video_data->_data_length = size;
+            p_video_data->_video_buffer = reinterpret_cast<uint8_t *>(
+                        realloc(p_video_data->_video_buffer, size * sizeof(uint8_t))
+                        );
+        p_video_data->_data_length = p_video_data->_video_buffer != nullptr ? size : 0;
 
         *pp_pixel_buffer = p_video_data->_video_buffer;
     }
