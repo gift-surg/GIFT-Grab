@@ -9,7 +9,6 @@ namespace gg
 
 VideoSourceVLC::VideoSourceVLC(const std::string path)
     : _vlc_inst(nullptr)
-    , _vlc_media(nullptr)
     , _vlc_mp(nullptr)
     , _running(false)
     , _video_buffer(nullptr)
@@ -116,21 +115,16 @@ void VideoSourceVLC::init_vlc()
 
 void VideoSourceVLC::run_vlc()
 {
-    // free media
-    if (_vlc_media != nullptr)
-        libvlc_media_release(_vlc_media);
+    libvlc_media_t * vlc_media = nullptr;
 
     // If path contains a colon (:), it will be treated as a
     // URL. Else, it will be considered as a local path.
     if (_path.find(":") == std::string::npos)
-        _vlc_media = libvlc_media_new_path(_vlc_inst, _path.c_str());
+        vlc_media = libvlc_media_new_path(_vlc_inst, _path.c_str());
     else
-        _vlc_media = libvlc_media_new_location(_vlc_inst, _path.c_str());
-    if (_vlc_media == nullptr)
+        vlc_media = libvlc_media_new_location(_vlc_inst, _path.c_str());
+    if (vlc_media == nullptr)
         throw VideoSourceError(std::string("Could not open ").append(_path));
-
-    // Create a media player playing environement
-    libvlc_media_player_set_media(_vlc_mp, _vlc_media);
 
     // compose the processing pipeline description
     char pipeline[512];
@@ -162,14 +156,18 @@ void VideoSourceVLC::run_vlc()
             (long long int)(intptr_t)(void*) this,
             (long long int)(intptr_t)(void*) &VideoSourceVLC::prepareRender,
             (long long int)(intptr_t)(void*) &VideoSourceVLC::handleStream );
+    // activate pipeline in VLC media
+    char sout_options[1024];
+    sprintf(sout_options, ":sout=%s", pipeline);
+    libvlc_media_add_option(vlc_media, sout_options);
+    // set VLC media player's media
+    libvlc_media_player_set_media(_vlc_mp, vlc_media);
+    // release VLC media
+    libvlc_media_release(vlc_media);
 
     { // artificial scope for the mutex guard below
         std::lock_guard<std::mutex> data_lock_guard(_data_lock);
 
-        // activate pipeline in VLC media
-        char sout_options[1024];
-        sprintf(sout_options, ":sout=%s", pipeline);
-        libvlc_media_add_option(_vlc_media, sout_options);
 
         // play the media_player
         _running = true;
@@ -188,18 +186,15 @@ void VideoSourceVLC::stop_vlc()
     // stop playing
     libvlc_media_player_stop(_vlc_mp);
 
-    std::lock_guard<std::mutex> data_lock_guard(_data_lock);
-
-    _running = false;
+    { // artificial scope for mutex guard below
+        std::lock_guard<std::mutex> data_lock_guard(_data_lock);
+        _running = false;
+    }
 }
 
 
 void VideoSourceVLC::release_vlc()
 {
-    // free media
-    if (_vlc_media != nullptr)
-        libvlc_media_release(_vlc_media);
-
     // free media player
     libvlc_media_player_release(_vlc_mp);
 
