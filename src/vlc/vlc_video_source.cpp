@@ -83,7 +83,9 @@ void VideoSourceVLC::set_sub_frame(int x, int y, int width, int height)
 
 void VideoSourceVLC::get_full_frame()
 {
-    set_sub_frame(_full.x, _full.y, _full.width, _full.height);
+    stop_vlc();
+    reset_crop();
+    run_vlc();
 }
 
 
