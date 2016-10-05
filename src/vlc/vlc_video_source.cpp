@@ -106,6 +106,18 @@ void VideoSourceVLC::init_vlc()
     _vlc_inst = libvlc_new(sizeof(vlc_args) / sizeof(vlc_args[0]), vlc_args);
     if (_vlc_inst == nullptr)
         throw VideoSourceError("Could not create VLC engine");
+}
+
+
+void VideoSourceVLC::run_vlc()
+{
+    // free media
+    if (_vlc_media != nullptr)
+        libvlc_media_release(_vlc_media);
+
+    // free media player
+    if (_vlc_mp != nullptr)
+        libvlc_media_player_release(_vlc_mp);
 
     // If path contains a colon (:), it will be treated as a
     // URL. Else, it will be considered as a local path.
@@ -120,11 +132,7 @@ void VideoSourceVLC::init_vlc()
     _vlc_mp = libvlc_media_player_new_from_media(_vlc_media);
     if (_vlc_mp == nullptr)
         throw VideoSourceError("Could not create VLC media player");
-}
 
-
-void VideoSourceVLC::run_vlc()
-{
     // compose the processing pipeline description
     char pipeline[512];
     // open transcode step
@@ -189,12 +197,6 @@ void VideoSourceVLC::stop_vlc()
 
 void VideoSourceVLC::release_vlc()
 {
-    // free media
-    libvlc_media_release(_vlc_media);
-
-    // free media player
-    libvlc_media_player_release(_vlc_mp);
-
     // free engine
     libvlc_release(_vlc_inst);
 }
