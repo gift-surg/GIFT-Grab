@@ -35,11 +35,11 @@ VideoSourceVLC::~VideoSourceVLC()
 bool VideoSourceVLC::get_frame_dimensions(int & width, int & height)
 {
     std::lock_guard<std::mutex> data_lock_guard(_data_lock);
-    if(this->_cols == 0 || this->_rows == 0)
+    if(_cols == 0 || _rows == 0)
         return false;
 
-    width = this->_cols;
-    height = this->_rows;
+    width = _cols;
+    height = _rows;
     return true;
 }
 
