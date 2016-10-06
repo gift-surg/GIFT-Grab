@@ -331,22 +331,23 @@ epiphan-pearl:
     - rm -rf "$GiftGrab_BUILD_DIR"
     - mkdir -p "$GiftGrab_BUILD_DIR"
     - cd "$GiftGrab_BUILD_DIR"
-    - export EPIPHAN_PEARL_MRL="rtsp://128.16.14.129:554/stream.sdp"
-    # test BGRA colour space
-    - cmake -D USE_EPIPHAN_PEARL=ON -D USE_I420=OFF -D BUILD_PYTHON=ON -D BUILD_TESTS=ON -D USE_HEVC=ON -D USE_NVENC=ON "$GiftGrab_SOURCE_DIR"
-    - make -j; exit_on_fail
-    - check_epiphan_pearl_alive
-    - ctest; exit_on_fail
+    - export EPIPHAN_PEARL_IP="128.16.14.129"
+    - export EPIPHAN_PEARL_MRL="rtsp://$EPIPHAN_PEARL_IP:554/stream.sdp"
+    # test BGRA colour space TODO #85
+    # - cmake -D USE_EPIPHAN_PEARL=ON -D USE_I420=OFF -D BUILD_PYTHON=ON -D BUILD_TESTS=ON -D USE_HEVC=ON -D USE_NVENC=ON "$GiftGrab_SOURCE_DIR"
+    # - make -j; exit_on_fail
+    # - check_epiphan_pearl_alive
+    # - ctest; exit_on_fail
     # test I420 colour space
     - cmake -D USE_BGRA=OFF -D USE_I420=ON .
     - make -j; exit_on_fail
     - check_epiphan_pearl_alive
     - ctest; exit_on_fail
-    # test both colour spaces
-    - cmake -D USE_BGRA=ON -D USE_I420=ON .
-    - make -j; exit_on_fail
-    - check_epiphan_pearl_alive
-    - ctest; exit_on_fail
+    # test both colour spaces TODO #85
+    # - cmake -D USE_BGRA=ON -D USE_I420=ON .
+    # - make -j; exit_on_fail
+    # - check_epiphan_pearl_alive
+    # - ctest; exit_on_fail
   tags:
     - gift-linux
     - gift-epiphan-pearl
