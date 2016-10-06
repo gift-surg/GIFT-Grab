@@ -334,7 +334,7 @@ epiphan-pearl:
     - export EPIPHAN_PEARL_IP="128.16.14.129"
     - export EPIPHAN_PEARL_MRL="rtsp://$EPIPHAN_PEARL_IP:554/stream.sdp"
     # test BGRA colour space TODO #85
-    # - cmake -D USE_EPIPHAN_PEARL=ON -D USE_I420=OFF -D BUILD_PYTHON=ON -D BUILD_TESTS=ON -D USE_HEVC=ON -D USE_NVENC=ON "$GiftGrab_SOURCE_DIR"
+    - cmake -D USE_EPIPHAN_PEARL=ON -D USE_I420=OFF -D BUILD_PYTHON=ON -D BUILD_TESTS=ON -D USE_HEVC=ON -D USE_NVENC=ON "$GiftGrab_SOURCE_DIR"
     # - make -j; exit_on_fail
     # - check_epiphan_pearl_alive
     # - ctest; exit_on_fail
