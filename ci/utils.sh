@@ -18,3 +18,22 @@ function check_epiphan_alive
         exit 1
     fi
 }
+
+function check_epiphan_pearl_alive
+{
+    if [ -n "$EPIPHAN_PEARL_IP" ]; then
+        echo "EPIPHAN_PEARL_IP not set"
+        exit 1
+    fi
+
+    # TODO: v2u --address 128.16..... does not work,
+    # so using ping instead
+    ping -c 5 -v -W 5 $EPIPHAN_PEARL_IP
+
+    exit_status=$?
+    if [[ "$exit_status" -ne "0" ]]; then
+        echo "Could not get data from Epiphan Pearl located at $EPIPHAN_PEARL_IP"
+        echo "Please make sure Epiphan Pearl is connected properly, and retry build"
+        exit 1
+    fi
+}
