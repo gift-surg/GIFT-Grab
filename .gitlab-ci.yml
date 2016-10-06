@@ -321,7 +321,7 @@ epiphan-dvi2pcie-duo:
   only:
     - this-branch-should-never-exist
 
-################## Device: Epiphan DVI2PCIe Duo ##################
+################## Device: Epiphan Pearl #########################
 ################## Platform: PyPI ################################
 ################## Target: All ###################################
 pypi-epiphan-pearl:
