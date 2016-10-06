@@ -21,7 +21,7 @@ function check_epiphan_alive
 
 function check_epiphan_pearl_alive
 {
-    if [ -n "$EPIPHAN_PEARL_IP" ]; then
+    if [ -z "$EPIPHAN_PEARL_IP" ]; then
         echo "EPIPHAN_PEARL_IP not set"
         exit 1
     fi
