@@ -86,6 +86,7 @@ class GiftGrabInstallCommand(install):
                    ('enable-gpl', None, None),
                    ('vp9', None, None),
                    ('nvenc', None, None),
+                   ('enable-nonfree', None, None),
                    ('cmake-install-prefix=', None, None)]
 
 
@@ -107,7 +108,7 @@ class GiftGrabInstallCommand(install):
             str_rep += ' VP9,'
         if self.hevc:
             str_rep += ' HEVC'
-            if self.nvenc:
+            if self.nvenc and self.enable_nonfree:
                 str_rep += ' (NVENC)'
             elif self.x265 and self.enable_gpl:
                 str_rep += ' (x265)'
@@ -126,6 +127,7 @@ class GiftGrabInstallCommand(install):
         self.enable_gpl = None
         self.vp9 = None
         self.nvenc = None
+        self.enable_nonfree = None
 
 
     def finalize_options(self):
@@ -267,16 +269,21 @@ class GiftGrabInstallCommand(install):
                     raise LibError(err_summary)
 
                 if self.nvenc:
-                    opt = '--enable-nvenc'
-                    if opt not in output_buffer:
-                        err_summary = 'Your FFmpeg does not seem to support NVENC.'
-                        err_msg = '%s\n%s%s' % (
-                            err_summary,
-                            'Please install FFmpeg with NVENC support ',
-                            '(%s).' % (opt)
-                        )
-                        self.__print_err_msg(err_msg)
-                        raise LibError(err_summary)
+                    if not self.enable_nonfree:
+                        err_msg = 'You must enable non-free components for NVENC support'
+                        self.__print_err_msg(err_mst)
+                        raise LibError(err_msg)
+                    else:
+                        opt = '--enable-nvenc'
+                        if opt not in output_buffer:
+                            err_summary = 'Your FFmpeg does not seem to support NVENC.'
+                            err_msg = '%s\n%s%s' % (
+                                err_summary,
+                                'Please install FFmpeg with NVENC support ',
+                                '(%s).' % (opt)
+                            )
+                            self.__print_err_msg(err_msg)
+                            raise LibError(err_summary)
                 elif self.x265:
                     if not self.enable_gpl:
                         err_msg = 'You must enable GPL for x265 support'
