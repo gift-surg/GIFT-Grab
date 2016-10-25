@@ -35,6 +35,8 @@ OPTION(USE_VP9
     "Video encoding with VP9 (requires FFmpeg, pkg-config and libvpx)" OFF)
 OPTION(USE_NVENC
     "Hardware-accelerated video encoding with HEVC (requires FFmpeg, pkg-config and NVENC)" OFF)
+OPTION(ENABLE_NONFREE
+    "Enable non-free components" OFF)
 OPTION(BUILD_DOC
     "Source code documentation (requires Doxygen)" OFF)
 OPTION(BUILD_TESTS
