@@ -5,7 +5,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.2.0)
 SET(GiftGrab_PATH_SUFFIX giftgrab)
 
 # RPATH stuff - to avoid losing linking information
-SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
+SET(CMAKE_SKIP_BUILD_RPATH FALSE)
 SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib/${GiftGrab_PATH_SUFFIX}")
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
@@ -35,6 +35,8 @@ OPTION(USE_VP9
     "Video encoding with VP9 (requires FFmpeg, pkg-config and libvpx)" OFF)
 OPTION(USE_NVENC
     "Hardware-accelerated video encoding with HEVC (requires FFmpeg, pkg-config and NVENC)" OFF)
+OPTION(ENABLE_NONFREE
+    "Enable non-free components" OFF)
 OPTION(BUILD_DOC
     "Source code documentation (requires Doxygen)" OFF)
 OPTION(BUILD_TESTS
@@ -60,11 +62,29 @@ MARK_AS_ADVANCED(USE_OPENCV)
 SET(USE_LIBVLC OFF CACHE BOOL "ON OFF" FORCE)
 MARK_AS_ADVANCED(USE_LIBVLC)
 
+# Check if non-free explicitly enabled for relevant components
+if(USE_NVENC AND NOT ENABLE_NONFREE)
+    MESSAGE(FATAL_ERROR
+        "NVENC (NVIDIA Video Codec SDK) has a proprietary licence: you must explicitly enable non-free (ENABLE_NONFREE=ON) to build GIFT-Grab with NVENC support")
+endif(USE_NVENC AND NOT ENABLE_NONFREE)
+
 # Check GPL explicitly enabled for relevant components
 if(USE_X265 AND NOT ENABLE_GPL)
     MESSAGE(FATAL_ERROR
         "x265 is a GPL library: you must explicitly enable GPL (ENABLE_GPL=ON) to build GIFT-Grab with x265 support")
 endif(USE_X265 AND NOT ENABLE_GPL)
+
+# GPL and non-free are not compatible
+if(ENABLE_GPL AND ENABLE_NONFREE)
+    MESSAGE(FATAL_ERROR
+        "GPL and non-free are not compatible options, and so GIFT-Grab cannot be built with both")
+elseif(ENABLE_GPL)
+    MESSAGE(WARNING
+        "You have upgraded the GIFT-Grab licence to GPL. This means if you re-distribute the GIFT-Grab code, you must distribute it using the GPL licence.")
+elseif(ENABLE_NONFREE)
+    MESSAGE(WARNING
+        "You have enabled one or more non-free components of GIFT-Grab. This means that GIFT-Grab cannot be re-distributed.")
+endif(ENABLE_GPL AND ENABLE_NONFREE)
 
 # Check at least one colour space activated if using Epiphan DVI2PCIe Duo
 if(USE_EPIPHAN_DVI2PCIE_DUO)
