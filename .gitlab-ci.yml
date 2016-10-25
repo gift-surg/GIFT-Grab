@@ -50,7 +50,7 @@ linux:
     # turn x265 off explicitly for combination testing
     - cmake -D ENABLE_GPL=OFF -D USE_X265=OFF .
     # hardware-accelerated HEVC
-    - cmake -D USE_NVENC=ON .
+    - cmake -D ENABLE_NONFREE=ON -D USE_NVENC=ON .
     - make -j; exit_on_fail
     - ctest; exit_on_fail
     - make install

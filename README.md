@@ -18,7 +18,7 @@ Optional (depending on desired features, see "How to use" below):
 
 * [OpenCV](http://www.opencv.org/) (tested with 2.4.12)
 * [FFmpeg](https://ffmpeg.org/) (tested with 3.0.1)
-* [NVENC](https://developer.nvidia.com/nvidia-video-codec-sdk) (tested with 6.0.1)
+* [NVENC (NVIDIA Video Codec SDK)](https://developer.nvidia.com/nvidia-video-codec-sdk) (tested with 6.0.1, **note that NVENC has a proprietary licence, so "non-free" components need to be enabled - see below - when building GIFT-Grab with NVENC support**)
 * [A GPU supporting NVENC](https://developer.nvidia.com/nvidia-video-codec-sdk)
 * [kvazaar](https://github.com/ultravideo/kvazaar) (tested with 0.8.3)
 * [x265](http://x265.org/) (tested with 1.9, **note that x265 is a GPL library, so GPL needs to be enabled - see below - when building GIFT-Grab with x265 support**)
@@ -57,7 +57,7 @@ Features can be customised as per the combinations listed below. Please note tha
 * `-D USE_XVID=ON` for Xvid support (requires OpenCV).
 * `-D USE_HEVC=ON` for HEVC support (requires FFmpeg, pkg-config and kvazaar).
 * `-D USE_HEVC=ON -D ENABLE_GPL=ON -D USE_X265=ON` to use x265 instead of kvazaar for HEVC support (requires FFmpeg, pkg-config and x265).
-* `-D USE_HEVC=ON -D USE_NVENC=ON` for hardware-accelerated HEVC support (requires a supported GPU, FFmpeg, pkg-config and NVENC).
+* `-D USE_HEVC=ON -D ENABLE_NONFREE=ON -D USE_NVENC=ON` for hardware-accelerated HEVC support (requires a supported GPU, FFmpeg, pkg-config and NVENC).
 * `-D USE_VP9=ON` for VP9 support (requires FFmpeg, pkg-config and libvpx).
 * `-D BUILD_PYTHON=ON` for GIFT-Grab Python API (requires Python and Boost.Python).
 * To quickly see whether GIFT-Grab works on your system, turn on tests with `-D BUILD_TESTS=ON -D BUILD_PYTHON=ON` (requires Python, Boost.Python, and pytest). Then run `ctest` or `make test` in the build directory.
