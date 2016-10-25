@@ -127,20 +127,20 @@ pypi:
     - pip install -vvv --install-option="--hevc" --install-option="--enable-gpl" --install-option="--x265" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-hevc-bgra; exit_on_fail
     # hardware-accelerated HEVC
-    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --upgrade "$PyPI_INSTALLER"
+    - pip install -vvv --install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-hevc-bgra; exit_on_fail
     # Xvid support
-    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--xvid" --upgrade "$PyPI_INSTALLER"
+    - pip install -vvv --install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc" --install-option="--xvid" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-xvid-bgra; exit_on_fail
     # VP9 support
-    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --upgrade "$PyPI_INSTALLER"
+    - pip install -vvv --install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-vp9-bgra; exit_on_fail
     # Epiphan DVI2PCIe Duo support (OpenCV only)
-    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--no-i420" --upgrade "$PyPI_INSTALLER"
+    - pip install -vvv --install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--no-i420" --upgrade "$PyPI_INSTALLER"
     # Epiphan DVI2PCIe Duo support (libVLC only)
-    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--no-bgra" --upgrade "$PyPI_INSTALLER"
+    - pip install -vvv --install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--no-bgra" --upgrade "$PyPI_INSTALLER"
     # Epiphan DVI2PCIe Duo support (both OpenCV and libVLC)
-    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --upgrade "$PyPI_INSTALLER"
+    - pip install -vvv --install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-hevc-i420; exit_on_fail
     - test-giftgrab-vp9-i420; exit_on_fail
     - deactivate
