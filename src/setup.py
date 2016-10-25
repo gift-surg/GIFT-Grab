@@ -346,6 +346,7 @@ class GiftGrabInstallCommand(install):
         if self.hevc:
             cmake_args.append('-DUSE_HEVC=ON')
             if self.nvenc:
+                cmake_args.append('-DENABLE_NONFREE=ON')
                 cmake_args.append('-DUSE_NVENC=ON')
             elif self.x265:
                 cmake_args.append('-DENABLE_GPL=ON')
