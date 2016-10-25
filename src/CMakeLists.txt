@@ -74,6 +74,12 @@ if(USE_X265 AND NOT ENABLE_GPL)
         "x265 is a GPL library: you must explicitly enable GPL (ENABLE_GPL=ON) to build GIFT-Grab with x265 support")
 endif(USE_X265 AND NOT ENABLE_GPL)
 
+# GPL and non-free are not compatible
+if(ENABLE_GPL AND ENABLE_NONFREE)
+    MESSAGE(FATAL_ERROR
+        "GPL and non-free are not compatible options, and so GIFT-Grab cannot be built with both")
+endif(ENABLE_GPL AND ENABLE_NONFREE)
+
 # Check at least one colour space activated if using Epiphan DVI2PCIe Duo
 if(USE_EPIPHAN_DVI2PCIE_DUO)
     if(NOT USE_BGRA AND NOT USE_I420)
