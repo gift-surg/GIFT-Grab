@@ -60,6 +60,12 @@ MARK_AS_ADVANCED(USE_OPENCV)
 SET(USE_LIBVLC OFF CACHE BOOL "ON OFF" FORCE)
 MARK_AS_ADVANCED(USE_LIBVLC)
 
+# Check if non-free explicitly enabled for relevant components
+if(USE_NVENC AND NOT ENABLE_NONFREE)
+    MESSAGE(FATAL_ERROR
+        "NVENC (NVIDIA Video Codec SDK) has a proprietary licence: you must explicitly enable non-free (ENABLE_NONFREE=ON) to build GIFT-Grab with NVENC support")
+endif(USE_NVENC AND NOT ENABLE_NONFREE)
+
 # Check GPL explicitly enabled for relevant components
 if(USE_X265 AND NOT ENABLE_GPL)
     MESSAGE(FATAL_ERROR
