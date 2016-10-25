@@ -78,6 +78,12 @@ endif(USE_X265 AND NOT ENABLE_GPL)
 if(ENABLE_GPL AND ENABLE_NONFREE)
     MESSAGE(FATAL_ERROR
         "GPL and non-free are not compatible options, and so GIFT-Grab cannot be built with both")
+elseif(ENABLE_GPL)
+    MESSAGE(WARNING
+        "You have upgraded the GIFT-Grab licence to GPL. This means if you re-distribute the GIFT-Grab code, you must distribute it using the GPL licence.")
+elseif(ENABLE_NONFREE)
+    MESSAGE(WARNING
+        "You have enabled one or more non-free components of GIFT-Grab. This means that GIFT-Grab cannot be re-distributed.")
 endif(ENABLE_GPL AND ENABLE_NONFREE)
 
 # Check at least one colour space activated if using Epiphan DVI2PCIe Duo
