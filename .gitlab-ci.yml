@@ -266,7 +266,7 @@ epiphan-dvi2pcie-duo:
     - export LIBVLC_INCLUDE_PATH="$STORZ_STACK_GIFTGRAB_ENV_ROOT/include"
     - export LIBVLC_LIBRARY_PATH="$STORZ_STACK_GIFTGRAB_ENV_ROOT/lib"
     # test BGRA colour space
-    - cmake -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D USE_I420=OFF -D BUILD_PYTHON=ON -D BUILD_TESTS=ON -D USE_HEVC=ON -D USE_NVENC=ON "$GiftGrab_SOURCE_DIR"
+    - cmake -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D USE_I420=OFF -D BUILD_PYTHON=ON -D BUILD_TESTS=ON -D USE_HEVC=ON -D USE_NVENC=ON -D ENABLE_NONFREE=ON "$GiftGrab_SOURCE_DIR"
     - make -j; exit_on_fail
     - check_epiphan_alive
     - ctest; exit_on_fail
