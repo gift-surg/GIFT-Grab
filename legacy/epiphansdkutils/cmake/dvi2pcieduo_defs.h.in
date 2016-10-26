@@ -1,6 +1,6 @@
 #pragma once
-#cmakedefine EpiphanSDK_DVI "@EpiphanSDK_DVI@"
-#cmakedefine EpiphanSDK_SDI "@EpiphanSDK_SDI@"
-#cmakedefine EpiphanSDK_DVI_MAX_FRAME_RATE @EpiphanSDK_DVI_MAX_FRAME_RATE@
-#cmakedefine EpiphanSDK_SDI_MAX_FRAME_RATE @EpiphanSDK_SDI_MAX_FRAME_RATE@
-#cmakedefine EpiphanSDK_DUAL_MAX_FRAME_RATE @EpiphanSDK_DUAL_MAX_FRAME_RATE@
+#cmakedefine Epiphan_DVI2PCIeDuo_DVI "@Epiphan_DVI2PCIeDuo_DVI@"
+#cmakedefine Epiphan_DVI2PCIeDuo_SDI "@Epiphan_DVI2PCIeDuo_SDI@"
+#cmakedefine Epiphan_DVI2PCIeDuo_DVI_MAX_FRAME_RATE @Epiphan_DVI2PCIeDuo_DVI_MAX_FRAME_RATE@
+#cmakedefine Epiphan_DVI2PCIeDuo_SDI_MAX_FRAME_RATE @Epiphan_DVI2PCIeDuo_SDI_MAX_FRAME_RATE@
+#cmakedefine Epiphan_DVI2PCIeDuo_DUAL_MAX_FRAME_RATE @Epiphan_DVI2PCIeDuo_DUAL_MAX_FRAME_RATE@
