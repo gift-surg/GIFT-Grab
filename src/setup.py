@@ -282,7 +282,7 @@ class GiftGrabInstallCommand(install):
                 if self.nvenc:
                     if not self.enable_nonfree:
                         err_msg = 'You must enable non-free components for NVENC support'
-                        self.__print_err_msg(err_mst)
+                        self.__print_err_msg(err_msg)
                         raise LibError(err_msg)
                     else:
                         opt = '--enable-nvenc'
