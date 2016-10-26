@@ -107,16 +107,17 @@ pypi:
     # HEVC support with x265
     - pip install -vvv --install-option="--hevc" --install-option="--enable-gpl" --install-option="--x265" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-hevc-bgra; exit_on_fail
+    - test-giftgrab-hevc-i420; exit_on_fail
     # hardware-accelerated HEVC
     - pip install -vvv --install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-hevc-bgra; exit_on_fail
+    - test-giftgrab-hevc-i420; exit_on_fail
     # Xvid support
     - pip install -vvv --install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc" --install-option="--xvid" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-xvid-bgra; exit_on_fail
     # VP9 support
     - pip install -vvv --install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-vp9-bgra; exit_on_fail
-    - test-giftgrab-hevc-i420; exit_on_fail
     - test-giftgrab-vp9-i420; exit_on_fail
     - deactivate
   tags:
