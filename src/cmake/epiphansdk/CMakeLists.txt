@@ -176,12 +176,17 @@ SET(EpiphanSDK_LIBS
     CACHE INTERNAL "Epiphan video grabbing SDK link libraries"
     )
 # Variables to be used for Epiphan DVI2PCIe Duo port specs
+SET(V2U "$ENV{EpiphanSDK_DIR}/epiphan/samples/v2u/build/release/v2u")
+EXECUTE_PROCESS(
+    COMMAND ${V2U} -s
+    OUTPUT_VARIABLE V2U_OUT
+    )
 SET(Epiphan_DVI2PCIeDuo_DVI
-    "\"/dev/video0\""  # TODO: automate?
+    "\"${V2U_OUT}.vga\""
     CACHE INTERNAL "Epiphan DVI2PCIe Duo DVI port device file on Linux"
     )
 SET(Epiphan_DVI2PCIeDuo_SDI
-    "\"/dev/video1\""  # TODO: automate?
+    "\"${V2U_OUT}.sdi\""
     CACHE INTERNAL "Epiphan DVI2PCIe Duo SDI port device file on Linux"
     )
 SET(Epiphan_DVI2PCIeDuo_DVI_MAX_FRAME_RATE

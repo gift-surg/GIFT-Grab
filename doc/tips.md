@@ -18,7 +18,8 @@ Epiphan Video Grabbing SDK
 --------------------------
 
 1. Download Epiphan video grabbing SDK from [Epiphan support](https://www.epiphan.com/support/) and unpack it, e.g. `wget https://www.epiphan.com/downloads/products/epiphan_sdk-3.30.3.0007.zip; unzip epiphan_sdk-3.30.3.0007.zip`.
-1. (Optional) Move the resulting folder to a system folder, e.g. `/opt`, for easy access by all users.
+1. Change into the sub-folder `epiphan/samples/v2u` and run `make`. This should create a `build` folder here.
+1. (Optional) Move the top folder (i.e. the one resulting from unpacking the archive) to a system folder, e.g. `/opt`, for easy access by all users.
 1. Specify this folder's **absolute** path as the `EpiphanSDK_DIR` environment variable, e.g. `export EpiphanSDK_DIR="/opt/epiphan_sdk-3.30.3.0007"`.
 
 OpenCV
