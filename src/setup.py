@@ -236,8 +236,8 @@ class GiftGrabInstallCommand(install):
         # check libVLC
         if self.epiphan_dvi2pcie_duo and not self.no_i420:
             if self.epiphansdk and self.enable_nonfree:
-                cmd = ['cmake', join(join(self.here, 'cmake'), 'epiphansdk')]
-                err_msg = '%s\n%s%s' % (
+                cmd = ['cmake', join(self.here, 'cmake', 'epiphansdk')]
+                err_msg = '%s' % (
                     'Epiphan SDK does not seem to be available on your system.',
                 )
                 self.__check_command(cmd, err_msg)
