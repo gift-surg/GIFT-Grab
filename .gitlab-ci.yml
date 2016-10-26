@@ -2,6 +2,7 @@ variables:
   CI_SCRIPTS_DIR: "./ci"
   SCRATCH_DIR: "/home/gitlab-runner/giftgrab-scratch"
   CTEST_OUTPUT_ON_FAILURE: "1"
+  EpiphanSDK_DIR: "/home/gitlab-runner/environments/giftgrab/opt/epiphan_sdk-3.30.3.0007"
 
 before_script:
   - rm -rf $SCRATCH_DIR
