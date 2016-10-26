@@ -53,10 +53,10 @@ IVideoSource * Factory::connect(enum Device type, enum ColourSpace colour) {
                 throw DeviceNotFound(e.what());
             }
 #elif defined(USE_EPIPHANSDK)
-#ifdef EpiphanSDK_DVI
+#ifdef Epiphan_DVI2PCIeDuo_DVI
             try
             {
-                src = new VideoSourceEpiphanSDK(EpiphanSDK_DVI,
+                src = new VideoSourceEpiphanSDK(Epiphan_DVI2PCIeDuo_DVI,
                                                 V2U_GRABFRAME_FORMAT_I420);
             }
             catch (VideoSourceError & e)
@@ -64,7 +64,7 @@ IVideoSource * Factory::connect(enum Device type, enum ColourSpace colour) {
                 throw DeviceNotFound(e.what());
             }
 #else
-            throw DeviceNotFound("EpiphanSDK_DVI macro not defined");
+            throw DeviceNotFound("Epiphan_DVI2PCIeDuo_DVI macro not defined");
 #endif
 #else
             throw VideoSourceError(
@@ -105,10 +105,10 @@ IVideoSource * Factory::connect(enum Device type, enum ColourSpace colour) {
                 throw DeviceNotFound(e.what());
             }
 #elif defined(USE_EPIPHANSDK)
-#ifdef EpiphanSDK_SDI
+#ifdef Epiphan_DVI2PCIeDuo_SDI
             try
             {
-                src = new VideoSourceEpiphanSDK(EpiphanSDK_SDI,
+                src = new VideoSourceEpiphanSDK(Epiphan_DVI2PCIeDuo_SDI,
                                                 V2U_GRABFRAME_FORMAT_I420);
             }
             catch (VideoSourceError & e)
@@ -116,7 +116,7 @@ IVideoSource * Factory::connect(enum Device type, enum ColourSpace colour) {
                 throw DeviceNotFound(e.what());
             }
 #else
-            throw DeviceNotFound("EpiphanSDK_SDI macro not defined");
+            throw DeviceNotFound("Epiphan_DVI2PCIeDuo_SDI macro not defined");
 #endif
 #else
             throw VideoSourceError(

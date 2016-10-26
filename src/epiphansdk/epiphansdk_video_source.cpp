@@ -89,15 +89,15 @@ double VideoSourceEpiphanSDK::get_frame_rate()
 {
     if (_frame_grabber)
     {
-#if defined(EpiphanSDK_DVI) and \
-    defined(EpiphanSDK_SDI) and \
-    defined(EpiphanSDK_DVI_MAX_FRAME_RATE) and \
-    defined(EpiphanSDK_SDI_MAX_FRAME_RATE)
+#if defined(Epiphan_DVI2PCIeDuo_DVI) and \
+    defined(Epiphan_DVI2PCIeDuo_SDI) and \
+    defined(Epiphan_DVI2PCIeDuo_DVI_MAX_FRAME_RATE) and \
+    defined(Epiphan_DVI2PCIeDuo_SDI_MAX_FRAME_RATE)
         std::string port_id = FrmGrab_GetId(_frame_grabber);
-        if (port_id == EpiphanSDK_DVI)
-            return EpiphanSDK_DVI_MAX_FRAME_RATE;
-        else if (port_id == EpiphanSDK_SDI)
-            return EpiphanSDK_SDI_MAX_FRAME_RATE;
+        if (port_id == Epiphan_DVI2PCIeDuo_DVI)
+            return Epiphan_DVI2PCIeDuo_DVI_MAX_FRAME_RATE;
+        else if (port_id == Epiphan_DVI2PCIeDuo_SDI)
+            return Epiphan_DVI2PCIeDuo_SDI_MAX_FRAME_RATE;
 #endif
     }
 
