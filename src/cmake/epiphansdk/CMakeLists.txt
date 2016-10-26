@@ -168,7 +168,7 @@ SET(LIBS
 
 # Variables to be used by linking libraries
 SET(EpiphanSDK_INCLUDE_DIRS
-    $ENV{EpiphanSDK_DIR}/epiphan/frmgrab/include
+    ${INCLUDE_DIRS}
     CACHE INTERNAL "Epiphan video grabbing SDK include dirs"
     )
 SET(EpiphanSDK_LIBS
