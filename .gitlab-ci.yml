@@ -84,6 +84,18 @@ linux:
     # no ctest for Epiphan DVI2PCIe Duo on
     # general-purpose Linux test server
     - make install
+    # Epiphan DVI2PCIe Duo support (Epiphan SDK only)
+    - cmake -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D ENABLE_NONFREE=ON -D USE_EPIPHANSDK=ON -D USE_BGRA=OFF .
+    - make -j; exit_on_fail
+    # no ctest for Epiphan DVI2PCIe Duo on
+    # general-purpose Linux test server
+    - make install
+    # Epiphan DVI2PCIe Duo support (both OpenCV and Epiphan SDK)
+    - cmake -D USE_BGRA=ON -D USE_I420=ON .
+    - make -j; exit_on_fail
+    # no ctest for Epiphan DVI2PCIe Duo on
+    # general-purpose Linux test server
+    - make install
     # build docs
     - cmake -D BUILD_DOC=ON .
     - make -j; exit_on_fail
@@ -141,6 +153,10 @@ pypi:
     - pip install -vvv --install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--no-bgra" --upgrade "$PyPI_INSTALLER"
     # Epiphan DVI2PCIe Duo support (both OpenCV and libVLC)
     - pip install -vvv --install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --upgrade "$PyPI_INSTALLER"
+    # Epiphan DVI2PCIe Duo support (Epiphan SDK only)
+    - pip install -vvv --install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--epiphansdk" --install-option="--no-bgra" --upgrade "$PyPI_INSTALLER"
+    # Epiphan DVI2PCIe Duo support (both OpenCV and Epiphan SDK)
+    - pip install -vvv --install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--epiphansdk" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-hevc-i420; exit_on_fail
     - test-giftgrab-vp9-i420; exit_on_fail
     - deactivate
