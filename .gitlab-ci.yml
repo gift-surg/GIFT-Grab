@@ -202,7 +202,7 @@ pypi-epiphan-dvi2pcie-duo:
     - pip install PyYAML
     - pip install pytest
     # Epiphan DVI2PCIe Duo support (OpenCV only)
-    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--no-i420" --upgrade "$PyPI_INSTALLER"
+    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--enable-nonfree" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--no-i420" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-epiphan-dvi2pcieduo-bgra; exit_on_fail
     - edd-dvi-bgra-hevc; exit_on_fail
     - edd-sdi-bgra-hevc; exit_on_fail
@@ -211,7 +211,7 @@ pypi-epiphan-dvi2pcie-duo:
     - edd-dvi-bgra-vp9; exit_on_fail
     - edd-sdi-bgra-vp9; exit_on_fail
     # Epiphan DVI2PCIe Duo support (libVLC only)
-    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--no-bgra" --upgrade "$PyPI_INSTALLER"
+    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--enable-nonfree" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--no-bgra" --upgrade "$PyPI_INSTALLER"
     # TODO: issue #102
     # - test-giftgrab-epiphan-dvi2pcieduo-i420; exit_on_fail
     - edd-dvi-i420-hevc; exit_on_fail
@@ -223,7 +223,7 @@ pypi-epiphan-dvi2pcie-duo:
     - ls -alh ./*.webm
     - rm -f ./*.mp4 ./*.avi ./*.webm
     # Epiphan DVI2PCIe Duo support (both OpenCV and libVLC)
-    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --upgrade "$PyPI_INSTALLER"
+    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--enable-nonfree" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-epiphan-dvi2pcieduo-bgra; exit_on_fail
     - edd-dvi-bgra-hevc; exit_on_fail
     - edd-sdi-bgra-hevc; exit_on_fail
