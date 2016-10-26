@@ -180,8 +180,14 @@ SET(V2U "$ENV{EpiphanSDK_DIR}/epiphan/samples/v2u/build/release/v2u")
 EXECUTE_PROCESS(
     COMMAND ${V2U} -s
     OUTPUT_VARIABLE V2U_OUT
+    RESULT_VARIABLE V2U_EXIT_CODE
     OUTPUT_STRIP_TRAILING_WHITESPACE
     )
+if(NOT V2U_EXIT_CODE EQUAL 0)
+    MESSAGE(FATAL_ERROR
+        "No Epiphan cards seem to be installed on your system."
+        )
+endif(NOT V2U_EXIT_CODE EQUAL 0)
 SET(Epiphan_DVI2PCIeDuo_DVI
     "\"${V2U_OUT}.vga\""
     CACHE INTERNAL "Epiphan DVI2PCIe Duo DVI port device file on Linux"
