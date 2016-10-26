@@ -180,6 +180,7 @@ SET(V2U "$ENV{EpiphanSDK_DIR}/epiphan/samples/v2u/build/release/v2u")
 EXECUTE_PROCESS(
     COMMAND ${V2U} -s
     OUTPUT_VARIABLE V2U_OUT
+    OUTPUT_STRIP_TRAILING_WHITESPACE
     )
 SET(Epiphan_DVI2PCIeDuo_DVI
     "\"${V2U_OUT}.vga\""
