@@ -47,14 +47,14 @@ OPTION(USE_BGRA
     "Capture video in BGRA colour space (requires OpenCV)" ON)
 OPTION(USE_I420
     "Capture video in I420 colour space (requires libVLC)" ON)
+OPTION(USE_EPIPHANSDK
+    "Use Epiphan video grabbing SDK (requires zlib and ptreads)" OFF)
 OPTION(GENERATE_PERFORMANCE_OUTPUT
     "Performance benchmark reports (requires Boost.Timer and Boost.System)" OFF)
 MARK_AS_ADVANCED(GENERATE_PERFORMANCE_OUTPUT)
 
 # Inferred options off by default, and advanced
 # (i.e. not shown to user)
-SET(USE_EPIPHANSDK OFF CACHE BOOL "ON OFF" FORCE)
-MARK_AS_ADVANCED(USE_EPIPHANSDK)
 SET(USE_FFMPEG OFF CACHE BOOL "ON OFF" FORCE)
 MARK_AS_ADVANCED(USE_FFMPEG)
 SET(USE_OPENCV OFF CACHE BOOL "ON OFF" FORCE)
@@ -100,7 +100,9 @@ if((USE_EPIPHAN_DVI2PCIE_DUO AND USE_BGRA) OR
 endif()
 
 if(USE_EPIPHAN_DVI2PCIE_DUO AND USE_I420)
-    SET(USE_LIBVLC ON CACHE BOOL "OFF ON" FORCE)
+    if(NOT USE_EPIPHANSDK)
+        SET(USE_LIBVLC ON CACHE BOOL "OFF ON" FORCE)
+    endif(NOT USE_EPIPHANSDK)
 endif(USE_EPIPHAN_DVI2PCIE_DUO AND USE_I420)
 
 # Determine whether FFmpeg needed
