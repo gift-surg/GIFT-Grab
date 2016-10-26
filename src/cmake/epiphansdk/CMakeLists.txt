@@ -166,6 +166,16 @@ SET(LIBS
     ${ZLIB_LIBRARIES}
     )
 
+# Variables to be used by linking libraries
+SET(EpiphanSDK_INCLUDE_DIRS
+    $ENV{EpiphanSDK_DIR}/epiphan/frmgrab/include
+    CACHE INTERNAL "Epiphan video grabbing SDK include dirs"
+    )
+SET(EpiphanSDK_LIBS
+    ${LIBS}
+    CACHE INTERNAL "Epiphan video grabbing SDK link libraries"
+    )
+
 ## Sample apps
 #OPTION(BUILD_TESTS "Build tests" OFF)
 #if(BUILD_TESTS)
