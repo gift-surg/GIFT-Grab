@@ -175,6 +175,23 @@ SET(EpiphanSDK_LIBS
     ${LIBS}
     CACHE INTERNAL "Epiphan video grabbing SDK link libraries"
     )
+# Variables to be used for Epiphan DVI2PCIe Duo port specs
+SET(Epiphan_DVI2PCIeDuo_DVI
+    "\"/dev/video0\""  # TODO: automate?
+    CACHE INTERNAL "Epiphan DVI2PCIe Duo DVI port device file on Linux"
+    )
+SET(Epiphan_DVI2PCIeDuo_SDI
+    "\"/dev/video1\""  # TODO: automate?
+    CACHE INTERNAL "Epiphan DVI2PCIe Duo SDI port device file on Linux"
+    )
+SET(Epiphan_DVI2PCIeDuo_DVI_MAX_FRAME_RATE
+    60  # TODO: automate?
+    CACHE INTERNAL "Epiphan DVI2PCIe Duo DVI port max frame rate"
+    )
+SET(Epiphan_DVI2PCIeDuo_SDI_MAX_FRAME_RATE
+    60  # TODO: automate?
+    CACHE INTERNAL "Epiphan DVI2PCIe Duo SDI port max frame rate"
+    )
 
 ## Sample apps
 #OPTION(BUILD_TESTS "Build tests" OFF)
