@@ -1,6 +1,5 @@
 #pragma once
 #include "frmgrab.h"
-#include "dvi2pcieduo_defs.h"
 #include "ivideosource.h"
 #include "macros.h"
 
