@@ -105,7 +105,7 @@ def test_frame_grabbing(colour_space, config_dir):
     roi = [426, 40, 1064, 1040]
     width_offset = 0
     # disabling the offset within #83
-    if colour_space == ColourSpace.I420 and environ.get('USE_EPIPHANSDK'):
+    if colour_space == pygiftgrab.ColourSpace.I420 and environ.get('USE_EPIPHANSDK'):
         width_offset = 4  # see GiftGrab issues #54 and #67
     fs.start()
     us.start()
