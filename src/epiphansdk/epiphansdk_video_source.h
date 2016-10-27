@@ -1,6 +1,5 @@
 #pragma once
 #include "frmgrab.h"
-#include "dvi2pcieduo_defs.h"
 #include "ivideosource.h"
 #include "macros.h"
 
@@ -60,9 +59,7 @@ public:
 public:
     bool get_frame_dimensions(int & width, int & height);
 
-    bool get_frame(VideoFrame_BGRA & frame);
-
-    bool get_frame(VideoFrame_I420 & frame);
+    bool get_frame(VideoFrame & frame);
 
     double get_frame_rate();
 

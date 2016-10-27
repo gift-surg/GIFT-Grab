@@ -78,6 +78,7 @@ class GiftGrabInstallCommand(install):
 
     user_options = install.user_options + \
                   [('epiphan-dvi2pcie-duo', None, None),
+                   ('epiphansdk', None, None),
                    ('no-bgra', None, None),
                    ('no-i420', None, None),
                    ('xvid', None, None),
@@ -102,6 +103,8 @@ class GiftGrabInstallCommand(install):
                 str_rep += ' BGRA,'
             if not self.no_i420:
                 str_rep += ' I420,'
+            if self.epiphansdk and self.enable_nonfree:
+                str_rep += ' using Epiphan SDK,'
         if self.xvid:
             str_rep += ' Xvid,'
         if self.vp9:
@@ -119,6 +122,7 @@ class GiftGrabInstallCommand(install):
     def initialize_options(self):
         install.initialize_options(self)
         self.epiphan_dvi2pcie_duo = None
+        self.epiphansdk = None
         self.no_bgra = None
         self.no_i420 = None
         self.xvid = None
@@ -231,13 +235,20 @@ class GiftGrabInstallCommand(install):
 
         # check libVLC
         if self.epiphan_dvi2pcie_duo and not self.no_i420:
-            cmd = ['cmake', join(join(self.here, 'cmake'), 'libvlc')]
-            err_msg = '%s\n%s%s' % (
-                'libVLC does not seem to be installed on your system.',
-                'libVLC is needed for Epiphan DVI2PCIe Duo support ',
-                'using the I420 colour space.'
-            )
-            self.__check_command(cmd, err_msg)
+            if self.epiphansdk and self.enable_nonfree:
+                cmd = ['cmake', join(self.here, 'cmake', 'epiphansdk')]
+                err_msg = '%s' % (
+                    'Epiphan SDK does not seem to be available on your system.',
+                )
+                self.__check_command(cmd, err_msg)
+            else:
+                cmd = ['cmake', join(join(self.here, 'cmake'), 'libvlc')]
+                err_msg = '%s\n%s%s' % (
+                    'libVLC does not seem to be installed on your system.',
+                    'libVLC is needed for Epiphan DVI2PCIe Duo support ',
+                    'using the I420 colour space.'
+                )
+                self.__check_command(cmd, err_msg)
 
         # check FFmpeg
         if self.hevc or self.vp9:
@@ -271,7 +282,7 @@ class GiftGrabInstallCommand(install):
                 if self.nvenc:
                     if not self.enable_nonfree:
                         err_msg = 'You must enable non-free components for NVENC support'
-                        self.__print_err_msg(err_mst)
+                        self.__print_err_msg(err_msg)
                         raise LibError(err_msg)
                     else:
                         opt = '--enable-nvenc'
@@ -341,6 +352,9 @@ class GiftGrabInstallCommand(install):
         cmake_args.append('-DBUILD_TESTS=ON')
         if self.epiphan_dvi2pcie_duo:
             cmake_args.append('-DUSE_EPIPHAN_DVI2PCIE_DUO=ON')
+            if self.epiphansdk:
+                cmake_args.append('-DENABLE_NONFREE=ON')
+                cmake_args.append('-DUSE_EPIPHANSDK=ON')
         if self.xvid:
             cmake_args.append('-DUSE_XVID=ON')
         if self.hevc:

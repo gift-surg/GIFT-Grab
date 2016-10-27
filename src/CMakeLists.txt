@@ -47,14 +47,14 @@ OPTION(USE_BGRA
     "Capture video in BGRA colour space (requires OpenCV)" ON)
 OPTION(USE_I420
     "Capture video in I420 colour space (requires libVLC)" ON)
+OPTION(USE_EPIPHANSDK
+    "Use Epiphan video grabbing SDK (requires zlib and ptreads)" OFF)
 OPTION(GENERATE_PERFORMANCE_OUTPUT
     "Performance benchmark reports (requires Boost.Timer and Boost.System)" OFF)
 MARK_AS_ADVANCED(GENERATE_PERFORMANCE_OUTPUT)
 
 # Inferred options off by default, and advanced
 # (i.e. not shown to user)
-SET(USE_EPIPHANSDK OFF CACHE BOOL "ON OFF" FORCE)
-MARK_AS_ADVANCED(USE_EPIPHANSDK)
 SET(USE_FFMPEG OFF CACHE BOOL "ON OFF" FORCE)
 MARK_AS_ADVANCED(USE_FFMPEG)
 SET(USE_OPENCV OFF CACHE BOOL "ON OFF" FORCE)
@@ -67,6 +67,10 @@ if(USE_NVENC AND NOT ENABLE_NONFREE)
     MESSAGE(FATAL_ERROR
         "NVENC (NVIDIA Video Codec SDK) has a proprietary licence: you must explicitly enable non-free (ENABLE_NONFREE=ON) to build GIFT-Grab with NVENC support")
 endif(USE_NVENC AND NOT ENABLE_NONFREE)
+if(USE_EPIPHANSDK AND NOT ENABLE_NONFREE)
+    MESSAGE(FATAL_ERROR
+        "Epiphan video grabbing SDK has a proprietary licence: you must explicitly enable non-free (ENABLE_NONFREE=ON) to build GIFT-Grab with Epiphan video grabbing SDK support.")
+endif(USE_EPIPHANSDK AND NOT ENABLE_NONFREE)
 
 # Check GPL explicitly enabled for relevant components
 if(USE_X265 AND NOT ENABLE_GPL)
@@ -100,7 +104,9 @@ if((USE_EPIPHAN_DVI2PCIE_DUO AND USE_BGRA) OR
 endif()
 
 if(USE_EPIPHAN_DVI2PCIE_DUO AND USE_I420)
-    SET(USE_LIBVLC ON CACHE BOOL "OFF ON" FORCE)
+    if(NOT USE_EPIPHANSDK)
+        SET(USE_LIBVLC ON CACHE BOOL "OFF ON" FORCE)
+    endif(NOT USE_EPIPHANSDK)
 endif(USE_EPIPHAN_DVI2PCIE_DUO AND USE_I420)
 
 # Determine whether FFmpeg needed
@@ -188,6 +194,10 @@ if(USE_EPIPHANSDK)
     INCLUDE_DIRECTORIES(${EpiphanSDK_INCLUDE_DIRS})
     LIST(APPEND LIBS ${EpiphanSDK_LIBS})
     ADD_DEFINITIONS(-DUSE_EPIPHANSDK)
+    ADD_DEFINITIONS(-DEpiphan_DVI2PCIeDuo_DVI=${Epiphan_DVI2PCIeDuo_DVI})
+    ADD_DEFINITIONS(-DEpiphan_DVI2PCIeDuo_SDI=${Epiphan_DVI2PCIeDuo_SDI})
+    ADD_DEFINITIONS(-DEpiphan_DVI2PCIeDuo_DVI_MAX_FRAME_RATE=${Epiphan_DVI2PCIeDuo_DVI_MAX_FRAME_RATE})
+    ADD_DEFINITIONS(-DEpiphan_DVI2PCIeDuo_SDI_MAX_FRAME_RATE=${Epiphan_DVI2PCIeDuo_SDI_MAX_FRAME_RATE})
 
     INCLUDE_DIRECTORIES(epiphansdk)
     LIST(APPEND HEADERS epiphansdk/epiphansdk_video_source.h)

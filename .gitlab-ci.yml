@@ -2,6 +2,7 @@ variables:
   CI_SCRIPTS_DIR: "./ci"
   SCRATCH_DIR: "/home/gitlab-runner/giftgrab-scratch"
   CTEST_OUTPUT_ON_FAILURE: "1"
+  EpiphanSDK_DIR: "/home/gitlab-runner/environments/giftgrab/opt/epiphan_sdk-3.30.3.0007"
 
 before_script:
   - rm -rf $SCRATCH_DIR
@@ -64,26 +65,6 @@ linux:
     - make -j; exit_on_fail
     - ctest; exit_on_fail
     - make install
-    # deactivate Xvid to avoid interference with OpenCV in following tests
-    - cmake -D USE_XVID=OFF .
-    # Epiphan DVI2PCIe Duo support (OpenCV only)
-    - cmake -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D USE_I420=OFF .
-    - make -j; exit_on_fail
-    # no ctest for Epiphan DVI2PCIe Duo on
-    # general-purpose Linux test server
-    - make install
-    # Epiphan DVI2PCIe Duo support (libVLC only)
-    - cmake -D USE_BGRA=OFF -D USE_I420=ON .
-    - make -j; exit_on_fail
-    # no ctest for Epiphan DVI2PCIe Duo on
-    # general-purpose Linux test server
-    - make install
-    # Epiphan DVI2PCIe Duo support (both OpenCV and libVLC)
-    - cmake -D USE_BGRA=ON -D USE_I420=ON .
-    - make -j; exit_on_fail
-    # no ctest for Epiphan DVI2PCIe Duo on
-    # general-purpose Linux test server
-    - make install
     # build docs
     - cmake -D BUILD_DOC=ON .
     - make -j; exit_on_fail
@@ -126,22 +107,17 @@ pypi:
     # HEVC support with x265
     - pip install -vvv --install-option="--hevc" --install-option="--enable-gpl" --install-option="--x265" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-hevc-bgra; exit_on_fail
+    - test-giftgrab-hevc-i420; exit_on_fail
     # hardware-accelerated HEVC
     - pip install -vvv --install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-hevc-bgra; exit_on_fail
+    - test-giftgrab-hevc-i420; exit_on_fail
     # Xvid support
     - pip install -vvv --install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc" --install-option="--xvid" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-xvid-bgra; exit_on_fail
     # VP9 support
     - pip install -vvv --install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-vp9-bgra; exit_on_fail
-    # Epiphan DVI2PCIe Duo support (OpenCV only)
-    - pip install -vvv --install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--no-i420" --upgrade "$PyPI_INSTALLER"
-    # Epiphan DVI2PCIe Duo support (libVLC only)
-    - pip install -vvv --install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--no-bgra" --upgrade "$PyPI_INSTALLER"
-    # Epiphan DVI2PCIe Duo support (both OpenCV and libVLC)
-    - pip install -vvv --install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --upgrade "$PyPI_INSTALLER"
-    - test-giftgrab-hevc-i420; exit_on_fail
     - test-giftgrab-vp9-i420; exit_on_fail
     - deactivate
   tags:
@@ -185,7 +161,7 @@ pypi-epiphan-dvi2pcie-duo:
     - pip install PyYAML
     - pip install pytest
     # Epiphan DVI2PCIe Duo support (OpenCV only)
-    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--no-i420" --upgrade "$PyPI_INSTALLER"
+    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--enable-nonfree" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--no-i420" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-epiphan-dvi2pcieduo-bgra; exit_on_fail
     - edd-dvi-bgra-hevc; exit_on_fail
     - edd-sdi-bgra-hevc; exit_on_fail
@@ -194,7 +170,7 @@ pypi-epiphan-dvi2pcie-duo:
     - edd-dvi-bgra-vp9; exit_on_fail
     - edd-sdi-bgra-vp9; exit_on_fail
     # Epiphan DVI2PCIe Duo support (libVLC only)
-    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--no-bgra" --upgrade "$PyPI_INSTALLER"
+    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--enable-nonfree" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--no-bgra" --upgrade "$PyPI_INSTALLER"
     # TODO: issue #102
     # - test-giftgrab-epiphan-dvi2pcieduo-i420; exit_on_fail
     - edd-dvi-i420-hevc; exit_on_fail
@@ -206,7 +182,7 @@ pypi-epiphan-dvi2pcie-duo:
     - ls -alh ./*.webm
     - rm -f ./*.mp4 ./*.avi ./*.webm
     # Epiphan DVI2PCIe Duo support (both OpenCV and libVLC)
-    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --upgrade "$PyPI_INSTALLER"
+    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--enable-nonfree" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-epiphan-dvi2pcieduo-bgra; exit_on_fail
     - edd-dvi-bgra-hevc; exit_on_fail
     - edd-sdi-bgra-hevc; exit_on_fail
@@ -222,13 +198,27 @@ pypi-epiphan-dvi2pcie-duo:
     - ls -alh ./*.avi
     - ls -alh ./*.webm
     - rm -f ./*.mp4 ./*.avi ./*.webm
+    # Epiphan DVI2PCIe Duo support (both OpenCV and Epiphan SDK)
+    # dummy var, to induce width_offset in test_realtime.py
+    # see definition of width_offset in test_realtime.py (Epiphan DVI2PCIe Duo tests)
+    - export USE_EPIPHANSDK=3
+    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--enable-nonfree" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--epiphansdk" --upgrade "$PyPI_INSTALLER"
+    - test-giftgrab-epiphan-dvi2pcieduo-i420; exit_on_fail
+    - edd-dvi-i420-hevc; exit_on_fail
+    - edd-sdi-i420-hevc; exit_on_fail
+    - edd-dvi-i420-vp9; exit_on_fail
+    - edd-sdi-i420-vp9; exit_on_fail
+    - ls -alh ./*.mp4
+    - ls -alh ./*.webm
+    - rm -f ./*.mp4 ./*.avi ./*.webm
+    - unset USE_EPIPHANSDK  # remove dummy var
     - deactivate
   tags:
     - gift-linux
     - gift-pypi
     - gift-epiphan-dvi2pcie-duo
   only:
-    - 101-vlc-video-source-fails-when-resetting-engine-and-or-player-with-a-crop
+    - 100-use-of-epiphansdk-after-libvlc-integrated
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 epiphan-dvi2pcie-duo:
@@ -249,7 +239,7 @@ epiphan-dvi2pcie-duo:
     - export LIBVLC_INCLUDE_PATH="$STORZ_STACK_GIFTGRAB_ENV_ROOT/include"
     - export LIBVLC_LIBRARY_PATH="$STORZ_STACK_GIFTGRAB_ENV_ROOT/lib"
     # test BGRA colour space
-    - cmake -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D USE_I420=OFF -D BUILD_PYTHON=ON -D BUILD_TESTS=ON -D USE_HEVC=ON -D USE_NVENC=ON "$GiftGrab_SOURCE_DIR"
+    - cmake -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D USE_I420=OFF -D BUILD_PYTHON=ON -D BUILD_TESTS=ON -D USE_HEVC=ON -D USE_NVENC=ON -D ENABLE_NONFREE=ON "$GiftGrab_SOURCE_DIR"
     - make -j; exit_on_fail
     - check_epiphan_alive
     - ctest; exit_on_fail
@@ -263,8 +253,17 @@ epiphan-dvi2pcie-duo:
     - make -j; exit_on_fail
     - check_epiphan_alive
     - ctest; exit_on_fail
+    # Epiphan SDK
+    # dummy var, to induce width_offset in test_realtime.py
+    # see definition of width_offset in test_realtime.py (Epiphan DVI2PCIe Duo tests)
+    - export USE_EPIPHANSDK=3
+    - cmake -D USE_EPIPHANSDK=ON -D ENABLE_NONFREE=ON .
+    - make -j; exit_on_fail
+    - check_epiphan_alive
+    - ctest; exit_on_fail
+    - unset USE_EPIPHANSDK  # remove dummy var
   tags:
     - gift-linux
     - gift-epiphan-dvi2pcie-duo
   only:
-    - 101-vlc-video-source-fails-when-resetting-engine-and-or-player-with-a-crop
+    - 100-use-of-epiphansdk-after-libvlc-integrated

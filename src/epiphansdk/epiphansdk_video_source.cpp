@@ -28,7 +28,7 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
     }
     _flags |= colour_space;
 
-    VideoFrame_I420 frame;
+    VideoFrame frame(I420);
     _full.x = 0;
     _full.y = 0;
     /* TODO - e.g. EpiphanSDK_MAX_RES_X and
@@ -55,18 +55,16 @@ bool VideoSourceEpiphanSDK::get_frame_dimensions(int & width, int & height)
     return true;
 }
 
-bool VideoSourceEpiphanSDK::get_frame(VideoFrame_BGRA & frame)
+bool VideoSourceEpiphanSDK::get_frame(VideoFrame & frame)
 {
-    // TODO - exception GiftGrab#42
-    return false;
-}
+    if (frame.colour() != I420)
+        // TODO - exception GiftGrab#42
+        return false;
 
-bool VideoSourceEpiphanSDK::get_frame(VideoFrame_I420 & frame)
-{
     _buffer = FrmGrab_Frame(_frame_grabber, _flags, &_roi);
     if (_buffer)
     {
-        frame = VideoFrame_I420(
+        frame.init_from_specs(
                     static_cast<unsigned char*>(_buffer->pixbuf),
                     _buffer->imagelen,
                     /* TODO #54 specified _roi not always
@@ -75,8 +73,7 @@ bool VideoSourceEpiphanSDK::get_frame(VideoFrame_I420 & frame)
                      * instead of _roi to avoid alignment
                      * problems when saving to video files
                      */
-                    _buffer->crop.width, _buffer->crop.height,
-                    false
+                    _buffer->crop.width, _buffer->crop.height
                     );
         FrmGrab_Release(_frame_grabber, _buffer);
         return true;
@@ -89,15 +86,15 @@ double VideoSourceEpiphanSDK::get_frame_rate()
 {
     if (_frame_grabber)
     {
-#if defined(EpiphanSDK_DVI) and \
-    defined(EpiphanSDK_SDI) and \
-    defined(EpiphanSDK_DVI_MAX_FRAME_RATE) and \
-    defined(EpiphanSDK_SDI_MAX_FRAME_RATE)
+#if defined(Epiphan_DVI2PCIeDuo_DVI) and \
+    defined(Epiphan_DVI2PCIeDuo_SDI) and \
+    defined(Epiphan_DVI2PCIeDuo_DVI_MAX_FRAME_RATE) and \
+    defined(Epiphan_DVI2PCIeDuo_SDI_MAX_FRAME_RATE)
         std::string port_id = FrmGrab_GetId(_frame_grabber);
-        if (port_id == EpiphanSDK_DVI)
-            return EpiphanSDK_DVI_MAX_FRAME_RATE;
-        else if (port_id == EpiphanSDK_SDI)
-            return EpiphanSDK_SDI_MAX_FRAME_RATE;
+        if (port_id == Epiphan_DVI2PCIeDuo_DVI)
+            return Epiphan_DVI2PCIeDuo_DVI_MAX_FRAME_RATE;
+        else if (port_id == Epiphan_DVI2PCIeDuo_SDI)
+            return Epiphan_DVI2PCIeDuo_SDI_MAX_FRAME_RATE;
 #endif
     }
 

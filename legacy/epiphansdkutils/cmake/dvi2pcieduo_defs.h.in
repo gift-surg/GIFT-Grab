@@ -1,0 +1,6 @@
+#pragma once
+#cmakedefine Epiphan_DVI2PCIeDuo_DVI "@Epiphan_DVI2PCIeDuo_DVI@"
+#cmakedefine Epiphan_DVI2PCIeDuo_SDI "@Epiphan_DVI2PCIeDuo_SDI@"
+#cmakedefine Epiphan_DVI2PCIeDuo_DVI_MAX_FRAME_RATE @Epiphan_DVI2PCIeDuo_DVI_MAX_FRAME_RATE@
+#cmakedefine Epiphan_DVI2PCIeDuo_SDI_MAX_FRAME_RATE @Epiphan_DVI2PCIeDuo_SDI_MAX_FRAME_RATE@
+#cmakedefine Epiphan_DVI2PCIeDuo_DUAL_MAX_FRAME_RATE @Epiphan_DVI2PCIeDuo_DUAL_MAX_FRAME_RATE@
