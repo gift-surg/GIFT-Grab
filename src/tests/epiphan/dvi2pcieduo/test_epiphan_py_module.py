@@ -40,7 +40,7 @@ def timing_report(file_path):
     return True
 
 
-@pytest.mark.real_time
+@pytest.mark.epiphan_py_module
 @pytest.mark.usefixtures('cleanup')
 def test_parse(colour_space, config_dir):
     # not existing config file
@@ -68,7 +68,7 @@ def test_parse(colour_space, config_dir):
         _ = parse(join(config_dir, 'oserror.yml'))
 
 
-@pytest.mark.real_time
+@pytest.mark.epiphan_py_module
 @pytest.mark.usefixtures('cleanup')
 def test_frame_grabbing(colour_space, config_dir):
     # test-input & data
