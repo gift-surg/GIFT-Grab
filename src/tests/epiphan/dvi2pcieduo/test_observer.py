@@ -39,9 +39,6 @@ class DummyObservable(Observable):
     def dummy_run(self, frame_rate, duration):
         d_time = (1.0 - 0.5) / frame_rate
         n = duration * frame_rate
-        print('{} fps, {} s => {} x {}'.format(
-            frame_rate, duration, n, d_time)
-        )
         for i in range(n):
             self.notify()
             time.sleep(d_time)
@@ -72,12 +69,6 @@ class FrameRateTimer(Observer):
         diffs = np.array(map(
             (lambda p: (p[1] - p[0]).microseconds / 1000.0),
             pairs)
-        )
-        print('{} diffs of {} timestamps are'.format(
-            len(diffs), len(self._timestamps))
-        )
-        print('min = {}, max = {}'.format(
-            np.min(diffs), np.max(diffs))
         )
         del self._timestamps[:]
         return np.max(diffs) <= 1000.0 / self._frame_rate
