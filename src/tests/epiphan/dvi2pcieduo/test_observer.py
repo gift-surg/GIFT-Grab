@@ -5,11 +5,17 @@ import numpy as np
 
 
 class Observer:
+    """To be replaced by pygiftgrab.Observer
+    """
+
     def update(self):
-        print('Observer')
+        print('Observer-update')
 
 
 class Observable:
+    """To be replaced by pygiftgrab.Observable
+    """
+
     def __init__(self):
         self._observers = []
 
@@ -23,18 +29,22 @@ class Observable:
         except ValueError:
             pass
 
-    def dummy_run(self, frame_rate, duration):
-        d_time = (1.0 - 0.5) / frame_rate
-        n = duration * frame_rate
-        print('{} fps, {} s => {} x {}'.format(frame_rate, duration, n, d_time))
-        for i in range(n):
-            self.notify()
-            time.sleep(d_time)
-
     def notify(self, modifier=None):
         for observer in self._observers:
             if modifier != observer:
                 observer.update()
+
+
+class DummyObservable(Observable):
+    def dummy_run(self, frame_rate, duration):
+        d_time = (1.0 - 0.5) / frame_rate
+        n = duration * frame_rate
+        print('{} fps, {} s => {} x {}'.format(
+            frame_rate, duration, n, d_time)
+        )
+        for i in range(n):
+            self.notify()
+            time.sleep(d_time)
 
 
 class FrameRateTimer(Observer):
@@ -82,7 +92,7 @@ class FrameRateTimer(Observer):
 def test_frame_rate(frame_rate):
     timer_1 = FrameRateTimer(frame_rate)
     timer_2 = FrameRateTimer(frame_rate)
-    source = Observable()
+    source = DummyObservable()
     # source = gg.Factory.connect(gg.Device.DVI2PCIeDuo_DVI,
     #                             gg.ColourSpace.I420)
     source.attach(timer_1)
@@ -103,3 +113,4 @@ def test_frame_rate(frame_rate):
 
 
 test_frame_rate(60)
+test_frame_rate(30)
