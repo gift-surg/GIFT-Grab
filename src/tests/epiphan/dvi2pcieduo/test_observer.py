@@ -37,7 +37,7 @@ class Observable:
                 observer.update()
 
 
-class TestTimer(Observer):
+class FrameRateTimer(Observer):
     """Descendant of GIFT-Grab's `Observer`, which
     will listen to Observable's for some time and
     when asked, will report whether data has been
@@ -54,8 +54,11 @@ class TestTimer(Observer):
         )
 
     def __bool__(self):
+        """Check if updates have been in time intervals
+        in line with defined frame rate, also resetting
+        all saved timestamps, i.e. ready for next round.
+        """
         pairs = zip(self._timestamps[:-1], self._timestamps[1:])
-        # print pairs
         diffs = np.array(map(
             (lambda p: (p[1] - p[0]).microseconds / 1000.0),
             pairs)
@@ -77,20 +80,20 @@ class TestTimer(Observer):
 
 
 def test_frame_rate(frame_rate):
-    timer_1 = TestTimer(frame_rate)
-    timer_2 = TestTimer(frame_rate)
+    timer_1 = FrameRateTimer(frame_rate)
+    timer_2 = FrameRateTimer(frame_rate)
     source = Observable()
     # source = gg.Factory.connect(gg.Device.DVI2PCIeDuo_DVI,
     #                             gg.ColourSpace.I420)
     source.attach(timer_1)
     source.attach(timer_2)
-    source.dummy_run(frame_rate, 30)
+    source.dummy_run(frame_rate, 30)  # TODO remove
     assert timer_1
     assert timer_2
-    source.dummy_run(frame_rate / 2, 30)
+    source.dummy_run(frame_rate / 2, 30)  # TODO remove
     assert not timer_1
     assert not timer_2
-    source.dummy_run(frame_rate * 2, 30)
+    source.dummy_run(frame_rate * 2, 30)  # TODO remove
     assert timer_1
     assert timer_2
     # time.sleep(120)
