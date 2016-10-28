@@ -37,7 +37,7 @@ class Observable:
 
 class DummyObservable(Observable):
     def dummy_run(self, frame_rate, duration):
-        d_time = (1.0 - 0.5) / frame_rate
+        d_time = (1.0 - 0.1) / frame_rate
         n = duration * frame_rate
         for i in range(n):
             self.notify()
