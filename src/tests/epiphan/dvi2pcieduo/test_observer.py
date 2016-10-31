@@ -6,7 +6,7 @@ import pygiftgrab as pgg
 
 class FrameRateTimer(pgg.Observer):
     """Descendant of GIFT-Grab's `Observer`, which
-    will listen to Observable's for some time and
+    will listen to `Observable`s for some time and
     when asked, will report whether data has been
     sent at the specified frame rate.
     """
