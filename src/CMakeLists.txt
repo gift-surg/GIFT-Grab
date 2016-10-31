@@ -124,7 +124,9 @@ INCLUDE_DIRECTORIES(utils)
 # Variable for header and source files
 SET(HEADERS
     api/ivideosource.h
+    api/iobservable.h
     api/ivideotarget.h
+    api/iobserver.h
     api/videoframe.h
     api/maskframe.h
     api/factory.h
