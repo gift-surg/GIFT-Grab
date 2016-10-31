@@ -29,6 +29,7 @@ foreach(COLOUR_SPACE ${COLOUR_SPACES})
     LIST(APPEND TESTS_LIST ${NAME_TEST})
 endforeach(COLOUR_SPACE)
 
+# Commented out to test VideoFrame assignment operator
 # Both ports of Epiphan DVI2PCIe Duo using the observer pattern
 #foreach(COLOUR_SPACE ${COLOUR_SPACES})
 #    foreach(PORT ${PORTS})
