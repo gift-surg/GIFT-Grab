@@ -1,4 +1,3 @@
-# import pygiftgrab as gg
 import time
 import datetime
 import pytest
