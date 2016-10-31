@@ -1,7 +1,7 @@
 # import pygiftgrab as gg
 import time
 import datetime
-import numpy as np
+import pytest
 
 
 class Observer:
@@ -66,12 +66,12 @@ class FrameRateTimer(Observer):
         all saved timestamps, i.e. ready for next round.
         """
         pairs = zip(self._timestamps[:-1], self._timestamps[1:])
-        diffs = np.array(map(
+        diffs = map(
             (lambda p: (p[1] - p[0]).microseconds / 1000.0),
-            pairs)
+            pairs
         )
         del self._timestamps[:]
-        return np.max(diffs) <= 1000.0 / self._frame_rate
+        return max(diffs) <= 1000.0 / self._frame_rate
 
     def __nonzero__(self):
         if self.__bool__():
@@ -80,28 +80,21 @@ class FrameRateTimer(Observer):
             return 0
 
 
-def test_frame_rate(frame_rate):
-    timer_1 = FrameRateTimer(frame_rate)
-    timer_2 = FrameRateTimer(frame_rate)
+@pytest.mark.observer_pattern
+def test_frame_rate(frame_rate, observers):
+    timers = []
+    for i in range(observers):
+        timers.append(FrameRateTimer(frame_rate))
     source = DummyObservable()
     # source = gg.Factory.connect(gg.Device.DVI2PCIeDuo_DVI,
     #                             gg.ColourSpace.I420)
-    source.attach(timer_1)
-    source.attach(timer_2)
+    for timer in timers:
+        source.attach(timer)
     source.dummy_run(frame_rate, 30)  # TODO remove
-    assert timer_1
-    assert timer_2
-    source.dummy_run(frame_rate / 2, 30)  # TODO remove
-    assert not timer_1
-    assert not timer_2
-    source.dummy_run(frame_rate * 2, 30)  # TODO remove
-    assert timer_1
-    assert timer_2
+    for timer in timers:
+        assert timer
     # time.sleep(120)
-    source.detach(timer_1)
-    source.detach(timer_2)
+    for timer in timers:
+        source.detach(timer)
+    del timers[:]
     # gg.Factory.disconnect(gg.Device.DVI2PCIeDuo_DVI)
-
-
-test_frame_rate(60)
-test_frame_rate(30)

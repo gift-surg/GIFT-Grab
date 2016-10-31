@@ -1,6 +1,7 @@
 FILE(COPY
     ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/test_unit.py
     ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/test_epiphan_py_module.py
+    ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/test_observer.py
     ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/conftest.py
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
 )
@@ -27,6 +28,12 @@ foreach(COLOUR_SPACE ${COLOUR_SPACES})
     )
     LIST(APPEND TESTS_LIST ${NAME_TEST})
 endforeach(COLOUR_SPACE)
+
+SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_ObserverPattern)
+ADD_TEST(NAME ${NAME_TEST}
+    COMMAND py.test --frame-rate=60 --observers=3 test_observer.py
+)
+LIST(APPEND TESTS_LIST ${NAME_TEST})
 
 # to avoid copying stuff around
 SET_TESTS_PROPERTIES(${TESTS_LIST}
