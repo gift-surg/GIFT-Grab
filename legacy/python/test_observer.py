@@ -2,10 +2,49 @@
 import time
 import datetime
 import pytest
-import pygiftgrab as pgg
 
 
-class FrameRateTimer(pgg.Observer):
+class Observer:
+    """To be replaced by pygiftgrab.Observer
+    """
+
+    def update(self):
+        print('Observer-update')
+
+
+class Observable:
+    """To be replaced by pygiftgrab.Observable
+    """
+
+    def __init__(self):
+        self._observers = []
+
+    def attach(self, observer):
+        if observer not in self._observers:
+            self._observers.append(observer)
+
+    def detach(self, observer):
+        try:
+            self._observers.remove(observer)
+        except ValueError:
+            pass
+
+    def notify(self, modifier=None):
+        for observer in self._observers:
+            if modifier != observer:
+                observer.update()
+
+
+class DummyObservable(Observable):
+    def dummy_run(self, frame_rate, duration):
+        d_time = (1.0 - 0.1) / frame_rate
+        n = duration * frame_rate
+        for i in range(n):
+            self.notify()
+            time.sleep(d_time)
+
+
+class FrameRateTimer(Observer):
     """Descendant of GIFT-Grab's `Observer`, which
     will listen to Observable's for some time and
     when asked, will report whether data has been
@@ -42,19 +81,20 @@ class FrameRateTimer(pgg.Observer):
 
 
 @pytest.mark.observer_pattern
-def test_frame_rate(port, colour_space, frame_rate, observers):
+def test_frame_rate(frame_rate, observers):
     timers = []
     for i in range(observers):
         timers.append(FrameRateTimer(frame_rate))
-    source = pgg.Factory.connect(port, colour_space)
+    source = DummyObservable()
+    # source = gg.Factory.connect(gg.Device.DVI2PCIeDuo_DVI,
+    #                             gg.ColourSpace.I420)
     for timer in timers:
         source.attach(timer)
-
-    time.sleep(120)  # listen for data these nr. of sec
+    source.dummy_run(frame_rate, 30)  # TODO remove
     for timer in timers:
         assert timer
-
+    # time.sleep(120)
     for timer in timers:
         source.detach(timer)
     del timers[:]
-    pgg.Factory.disconnect(port)
+    # gg.Factory.disconnect(gg.Device.DVI2PCIeDuo_DVI)
