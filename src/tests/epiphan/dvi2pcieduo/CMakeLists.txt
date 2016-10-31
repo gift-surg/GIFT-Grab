@@ -30,21 +30,21 @@ foreach(COLOUR_SPACE ${COLOUR_SPACES})
 endforeach(COLOUR_SPACE)
 
 # Both ports of Epiphan DVI2PCIe Duo using the observer pattern
-foreach(COLOUR_SPACE ${COLOUR_SPACES})
-    foreach(PORT ${PORTS})
-        SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_ObserverPattern_${PORT}_${COLOUR_SPACE})
-        if(COLOUR_SPACE STREQUAL "I420")
-            SET(FRAME_RATE 60)
-        elseif(COLOUR_SPACE STREQUAL "BGRA")
-            SET(FRAME_RATE 30)
-        endif(COLOUR_SPACE STREQUAL "I420")
-
-        ADD_TEST(NAME ${NAME_TEST}
-            COMMAND py.test --port=${PORT} --colour-space=${COLOUR_SPACE} --frame-rate=${FRAME_RATE} --observers=3 test_observer.py
-        )
-        LIST(APPEND TESTS_LIST ${NAME_TEST})
-    endforeach(PORT)
-endforeach(COLOUR_SPACE)
+#foreach(COLOUR_SPACE ${COLOUR_SPACES})
+#    foreach(PORT ${PORTS})
+#        SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_ObserverPattern_${PORT}_${COLOUR_SPACE})
+#        if(COLOUR_SPACE STREQUAL "I420")
+#            SET(FRAME_RATE 60)
+#        elseif(COLOUR_SPACE STREQUAL "BGRA")
+#            SET(FRAME_RATE 30)
+#        endif(COLOUR_SPACE STREQUAL "I420")
+#
+#        ADD_TEST(NAME ${NAME_TEST}
+#            COMMAND py.test --port=${PORT} --colour-space=${COLOUR_SPACE} --frame-rate=${FRAME_RATE} --observers=3 test_observer.py
+#        )
+#        LIST(APPEND TESTS_LIST ${NAME_TEST})
+#    endforeach(PORT)
+#endforeach(COLOUR_SPACE)
 
 # to avoid copying stuff around
 SET_TESTS_PROPERTIES(${TESTS_LIST}
