@@ -20,7 +20,7 @@ foreach(COLOUR_SPACE ${COLOUR_SPACES})
     endforeach(PORT)
 endforeach(COLOUR_SPACE)
 
-# Both ports in real-time
+# Both ports of Epiphan DVI2PCIe Duo using the Epiphan Python module
 foreach(COLOUR_SPACE ${COLOUR_SPACES})
     SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_PyModule_${COLOUR_SPACE})
     ADD_TEST(NAME ${NAME_TEST}
