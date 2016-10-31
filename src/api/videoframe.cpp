@@ -125,6 +125,11 @@ VideoFrame::~VideoFrame()
     free_memory();
 }
 
+void VideoFrame::operator=(const VideoFrame & rhs)
+{
+    clone(rhs);
+}
+
 void VideoFrame::init_from_specs(unsigned char * data, size_t data_length,
                                  size_t cols, size_t rows)
 {
@@ -140,6 +145,15 @@ void VideoFrame::init_from_specs(unsigned char * data, size_t data_length,
     }
 
     set_dimensions(cols, rows);
+}
+
+void VideoFrame::clone(const VideoFrame & rhs)
+{
+    free_memory();
+    _manage_data = true;
+    _colour = rhs._colour;
+    init_from_specs(rhs._data, rhs._data_length,
+                    rhs._cols, rhs._rows);
 }
 
 void VideoFrame::set_dimensions(size_t cols, size_t rows)

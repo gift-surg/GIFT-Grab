@@ -82,6 +82,12 @@ public:
     virtual ~VideoFrame();
 
     //!
+    //! \brief Clone \c rhs, copying its data
+    //! \param rhs
+    //!
+    void operator=(const VideoFrame & rhs);
+
+    //!
     //! \brief Initialise using passed data AND frame specs
     //!
     //! The caller is responsible for ensuring consistency of specs.
@@ -195,6 +201,12 @@ protected:
     bool _manage_data;
 
 protected:
+    //!
+    //! \brief Clone \c rhs
+    //! \param rhs
+    //!
+    void clone(const VideoFrame & rhs);
+
     //!
     //! \brief Set dimensions in conjunction with
     //! colour space requirements
