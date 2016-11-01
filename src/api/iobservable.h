@@ -29,6 +29,15 @@ protected:
 
 public:
     //!
+    //! \brief
+    //!
+    virtual ~IObservable()
+    {
+
+    }
+
+public:
+    //!
     //! \brief Attach given observer to this observable.
     //! If observer already attached, no action is taken,
     //! no action is taken.

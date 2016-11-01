@@ -17,6 +17,15 @@ class IObserver
 public:
     //!
     //! \brief
+    //!
+    virtual ~IObserver()
+    {
+
+    }
+
+public:
+    //!
+    //! \brief
     //! \param frame
     //!
     virtual void update(VideoFrame & frame) = 0;
