@@ -12,10 +12,11 @@ class FrameRateTimer(pgg.IObserver):
     """
 
     def __init__(self, frame_rate):
+        super(FrameRateTimer, self).__init__()
         self._frame_rate = frame_rate
         self._timestamps = []
 
-    def update(self):
+    def update(self, frame):
         self._timestamps.append(
             datetime.datetime.now()
         )

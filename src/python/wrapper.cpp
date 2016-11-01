@@ -47,7 +47,13 @@ class IVideoSourceWrapper : IVideoSource, wrapper<IVideoSource>
     }
 };
 
-class IObserverWrapper : gg::IObserver, wrapper<gg::IObserver>
+/* The inheritance should be public, in order to preserve
+ * the public accessibility of the update() method. The
+ * Boost.Python examples feature struct's rather than
+ * classes, and in struct's everything is public by
+ * definition.
+ */
+class IObserverWrapper : public gg::IObserver, public wrapper<gg::IObserver>
 {
     void update(gg::VideoFrame & frame)
     {
@@ -181,7 +187,8 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     ;
 #endif
 
-    class_<gg::IObserver, boost::noncopyable>("IObserver", no_init)
+    class_<IObserverWrapper, boost::noncopyable>("IObserver")
+        .def("update", pure_virtual(&gg::IObserver::update))
     ;
 
     class_<gg::IVideoTarget, bases<gg::IObserver>, boost::noncopyable>(
