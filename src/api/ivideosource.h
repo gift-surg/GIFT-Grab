@@ -2,6 +2,7 @@
 
 #include "videoframe.h"
 #include "except.h"
+#include "iobservable.h"
 
 //!
 //! \brief This abstract class defines the interface that every video source
@@ -10,7 +11,7 @@
 //! This enables the underlying algorithms to be agnostic of
 //! the data sources.
 //!
-class IVideoSource
+class IVideoSource : public gg::IObservable
 {
 public:
     //!
