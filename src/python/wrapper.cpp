@@ -1,5 +1,6 @@
 #include "factory.h"
 #include "except.h"
+#include "iobserver.h"
 #ifdef USE_OPENCV
 #include "opencv_video_source.h"
 #include "opencv_video_target.h"
