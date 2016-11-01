@@ -47,6 +47,14 @@ class IVideoSourceWrapper : IVideoSource, wrapper<IVideoSource>
     }
 };
 
+class IObserverWrapper : gg::IObserver, wrapper<gg::IObserver>
+{
+    void update(gg::VideoFrame & frame)
+    {
+        this->get_override("update")(frame);
+    }
+};
+
 class IVideoTargetWrapper : gg::IVideoTarget, wrapper<gg::IVideoTarget>
 {
     void init(const std::string filepath, const float framerate)
@@ -130,9 +138,6 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .def("cols", &gg::VideoFrame::cols)
     ;
 
-    class_<gg::IObserver>("IObserver", no_init)
-    ;
-
     class_<IVideoSource, boost::noncopyable>("IVideoSource", no_init)
     ;
 
@@ -170,7 +175,12 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     ;
 #endif
 
-    class_<gg::IVideoTarget, boost::noncopyable>("IVideoTarget", no_init)
+    class_<gg::IObserver, boost::noncopyable>("IObserver", no_init)
+    ;
+
+    class_<gg::IVideoTarget, bases<gg::IObserver>, boost::noncopyable>(
+                "IVideoTarget", no_init)
+        .def("update", &gg::IVideoTarget::update)
     ;
 
 #ifdef USE_FFMPEG
