@@ -1,6 +1,6 @@
 #include "factory.h"
 #include "except.h"
-#include "iobserver.h"
+#include "iobservable.h"
 #ifdef USE_OPENCV
 #include "opencv_video_source.h"
 #include "opencv_video_target.h"
@@ -138,7 +138,13 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .def("cols", &gg::VideoFrame::cols)
     ;
 
-    class_<IVideoSource, boost::noncopyable>("IVideoSource", no_init)
+    class_<gg::IObservable, boost::noncopyable>("IObservable", no_init)
+        .def("attach", &gg::IObservable::attach)
+        .def("detach", &gg::IObservable::detach)
+    ;
+
+    class_<IVideoSource, bases<gg::IObservable>, boost::noncopyable>(
+                "IVideoSource", no_init)
     ;
 
 #ifdef USE_OPENCV
