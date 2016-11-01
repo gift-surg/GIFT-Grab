@@ -1,6 +1,7 @@
 #pragma once
 
 #include "iobserver.h"
+#include <vector>
 
 namespace gg
 {
