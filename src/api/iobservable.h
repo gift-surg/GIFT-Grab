@@ -2,6 +2,7 @@
 
 #include "iobserver.h"
 #include <vector>
+#include <algorithm>
 
 namespace gg
 {
