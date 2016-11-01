@@ -12,6 +12,11 @@ namespace gg
 //! part of the observer design pattern (aka
 //! subscriber-publisher).
 //!
+//! Note that no new buffer is created when broadcasting
+//! data, i.e. every IObserver is responsible for
+//! ensuring data is promptly copied to their own
+//! data buffer.
+//!
 class IObservable
 {
 protected:
