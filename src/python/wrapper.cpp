@@ -121,6 +121,9 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .def("cols", &gg::VideoFrame::cols)
     ;
 
+    class_<gg::IObserver>("IObserver", no_init)
+    ;
+
     class_<IVideoSource, boost::noncopyable>("IVideoSource", no_init)
     ;
 
