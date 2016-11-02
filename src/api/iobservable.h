@@ -3,6 +3,8 @@
 #include "iobserver.h"
 #include <vector>
 #include <algorithm>
+#include <typeinfo>
+#include <functional>
 
 namespace gg
 {
@@ -25,7 +27,7 @@ protected:
     //!
     //! \brief
     //!
-    std::vector<IObserver *> _observers;
+    std::vector< std::reference_wrapper<IObserver> > _observers;
 
 public:
     //!
@@ -49,7 +51,7 @@ public:
     {
         if (not attached(observer))
         {
-            _observers.push_back(&observer);
+            _observers.push_back(observer);
             if (not attached(observer))
                 throw ObserverError("Attaching observer unsuccessful");
         }
@@ -63,10 +65,13 @@ public:
     //!
     virtual void detach(IObserver & observer)
     {
-        _observers.erase(std::remove(
+        _observers.erase(std::find_if(
                              _observers.begin(),
                              _observers.end(),
-                             &observer),
+                             [&](const std::reference_wrapper<IObserver> &o)
+                                {
+                                    return &(o.get()) == &observer;
+                                }),
                          _observers.end());
         if (attached(observer))
             throw ObserverError("Detaching observer unsuccessful");
@@ -78,8 +83,12 @@ protected:
     //!
     virtual void notify(VideoFrame & frame) noexcept
     {
-        for (IObserver * observer : _observers)
-            observer->update(frame);
+        for (IObserver & observer : _observers)
+        {
+            printf("%p observer is of type %s\n",
+                   &observer, typeid(observer).name());
+            observer.update(frame);
+        }
     }
 
     //!
@@ -90,10 +99,13 @@ protected:
     //!
     bool attached(const IObserver & observer) const noexcept
     {
-        return std::find(
-                    _observers.begin(), _observers.end(),
-                    &observer
-                    ) != _observers.end();
+        return std::find_if(
+                    _observers.begin(),
+                    _observers.end(),
+                    [&](const std::reference_wrapper<IObserver> &o)
+                       {
+                           return &(o.get()) == &observer;
+                       }) != _observers.end();
     }
 };
 
