@@ -77,9 +77,9 @@ public:
             throw ObserverError("Detaching observer unsuccessful");
     }
 
-protected:
     //!
     //! \brief Notify all attached observers of new data
+    //! \param frame
     //!
     virtual void notify(VideoFrame & frame) noexcept
     {
@@ -91,6 +91,7 @@ protected:
         }
     }
 
+protected:
     //!
     //! \brief Check whether passed observer is already
     //! attached

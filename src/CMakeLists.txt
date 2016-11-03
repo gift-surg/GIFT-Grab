@@ -127,6 +127,7 @@ SET(HEADERS
     api/iobservable.h
     api/ivideotarget.h
     api/iobserver.h
+    api/broadcastdaemon.h
     api/videoframe.h
     api/maskframe.h
     api/factory.h
