@@ -127,6 +127,8 @@ void translate_ObserverError(gg::ObserverError const & e)
 
 BOOST_PYTHON_MODULE(pygiftgrab)
 {
+    PyEval_InitThreads();
+
     register_exception_translator<gg::VideoSourceError>(&translate_VideoSourceError);
     register_exception_translator<gg::DeviceNotFound>(&translate_DeviceNotFound);
     register_exception_translator<gg::DeviceOffline>(&translate_DeviceOffline);

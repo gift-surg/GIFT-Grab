@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ivideosource.h"
+#include "gil.h"
 #include "macros.h"
 #include <thread>
 #include <chrono>
@@ -92,7 +93,7 @@ public:
 
         float sleep_duration_ms = 1000.0 / frame_rate;
         _running = true;
-
+        ScopedPythonGILRelease gil_release;
         _thread = std::thread(&BroadcastDaemon::run,
                               this,
                               frame_rate);
