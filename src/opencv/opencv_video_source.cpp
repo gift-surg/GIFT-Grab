@@ -5,6 +5,7 @@
 VideoSourceOpenCV::VideoSourceOpenCV(const char * path)
     :IVideoSource()
     , _frame_rate(0)
+    , _daemon(nullptr)
 {
     _cap.open(path);
     if (!_cap.isOpened()) {
@@ -12,6 +13,7 @@ VideoSourceOpenCV::VideoSourceOpenCV(const char * path)
                             + path;
         throw std::runtime_error(error);
     }
+    _daemon = new gg::BroadcastDaemon(this);
 }
 
 VideoSourceOpenCV::VideoSourceOpenCV(int deviceId)
@@ -25,6 +27,12 @@ VideoSourceOpenCV::VideoSourceOpenCV(int deviceId)
         error.append(" could not be opened");
         throw gg::DeviceNotFound(error);
     }
+    _daemon = new gg::BroadcastDaemon(this);
+}
+
+VideoSourceOpenCV::~VideoSourceOpenCV()
+{
+    free(_daemon);
 }
 
 double VideoSourceOpenCV::get_frame_rate()
@@ -128,4 +136,18 @@ bool VideoSourceOpenCV::get_frame(gg::VideoFrame & frame)
         frame.init_from_specs(data, data_length, cols, rows);
     }
     return has_read;
+}
+
+void VideoSourceOpenCV::attach(gg::IObserver & observer)
+{
+    gg::IObservable::attach(observer);
+    if (_observers.size() == 1)
+        _daemon->start(get_frame_rate());
+}
+
+void VideoSourceOpenCV::detach(gg::IObserver & observer)
+{
+    gg::IObservable::detach(observer);
+    if (_observers.empty())
+        _daemon->stop();
 }

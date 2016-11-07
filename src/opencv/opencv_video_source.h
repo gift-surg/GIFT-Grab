@@ -4,6 +4,7 @@
 #include "ivideosource.h"
 #include "macros.h"
 #include "except.h"
+#include "broadcastdaemon.h"
 
 // OpenCV includes
 #include "opencv2/opencv.hpp"
@@ -33,6 +34,11 @@ public:
     //!
     VideoSourceOpenCV(const int deviceId);
 
+    //!
+    //! \brief
+    //!
+    virtual ~VideoSourceOpenCV();
+
     bool get_frame_dimensions(int & width, int & height);
 
     bool get_frame(gg::VideoFrame &frame);
@@ -45,6 +51,16 @@ public:
         _get_sub_frame = true;
         _buffer_sub_bgra = cv::Mat::zeros(height, width, CV_8UC4);
     }
+
+    void attach(gg::IObserver & observer) override;
+
+    void detach(gg::IObserver & observer) override;
+
+protected:
+    //!
+    //! \brief
+    //!
+    gg::BroadcastDaemon * _daemon;
 
 private:
     //!
