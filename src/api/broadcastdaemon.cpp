@@ -66,6 +66,7 @@ void BroadcastDaemon::run(float sleep_duration_ms)
                 static_cast<int>(1000 * sleep_duration_ms));
     while (true)
     {
+        auto start = std::chrono::high_resolution_clock::now();
         {
             std::lock_guard<std::mutex> lock_guard(_lock);
             if (not _running)
@@ -74,7 +75,14 @@ void BroadcastDaemon::run(float sleep_duration_ms)
         got_frame = _source->get_frame(frame);
         if (got_frame)
             _source->notify(frame);
-        std::this_thread::sleep_for(inter_frame_duration); // TODO - account for lost time?
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::microseconds processing_duration =
+                std::chrono::duration_cast<std::chrono::microseconds>(
+                    end - start
+                    );
+        auto sleep_duration = inter_frame_duration - processing_duration;
+        if (sleep_duration.count() > 0)
+            std::this_thread::sleep_for(sleep_duration);
     }
 }
 
