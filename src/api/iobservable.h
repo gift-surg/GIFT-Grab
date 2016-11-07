@@ -85,8 +85,6 @@ public:
     {
         for (IObserver & observer : _observers)
         {
-            printf("%p observer is of type %s\n",
-                   &observer, typeid(observer).name());
             observer.update(frame);
         }
     }
