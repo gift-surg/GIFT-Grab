@@ -153,9 +153,7 @@ void VideoSourceOpenCV::detach(gg::IObserver & observer)
     {
         std::lock_guard<std::mutex> lock_guard(_observers_lock);
         if (_observers.size() == 1)
-        {
             _daemon->stop();
-        }
     }
     gg::IObservable::detach(observer);
 }
