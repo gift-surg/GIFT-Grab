@@ -18,8 +18,11 @@ public:
     //! \brief Destructor, doing nothing
     //!
     virtual ~IVideoSource()
-    {}
+    {
 
+    }
+
+public:
     //!
     //! \brief Get colour space in which this source
     //! is operating
@@ -102,6 +105,19 @@ protected:
     IVideoSource()
         :_get_sub_frame(false), _num_burn_frames(0)
     {}
+
+    //!
+    //! \brief Constructor setting colour space
+    //! \param colour
+    //! \sa default constructor
+    //!
+    IVideoSource(gg::ColourSpace colour)
+        : _colour(colour)
+        , _get_sub_frame(false)
+        , _num_burn_frames(0)
+    {
+
+    }
 
     //!
     //! \brief Indicates the colour space in which this
