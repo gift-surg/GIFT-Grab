@@ -21,7 +21,7 @@ class FrameRateTimer(pgg.IObserver):
         super(FrameRateTimer, self).__init__()
         self._frame_rate = frame_rate
         if use_numpy:
-            self._timestamps = np.array([], dtype='datetime64')
+            self._timestamps = np.array([], dtype='datetime64[us]')
         else:
             self._timestamps = []
 
