@@ -52,9 +52,9 @@ def test_frame_rate(port, colour_space, frame_rate, observers):
 
     time.sleep(120)  # listen for data these nr. of sec
     for timer in timers:
-        assert timer
+        source.detach(timer)
 
     for timer in timers:
-        source.detach(timer)
+        assert timer
     del timers[:]
     pgg.Factory.disconnect(port)
