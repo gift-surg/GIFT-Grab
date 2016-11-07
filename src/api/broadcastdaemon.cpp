@@ -53,8 +53,7 @@ void BroadcastDaemon::stop()
 
 void BroadcastDaemon::run(float sleep_duration_ms)
 {
-    // TODO - colour?
-    VideoFrame frame(I420, false);
+    VideoFrame frame(_source->get_colour(), false);
     bool got_frame = false;
     std::chrono::microseconds inter_frame_duration(
                 static_cast<int>(1000 * sleep_duration_ms));
