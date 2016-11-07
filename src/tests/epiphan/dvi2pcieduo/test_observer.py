@@ -3,6 +3,12 @@ import datetime
 import pytest
 import pygiftgrab as pgg
 
+use_numpy = True
+try:
+    import numpy as np
+except ImportError:
+    use_numpy = False
+
 
 class FrameRateTimer(pgg.IObserver):
     """Descendant of GIFT-Grab's `Observer`, which
@@ -14,25 +20,37 @@ class FrameRateTimer(pgg.IObserver):
     def __init__(self, frame_rate):
         super(FrameRateTimer, self).__init__()
         self._frame_rate = frame_rate
-        self._timestamps = []
+        if use_numpy:
+            self._timestamps = np.array([], dtype='datetime64')
+        else:
+            self._timestamps = []
 
     def update(self, frame):
-        self._timestamps.append(
-            datetime.datetime.now()
-        )
+        if use_numpy:
+            self._timestamps = np.append(self._timestamps,
+                np.datetime64(datetime.datetime.now()))
+        else:
+            self._timestamps.append(datetime.datetime.now())
 
     def __bool__(self):
         """Check if updates have been in time intervals
         in line with defined frame rate, also resetting
         all saved timestamps, i.e. ready for next round.
         """
-        pairs = zip(self._timestamps[:-1], self._timestamps[1:])
-        diffs = map(
-            (lambda p: (p[1] - p[0]).microseconds / 1000.0),
-            pairs
-        )
-        del self._timestamps[:]
-        return max(diffs) <= 1000.0 / self._frame_rate
+        global use_numpy
+        if use_numpy:
+            diffs = self._timestamps[1:] - self._timestamps[:-1]
+            return np.count_nonzero(
+                       diffs > np.timedelta64(1000000 / self._frame_rate, 'us')
+                   ) == 0
+        else:
+            pairs = zip(self._timestamps[:-1], self._timestamps[1:])
+            diffs = map(
+                (lambda p: (p[1] - p[0]).microseconds / 1000.0),
+                pairs
+            )
+            del self._timestamps[:]
+            return max(diffs) <= 1000.0 / self._frame_rate
 
     def __nonzero__(self):
         if self.__bool__():
