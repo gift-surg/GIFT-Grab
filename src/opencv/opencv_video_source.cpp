@@ -141,13 +141,21 @@ bool VideoSourceOpenCV::get_frame(gg::VideoFrame & frame)
 void VideoSourceOpenCV::attach(gg::IObserver & observer)
 {
     gg::IObservable::attach(observer);
-    if (_observers.size() == 1)
-        _daemon->start(get_frame_rate());
+    {
+        std::lock_guard<std::mutex> lock_guard(_observers_lock);
+        if (_observers.size() == 1)
+            _daemon->start(get_frame_rate());
+    }
 }
 
 void VideoSourceOpenCV::detach(gg::IObserver & observer)
 {
-    if (_observers.size() == 1)
-        _daemon->stop();
+    {
+        std::lock_guard<std::mutex> lock_guard(_observers_lock);
+        if (_observers.size() == 1)
+        {
+            _daemon->stop();
+        }
+    }
     gg::IObservable::detach(observer);
 }
