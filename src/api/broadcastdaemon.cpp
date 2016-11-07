@@ -18,7 +18,7 @@ BroadcastDaemon::BroadcastDaemon(IVideoSource * source)
 
 BroadcastDaemon::~BroadcastDaemon()
 {
-    // nop
+    stop();
 }
 
 void BroadcastDaemon::start(float frame_rate)
@@ -44,11 +44,17 @@ void BroadcastDaemon::start(float frame_rate)
 
 void BroadcastDaemon::stop()
 {
+    bool stopped = false;
     {
         std::lock_guard<std::mutex> lock_guard(_lock);
-        _running = false;
+        if (_running)
+        {
+            _running = false;
+            stopped = true;
+        }
     }
-    _thread.join();
+    if (stopped)
+        _thread.join();
 }
 
 void BroadcastDaemon::run(float sleep_duration_ms)
