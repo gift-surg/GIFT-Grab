@@ -101,9 +101,11 @@ public:
 protected:
     //!
     //! \brief Check whether passed observer is already
-    //! attached
+    //! attached. Because this function is protected, no
+    //! thread-safety operation is performed inside it.
     //! \param observer
     //! \return
+    //! \sa _observers_lock
     //!
     bool attached(const IObserver & observer) const noexcept
     {
