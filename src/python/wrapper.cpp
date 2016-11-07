@@ -30,12 +30,22 @@ public:
             gg::IObservable::attach(boost::ref(observer));
     }
 
+    void default_attach(gg::IObserver & observer)
+    {
+        gg::IObservable::attach(observer);
+    }
+
     void detach(gg::IObserver & observer)
     {
         if (override f = this->get_override("detach"))
             f(boost::ref(observer));
         else
             gg::IObservable::detach(boost::ref(observer));
+    }
+
+    void default_detach(gg::IObserver & observer)
+    {
+        gg::IObservable::detach(boost::ref(observer));
     }
 };
 
@@ -196,6 +206,8 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .def("get_frame_rate", &VideoSourceOpenCV::get_frame_rate)
         .def("set_sub_frame", &VideoSourceOpenCV::set_sub_frame)
         .def("get_full_frame", &VideoSourceOpenCV::get_full_frame)
+        .def("attach", &gg::IObservable::attach, &IObservableWrapper::default_attach)
+        .def("detach", &gg::IObservable::detach, &IObservableWrapper::default_detach)
     ;
 #endif // USE_OPENCV
 
