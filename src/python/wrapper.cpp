@@ -206,6 +206,8 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .def("get_frame_rate", &VideoSourceOpenCV::get_frame_rate)
         .def("set_sub_frame", &VideoSourceOpenCV::set_sub_frame)
         .def("get_full_frame", &VideoSourceOpenCV::get_full_frame)
+        .def("attach", &gg::IObservable::attach, &IObservableWrapper::default_attach)
+        .def("detach", &gg::IObservable::detach, &IObservableWrapper::default_detach)
     ;
 #endif // USE_OPENCV
 
