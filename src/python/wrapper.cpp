@@ -220,6 +220,8 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .def("get_frame_rate", &gg::VideoSourceEpiphanSDK::get_frame_rate)
         .def("set_sub_frame", &gg::VideoSourceEpiphanSDK::set_sub_frame)
         .def("get_full_frame", &gg::VideoSourceEpiphanSDK::get_full_frame)
+        .def("attach", &gg::IObservable::attach, &IObservableWrapper::default_attach)
+        .def("detach", &gg::IObservable::detach, &IObservableWrapper::default_detach)
     ;
 #endif
 
