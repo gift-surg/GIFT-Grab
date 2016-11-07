@@ -249,8 +249,10 @@ if(BUILD_PYTHON)
     ADD_SUBDIRECTORY(cmake/boost.python)
     INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
 
+    INCLUDE_DIRECTORIES(python)
+
     SET(NAME_PYTHON py${NAME})
-    ADD_LIBRARY(${NAME_PYTHON} SHARED python/wrapper.cpp)
+    ADD_LIBRARY(${NAME_PYTHON} SHARED python/gil.h python/wrapper.cpp)
     TARGET_LINK_LIBRARIES(${NAME_PYTHON} ${Boost_LIBRARIES} ${NAME})
     # no lib prefix
     SET_TARGET_PROPERTIES(${NAME_PYTHON} PROPERTIES PREFIX "")
