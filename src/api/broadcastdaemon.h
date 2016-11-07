@@ -92,15 +92,21 @@ public:
     {
         if (frame_rate <= 0.0)
             throw VideoSourceError("Invalid frame rate");
+        {
+            std::lock_guard<std::mutex> lock_guard(_lock);
+            if (_running)
+                throw VideoSourceError("Broadcast daemon already running");
+            else
+                _running = true;
+        }
 
-        float sleep_duration_ms = 1000.0 / frame_rate;
-        _running = true;
 #ifdef BUILD_PYTHON
         ScopedPythonGILRelease gil_release;
 #endif
+
         _thread = std::thread(&BroadcastDaemon::run,
                               this,
-                              frame_rate);
+                              1000.0 / frame_rate);
     }
 
     //!
@@ -108,8 +114,10 @@ public:
     //!
     void stop()
     {
-        std::lock_guard<std::mutex> lock_guard(_lock);
-        _running = false;
+        {
+            std::lock_guard<std::mutex> lock_guard(_lock);
+            _running = false;
+        }
         _thread.join();
     }
 
@@ -123,14 +131,18 @@ protected:
     {
         // TODO - colour?
         VideoFrame frame(I420, false);
+        bool got_frame = false;
+        std::chrono::microseconds inter_frame_duration(
+                    static_cast<int>(1000 * sleep_duration_ms));
         while (_running)
         {
-            std::lock_guard<std::mutex> lock_guard(_lock);
-            if (_source->get_frame(frame))
+            {
+                std::lock_guard<std::mutex> lock_guard(_lock);
+                got_frame = _source->get_frame(frame);
+            }
+            if (got_frame)
                 _source->notify(frame);
-            std::this_thread::sleep_for(
-                std::chrono::microseconds(static_cast<int>(1000 * sleep_duration_ms))
-            ); // TODO - account for lost time?
+            std::this_thread::sleep_for(inter_frame_duration); // TODO - account for lost time?
         }
     }
 
