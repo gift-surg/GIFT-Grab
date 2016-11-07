@@ -9,6 +9,7 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
     : IVideoSource()
     , _frame_grabber(nullptr)
     , _flags(0)
+    , _daemon(nullptr)
 {
     FrmGrab_Init();
 
@@ -44,10 +45,13 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
     get_full_frame();
     // TODO - exception GiftGrab#42
     if (not get_frame(frame)) return;
+
+    _daemon = new gg::BroadcastDaemon(this);
 }
 
 VideoSourceEpiphanSDK::~VideoSourceEpiphanSDK()
 {
+    delete _daemon;
     if (_frame_grabber) FrmGrab_Close(_frame_grabber);
     FrmGrab_Deinit();
 }
@@ -131,6 +135,26 @@ void VideoSourceEpiphanSDK::get_full_frame()
     _roi.y = _full.y;
     _roi.width = _full.width;
     _roi.height = _full.height;
+}
+
+void VideoSourceEpiphanSDK::attach(IObserver & observer)
+{
+    gg::IObservable::attach(observer);
+    {
+        std::lock_guard<std::mutex> lock_guard(_observers_lock);
+        if (_observers.size() == 1)
+            _daemon->start(get_frame_rate());
+    }
+}
+
+void VideoSourceEpiphanSDK::detach(IObserver & observer)
+{
+    {
+        std::lock_guard<std::mutex> lock_guard(_observers_lock);
+        if (_observers.size() == 1)
+            _daemon->stop();
+    }
+    gg::IObservable::detach(observer);
 }
 
 }

@@ -2,6 +2,7 @@
 #include "frmgrab.h"
 #include "ivideosource.h"
 #include "macros.h"
+#include "broadcastdaemon.h"
 
 namespace gg
 {
@@ -36,6 +37,11 @@ protected:
     //!
     V2U_GrabFrame2 * _buffer;
 
+    //!
+    //! \brief
+    //!
+    gg::BroadcastDaemon * _daemon;
+
 public:
     //!
     //! \brief Connects to specified port of an Epiphan
@@ -66,6 +72,10 @@ public:
     void set_sub_frame(int x, int y, int width, int height);
 
     void get_full_frame();
+
+    void attach(gg::IObserver & observer) override;
+
+    void detach(gg::IObserver & observer) override;
 
     DISALLOW_COPY_AND_ASSIGNMENT(VideoSourceEpiphanSDK);
 };
