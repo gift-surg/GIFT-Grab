@@ -98,7 +98,8 @@ public:
 
     void update(gg::VideoFrame & frame)
     {
-        this->get_override("update")(frame);
+        gg::ScopedPythonGILLock gil_lock;
+        this->get_override("update")(boost::ref(frame));
     }
 };
 
