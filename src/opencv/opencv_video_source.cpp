@@ -3,7 +3,7 @@
 #include <iostream>
 
 VideoSourceOpenCV::VideoSourceOpenCV(const char * path)
-    :IVideoSource()
+    : IVideoSource(gg::BGRA)
     , _frame_rate(0)
     , _daemon(nullptr)
 {
@@ -17,7 +17,7 @@ VideoSourceOpenCV::VideoSourceOpenCV(const char * path)
 }
 
 VideoSourceOpenCV::VideoSourceOpenCV(int deviceId)
-    : IVideoSource()
+    : IVideoSource(gg::BGRA)
     , _frame_rate(0)
 {
     _cap.open(deviceId);
@@ -99,7 +99,7 @@ bool VideoSourceOpenCV::get_frame_dimensions(int &width, int & height)
 
 bool VideoSourceOpenCV::get_frame(gg::VideoFrame & frame)
 {
-    if (frame.colour() != gg::ColourSpace::BGRA)
+    if (frame.colour() != _colour)
         return false;
 
     if (!_cap.isOpened()) return false;
