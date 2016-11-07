@@ -45,7 +45,7 @@ public:
     //!
     virtual void finalise() = 0;
 
-    virtual void update(VideoFrame & frame)
+    void update(VideoFrame & frame) override
     {
         append(frame);
     }
