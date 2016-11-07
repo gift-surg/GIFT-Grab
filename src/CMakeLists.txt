@@ -134,6 +134,7 @@ SET(HEADERS
     api/except.h
 )
 SET(SOURCES
+    api/iobservable.cpp
     api/videoframe.cpp
     api/broadcastdaemon.cpp
     api/maskframe.cpp

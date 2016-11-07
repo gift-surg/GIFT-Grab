@@ -39,10 +39,7 @@ public:
     //!
     //! \brief
     //!
-    virtual ~IObservable()
-    {
-
-    }
+    virtual ~IObservable();
 
 public:
     //!
@@ -53,16 +50,7 @@ public:
     //! \throw ObserverError with a detailed message if
     //! attach attempt unsuccessful
     //!
-    virtual void attach(IObserver & observer)
-    {
-        std::lock_guard<std::mutex> lock_guard(_observers_lock);
-        if (not attached(observer))
-        {
-            _observers.push_back(observer);
-            if (not attached(observer))
-                throw ObserverError("Could not attach observer");
-        }
-    }
+    virtual void attach(IObserver & observer);
 
     //!
     //! \brief Detach given observer from this observable
@@ -70,33 +58,13 @@ public:
     //! \throw ObserverError with a detailed message if
     //! detach attempt unsuccessful
     //!
-    virtual void detach(IObserver & observer)
-    {
-        std::lock_guard<std::mutex> lock_guard(_observers_lock);
-        _observers.erase(std::find_if(
-                             _observers.begin(),
-                             _observers.end(),
-                             [&](const std::reference_wrapper<IObserver> &o)
-                                {
-                                    return &(o.get()) == &observer;
-                                }),
-                         _observers.end());
-        if (attached(observer))
-            throw ObserverError("Could not detach observer");
-    }
+    virtual void detach(IObserver & observer);
 
     //!
     //! \brief Notify all attached observers of new data
     //! \param frame
     //!
-    virtual void notify(VideoFrame & frame) noexcept
-    {
-        std::lock_guard<std::mutex> lock_guard(_observers_lock);
-        for (IObserver & observer : _observers)
-        {
-            observer.update(frame);
-        }
-    }
+    virtual void notify(VideoFrame & frame) noexcept;
 
 protected:
     //!
@@ -107,16 +75,7 @@ protected:
     //! \return
     //! \sa _observers_lock
     //!
-    bool attached(const IObserver & observer) const noexcept
-    {
-        return std::find_if(
-                    _observers.begin(),
-                    _observers.end(),
-                    [&](const std::reference_wrapper<IObserver> &o)
-                       {
-                           return &(o.get()) == &observer;
-                       }) != _observers.end();
-    }
+    bool attached(const IObserver & observer) const noexcept;
 };
 
 }
