@@ -21,6 +21,16 @@ public:
     {}
 
     //!
+    //! \brief Get colour space in which this source
+    //! is operating
+    //! \return
+    //!
+    virtual gg::ColourSpace get_colour()
+    {
+        return _colour;
+    }
+
+    //!
     //! \brief Get frame dimensions
     //! \param width
     //! \param height
@@ -92,6 +102,12 @@ protected:
     IVideoSource()
         :_get_sub_frame(false), _num_burn_frames(0)
     {}
+
+    //!
+    //! \brief Indicates the colour space in which this
+    //! source is operating
+    //!
+    gg::ColourSpace _colour;
 
     //!
     //! \brief If \c false, then grab full frames, otherwise
