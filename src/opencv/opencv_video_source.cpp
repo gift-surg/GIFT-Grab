@@ -147,7 +147,7 @@ void VideoSourceOpenCV::attach(gg::IObserver & observer)
 
 void VideoSourceOpenCV::detach(gg::IObserver & observer)
 {
-    gg::IObservable::detach(observer);
-    if (_observers.empty())
+    if (_observers.size() == 1)
         _daemon->stop();
+    gg::IObservable::detach(observer);
 }
