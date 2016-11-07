@@ -61,6 +61,13 @@ public:
     //!
     VideoFrame(enum ColourSpace colour, size_t cols, size_t rows);
 
+    //!
+    //! \brief Create a video frame by copying the data and
+    //! all properties of \c rhs
+    //! \param rhs
+    //!
+    VideoFrame(const VideoFrame & rhs);
+
 #ifdef USE_OPENCV
     //!
     //! \brief Compute an elliptical mask for this image
@@ -202,8 +209,10 @@ protected:
 
 protected:
     //!
-    //! \brief Clone \c rhs
+    //! \brief Clone \c rhs, after setting \c
+    //! _manage_data
     //! \param rhs
+    //! \sa _manage_data
     //!
     void clone(const VideoFrame & rhs);
 

@@ -25,6 +25,15 @@ VideoFrame::VideoFrame(ColourSpace colour, size_t cols, size_t rows)
     set_pixels_black();
 }
 
+VideoFrame::VideoFrame(const VideoFrame & rhs)
+    : _colour(rhs.colour())
+    , _manage_data(true)
+    , _data(nullptr)
+    , _data_length(0)
+{
+    clone(rhs);
+}
+
 #ifdef USE_OPENCV
 std::unique_ptr<MaskFrame> VideoFrame::compute_image_mask(int x, int y,
                                                                int width, int height)
