@@ -53,7 +53,7 @@ public:
         {
             _observers.push_back(observer);
             if (not attached(observer))
-                throw ObserverError("Attaching observer unsuccessful");
+                throw ObserverError("Could not attach observer");
         }
     }
 
@@ -74,7 +74,7 @@ public:
                                 }),
                          _observers.end());
         if (attached(observer))
-            throw ObserverError("Detaching observer unsuccessful");
+            throw ObserverError("Could not detach observer");
     }
 
     //!
