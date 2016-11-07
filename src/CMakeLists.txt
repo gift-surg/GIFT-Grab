@@ -135,6 +135,7 @@ SET(HEADERS
 )
 SET(SOURCES
     api/videoframe.cpp
+    api/broadcastdaemon.cpp
     api/maskframe.cpp
     api/factory.cpp
     api/except.cpp
