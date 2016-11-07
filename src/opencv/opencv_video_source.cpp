@@ -32,7 +32,7 @@ VideoSourceOpenCV::VideoSourceOpenCV(int deviceId)
 
 VideoSourceOpenCV::~VideoSourceOpenCV()
 {
-    free(_daemon);
+    delete _daemon;
 }
 
 double VideoSourceOpenCV::get_frame_rate()
