@@ -8,7 +8,8 @@ namespace gg
 {
 
 VideoSourceVLC::VideoSourceVLC(const std::string path)
-    : _vlc_inst(nullptr)
+    : IVideoSource(gg::I420)
+    , _vlc_inst(nullptr)
     , _vlc_mp(nullptr)
     , _running(false)
     , _video_buffer(nullptr)
@@ -46,7 +47,7 @@ bool VideoSourceVLC::get_frame_dimensions(int & width, int & height)
 
 bool VideoSourceVLC::get_frame(VideoFrame & frame)
 {
-    if (frame.colour() != ColourSpace::I420)
+    if (frame.colour() != _colour)
         return false;
 
     std::lock_guard<std::mutex> data_lock_guard(_data_lock);
