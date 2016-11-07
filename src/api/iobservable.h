@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <typeinfo>
 #include <functional>
+#include <mutex>
 
 namespace gg
 {
@@ -29,6 +30,11 @@ protected:
     //!
     std::vector< std::reference_wrapper<IObserver> > _observers;
 
+    //!
+    //! \brief
+    //!
+    std::mutex _observers_lock;
+
 public:
     //!
     //! \brief
@@ -49,6 +55,7 @@ public:
     //!
     virtual void attach(IObserver & observer)
     {
+        std::lock_guard<std::mutex> lock_guard(_observers_lock);
         if (not attached(observer))
         {
             _observers.push_back(observer);
@@ -65,6 +72,7 @@ public:
     //!
     virtual void detach(IObserver & observer)
     {
+        std::lock_guard<std::mutex> lock_guard(_observers_lock);
         _observers.erase(std::find_if(
                              _observers.begin(),
                              _observers.end(),
@@ -83,6 +91,7 @@ public:
     //!
     virtual void notify(VideoFrame & frame) noexcept
     {
+        std::lock_guard<std::mutex> lock_guard(_observers_lock);
         for (IObserver & observer : _observers)
         {
             observer.update(frame);
