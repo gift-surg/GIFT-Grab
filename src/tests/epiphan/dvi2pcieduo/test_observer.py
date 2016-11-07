@@ -74,5 +74,4 @@ def test_frame_rate(port, colour_space, frame_rate, observers):
 
     for timer in timers:
         assert timer
-    del timers[:]
     pgg.Factory.disconnect(port)
