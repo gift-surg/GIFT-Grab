@@ -19,6 +19,36 @@
 
 using namespace boost::python;
 
+class IObservableWrapper : public gg::IObservable, public wrapper<gg::IObservable>
+{
+public:
+    void attach(gg::IObserver & observer)
+    {
+        if (override f = this->get_override("attach"))
+            f(boost::ref(observer));
+        else
+            gg::IObservable::attach(boost::ref(observer));
+    }
+
+    void default_attach(gg::IObserver & observer)
+    {
+        gg::IObservable::attach(observer);
+    }
+
+    void detach(gg::IObserver & observer)
+    {
+        if (override f = this->get_override("detach"))
+            f(boost::ref(observer));
+        else
+            gg::IObservable::detach(boost::ref(observer));
+    }
+
+    void default_detach(gg::IObserver & observer)
+    {
+        gg::IObservable::detach(boost::ref(observer));
+    }
+};
+
 class IVideoSourceWrapper : IVideoSource, wrapper<IVideoSource>
 {
     bool get_frame_dimensions(int & width, int & height)
@@ -157,9 +187,9 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .def("cols", &gg::VideoFrame::cols)
     ;
 
-    class_<gg::IObservable, boost::noncopyable>("IObservable", no_init)
-        .def("attach", &gg::IObservable::attach)
-        .def("detach", &gg::IObservable::detach)
+    class_<IObservableWrapper,boost::noncopyable>("IObservable", no_init)
+        .def("attach", &IObservableWrapper::attach)
+        .def("detach", &IObservableWrapper::detach)
     ;
 
     class_<IVideoSource, bases<gg::IObservable>, boost::noncopyable>(
