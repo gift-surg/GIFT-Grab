@@ -1,4 +1,7 @@
 #include "vlc_video_source.h"
+#ifdef BUILD_PYTHON
+#include "gil.h"
+#endif
 #include <cstdio>
 #include <cstdlib>
 #include <chrono>
@@ -165,6 +168,10 @@ void VideoSourceVLC::run_vlc()
     libvlc_media_player_set_media(_vlc_mp, vlc_media);
     // release VLC media
     libvlc_media_release(vlc_media);
+
+#ifdef BUILD_PYTHON
+    ScopedPythonGILRelease gil_release;
+#endif
 
     { // artificial scope for the mutex guard below
         std::lock_guard<std::mutex> data_lock_guard(_data_lock);
