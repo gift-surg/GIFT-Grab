@@ -12,7 +12,8 @@ namespace gg
 //!
 //! See https://docs.python.org/2/c-api/init.html
 //! for a discussion. Also note that there are some
-//! issues around the GIL (https://wiki.python.org/moin/GlobalInterpreterLock). So use this with care. Below
+//! issues around the GIL (https://wiki.python.org/moin/GlobalInterpreterLock).
+//! So use this with care. Below
 //! is a sample bare-bones code snippet showing how
 //! we make use of the GIL mechanism in GIFT-Grab:
 //!
