@@ -50,8 +50,9 @@ public:
     }
 };
 
-class IVideoSourceWrapper : IVideoSource, wrapper<IVideoSource>
+class IVideoSourceWrapper : public IVideoSource, public wrapper<IVideoSource>
 {
+public:
     bool get_frame_dimensions(int & width, int & height)
     {
         return this->get_override("get_frame_dimensions")(width, height);
@@ -104,8 +105,9 @@ public:
     }
 };
 
-class IVideoTargetWrapper : gg::IVideoTarget, wrapper<gg::IVideoTarget>
+class IVideoTargetWrapper : public gg::IVideoTarget, public wrapper<gg::IVideoTarget>
 {
+public:
     void init(const std::string filepath, const float framerate)
     {
         this->get_override("init")(filepath, framerate);
