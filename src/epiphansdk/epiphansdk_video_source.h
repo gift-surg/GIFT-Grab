@@ -73,10 +73,6 @@ public:
 
     void get_full_frame();
 
-    void attach(gg::IObserver & observer) override;
-
-    void detach(gg::IObserver & observer) override;
-
     DISALLOW_COPY_AND_ASSIGNMENT(VideoSourceEpiphanSDK);
 };
 

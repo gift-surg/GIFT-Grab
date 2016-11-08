@@ -47,6 +47,7 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
     if (not get_frame(frame)) return;
 
     _daemon = new gg::BroadcastDaemon(this);
+    _daemon->start(get_frame_rate());
 }
 
 VideoSourceEpiphanSDK::~VideoSourceEpiphanSDK()
@@ -135,26 +136,6 @@ void VideoSourceEpiphanSDK::get_full_frame()
     _roi.y = _full.y;
     _roi.width = _full.width;
     _roi.height = _full.height;
-}
-
-void VideoSourceEpiphanSDK::attach(IObserver & observer)
-{
-    gg::IObservable::attach(observer);
-    {
-        std::lock_guard<std::mutex> lock_guard(_observers_lock);
-        if (_observers.size() == 1)
-            _daemon->start(get_frame_rate());
-    }
-}
-
-void VideoSourceEpiphanSDK::detach(IObserver & observer)
-{
-    {
-        std::lock_guard<std::mutex> lock_guard(_observers_lock);
-        if (_observers.size() == 1)
-            _daemon->stop();
-    }
-    gg::IObservable::detach(observer);
 }
 
 }
