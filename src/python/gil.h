@@ -51,12 +51,18 @@ protected:
 
 public:
     //!
-    //! \brief Release GIL
+    //! \brief Release GIL, if already locked,
+    //! nop otherwise
     //!
     inline ScopedPythonGILRelease()
         : _thread_state(nullptr)
     {
-        _thread_state = PyEval_SaveThread();
+        if (PyEval_ThreadsInitialized() != 0)
+            /* non-zero means PyEval_InitThreads()
+             * has been called, i.e. Python API
+             * loaded
+             */
+            _thread_state = PyEval_SaveThread();
     }
 
     //!
@@ -65,8 +71,11 @@ public:
     //!
     inline ~ScopedPythonGILRelease()
     {
-        PyEval_RestoreThread(_thread_state);
-        _thread_state = nullptr;
+        if (_thread_state != nullptr)
+        {
+            PyEval_RestoreThread(_thread_state);
+            _thread_state = nullptr;
+        }
     }
 };
 
