@@ -2,9 +2,6 @@
 
 #include "iobserver.h"
 #include <vector>
-#include <algorithm>
-#include <typeinfo>
-#include <functional>
 #include <mutex>
 
 namespace gg

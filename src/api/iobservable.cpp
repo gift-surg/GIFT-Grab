@@ -1,4 +1,6 @@
 #include "iobservable.h"
+#include <functional>
+#include <algorithm>
 
 namespace gg
 {
