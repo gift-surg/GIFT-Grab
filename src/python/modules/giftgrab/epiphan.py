@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-from threading import Thread
 from time import sleep, time, strftime
 from datetime import timedelta
 import yaml
@@ -16,11 +15,11 @@ MAX_X = 1920
 MAX_Y = 1080
 
 
-class Recorder(Thread):
+class Recorder:
 
-    """A video recording thread that can be started, paused, resumed, and stopped.
+    """A video recorder that can be started, paused, resumed, and stopped.
 
-    When everything just works, this thread will connect to either the DVI or SDI
+    When everything just works, this recorder will connect to either the DVI or SDI
     `port` of an Epiphan DVI2PCIe Duo, grab frames there at the specified
     `frame_rate`, and save them using H265 (HEVC) encoding in an MP4 container
     pointed to by the specified `file_path`, which serves only as a prefix, i.e.
@@ -29,19 +28,19 @@ class Recorder(Thread):
     file will be created as well that will contain the total latency for that
     video file.
 
-    This thread class will attempt to perform the requested operations within a
+    This recorder class will attempt to perform the requested operations within a
     `timeout_limit`. As such, after the timeout, the operations will fail and this
-    will be propagated to the client through error messages. The thread will
-    simply stop at this point. Note that this thread class does not try to be
+    will be propagated to the client through error messages. The recorder will
+    simply stop at this point. Note that this recorder class does not attempt to be
     intelligent at all. As such, it is the client's responsibility to properly
     set the mentioned parameters.
 
     """
 
     def __init__(self, port, colour_space, frame_rate, file_path, timeout_limit=10):
-        """Initialise thread with desired configuration.
+        """Initialise the recorder with desired configuration.
 
-        Thread will not run if file writer cannot be created.
+        The recorder will not run if file writer cannot be created.
 
         @param port `pygiftgrab.Device.DVI2PCIeDuo_SDI` or
         `pygiftgrab.Device.DVI2PCIeDuo_DVI`
@@ -54,11 +53,10 @@ class Recorder(Thread):
         writable by user. If a relative directory is specified, it is
         internally converted to an absolute one
         @param timeout_limit 5 attempts will be made for critical operations
-        within this number of seconds (thread will not start if this is
+        within this number of seconds (recorder will not start if this is
         negative)
         """
 
-        Thread.__init__(self)
         self.timeout_limit = timeout_limit
         self.max_num_attempts = 5
         self.inter_attempt_duration = self.timeout_limit / self.max_num_attempts  # sec
@@ -131,7 +129,7 @@ class Recorder(Thread):
                           ', aborting recording.')
 
     def stop(self):
-        """Tell a `run()`ning thread to stop.
+        """Tell a `run()`ning recorder to stop.
 
         Will simply do nothing if not `is_running`.
         """
@@ -142,7 +140,7 @@ class Recorder(Thread):
         self.is_running = False
 
     def pause_recording(self):
-        """Tell a `run()`ning thread to pause recording.
+        """Tell a `run()`ning recorder to pause recording.
 
         This will finalise the current video `file`.
 
@@ -180,7 +178,7 @@ class Recorder(Thread):
         self.latency = 0.00
 
     def resume_recording(self):
-        """Tell a `run()`ning and paused thread to resume recording.
+        """Tell a `run()`ning and paused recorder to resume recording.
 
         This will create and open a new video `file`.
 
@@ -246,7 +244,7 @@ class Recorder(Thread):
                                  ' invalid')
 
     def set_full_frame(self):
-        """Tell thread to use full resolution frames.
+        """Tell recorder to use full resolution frames.
 
         This will have no effect if called in the middle of
         a recording.
@@ -437,7 +435,7 @@ def parse(file_path):
     corresponding tag of given YAML file.
 
     @param file_path
-    @return a ready-to-start `Recorder` thread on success
+    @return a ready-to-start `Recorder` on success
     @throw YAMLError if YAML file cannot be parsed
     @throw IOError if `file_path` cannot be opened for
     reading
@@ -485,7 +483,7 @@ def parse(file_path):
             else:
                 break
 
-        # create and return thread
+        # create and return recorder
         return Recorder(port=port, colour_space=colour_space, frame_rate=frame_rate,
                         file_path=unique_file_path, timeout_limit=timeout_limit)
 
