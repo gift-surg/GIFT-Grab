@@ -20,7 +20,7 @@ class Recorder:
     """A video recorder that can be started, paused, resumed, and stopped.
 
     When everything just works, this recorder will connect to either the DVI or SDI
-    `port` of an Epiphan DVI2PCIe Duo, grab frames there at the specified
+    `port` of an Epiphan DVI2PCIe Duo, start grabbing frames there at the specified
     `frame_rate`, and save them using H265 (HEVC) encoding in an MP4 container
     pointed to by the specified `file_path`, which serves only as a prefix, i.e.
     for each resume-pause a new file will be created with a recording index and
