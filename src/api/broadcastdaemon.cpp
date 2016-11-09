@@ -61,15 +61,23 @@ void BroadcastDaemon::stop()
 void BroadcastDaemon::run(float sleep_duration_ms)
 {
     VideoFrame frame(_source->get_colour(), false);
-    bool got_frame = false;
+    /* in case no frame is obtained, an empty frame is
+     * broadcast, to help against potential synchronisation
+     * problems
+     */
+    int cols = 1920, rows = 1080; // default value, in case
+                                  // something goes wrong
+    _source->get_frame_dimensions(cols, rows);
+    VideoFrame fill_frame(_source->get_colour(), cols, rows);
     std::chrono::microseconds inter_frame_duration(
                 static_cast<int>(1000 * sleep_duration_ms));
     while (_running)
     {
         auto start = std::chrono::high_resolution_clock::now();
-        got_frame = _source->get_frame(frame);
-        if (got_frame)
+        if (_source->get_frame(frame))
             _source->notify(frame);
+        else
+            _source->notify(fill_frame);
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::microseconds processing_duration =
                 std::chrono::duration_cast<std::chrono::microseconds>(
