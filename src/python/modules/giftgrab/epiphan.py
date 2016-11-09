@@ -79,7 +79,7 @@ class Recorder:
                 self.colour_space == pygiftgrab.ColourSpace.I420):
             self.is_running = True
 
-    def run(self):
+    def start(self):
         """Connect to specified `port` and start looping until `stop()`ped.
 
         Will simply do nothing if not `is_running`.
