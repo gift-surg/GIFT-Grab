@@ -127,7 +127,7 @@ class Recorder:
         if not self.is_recording:
             return
 
-        if self.__stop_acquisition()
+        if self.__stop_acquisition():
             self.is_recording = False
 
             try:
@@ -186,7 +186,7 @@ class Recorder:
             return
 
         if self.__init_video_writer():
-            if self.__start_acquisition()
+            if self.__start_acquisition():
                 self.started_at = time()
                 self.is_recording = True
 
