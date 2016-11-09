@@ -64,14 +64,9 @@ void BroadcastDaemon::run(float sleep_duration_ms)
     bool got_frame = false;
     std::chrono::microseconds inter_frame_duration(
                 static_cast<int>(1000 * sleep_duration_ms));
-    while (true)
+    while (_running)
     {
         auto start = std::chrono::high_resolution_clock::now();
-        {
-            std::lock_guard<std::mutex> lock_guard(_lock);
-            if (not _running)
-                break;
-        }
         got_frame = _source->get_frame(frame);
         if (got_frame)
             _source->notify(frame);
