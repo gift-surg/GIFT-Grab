@@ -80,7 +80,8 @@ class Recorder:
             self.is_running = True
 
     def start(self):
-        """Connect to specified `port` and start looping until `stop()`ped.
+        """Connect to specified `port` and start data acquisition until
+        `stop()`ped.
 
         Will simply do nothing if not `is_running`.
         """
@@ -93,43 +94,15 @@ class Recorder:
             if not self.__connect_device():
                 return
 
-            inter_frame_duration = self.__inter_frame_duration()
-            frame = pygiftgrab.VideoFrame(self.colour_space, False)
             self.resume_recording()  # i.e. start recording
 
-            while self.is_running:
-                start = time()
-                if self.is_recording:
-                    got_frame = self.device.get_frame(frame)
-
-                    try:
-                        if got_frame:
-                            self.file.append(frame)
-                        else:
-                            logging.error('Could not read video stream, appending black frame')
-                            self.file.append(self.black_frame)
-                    except RuntimeError as e:
-                        # TODO - consider pausing and resuming instead
-                        logging.error(
-                            'Appending frame failed with: ' + e.message +
-                            ', aborting recording from ' + str(self.port)
-                        )
-                        self.stop()
-                        continue
-
-                sleep_duration = inter_frame_duration - (time() - start)
-                if sleep_duration > 0:
-                    sleep(sleep_duration)
-                else:
-                    self.latency -= sleep_duration
-
-            self.__disconnect_device()
         except BaseException as e:
-            logging.error('Unspecific exception: ' + e.message +
+            logging.error('Unspecific exception on starting: ' + e.message +
                           ', aborting recording.')
 
     def stop(self):
-        """Tell a `run()`ning recorder to stop.
+        """Stop a `start()`ed recorder and disconnect from the
+        Epiphan `port`.
 
         Will simply do nothing if not `is_running`.
         """
@@ -137,12 +110,13 @@ class Recorder:
             return
 
         self.pause_recording()
-        self.is_running = False
+
+        if self.__disconnect_device():
+            self.is_running = False
 
     def pause_recording(self):
-        """Tell a `run()`ning recorder to pause recording.
-
-        This will finalise the current video `file`.
+        """Pause a `start()`ed recorder and finalise the current
+        video `file`.
 
         @see resume_recording()
         """
@@ -153,32 +127,31 @@ class Recorder:
         if not self.is_recording:
             return
 
-        self.is_recording = False
-        # sleep to allow for stop to be picked up
-        sleep(2 * self.__inter_frame_duration())
+        if self.__stop_acquisition()
+            self.is_recording = False
 
-        try:
-            self.file.finalise()
-        except RuntimeError as e:
-            logging.error(e.message)
+            try:
+                self.file.finalise()
+            except RuntimeError as e:
+                logging.error(e.message)
 
-        # write timing report as well
-        try:
-            report_file = open(self.__video_filename() + '.timing.yml', 'w')
-            timing_report = dict(elapsed=str(timedelta(seconds=time() - self.started_at)),
-                                 latency=str(timedelta(seconds=self.latency)))
-            report_file.write(yaml.dump(timing_report, default_flow_style=False))
-            report_file.close()
-        except (IOError, yaml.YAMLError) as e:
-            logging.error(
-                'Intermediate report generation failed with: ' +
-                e.message
-            )
+            # write timing report as well
+            try:
+                report_file = open(self.__video_filename() + '.timing.yml', 'w')
+                timing_report = dict(elapsed=str(timedelta(seconds=time() - self.started_at)),
+                                     latency=str(timedelta(seconds=self.latency)))
+                report_file.write(yaml.dump(timing_report, default_flow_style=False))
+                report_file.close()
+            except (IOError, yaml.YAMLError) as e:
+                logging.error(
+                    'Intermediate report generation failed with: ' +
+                    e.message
+                )
 
-        self.latency = 0.00
+            self.latency = 0.00
 
     def resume_recording(self):
-        """Tell a `run()`ning and paused recorder to resume recording.
+        """Resume a `start()`ed and paused recorder.
 
         This will create and open a new video `file`.
 
@@ -213,10 +186,9 @@ class Recorder:
             return
 
         if self.__init_video_writer():
-            self.started_at = time()
-            self.is_recording = True
-        else:
-            self.is_recording = False
+            if self.__start_acquisition()
+                self.started_at = time()
+                self.is_recording = True
 
     def set_sub_frame(self, x, y, width, height):
         """Set region of interest to record.
@@ -251,6 +223,36 @@ class Recorder:
         """
         if not self.is_recording:
             self.sub_frame = None
+
+    def __start_acquisition(self):
+        """Attach the current file writer to current device.
+
+        @return ``True`` on success, ``False`` otherwise
+        """
+        try:
+            self.device.attach(self.file)
+        except RuntimeError as e:
+            logging.error(
+                'Could not start acquisition due to {}'.format(e.message)
+            )
+            return False
+        else:
+            return True
+
+    def __stop_acquisition(self):
+        """Detach the current file writer from current device.
+
+        @return ``True`` on success, ``False`` otherwise
+        """
+        try:
+            self.device.detach(self.file)
+        except RuntimeError as e:
+            logging.error(
+                'Could not stop acquisition due to {}'.format(e.message)
+            )
+            return False
+        else:
+            return True
 
     def __video_filename(self):
         """Report what video file to record to.
