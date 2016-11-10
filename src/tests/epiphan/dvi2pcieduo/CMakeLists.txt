@@ -22,11 +22,15 @@ endforeach(COLOUR_SPACE)
 
 # Both ports of Epiphan DVI2PCIe Duo using the Epiphan Python module
 foreach(COLOUR_SPACE ${COLOUR_SPACES})
-    SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_PyModule_${COLOUR_SPACE})
-    ADD_TEST(NAME ${NAME_TEST}
-        COMMAND py.test --colour-space=${COLOUR_SPACE} --config-dir=${CONFIG_DIR} test_epiphan_py_module.py
-    )
-    LIST(APPEND TESTS_LIST ${NAME_TEST})
+    # BGRA tests of the Epiphan Python module disabled
+    # temporarily due to issue #115
+    if(NOT COLOUR_SPACE STREQUAL "BGRA")
+        SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_PyModule_${COLOUR_SPACE})
+        ADD_TEST(NAME ${NAME_TEST}
+            COMMAND py.test --colour-space=${COLOUR_SPACE} --config-dir=${CONFIG_DIR} test_epiphan_py_module.py
+        )
+        LIST(APPEND TESTS_LIST ${NAME_TEST})
+    endif(NOT COLOUR_SPACE STREQUAL "BGRA")
 endforeach(COLOUR_SPACE)
 
 # Both ports of Epiphan DVI2PCIe Duo using the observer pattern
