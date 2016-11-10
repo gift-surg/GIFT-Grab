@@ -73,7 +73,7 @@ class Recorder:
         self.sub_frame = None
         self.device = None
         self.black_frame = None
-        if self.__create_video_writer() and self.timeout_limit > 0 \
+        if self.timeout_limit > 0 \
            and (self.colour_space == pygiftgrab.ColourSpace.BGRA or \
                 self.colour_space == pygiftgrab.ColourSpace.I420):
             self.is_running = True
@@ -131,6 +131,8 @@ class Recorder:
 
             try:
                 self.file.finalise()
+                del self.file
+                self.file = None
             except RuntimeError as e:
                 logging.error(e.message)
 
@@ -182,10 +184,11 @@ class Recorder:
         else:
             return
 
-        if self.__init_video_writer():
-            if self.__start_acquisition():
-                self.started_at = time()
-                self.is_recording = True
+        if self.__create_video_writer():
+            if self.__init_video_writer():
+                if self.__start_acquisition():
+                    self.started_at = time()
+                    self.is_recording = True
 
     def set_sub_frame(self, x, y, width, height):
         """Set region of interest to record.
