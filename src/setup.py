@@ -464,12 +464,9 @@ for colour_space in ['bgra', 'i420']:
         target_script += '=giftgrab.tests:test_{}_{}'.format(
             codec, colour_space)
         console_scripts.append(target_script)
-"""
-'test-giftgrab-epiphan-dvi2pcieduo-bgra=giftgrab.tests:test_epiphan_dvi2pcieduo_bgra'
-temporarily disabled due to issue #115
-"""
 console_scripts = console_scripts +\
-                  ['test-giftgrab-epiphan-dvi2pcieduo-i420=giftgrab.tests:test_epiphan_dvi2pcieduo_i420']
+                  ['test-giftgrab-epiphan-dvi2pcieduo-bgra=giftgrab.tests:test_epiphan_dvi2pcieduo_bgra',
+                   'test-giftgrab-epiphan-dvi2pcieduo-i420=giftgrab.tests:test_epiphan_dvi2pcieduo_i420']
 setup(
     name='gift-grab',
     version='16.08.24rc1',
