@@ -192,12 +192,6 @@ def test_frame_grabbing(colour_space, config_dir):
     fs.stop()
     us.stop()
 
-    # join threads
-    fs.join(timeout=fs.timeout_limit)
-    assert not fs.isAlive()
-    us.join(timeout=us.timeout_limit)
-    assert not us.isAlive()
-
     # test dumped Recorder configuration
     dump(fs)
     dumped_fs = parse(join(dirname(fs_file_path), 'config.yml'))
@@ -225,13 +219,6 @@ def cleanup():
     sleep(5)
 
     for recorder in recorders:
-        recorder.join(timeout=recorder.timeout_limit)
-    sleep(5)
-
-    for recorder in recorders:
         rmtree(dirname(recorder.file_path))
-
-    for recorder in recorders:
-        assert not recorder.isAlive()
 
     del recorders[:]
