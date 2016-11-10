@@ -158,7 +158,12 @@ void VideoFrame::init_from_specs(unsigned char * data, size_t data_length,
 
 void VideoFrame::clone(const VideoFrame & rhs)
 {
-    free_memory();
+    if (not _manage_data)
+    {
+        _data = nullptr;
+        _data_length = 0;
+        set_dimensions(0, 0);
+    }
     _manage_data = true;
     _colour = rhs._colour;
     init_from_specs(rhs._data, rhs._data_length,
