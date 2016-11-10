@@ -25,7 +25,7 @@ class Recorder:
     pointed to by the specified `file_path`, which serves only as a prefix, i.e.
     for each resume-pause a new file will be created with a recording index and
     the file extension appended. After each video file has been finalised, a text
-    file will be created as well that will contain the total latency for that
+    file will be created as well that will contain the total duration for that
     video file.
 
     This recorder class will attempt to perform the requested operations within a
@@ -69,7 +69,6 @@ class Recorder:
         self.recording_index = 0
         self.frame_rate = frame_rate
         self.is_recording = False
-        self.latency = 0.0  # sec
         self.started_at = 0
         self.sub_frame = None
         self.device = None
@@ -138,8 +137,7 @@ class Recorder:
             # write timing report as well
             try:
                 report_file = open(self.__video_filename() + '.timing.yml', 'w')
-                timing_report = dict(elapsed=str(timedelta(seconds=time() - self.started_at)),
-                                     latency=str(timedelta(seconds=self.latency)))
+                timing_report = dict(elapsed=str(timedelta(seconds=time() - self.started_at)))
                 report_file.write(yaml.dump(timing_report, default_flow_style=False))
                 report_file.close()
             except (IOError, yaml.YAMLError) as e:
@@ -148,7 +146,6 @@ class Recorder:
                     e.message
                 )
 
-            self.latency = 0.00
 
     def resume_recording(self):
         """Resume a `start()`ed and paused recorder.

@@ -31,12 +31,6 @@ def timing_report(file_path):
             strptime(data['elapsed'], '%H:%M:%S.%f')
         except ValueError:
             return False
-        if 'latency' not in data:
-            return False
-        try:
-            strptime(data['latency'], '%H:%M:%S.%f')
-        except ValueError:
-            return False
     return True
 
 
