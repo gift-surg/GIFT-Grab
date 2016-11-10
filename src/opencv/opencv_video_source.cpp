@@ -14,6 +14,7 @@ VideoSourceOpenCV::VideoSourceOpenCV(const char * path)
         throw std::runtime_error(error);
     }
     _daemon = new gg::BroadcastDaemon(this);
+    _daemon->start(get_frame_rate());
 }
 
 VideoSourceOpenCV::VideoSourceOpenCV(int deviceId)
@@ -28,6 +29,7 @@ VideoSourceOpenCV::VideoSourceOpenCV(int deviceId)
         throw gg::DeviceNotFound(error);
     }
     _daemon = new gg::BroadcastDaemon(this);
+    _daemon->start(get_frame_rate());
 }
 
 VideoSourceOpenCV::~VideoSourceOpenCV()
@@ -138,22 +140,3 @@ bool VideoSourceOpenCV::get_frame(gg::VideoFrame & frame)
     return has_read;
 }
 
-void VideoSourceOpenCV::attach(gg::IObserver & observer)
-{
-    gg::IObservable::attach(observer);
-    {
-        std::lock_guard<std::mutex> lock_guard(_observers_lock);
-        if (_observers.size() == 1)
-            _daemon->start(get_frame_rate());
-    }
-}
-
-void VideoSourceOpenCV::detach(gg::IObserver & observer)
-{
-    {
-        std::lock_guard<std::mutex> lock_guard(_observers_lock);
-        if (_observers.size() == 1)
-            _daemon->stop();
-    }
-    gg::IObservable::detach(observer);
-}

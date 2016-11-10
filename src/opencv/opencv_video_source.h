@@ -52,10 +52,6 @@ public:
         _buffer_sub_bgra = cv::Mat::zeros(height, width, CV_8UC4);
     }
 
-    void attach(gg::IObserver & observer) override;
-
-    void detach(gg::IObserver & observer) override;
-
 protected:
     //!
     //! \brief
