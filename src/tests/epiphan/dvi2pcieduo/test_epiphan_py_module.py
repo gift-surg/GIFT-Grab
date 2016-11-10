@@ -25,13 +25,13 @@ def timing_report(file_path):
     """
     with open(file_path, 'r') as stream:
         data = yaml.load(stream)
-        if data['elapsed'] is None:
+        if 'elapsed' not in data:
             return False
         try:
             strptime(data['elapsed'], '%H:%M:%S.%f')
         except ValueError:
             return False
-        if data['latency'] is None:
+        if 'latency' not in data:
             return False
         try:
             strptime(data['latency'], '%H:%M:%S.%f')
