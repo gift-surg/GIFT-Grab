@@ -33,7 +33,7 @@ public:
 
     void default_attach(gg::IObserver & observer)
     {
-        gg::IObservable::attach(observer);
+        gg::IObservable::attach(boost::ref(observer));
     }
 
     void detach(gg::IObserver & observer)
