@@ -25,7 +25,7 @@ protected:
     //!
     //! \brief
     //!
-    std::vector< std::reference_wrapper<IObserver> > _observers;
+    std::vector< IObserver * > _observers;
 
     //!
     //! \brief
