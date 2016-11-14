@@ -40,6 +40,8 @@ class FrameRateTimer(pgg.IObserver):
         global use_numpy
         if use_numpy:
             diffs = self._timestamps[1:] - self._timestamps[:-1]
+            if len(diffs) == 0:
+                return False
             return np.count_nonzero(
                        diffs > np.timedelta64(1000000 / self._frame_rate, 'us')
                    ) == 0
