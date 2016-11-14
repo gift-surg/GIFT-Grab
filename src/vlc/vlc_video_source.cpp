@@ -10,6 +10,14 @@
 namespace gg
 {
 
+//!
+//! \brief This is to be used by the
+//! \c prepareRender and/or \c handleStream
+//! functions as appropriate
+//!
+VideoFrame buffer_frame(I420, false);
+
+
 VideoSourceVLC::VideoSourceVLC(const std::string path)
     : IVideoSource(gg::I420)
     , _vlc_inst(nullptr)
@@ -287,6 +295,8 @@ void VideoSourceVLC::handleStream(VideoSourceVLC * p_video_data,
     {
         p_video_data->_cols = cols;
         p_video_data->_rows = rows;
+        buffer_frame.init_from_specs(p_pixel_buffer, size, cols, rows);
+        p_video_data->notify(buffer_frame);
     }
 }
 
