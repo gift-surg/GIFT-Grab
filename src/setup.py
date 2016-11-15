@@ -450,7 +450,7 @@ description = 'GIFT-Grab was developed as part of the GIFT-Surg project ' +\
 description = '%s\n\n%s' % (summary, description)
 console_scripts = []
 for port in ['sdi', 'dvi']:
-    for colour_space in ['bgra']:
+    for colour_space in ['i420']:
         # Disabled the BGRA tests of Epiphan DVI2PCIe Duo (currently using OpenCV)
         # until issue #115 is resolved
         for codec in ['xvid', 'hevc', 'vp9']:
