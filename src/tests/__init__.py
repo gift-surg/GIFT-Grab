@@ -52,10 +52,11 @@ def __run_epiphan_tests(colour_space):
                     epiphan_dvi2pcieduo_working_dir, '-m', 'unit'])
         if ret: exit(ret)
 
-    ret = main(['--colour-space=%s' % (colour_space),
-                '--config-dir=%s' % (epiphan_dvi2pcieduo_config_dir),
-                epiphan_dvi2pcieduo_working_dir, '-m', 'epiphan_py_module'])
-    if ret: exit(ret)
+    # Disabled the Python module tests until issue #114 is resolved
+    # ret = main(['--colour-space=%s' % (colour_space),
+    #             '--config-dir=%s' % (epiphan_dvi2pcieduo_config_dir),
+    #             epiphan_dvi2pcieduo_working_dir, '-m', 'epiphan_py_module'])
+    # if ret: exit(ret)
 
 
 def test_epiphan_dvi2pcieduo_bgra():
