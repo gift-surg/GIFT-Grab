@@ -180,7 +180,7 @@ pypi-epiphan-dvi2pcie-duo:
     - edd-dvi-i420-vp9; exit_on_fail
     - edd-sdi-i420-vp9; exit_on_fail
     - ls -alh ./*.mp4
-    - ls -alh ./*.avi
+    # - ls -alh ./*.avi
     - ls -alh ./*.webm
     - rm -f ./*.mp4 ./*.avi ./*.webm
     # Epiphan DVI2PCIe Duo support (both OpenCV and libVLC)
@@ -198,7 +198,7 @@ pypi-epiphan-dvi2pcie-duo:
     - edd-dvi-i420-vp9; exit_on_fail
     - edd-sdi-i420-vp9; exit_on_fail
     - ls -alh ./*.mp4
-    - ls -alh ./*.avi
+    # - ls -alh ./*.avi
     - ls -alh ./*.webm
     - rm -f ./*.mp4 ./*.avi ./*.webm
     # Epiphan DVI2PCIe Duo support (both OpenCV and Epiphan SDK)
