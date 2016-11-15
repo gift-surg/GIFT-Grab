@@ -464,10 +464,9 @@ for colour_space in ['bgra', 'i420']:
         target_script += '=giftgrab.tests:test_{}_{}'.format(
             codec, colour_space)
         console_scripts.append(target_script)
+# Disabled the BGRA tests of Epiphan DVI2PCIe Duo (currently using OpenCV) until issue #115 is resolved
+#'test-giftgrab-epiphan-dvi2pcieduo-bgra=giftgrab.tests:test_epiphan_dvi2pcieduo_bgra',
 console_scripts = console_scripts +\
-                  # Disabled the BGRA tests of Epiphan DVI2PCIe Duo (currently using OpenCV)
-                  # until issue #115 is resolved
-                  #'test-giftgrab-epiphan-dvi2pcieduo-bgra=giftgrab.tests:test_epiphan_dvi2pcieduo_bgra',
                   ['test-giftgrab-epiphan-dvi2pcieduo-i420=giftgrab.tests:test_epiphan_dvi2pcieduo_i420']
 setup(
     name='gift-grab',
