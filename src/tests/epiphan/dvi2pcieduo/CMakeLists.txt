@@ -33,7 +33,6 @@ endforeach(COLOUR_SPACE)
 # Both ports of Epiphan DVI2PCIe Duo using the observer pattern
 foreach(COLOUR_SPACE ${COLOUR_SPACES})
     foreach(PORT ${PORTS})
-        SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_ObserverPattern_${PORT}_${COLOUR_SPACE})
         if(COLOUR_SPACE STREQUAL "I420")
             if(USE_EPIPHANSDK)
                 SET(FRAME_RATE 40)
@@ -43,6 +42,7 @@ foreach(COLOUR_SPACE ${COLOUR_SPACES})
         elseif(COLOUR_SPACE STREQUAL "BGRA")
             SET(FRAME_RATE 30)
         endif(COLOUR_SPACE STREQUAL "I420")
+        SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_ObserverPattern_${PORT}_${COLOUR_SPACE}_${FRAME_RATE}fps)
 
         ADD_TEST(NAME ${NAME_TEST}
             COMMAND py.test --port=${PORT} --colour-space=${COLOUR_SPACE} --frame-rate=${FRAME_RATE} --observers=3 test_observer.py
