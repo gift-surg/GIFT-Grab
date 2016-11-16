@@ -3,6 +3,7 @@
 #include "videoframe.h"
 #include "except.h"
 #include "iobservable.h"
+#include "macros.h"
 
 //!
 //! \brief This abstract class defines the interface that every video source
@@ -138,4 +139,7 @@ protected:
     //! streaming
     //!
     unsigned int    _num_burn_frames;
+
+protected:
+    DISALLOW_COPY_AND_ASSIGNMENT(IVideoSource);
 };

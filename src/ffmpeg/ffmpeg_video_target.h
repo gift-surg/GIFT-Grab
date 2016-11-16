@@ -167,6 +167,9 @@ protected:
     //! \sa finalise
     //!
     void encode_and_write(AVFrame * frame, int & got_output);
+
+protected:
+    DISALLOW_COPY_AND_ASSIGNMENT(VideoTargetFFmpeg);
 };
 
 }

@@ -73,6 +73,7 @@ public:
 
     void get_full_frame();
 
+protected:
     DISALLOW_COPY_AND_ASSIGNMENT(VideoSourceEpiphanSDK);
 };
 

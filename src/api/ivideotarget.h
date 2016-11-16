@@ -3,6 +3,7 @@
 #include "videoframe.h"
 #include "except.h"
 #include "iobserver.h"
+#include "macros.h"
 
 namespace gg
 {
@@ -15,6 +16,16 @@ namespace gg
 //!
 class IVideoTarget : public IObserver
 {
+protected:
+    //!
+    //! \brief Default constructor that should
+    //! never be called publicly.
+    //!
+    IVideoTarget()
+    {
+        // nop
+    }
+
 public:
     //!
     //! \brief Destructor, doing nothing
@@ -94,6 +105,9 @@ protected:
         else
             return; // nop, i.e. pass
     }
+
+protected:
+    DISALLOW_COPY_AND_ASSIGNMENT(IVideoTarget);
 };
 
 }
