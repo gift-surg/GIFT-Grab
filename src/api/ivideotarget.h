@@ -3,6 +3,7 @@
 #include "videoframe.h"
 #include "except.h"
 #include "iobserver.h"
+#include "macros.h"
 
 namespace gg
 {
@@ -94,6 +95,9 @@ protected:
         else
             return; // nop, i.e. pass
     }
+
+protected:
+    DISALLOW_COPY_AND_ASSIGNMENT(IVideoTarget);
 };
 
 }
