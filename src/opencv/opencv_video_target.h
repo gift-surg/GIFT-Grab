@@ -59,6 +59,9 @@ public:
     void append(const VideoFrame & frame);
 
     void finalise();
+
+protected:
+    DISALLOW_COPY_AND_ASSIGNMENT(VideoTargetOpenCV);
 };
 
 }
