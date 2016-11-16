@@ -17,6 +17,15 @@ class IVideoTarget : public IObserver
 {
 public:
     //!
+    //! \brief Destructor, doing nothing
+    //!
+    virtual ~IVideoTarget()
+    {
+        // nop
+    }
+
+public:
+    //!
     //! \brief Initialise a file writer
     //! \param filepath
     //! \param framerate how many frames per second
