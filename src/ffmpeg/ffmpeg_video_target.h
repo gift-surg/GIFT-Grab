@@ -123,6 +123,11 @@ public:
     //!
     VideoTargetFFmpeg(const std::string codec);
 
+    //!
+    //! \brief
+    //!
+    virtual ~VideoTargetFFmpeg();
+
 public:
     void init(const std::string filepath, const float framerate);
 

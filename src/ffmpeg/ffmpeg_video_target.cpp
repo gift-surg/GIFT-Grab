@@ -65,6 +65,11 @@ VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
     av_register_all();
 }
 
+VideoTargetFFmpeg::~VideoTargetFFmpeg()
+{
+    // nop
+}
+
 void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
 {
     if (framerate <= 0)
