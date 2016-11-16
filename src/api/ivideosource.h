@@ -3,6 +3,7 @@
 #include "videoframe.h"
 #include "except.h"
 #include "iobservable.h"
+#include "macros.h"
 
 //!
 //! \brief This abstract class defines the interface that every video source
