@@ -116,4 +116,20 @@ public:
     //!
     virtual ~VideoSourceError() noexcept;
 };
+
+class ObserverError : public BasicException
+{
+public:
+    //!
+    //! \brief
+    //! \param detail
+    //!
+    ObserverError(const std::string & detail);
+
+    //!
+    //! \brief ~ObserverError
+    //! \sa BasicException::BasicException
+    //!
+    virtual ~ObserverError() noexcept;
+};
 }

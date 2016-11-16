@@ -9,6 +9,20 @@ def pytest_addoption(parser):
                      help='Epiphan DVI2PCIe Duo port specification (SDI or DVI)')
     parser.addoption('--config-dir', action='store',
                      help='Epiphan DVI2PCIe Duo config files directory')
+    parser.addoption('--frame-rate', action='store', type=int,
+                     help='Frame-rate specification for test')
+    parser.addoption('--observers', action='store', type=int,
+                     help='Number of observers to use when testing frame rate')
+
+
+@fixture(scope='session')
+def frame_rate(request):
+    return request.config.getoption('--frame-rate')
+
+
+@fixture(scope='session')
+def observers(request):
+    return request.config.getoption('--observers')
 
 
 @fixture(scope='session')
@@ -38,4 +52,3 @@ def port(request):
 @fixture(scope='session')
 def config_dir(request):
     return request.config.getoption('--config-dir')
-

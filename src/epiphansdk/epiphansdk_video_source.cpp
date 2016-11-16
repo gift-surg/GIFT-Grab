@@ -6,9 +6,10 @@ namespace gg
 
 VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
     const std::string device_id, V2U_INT32 colour_space)
-    : IVideoSource(),
-      _frame_grabber(nullptr),
-      _flags(0)
+    : IVideoSource()
+    , _frame_grabber(nullptr)
+    , _flags(0)
+    , _daemon(nullptr)
 {
     FrmGrab_Init();
 
@@ -26,9 +27,13 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
         std::cerr << "Colour space " << colour_space << " not supported" << std::endl;
         return;
     }
+    else if (colour_space == V2U_GRABFRAME_FORMAT_I420)
+        _colour = I420;
+    else
+        _colour = BGRA;
     _flags |= colour_space;
 
-    VideoFrame frame(I420);
+    VideoFrame frame(_colour);
     _full.x = 0;
     _full.y = 0;
     /* TODO - e.g. EpiphanSDK_MAX_RES_X and
@@ -40,10 +45,14 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
     get_full_frame();
     // TODO - exception GiftGrab#42
     if (not get_frame(frame)) return;
+
+    _daemon = new gg::BroadcastDaemon(this);
+    _daemon->start(get_frame_rate());
 }
 
 VideoSourceEpiphanSDK::~VideoSourceEpiphanSDK()
 {
+    delete _daemon;
     if (_frame_grabber) FrmGrab_Close(_frame_grabber);
     FrmGrab_Deinit();
 }
@@ -57,7 +66,7 @@ bool VideoSourceEpiphanSDK::get_frame_dimensions(int & width, int & height)
 
 bool VideoSourceEpiphanSDK::get_frame(VideoFrame & frame)
 {
-    if (frame.colour() != I420)
+    if (frame.colour() != _colour)
         // TODO - exception GiftGrab#42
         return false;
 

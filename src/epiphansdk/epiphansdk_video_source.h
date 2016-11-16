@@ -2,6 +2,7 @@
 #include "frmgrab.h"
 #include "ivideosource.h"
 #include "macros.h"
+#include "broadcastdaemon.h"
 
 namespace gg
 {
@@ -35,6 +36,11 @@ protected:
     //! \sa _frame_grabber
     //!
     V2U_GrabFrame2 * _buffer;
+
+    //!
+    //! \brief
+    //!
+    gg::BroadcastDaemon * _daemon;
 
 public:
     //!

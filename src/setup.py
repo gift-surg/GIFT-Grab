@@ -450,7 +450,9 @@ description = 'GIFT-Grab was developed as part of the GIFT-Surg project ' +\
 description = '%s\n\n%s' % (summary, description)
 console_scripts = []
 for port in ['sdi', 'dvi']:
-    for colour_space in ['bgra', 'i420']:
+    for colour_space in ['i420']:
+        # Disabled the BGRA tests of Epiphan DVI2PCIe Duo (currently using OpenCV)
+        # until issue #115 is resolved
         for codec in ['xvid', 'hevc', 'vp9']:
              record_script = 'edd-{}-{}-{}'.format(
                  port, colour_space, codec)
@@ -464,9 +466,10 @@ for colour_space in ['bgra', 'i420']:
         target_script += '=giftgrab.tests:test_{}_{}'.format(
             codec, colour_space)
         console_scripts.append(target_script)
+# Disabled the BGRA tests of Epiphan DVI2PCIe Duo (currently using OpenCV) until issue #115 is resolved
+#'test-giftgrab-epiphan-dvi2pcieduo-bgra=giftgrab.tests:test_epiphan_dvi2pcieduo_bgra',
 console_scripts = console_scripts +\
-                  ['test-giftgrab-epiphan-dvi2pcieduo-bgra=giftgrab.tests:test_epiphan_dvi2pcieduo_bgra',
-                   'test-giftgrab-epiphan-dvi2pcieduo-i420=giftgrab.tests:test_epiphan_dvi2pcieduo_i420']
+                  ['test-giftgrab-epiphan-dvi2pcieduo-i420=giftgrab.tests:test_epiphan_dvi2pcieduo_i420']
 setup(
     name='gift-grab',
     version='16.08.24rc1',

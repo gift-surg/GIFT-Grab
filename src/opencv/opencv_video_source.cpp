@@ -3,8 +3,9 @@
 #include <iostream>
 
 VideoSourceOpenCV::VideoSourceOpenCV(const char * path)
-    :IVideoSource()
+    : IVideoSource(gg::BGRA)
     , _frame_rate(0)
+    , _daemon(nullptr)
 {
     _cap.open(path);
     if (!_cap.isOpened()) {
@@ -12,10 +13,12 @@ VideoSourceOpenCV::VideoSourceOpenCV(const char * path)
                             + path;
         throw std::runtime_error(error);
     }
+    _daemon = new gg::BroadcastDaemon(this);
+    _daemon->start(get_frame_rate());
 }
 
 VideoSourceOpenCV::VideoSourceOpenCV(int deviceId)
-    : IVideoSource()
+    : IVideoSource(gg::BGRA)
     , _frame_rate(0)
 {
     _cap.open(deviceId);
@@ -25,6 +28,13 @@ VideoSourceOpenCV::VideoSourceOpenCV(int deviceId)
         error.append(" could not be opened");
         throw gg::DeviceNotFound(error);
     }
+    _daemon = new gg::BroadcastDaemon(this);
+    _daemon->start(get_frame_rate());
+}
+
+VideoSourceOpenCV::~VideoSourceOpenCV()
+{
+    delete _daemon;
 }
 
 double VideoSourceOpenCV::get_frame_rate()
@@ -91,7 +101,7 @@ bool VideoSourceOpenCV::get_frame_dimensions(int &width, int & height)
 
 bool VideoSourceOpenCV::get_frame(gg::VideoFrame & frame)
 {
-    if (frame.colour() != gg::ColourSpace::BGRA)
+    if (frame.colour() != _colour)
         return false;
 
     if (!_cap.isOpened()) return false;
@@ -129,3 +139,4 @@ bool VideoSourceOpenCV::get_frame(gg::VideoFrame & frame)
     }
     return has_read;
 }
+

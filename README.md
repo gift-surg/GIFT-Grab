@@ -37,7 +37,9 @@ Please note that there are cross-dependencies between some of these external lib
 Supported hardware
 ------------------
 
-* [Epiphan DVI2PCIe Duo](http://www.epiphan.com/products/dvi2pcie-duo/)
+* [Epiphan DVI2PCIe Duo](http://www.epiphan.com/products/dvi2pcie-duo/), with an acquisition frame rate of:
+  * 19 frames per second (fps) if using libVLC
+  * 40 fps if using Epiphan video grabber SDK
 
 Supported video formats
 -----------------------
@@ -80,10 +82,9 @@ Features can be customised as per the combinations listed below. Please note tha
 **To quickly test whether the GIFT-Grab Python API works** run:
 
 * `test-giftgrab-<codec>-<colour_space>` to test support for `<codec>` (one of `xvid`, `hevc`, or `vp9`) in `<colour_space>` (one of `bgra` or `i420`), provided GIFT-Grab was built with support for specified option (Note that currently GIFT-Grab does not support Xvid encoding with I420 frames).
-* `test-giftgrab-epiphan-dvi2pcieduo-<colour_space>` to test Epiphan DVI2PCIe Duo support where `<colour_space>` is one of `bgra` or `i420`
-* `edd-<port>-<colour_space>-<codec>` (e.g. `edd-dvi-i420-vp9`) to record 30 frames into a timestamp-named video file, where:
+* `test-giftgrab-epiphan-dvi2pcieduo-i420` to test Epiphan DVI2PCIe Duo support
+* `edd-<port>-i420-<codec>` (e.g. `edd-dvi-i420-vp9`) to record 30 frames into a timestamp-named video file, where:
    * `<port>` is one of `dvi` or `sdi`
-   * `<colour_space>` is one of `bgra` or `i420`
    * `<codec>` is one of `xvid`, `hevc`, or `vp9`
 
 Funding

@@ -2,6 +2,7 @@
 
 #include "videoframe.h"
 #include "except.h"
+#include "iobservable.h"
 
 //!
 //! \brief This abstract class defines the interface that every video source
@@ -10,14 +11,27 @@
 //! This enables the underlying algorithms to be agnostic of
 //! the data sources.
 //!
-class IVideoSource
+class IVideoSource : public gg::IObservable
 {
 public:
     //!
     //! \brief Destructor, doing nothing
     //!
     virtual ~IVideoSource()
-    {}
+    {
+
+    }
+
+public:
+    //!
+    //! \brief Get colour space in which this source
+    //! is operating
+    //! \return
+    //!
+    virtual gg::ColourSpace get_colour()
+    {
+        return _colour;
+    }
 
     //!
     //! \brief Get frame dimensions
@@ -91,6 +105,25 @@ protected:
     IVideoSource()
         :_get_sub_frame(false), _num_burn_frames(0)
     {}
+
+    //!
+    //! \brief Constructor setting colour space
+    //! \param colour
+    //! \sa default constructor
+    //!
+    IVideoSource(gg::ColourSpace colour)
+        : _colour(colour)
+        , _get_sub_frame(false)
+        , _num_burn_frames(0)
+    {
+
+    }
+
+    //!
+    //! \brief Indicates the colour space in which this
+    //! source is operating
+    //!
+    gg::ColourSpace _colour;
 
     //!
     //! \brief If \c false, then grab full frames, otherwise

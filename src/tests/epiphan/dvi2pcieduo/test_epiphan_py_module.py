@@ -25,22 +25,16 @@ def timing_report(file_path):
     """
     with open(file_path, 'r') as stream:
         data = yaml.load(stream)
-        if data['elapsed'] is None:
+        if 'elapsed' not in data:
             return False
         try:
             strptime(data['elapsed'], '%H:%M:%S.%f')
         except ValueError:
             return False
-        if data['latency'] is None:
-            return False
-        try:
-            strptime(data['latency'], '%H:%M:%S.%f')
-        except ValueError:
-            return False
     return True
 
 
-@pytest.mark.real_time
+@pytest.mark.epiphan_py_module
 @pytest.mark.usefixtures('cleanup')
 def test_parse(colour_space, config_dir):
     # not existing config file
@@ -68,7 +62,7 @@ def test_parse(colour_space, config_dir):
         _ = parse(join(config_dir, 'oserror.yml'))
 
 
-@pytest.mark.real_time
+@pytest.mark.epiphan_py_module
 @pytest.mark.usefixtures('cleanup')
 def test_frame_grabbing(colour_space, config_dir):
     # test-input & data
@@ -192,12 +186,6 @@ def test_frame_grabbing(colour_space, config_dir):
     fs.stop()
     us.stop()
 
-    # join threads
-    fs.join(timeout=fs.timeout_limit)
-    assert not fs.isAlive()
-    us.join(timeout=us.timeout_limit)
-    assert not us.isAlive()
-
     # test dumped Recorder configuration
     dump(fs)
     dumped_fs = parse(join(dirname(fs_file_path), 'config.yml'))
@@ -225,13 +213,6 @@ def cleanup():
     sleep(5)
 
     for recorder in recorders:
-        recorder.join(timeout=recorder.timeout_limit)
-    sleep(5)
-
-    for recorder in recorders:
         rmtree(dirname(recorder.file_path))
-
-    for recorder in recorders:
-        assert not recorder.isAlive()
 
     del recorders[:]

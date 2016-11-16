@@ -2,6 +2,7 @@
 
 #include "videoframe.h"
 #include "except.h"
+#include "iobserver.h"
 
 namespace gg
 {
@@ -12,7 +13,7 @@ namespace gg
 //! functionality to save streamed video e.g.
 //! to files
 //!
-class IVideoTarget
+class IVideoTarget : public IObserver
 {
 public:
     //!
@@ -43,6 +44,11 @@ public:
     //! be finalised, e.g. for IO reasons
     //!
     virtual void finalise() = 0;
+
+    void update(VideoFrame & frame) override
+    {
+        append(frame);
+    }
 
 protected:
     //!

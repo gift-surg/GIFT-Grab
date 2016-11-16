@@ -1,4 +1,7 @@
 #include "vlc_video_source.h"
+#ifdef BUILD_PYTHON
+#include "gil.h"
+#endif
 #include <cstdio>
 #include <cstdlib>
 #include <chrono>
@@ -7,8 +10,17 @@
 namespace gg
 {
 
+//!
+//! \brief This is to be used by the
+//! \c prepareRender and/or \c handleStream
+//! functions as appropriate
+//!
+VideoFrame buffer_frame(I420, false);
+
+
 VideoSourceVLC::VideoSourceVLC(const std::string path)
-    : _vlc_inst(nullptr)
+    : IVideoSource(gg::I420)
+    , _vlc_inst(nullptr)
     , _vlc_mp(nullptr)
     , _running(false)
     , _video_buffer(nullptr)
@@ -46,7 +58,7 @@ bool VideoSourceVLC::get_frame_dimensions(int & width, int & height)
 
 bool VideoSourceVLC::get_frame(VideoFrame & frame)
 {
-    if (frame.colour() != ColourSpace::I420)
+    if (frame.colour() != _colour)
         return false;
 
     std::lock_guard<std::mutex> data_lock_guard(_data_lock);
@@ -165,6 +177,10 @@ void VideoSourceVLC::run_vlc()
     // release VLC media
     libvlc_media_release(vlc_media);
 
+#ifdef BUILD_PYTHON
+    ScopedPythonGILRelease gil_release;
+#endif
+
     { // artificial scope for the mutex guard below
         std::lock_guard<std::mutex> data_lock_guard(_data_lock);
         // play the media_player
@@ -279,6 +295,8 @@ void VideoSourceVLC::handleStream(VideoSourceVLC * p_video_data,
     {
         p_video_data->_cols = cols;
         p_video_data->_rows = rows;
+        buffer_frame.init_from_specs(p_pixel_buffer, size, cols, rows);
+        p_video_data->notify(buffer_frame);
     }
 }
 

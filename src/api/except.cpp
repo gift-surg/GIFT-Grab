@@ -62,4 +62,15 @@ VideoSourceError::~VideoSourceError() noexcept
 
 }
 
+ObserverError::ObserverError(const std::string & detail) :
+    BasicException(detail)
+{
+
+}
+
+ObserverError::~ObserverError() noexcept
+{
+
+}
+
 }
