@@ -33,7 +33,7 @@ public:
     //!
     //! \brief Finalise communication with used framegrabber
     //!
-    ~FrameGrabberBlackMagic();
+    virtual ~FrameGrabberBlackMagic();
 
     bool get_frame_dimensions(int &width, int &height);
 
