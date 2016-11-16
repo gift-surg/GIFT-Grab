@@ -27,7 +27,7 @@ public:
     //!
     //! \brief Free all allocated memory
     //!
-    ~MaskFrame();
+    virtual ~MaskFrame();
 
     //!
     //! \brief Copy data from \c rhs, also setting

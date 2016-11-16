@@ -119,7 +119,7 @@ public:
     //! \brief Stop streaming and finalise current video
     //! source, freeing all used resources
     //!
-    ~VideoSourceVLC();
+    virtual ~VideoSourceVLC();
 
     bool get_frame_dimensions(int & width, int & height);
 

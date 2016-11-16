@@ -17,6 +17,11 @@ VideoTargetOpenCV::VideoTargetOpenCV(const std::string fourcc)
         _fourcc = fourcc;
 }
 
+VideoTargetOpenCV::~VideoTargetOpenCV()
+{
+    // nop
+}
+
 void VideoTargetOpenCV::init(const std::string filepath, const float framerate)
 {
     if (framerate <= 0)
