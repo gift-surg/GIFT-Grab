@@ -16,6 +16,16 @@ namespace gg
 //!
 class IVideoTarget : public IObserver
 {
+protected:
+    //!
+    //! \brief Default constructor that should
+    //! never be called publicly.
+    //!
+    IVideoTarget()
+    {
+        // nop
+    }
+
 public:
     //!
     //! \brief Destructor, doing nothing
