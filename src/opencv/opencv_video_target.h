@@ -48,6 +48,11 @@ public:
     //!
     VideoTargetOpenCV(const std::string fourcc = "XVID");
 
+    //!
+    //! \brief
+    //!
+    virtual ~VideoTargetOpenCV();
+
 public:
     void init(const std::string filepath, const float framerate);
 
