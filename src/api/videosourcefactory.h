@@ -48,6 +48,7 @@ protected:
     //!
     VideoSourceFactory();
 
+public:
     //!
     //! \brief Free all connected devices
     //! \sa free_device
