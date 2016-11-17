@@ -132,6 +132,7 @@ SET(HEADERS
     api/maskframe.h
     api/device.h
     api/factory.h
+    api/videosourcefactory.h
     api/except.h
 )
 SET(SOURCES
@@ -140,6 +141,7 @@ SET(SOURCES
     api/broadcastdaemon.cpp
     api/maskframe.cpp
     api/factory.cpp
+    api/videosourcefactory.cpp
     api/except.cpp
 )
 
