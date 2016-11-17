@@ -1,5 +1,10 @@
-from pytest import mark, raises
+from pytest import mark, raises, fixture
 from pygiftgrab import VideoSourceFactory, VideoFrame, ColourSpace, Device
+
+
+@fixture(params=[0, 1], ids=[Device.DVI2PCIeDuo_DVI, Device.DVI2PCIeDuo_SDI])
+def device(request):
+    return request.param
 
 
 @mark.video_source_factory
@@ -19,11 +24,11 @@ def test_get_instance_returns_singleton():
 
 
 @mark.video_source_factory
-def test_get_device_returns_connection(port, colour_space):
+def test_get_device_returns_connection(device, colour_space):
     factory = VideoSourceFactory.get_instance()
 
     source = None
-    source = factory.get_device(port, colour_space)
+    source = factory.get_device(device, colour_space)
     assert source is not None
 
     frame = VideoFrame(colour_space, False)
@@ -35,18 +40,18 @@ def test_get_device_returns_connection(port, colour_space):
 
 
 @mark.video_source_factory
-def test_get_device_returns_singleton(port, colour_space):
+def test_get_device_returns_singleton(device, colour_space):
     factory = VideoSourceFactory.get_instance()
 
-    source = factory.get_device(port, colour_space)
-    source_ = factory.get_device(port, colour_space)
+    source = factory.get_device(device, colour_space)
+    source_ = factory.get_device(device, colour_space)
     assert source is source_
 
 
 @mark.video_source_factory
-def test_get_device_does_not_create_duplicate(port, colour_space):
+def test_get_device_does_not_create_duplicate(device, colour_space):
     factory = VideoSourceFactory.get_instance()
-    source = factory.get_device(port, colour_space)
+    source = factory.get_device(device, colour_space)
 
     source_duplicate = None
     if colour_space == ColourSpace.I420:
@@ -54,7 +59,7 @@ def test_get_device_does_not_create_duplicate(port, colour_space):
     else:
         other_colour_space = ColourSpace.I420
     with raises(IOError):
-        source_duplicate = factory.get_device(port, other_colour_space)
+        source_duplicate = factory.get_device(device, other_colour_space)
     assert source_duplicate is None
 
 
