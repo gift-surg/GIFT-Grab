@@ -3,6 +3,8 @@
 namespace gg
 {
 
+VideoSourceFactory VideoSourceFactory::_factory_singleton;
+
 VideoSourceFactory::VideoSourceFactory()
 {
     // TODO
