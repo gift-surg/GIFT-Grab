@@ -1,4 +1,5 @@
 #include "factory.h"
+#include "videosourcefactory.h"
 #include "except.h"
 #include "iobservable.h"
 #include "gil.h"
@@ -281,5 +282,22 @@ BOOST_PYTHON_MODULE(pygiftgrab)
              // because ownership is passed to client
              return_value_policy<manage_new_object>())
         .staticmethod("writer")
+    ;
+
+    class_<gg::VideoSourceFactory>("VideoSourceFactory", no_init)
+        .def("get_device", &gg::VideoSourceFactory::get_device
+             /* Keep returned pointer (0) alive as long as factory (1) alive.
+              * Boost.Python documentation says reference_existing_object is
+              * dangerous, but apparently only when no additional lifetime
+              * management with a call policy is provided (for details, see:
+              * http://www.boost.org/doc/libs/1_39_0/libs/python/doc/v2/reference_existing_object.html
+              * ).
+              */
+             , return_value_policy<reference_existing_object, with_custodian_and_ward_postcall<1, 0> >()
+        )
+        .def("get_instance", &gg::VideoSourceFactory::get_instance
+             , return_internal_reference<>()
+        )
+        .staticmethod("get_instance")
     ;
 }
