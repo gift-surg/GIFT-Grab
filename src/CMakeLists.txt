@@ -130,6 +130,7 @@ SET(HEADERS
     api/broadcastdaemon.h
     api/videoframe.h
     api/maskframe.h
+    api/device.h
     api/factory.h
     api/except.h
 )

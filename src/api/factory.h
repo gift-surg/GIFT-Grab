@@ -3,16 +3,9 @@
 #include "ivideosource.h"
 #include "ivideotarget.h"
 #include "except.h"
+#include "device.h"
 
 namespace gg {
-
-//!
-//! \brief Lists supported framegrabber hardware
-//!
-enum Device {
-    DVI2PCIeDuo_DVI,
-    DVI2PCIeDuo_SDI
-};
 
 //!
 //! \brief Lists supported video saving options
