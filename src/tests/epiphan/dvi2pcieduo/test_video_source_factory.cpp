@@ -72,6 +72,8 @@ TEST_CASE( "get_device returns singleton", "[VideoSourceFactory]" )
     REQUIRE( source == source_ );
 }
 
+#if defined(USE_LIBVLC) or defined(USE_EPIPHANSDK)
+#if defined(USE_OPENCV)
 TEST_CASE( "get_device does not create duplicate", "[VideoSourceFactory]" )
 {
     gg::VideoSourceFactory & factory = gg::VideoSourceFactory::get_instance();
@@ -103,3 +105,5 @@ TEST_CASE( "free_device garbage-collects device", "[VideoSourceFactory]" )
     source = factory.get_device(device, other_colour);
     REQUIRE_FALSE( source == nullptr );
 }
+#endif
+#endif
