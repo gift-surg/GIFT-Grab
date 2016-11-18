@@ -39,10 +39,19 @@ LIST(APPEND PORTS SDI)
 LIST(APPEND PORTS DVI)
 
 # VideoSourceFactory
+SET(VIDEO_SOURCE_FACTORY_TEST test_video_source_factory)
+ADD_EXECUTABLE(
+    ${VIDEO_SOURCE_FACTORY_TEST}
+    ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/test_video_source_factory.cpp
+)
+TARGET_LINK_LIBRARIES(
+    ${VIDEO_SOURCE_FACTORY_TEST}
+    ${LIBS} ${NAME}
+)
 foreach(COLOUR_SPACE ${COLOUR_SPACES})
     SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_VideoSourceFactory_${COLOUR_SPACE})
     ADD_TEST(NAME ${NAME_TEST}
-        COMMAND py.test --port=${PORT} --colour-space=${COLOUR_SPACE} test_video_source_factory.py
+        COMMAND ${VIDEO_SOURCE_FACTORY_TEST} # TODO: --colour-space=${COLOUR_SPACE}
     )
     LIST(APPEND TESTS_LIST ${NAME_TEST})
 endforeach(COLOUR_SPACE)
