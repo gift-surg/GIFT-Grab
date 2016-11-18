@@ -35,7 +35,15 @@ IVideoSource * VideoSourceFactory::get_device(Device device,
                                               ColourSpace colour)
 {
     // if already connected, return
-    if (_devices[(int) device] != nullptr) return _devices[(int) device];
+    if (_devices[(int) device] != nullptr)
+    {
+        if (_device_colours[(int) device] != colour)
+            throw DeviceAlreadyConnected(
+                "Device already connected using another colour space"
+            );
+        else
+            return _devices[(int) device];
+    }
 
     // otherwise, connect
     IVideoSource * src = nullptr;
@@ -182,19 +190,9 @@ IVideoSource * VideoSourceFactory::get_device(Device device,
 
         // if no exception raised up to here, glory be to GIFT-Grab
         _devices[(int) device] = src;
-    }
-
-    return _devices[(int) device];
-
-    if (_devices[(int) device] == nullptr)
-    {
-        _devices[(int) device] = new DummyVideoSource;
         _device_colours[(int) device] = colour;
     }
-    else if (_device_colours[(int) device] != colour)
-        throw DeviceAlreadyConnected(
-                "Device already connected using another colour space"
-        );
+
     return _devices[(int) device];
 }
 
