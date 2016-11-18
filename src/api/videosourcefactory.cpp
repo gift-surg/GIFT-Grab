@@ -24,7 +24,13 @@ IVideoSource * VideoSourceFactory::get_device(Device device,
                                               ColourSpace colour)
 {
     // TODO
-    return nullptr;
+}
+
+void VideoSourceFactory::free_device(Device device)
+{
+    if (_devices[(int) device] != nullptr)
+        delete _devices[(int) device];
+    _devices[(int) device] = nullptr;
 }
 
 }
