@@ -37,6 +37,28 @@ public:
 };
 
 //!
+//! \brief Thrown in case a connection is
+//! attempted to a device that is already
+//! connected
+//!
+class DeviceAlreadyConnected : public BasicException
+{
+public:
+    //!
+    //! \brief
+    //! \param detail
+    //! \sa BasicException::BasicException
+    //!
+    DeviceAlreadyConnected(const std::string & detail);
+
+    //!
+    //! \brief
+    //! \sa BasicException::~BasicException
+    //!
+    virtual ~DeviceAlreadyConnected() noexcept;
+};
+
+//!
 //! \brief Thrown if connection attempts by
 //! gg::Factory to requested device fail
 //!

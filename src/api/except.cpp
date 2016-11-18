@@ -18,6 +18,17 @@ const char * BasicException::what() const noexcept
     return _detail.data();
 }
 
+DeviceAlreadyConnected::DeviceAlreadyConnected(const std::string & detail)
+    : BasicException(detail)
+{
+    // nop
+}
+
+DeviceAlreadyConnected::~DeviceAlreadyConnected() noexcept
+{
+    // nop
+}
+
 DeviceNotFound::DeviceNotFound(const std::string & detail) :
     BasicException(detail)
 {

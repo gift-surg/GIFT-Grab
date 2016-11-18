@@ -79,6 +79,8 @@ public:
     //! own. The factory will take care of properly
     //! garbage-collecting this at the end of the
     //! factory singleton's lifetime.
+    //! \throw DeviceAlreadyConnected if device already
+    //! connected (i.e. using another colour space)
     //! \throw DeviceNotFound if connection attempt
     //! fails
     //! \throw DeviceOffline if connection attempt
