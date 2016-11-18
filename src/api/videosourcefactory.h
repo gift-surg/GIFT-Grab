@@ -40,6 +40,13 @@ protected:
     //!
     IVideoSource * _devices[NUM_DEVICES];
 
+    //!
+    //! \brief At a single point in time, only one
+    //! connection using only one colour space
+    //! may exist
+    //!
+    ColourSpace _device_colours[NUM_DEVICES];
+
 protected:
     //!
     //! \brief The constructor should never
