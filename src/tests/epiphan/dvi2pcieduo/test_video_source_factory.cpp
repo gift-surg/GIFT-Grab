@@ -72,8 +72,12 @@ TEST_CASE( "get_device returns singleton", "[VideoSourceFactory]" )
     REQUIRE( source == source_ );
 }
 
-#if defined(USE_LIBVLC) or defined(USE_EPIPHANSDK)
-#if defined(USE_OPENCV)
+/* The following tests are protected with these macro
+ * definition checks because they involve support using
+ * both colour spaces.
+ */
+#if defined(USE_OPENCV)                            // BGRA colour space
+#if defined(USE_LIBVLC) or defined(USE_EPIPHANSDK) // I420 colour space
 TEST_CASE( "get_device does not create duplicate", "[VideoSourceFactory]" )
 {
     gg::VideoSourceFactory & factory = gg::VideoSourceFactory::get_instance();
