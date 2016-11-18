@@ -49,11 +49,13 @@ TARGET_LINK_LIBRARIES(
     ${LIBS} ${NAME}
 )
 foreach(COLOUR_SPACE ${COLOUR_SPACES})
-    SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_VideoSourceFactory_${COLOUR_SPACE})
-    ADD_TEST(NAME ${NAME_TEST}
-        COMMAND ${VIDEO_SOURCE_FACTORY_TEST} # TODO: --colour-space=${COLOUR_SPACE}
-    )
-    LIST(APPEND TESTS_LIST ${NAME_TEST})
+    foreach(PORT ${PORTS})
+        SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_VideoSourceFactory_${PORT}_${COLOUR_SPACE})
+        ADD_TEST(NAME ${NAME_TEST}
+            COMMAND ${VIDEO_SOURCE_FACTORY_TEST} ${PORT} ${COLOUR_SPACE}
+        )
+        LIST(APPEND TESTS_LIST ${NAME_TEST})
+    endforeach(PORT)
 endforeach(COLOUR_SPACE)
 
 # SDI and DVI ports on their own

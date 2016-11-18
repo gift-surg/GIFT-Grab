@@ -1,11 +1,44 @@
-#define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
+#define CATCH_CONFIG_RUNNER
 
 #include "videosourcefactory.h"
 #include "catch.hpp"
 
-// TODO Parametrize device and colour
-gg::Device device = gg::DVI2PCIeDuo_DVI;
-gg::ColourSpace colour = gg::I420, other_colour = gg::BGRA;
+gg::Device device;
+gg::ColourSpace colour, other_colour;
+
+int main(int argc, char * argv[])
+{
+    bool args_ok = true;
+    if (argc < 3)
+        args_ok = false;
+    else
+    {
+        if (strcmp(argv[1], "DVI") == 0)
+            device = gg::DVI2PCIeDuo_DVI;
+        else if (strcmp(argv[1], "SDI") == 0)
+            device = gg::DVI2PCIeDuo_SDI;
+        else
+            args_ok = false;
+        if (strcmp(argv[2], "BGRA") == 0)
+        {
+            colour = gg::BGRA;
+            other_colour = gg::I420;
+        }
+        else if (strcmp(argv[2], "I420") == 0)
+        {
+            colour = gg::I420;
+            other_colour = gg::BGRA;
+        }
+        else
+            args_ok = false;
+    }
+    if (not args_ok)
+    {
+        printf("Synopsis: %s DVI|SDI BGRA|I420\n", argv[0]);
+        return EXIT_FAILURE;
+    }
+    return Catch::Session().run();
+}
 
 TEST_CASE( "get_instance returns singleton", "[VideoSourceFactory]" )
 {
