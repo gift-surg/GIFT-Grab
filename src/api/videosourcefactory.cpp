@@ -13,7 +13,8 @@ VideoSourceFactory::VideoSourceFactory()
 
 VideoSourceFactory::~VideoSourceFactory()
 {
-    // TODO
+    free_device(DVI2PCIeDuo_DVI);
+    free_device(DVI2PCIeDuo_SDI);
 }
 
 VideoSourceFactory & VideoSourceFactory::get_instance()
