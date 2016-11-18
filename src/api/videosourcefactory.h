@@ -89,7 +89,6 @@ public:
     IVideoSource * get_device(enum Device device,
                               enum ColourSpace colour);
 
-protected:
     //!
     //! \brief Close connection to specified \c device,
     //! if existing
