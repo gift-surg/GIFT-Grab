@@ -1,3 +1,30 @@
+# Obtain Catch header for testing
+SET(CATCH_DIR "${CMAKE_BINARY_DIR}/extern/Catch")
+SET(CATCH_HEADER_URL
+    "https://raw.githubusercontent.com/philsquared/Catch/v1.5.8/single_include/catch.hpp"
+)
+FILE(DOWNLOAD
+     ${CATCH_HEADER_URL}
+     "${CATCH_DIR}/catch.hpp"
+     SHOW_PROGRESS STATUS CATCH_HEADER_DOWNLOAD_STATUS
+)
+LIST(GET CATCH_HEADER_DOWNLOAD_STATUS 0 1
+     CATCH_HEADER_DOWNLOAD_STATUS_EXIT_CODE
+     CATCH_HEADER_DOWNLOAD_STATUS_ERROR_STRING
+)
+if(CATCH_HEADER_DOWNLOAD_STATUS_EXIT_CODE)  # not-zero exit code => error!
+    MESSAGE(
+        "Catch is needed for the tests, but could not download the Catch header"
+    )
+    MESSAGE(
+        "The URL was: ${CATCH_HEADER_URL}"
+    )
+    MESSAGE(FATAL_ERROR
+        "The error was: ${CATCH_HEADER_DOWNLOAD_STATUS_ERROR_STRING}"
+    )
+endif(CATCH_HEADER_DOWNLOAD_STATUS_EXIT_CODE)
+INCLUDE_DIRECTORIES(${CATCH_DIR})
+
 FILE(COPY
     ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/test_video_source_factory.py
     ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/test_unit.py
