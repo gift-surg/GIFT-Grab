@@ -5,7 +5,7 @@
 
 // TODO Parametrize device and colour
 gg::Device device = gg::DVI2PCIeDuo_DVI;
-gg::ColourSpace colour = gg::I420;
+gg::ColourSpace colour = gg::I420, other_colour = gg::BGRA;
 
 TEST_CASE( "get_instance returns singleton", "[VideoSourceFactory]" )
 {
@@ -42,19 +42,7 @@ TEST_CASE( "get_device returns singleton", "[VideoSourceFactory]" )
 TEST_CASE( "get_device does not create duplicate", "[VideoSourceFactory]" )
 {
     gg::VideoSourceFactory & factory = gg::VideoSourceFactory::get_instance();
-    gg::ColourSpace other_colour;
-    switch(colour)
-    {
-    case gg::I420:
-        other_colour = gg::BGRA;
-        break;
-    case gg::BGRA:
-        other_colour = gg::I420;
-        break;
-    default:
-        FAIL("Colour space unknown");
-        break;
-    }
+
     IVideoSource * source = factory.get_device(device, colour);
     IVideoSource * source_duplicate = nullptr;
     REQUIRE_THROWS_AS(
@@ -64,17 +52,21 @@ TEST_CASE( "get_device does not create duplicate", "[VideoSourceFactory]" )
     REQUIRE( source_duplicate == nullptr );
 }
 
-TEST_CASE( "Factory garbage-collects devices", "[VideoSourceFactory]" )
+TEST_CASE( "free_device garbage-collects device", "[VideoSourceFactory]" )
 {
-    IVideoSource * source_dvi = nullptr;
-    IVideoSource * source_sdi = nullptr;
-    { // artificial scope: factory is deleted at the end
-        gg::VideoSourceFactory & factory = gg::VideoSourceFactory::get_instance();
-        source_dvi = factory.get_device(gg::DVI2PCIeDuo_DVI, colour);
-        REQUIRE_FALSE( source_dvi == nullptr );
-        source_sdi = factory.get_device(gg::DVI2PCIeDuo_SDI, colour);
-        REQUIRE_FALSE( source_sdi == nullptr );
-    }
-    REQUIRE( source_dvi == nullptr );
-    REQUIRE( source_sdi == nullptr );
+    gg::VideoSourceFactory & factory = gg::VideoSourceFactory::get_instance();
+    IVideoSource * source = factory.get_device(device, colour);
+    REQUIRE_FALSE( source == nullptr );
+
+    gg::VideoFrame frame(colour, false);
+    REQUIRE( frame.cols() == 0 );
+    REQUIRE( frame.rows() == 0 );
+    REQUIRE( source->get_frame(frame) );
+    REQUIRE( frame.cols() > 0 );
+    REQUIRE( frame.rows() > 0 );
+
+    factory.free_device(device);
+    source = nullptr;
+    source = factory.get_device(device, other_colour);
+    REQUIRE_FALSE( source == nullptr );
 }
