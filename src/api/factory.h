@@ -1,19 +1,10 @@
 #pragma once
 
+#include "storage.h"
 #include "ivideotarget.h"
 #include "except.h"
 
 namespace gg {
-
-//!
-//! \brief Lists supported video saving options
-//!
-enum Storage
-{
-    File_XviD,
-    File_HEVC,
-    File_VP9
-};
 
 //!
 //! \brief Used for connecting to supported

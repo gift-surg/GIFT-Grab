@@ -131,6 +131,7 @@ SET(HEADERS
     api/videoframe.h
     api/maskframe.h
     api/device.h
+    api/storage.h
     api/factory.h
     api/videosourcefactory.h
     api/except.h
