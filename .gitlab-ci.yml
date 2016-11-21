@@ -245,13 +245,16 @@ epiphan-dvi2pcie-duo:
     - cmake -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D BUILD_PYTHON=ON -D BUILD_TESTS=ON -D USE_HEVC=ON -D USE_NVENC=ON -D ENABLE_NONFREE=ON "$GiftGrab_SOURCE_DIR"
     - make -j; exit_on_fail
     - check_epiphan_alive
-    - ctest -R Epiphan_DVI2PCIeDuo_VideoSourceFactory; exit_on_fail
+    - ctest -R Epiphan_DVI2PCIeDuo_VideoSourceFactory_DVI_I420; exit_on_fail  # due to issue #126
+    - ctest -R Epiphan_DVI2PCIeDuo_VideoSourceFactory_SDI_I420; exit_on_fail  # due to issue #126
     # test BGRA colour space
     - cmake -D USE_BGRA=ON -D USE_I420=OFF .
     - make -j; exit_on_fail
     - check_epiphan_alive
     # -E => excluding VideoSourceFactory tests
     - ctest -E Epiphan_DVI2PCIeDuo_VideoSourceFactory; exit_on_fail
+    - ctest -R Epiphan_DVI2PCIeDuo_VideoSourceFactory_DVI_BGRA; exit_on_fail  # due to issue #126
+    - ctest -R Epiphan_DVI2PCIeDuo_VideoSourceFactory_SDI_BGRA; exit_on_fail  # due to issue #126
     # test I420 colour space
     - cmake -D USE_BGRA=OFF -D USE_I420=ON .
     - make -j; exit_on_fail
