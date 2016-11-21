@@ -1,4 +1,5 @@
 #include "factory.h"
+#include "videosourcefactory.h"
 #include "except.h"
 #include "iobservable.h"
 #include "gil.h"
@@ -131,6 +132,13 @@ void translate_VideoSourceError(gg::VideoSourceError const & e)
     PyErr_SetString(PyExc_RuntimeError, msg.c_str());
 }
 
+void translate_DeviceAlreadyConnected(gg::DeviceAlreadyConnected const & e)
+{
+    std::string msg;
+    msg.append("DeviceAlreadyConnected: ").append(e.what());
+    PyErr_SetString(PyExc_IOError, msg.c_str());
+}
+
 void translate_DeviceNotFound(gg::DeviceNotFound const & e)
 {
     std::string msg;
@@ -164,6 +172,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     PyEval_InitThreads();
 
     register_exception_translator<gg::VideoSourceError>(&translate_VideoSourceError);
+    register_exception_translator<gg::DeviceAlreadyConnected>(&translate_DeviceAlreadyConnected);
     register_exception_translator<gg::DeviceNotFound>(&translate_DeviceNotFound);
     register_exception_translator<gg::DeviceOffline>(&translate_DeviceOffline);
     register_exception_translator<gg::VideoTargetError>(&translate_VideoTargetError);
@@ -268,18 +277,27 @@ BOOST_PYTHON_MODULE(pygiftgrab)
 #endif // USE_OPENCV
 
     class_<gg::Factory>("Factory", no_init)
-        .def("connect", &gg::Factory::connect,
-             /* because client should never delete returned
-              * object on its own, but should rather call
-              * disconnect when done
-              */
-             return_value_policy<reference_existing_object>())
-        .staticmethod("connect")
-        .def("disconnect", &gg::Factory::disconnect)
-        .staticmethod("disconnect")
         .def("writer", &gg::Factory::writer,
              // because ownership is passed to client
              return_value_policy<manage_new_object>())
         .staticmethod("writer")
+    ;
+
+    class_<gg::VideoSourceFactory, boost::noncopyable>("VideoSourceFactory", no_init)
+        .def("get_device", &gg::VideoSourceFactory::get_device
+             /* Keep returned pointer (0) alive as long as factory (1) alive.
+              * Boost.Python documentation says reference_existing_object is
+              * dangerous, but apparently only when no additional lifetime
+              * management with a call policy is provided (for details, see:
+              * http://www.boost.org/doc/libs/1_39_0/libs/python/doc/v2/reference_existing_object.html
+              * ).
+              */
+             , return_value_policy<reference_existing_object, with_custodian_and_ward_postcall<1, 0> >()
+        )
+        .def("free_device", &gg::VideoSourceFactory::free_device)
+        .def("get_instance", &gg::VideoSourceFactory::get_instance
+             , return_value_policy<reference_existing_object>()
+        )
+        .staticmethod("get_instance")
     ;
 }

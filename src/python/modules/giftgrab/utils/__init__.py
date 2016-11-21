@@ -47,7 +47,8 @@ def __record_epiphan_dvi2pcieduo(port,
     which is automatically inferred using `codec`
     @param codec as defined in pygiftgrab
     """
-    epiphan = gg.Factory.connect(port, colour_space)
+    factory = gg.VideoSourceFactory.get_instance()
+    epiphan = factory.get_device(port, colour_space)
     writer = gg.Factory.writer(codec)
     frame_rate = 30
     writer.init(__unique_file_path() + __extension(codec), frame_rate)
@@ -55,7 +56,6 @@ def __record_epiphan_dvi2pcieduo(port,
         epiphan.get_frame(frame)
         writer.append(frame)
     writer.finalise()
-    gg.Factory.disconnect(port)
 
 
 num_frames = 30

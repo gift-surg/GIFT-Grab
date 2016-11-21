@@ -66,7 +66,8 @@ def test_frame_rate(port, colour_space, frame_rate, observers):
     timers = []
     for i in range(observers):
         timers.append(FrameRateTimer(frame_rate))
-    source = pgg.Factory.connect(port, colour_space)
+    factory = pgg.VideoSourceFactory.get_instance()
+    source = factory.get_device(port, colour_space)
     for timer in timers:
         source.attach(timer)
 
@@ -76,4 +77,3 @@ def test_frame_rate(port, colour_space, frame_rate, observers):
 
     for timer in timers:
         assert timer
-    pgg.Factory.disconnect(port)

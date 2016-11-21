@@ -1,3 +1,30 @@
+# Obtain Catch header for testing
+SET(CATCH_DIR "${CMAKE_BINARY_DIR}/extern/Catch")
+SET(CATCH_HEADER_URL
+    "https://raw.githubusercontent.com/philsquared/Catch/v1.5.8/single_include/catch.hpp"
+)
+FILE(DOWNLOAD
+     ${CATCH_HEADER_URL}
+     "${CATCH_DIR}/catch.hpp"
+     SHOW_PROGRESS STATUS CATCH_HEADER_DOWNLOAD_STATUS
+)
+LIST(GET CATCH_HEADER_DOWNLOAD_STATUS 0 1
+     CATCH_HEADER_DOWNLOAD_STATUS_EXIT_CODE
+     CATCH_HEADER_DOWNLOAD_STATUS_ERROR_STRING
+)
+if(CATCH_HEADER_DOWNLOAD_STATUS_EXIT_CODE)  # not-zero exit code => error!
+    MESSAGE(
+        "Catch is needed for the tests, but could not download the Catch header"
+    )
+    MESSAGE(
+        "The URL was: ${CATCH_HEADER_URL}"
+    )
+    MESSAGE(FATAL_ERROR
+        "The error was: ${CATCH_HEADER_DOWNLOAD_STATUS_ERROR_STRING}"
+    )
+endif(CATCH_HEADER_DOWNLOAD_STATUS_EXIT_CODE)
+INCLUDE_DIRECTORIES(${CATCH_DIR})
+
 FILE(COPY
     ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/test_unit.py
     ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/test_epiphan_py_module.py
@@ -7,9 +34,30 @@ FILE(COPY
 )
 SET(CONFIG_DIR ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/data)
 
-# SDI and DVI ports on their own
 LIST(APPEND PORTS SDI)
 LIST(APPEND PORTS DVI)
+
+# VideoSourceFactory
+SET(VIDEO_SOURCE_FACTORY_TEST test_video_source_factory)
+ADD_EXECUTABLE(
+    ${VIDEO_SOURCE_FACTORY_TEST}
+    ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/test_video_source_factory.cpp
+)
+TARGET_LINK_LIBRARIES(
+    ${VIDEO_SOURCE_FACTORY_TEST}
+    ${LIBS} ${NAME}
+)
+foreach(COLOUR_SPACE ${COLOUR_SPACES})
+    foreach(PORT ${PORTS})
+        SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_VideoSourceFactory_${PORT}_${COLOUR_SPACE})
+        ADD_TEST(NAME ${NAME_TEST}
+            COMMAND ${VIDEO_SOURCE_FACTORY_TEST} ${PORT} ${COLOUR_SPACE}
+        )
+        LIST(APPEND TESTS_LIST ${NAME_TEST})
+    endforeach(PORT)
+endforeach(COLOUR_SPACE)
+
+# SDI and DVI ports on their own
 foreach(COLOUR_SPACE ${COLOUR_SPACES})
     foreach(PORT ${PORTS})
         SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_${PORT}_${COLOUR_SPACE})
