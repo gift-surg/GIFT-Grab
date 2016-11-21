@@ -1,7 +1,5 @@
-#define CATCH_CONFIG_RUNNER
-
 #include "videosourcefactory.h"
-#include "catch.hpp"
+#include "include_catch.h"
 
 gg::Device device;
 gg::ColourSpace colour, other_colour;

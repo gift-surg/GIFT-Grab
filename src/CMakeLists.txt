@@ -257,6 +257,7 @@ if(BUILD_TESTS)
 
     ENABLE_TESTING()
 
+    INCLUDE_DIRECTORIES(tests)
     SUBDIRS(tests)
 endif(BUILD_TESTS)
 
