@@ -1,4 +1,3 @@
-#include "factory.h"
 #include "videosourcefactory.h"
 #include "videotargetfactory.h"
 #include "except.h"
@@ -276,13 +275,6 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .def("finalise", &gg::VideoTargetOpenCV::finalise)
     ;
 #endif // USE_OPENCV
-
-    class_<gg::Factory>("Factory", no_init)
-        .def("writer", &gg::Factory::writer,
-             // because ownership is passed to client
-             return_value_policy<manage_new_object>())
-        .staticmethod("writer")
-    ;
 
     class_<gg::VideoSourceFactory, boost::noncopyable>("VideoSourceFactory", no_init)
         .def("get_device", &gg::VideoSourceFactory::get_device
