@@ -34,18 +34,14 @@ IVideoTarget * VideoTargetFactory::create_file_writer(enum Storage codec,
     case File_XviD:
 #ifdef USE_OPENCV
         return new VideoTargetOpenCV("XVID");
-#endif // USE_OPENCV
+#endif
     case File_HEVC:
 #ifdef USE_FFMPEG
         return new VideoTargetFFmpeg("HEVC");
-#else
-        // nop, see default below
 #endif
     case File_VP9:
 #ifdef USE_FFMPEG
         return new VideoTargetFFmpeg("VP9");
-#else
-        // nop, see default below
 #endif
     default:
         std::string msg;
