@@ -49,7 +49,10 @@ public:
     //! \param codec
     //! \param filename RAII on this filename if target
     //! is created successfully
-    //! \return pointer to created video saving target
+    //! \return pointer to created video saving target.
+    //! It is the caller's responsibility to properly
+    //! garbage-collect this pointer, i.e. its owner
+    //! is the caller.
     //! \throw VideoTargetError with a detailed error
     //! message if creation of video target with
     //! specified \c type fails for some reason
