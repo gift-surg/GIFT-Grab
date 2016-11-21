@@ -1,5 +1,5 @@
 from pytest import yield_fixture, fail, mark
-from pygiftgrab import Factory, VideoFrame, ColourSpace
+from pygiftgrab import VideoSourceFactory, VideoFrame, ColourSpace
 
 source = None
 frame = None
@@ -19,9 +19,10 @@ sub2_height = 0
 @yield_fixture(scope='session')
 def peri_test(port, colour_space):
     # This section runs before each test
+    factory = VideoSourceFactory.get_instance()
     global source
     try:
-        source = Factory.connect(port, colour_space)
+        source = factory.get_device(port, colour_space)
     except IOError as e:
         raise RuntimeError('Could not connect to Epiphan DVI2PCIe Duo,\n' +
                            'The detailed error was:\n' +
@@ -62,13 +63,6 @@ def peri_test(port, colour_space):
     # Run test
     yield
 
-    # This section runs after each test
-    try:
-        Factory.disconnect(port)
-    except IOError as e:
-        raise RuntimeError('Could not disconnect from Epiphan DVI2PCIe Duo,\n' +
-                           'The detailed error was:\n' +
-                           e.message)
     # TODO: commented out to allow
     # for test GiftGrab#71 resolved
     # assert source is None
