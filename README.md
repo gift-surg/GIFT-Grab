@@ -29,6 +29,7 @@ Optional (depending on desired features, see "How to use" below):
 * [Boost.Python](http://www.boost.org/doc/libs/release/libs/python/) (tested with 1.54.0)
 * [pkg-config](https://www.freedesktop.org/wiki/Software/pkg-config/)
 * [pytest](http://doc.pytest.org/en/latest/)
+* [Catch](https://github.com/philsquared/Catch) (tested with 1.5.8)
 * [zlib](http://www.zlib.net/)
 * [POSIX threads (pthreads)](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/pthread.h.html)
 
@@ -65,7 +66,7 @@ Features can be customised as per the combinations listed below. Please note tha
 * `-D USE_HEVC=ON -D ENABLE_NONFREE=ON -D USE_NVENC=ON` for hardware-accelerated HEVC support (requires a supported GPU, FFmpeg, pkg-config and NVENC).
 * `-D USE_VP9=ON` for VP9 support (requires FFmpeg, pkg-config and libvpx).
 * `-D BUILD_PYTHON=ON` for GIFT-Grab Python API (requires Python and Boost.Python).
-* To quickly see whether GIFT-Grab works on your system, turn on tests with `-D BUILD_TESTS=ON -D BUILD_PYTHON=ON` (requires Python, Boost.Python, and pytest). Then run `ctest` or `make test` in the build directory.
+* To quickly see whether GIFT-Grab works on your system, turn on tests with `-D BUILD_TESTS=ON -D BUILD_PYTHON=ON` (requires Python, Boost.Python, Catch [will be automatically downloaded from the internet as part of the build process] and pytest). Then run `ctest` or `make test` in the build directory.
 
 **To use the GIFT-Grab C++ API** in your software: include `FIND_PACKAGE(GiftGrab)` in your CMake file to discover the `GiftGrab_INCLUDE_DIRS` and `GiftGrab_LIBS` CMake variables (respectively for GIFT-Grab header directories to include and GIFT-Grab libraries to link against).
 
