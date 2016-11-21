@@ -55,16 +55,21 @@ public:
     //! \param codec
     //! \param filename RAII on this filename if target
     //! is created successfully
+    //! \param frame_rate the resulting file writer
+    //! will use this frame rate
     //! \return pointer to created video saving target.
     //! It is the caller's responsibility to properly
     //! garbage-collect this pointer, i.e. its owner
     //! is the caller.
     //! \throw VideoTargetError with a detailed error
     //! message if creation of video target with
-    //! specified \c type fails for some reason
+    //! specified \c type fails for some reason, most
+    //! notably wrong file extension or invalid \c
+    //! frame_rate
     //!
     IVideoTarget * create_file_writer(enum Storage codec,
-                                      const std::string filename);
+                                      const std::string filename,
+                                      const float frame_rate);
 
 protected:
     DISALLOW_COPY_AND_ASSIGNMENT(VideoTargetFactory);

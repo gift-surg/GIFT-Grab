@@ -5,6 +5,7 @@
 
 gg::Storage codec;
 std::string extension;
+float frame_rate = 30.0;
 gg::ColourSpace colour;
 
 
@@ -104,32 +105,50 @@ TEST_CASE( "create_file_writer with valid file path returns file writer",
     gg::VideoTargetFactory & factory = gg::VideoTargetFactory::get_instance();
     gg::IVideoTarget * target = nullptr;
     std::string filename = generate_random_filename();
-    target = factory.create_file_writer(codec, filename);
+    target = factory.create_file_writer(codec, filename, frame_rate);
     REQUIRE_FALSE( target == nullptr );
     delete target;
 }
 
 TEST_CASE( "create_file_writer with invalid path throws exception",
-           "[VideoSourceFactory]")
+           "[VideoTargetFactory]")
 {
     gg::VideoTargetFactory & factory = gg::VideoTargetFactory::get_instance();
     gg::IVideoTarget * target = nullptr;
     REQUIRE_THROWS_AS(
-        factory.create_file_writer(codec, "/this/file/should/never/exist.extension"),
+        factory.create_file_writer(codec, "/this/file/should/never/exist.extension", frame_rate),
         gg::VideoTargetError
     );
     REQUIRE( target == nullptr );
 }
 
 TEST_CASE( "create_file_writer with invalid extension throws exception",
-           "[VideoSourceFactory]")
+           "[VideoTargetFactory]" )
 {
     gg::VideoTargetFactory & factory = gg::VideoTargetFactory::get_instance();
     gg::IVideoTarget * target = nullptr;
     std::string filename = generate_random_filename();
     filename.append(".invalidextension");
     REQUIRE_THROWS_AS(
-        factory.create_file_writer(codec, filename),
+        factory.create_file_writer(codec, filename, frame_rate),
+        gg::VideoTargetError
+    );
+    REQUIRE( target == nullptr );
+}
+
+TEST_CASE( "create_file_writer with invalid frame rate throws exception",
+           "[VideoTargetFactory]" )
+{
+    gg::VideoTargetFactory & factory = gg::VideoTargetFactory::get_instance();
+    gg::IVideoTarget * target = nullptr;
+    std::string filename = generate_random_filename();
+    REQUIRE_THROWS_AS(
+        factory.create_file_writer(codec, filename, -frame_rate),
+        gg::VideoTargetError
+    );
+    REQUIRE( target == nullptr );
+    REQUIRE_THROWS_AS(
+        factory.create_file_writer(codec, filename, 0.0),
         gg::VideoTargetError
     );
     REQUIRE( target == nullptr );
@@ -142,9 +161,10 @@ TEST_CASE( "create_file_writer returns ready-to-use file writer object (RAII)",
     gg::IVideoTarget * target = nullptr;
     std::string filename = generate_random_filename();
     REQUIRE_FALSE( file_exists(filename) );
-    target = factory.create_file_writer(codec, filename);
+    target = factory.create_file_writer(codec, filename, frame_rate);
     gg::VideoFrame frame(colour, 1920, 1080);
     target->append(frame);
     delete target;
     REQUIRE( file_exists(filename) );
 }
+

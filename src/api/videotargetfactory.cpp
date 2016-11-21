@@ -27,7 +27,8 @@ VideoTargetFactory & VideoTargetFactory::get_instance()
 }
 
 IVideoTarget * VideoTargetFactory::create_file_writer(enum Storage codec,
-                                                      const std::string filename)
+                                                      const std::string filename,
+                                                      const float frame_rate)
 {
     IVideoTarget * target = nullptr;
     switch (codec)
@@ -56,8 +57,8 @@ IVideoTarget * VideoTargetFactory::create_file_writer(enum Storage codec,
     }
 
     if (target != nullptr)
-        // TODO #34
-        target->init(filename, 30.0);
+        // TODO delete after #34
+        target->init(filename, frame_rate);
 
     return target;
 }
