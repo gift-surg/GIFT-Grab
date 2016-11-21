@@ -26,7 +26,6 @@ endif(CATCH_HEADER_DOWNLOAD_STATUS_EXIT_CODE)
 INCLUDE_DIRECTORIES(${CATCH_DIR})
 
 FILE(COPY
-    ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/test_video_source_factory.py
     ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/test_unit.py
     ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/test_epiphan_py_module.py
     ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/test_observer.py
