@@ -241,8 +241,13 @@ epiphan-dvi2pcie-duo:
     # for custom libVLC
     - export LIBVLC_INCLUDE_PATH="$STORZ_STACK_GIFTGRAB_ENV_ROOT/include"
     - export LIBVLC_LIBRARY_PATH="$STORZ_STACK_GIFTGRAB_ENV_ROOT/lib"
+    # test VideoSourceFactory (needs both colour spaces enabled)
+    - cmake -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D BUILD_PYTHON=ON -D BUILD_TESTS=ON -D USE_HEVC=ON -D USE_NVENC=ON -D ENABLE_NONFREE=ON "$GiftGrab_SOURCE_DIR"
+    - make -j; exit_on_fail
+    - check_epiphan_alive
+    - ctest -R Epiphan_DVI2PCIeDuo_VideoSourceFactory; exit_on_fail
     # test BGRA colour space
-    - cmake -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D USE_I420=OFF -D BUILD_PYTHON=ON -D BUILD_TESTS=ON -D USE_HEVC=ON -D USE_NVENC=ON -D ENABLE_NONFREE=ON "$GiftGrab_SOURCE_DIR"
+    - cmake -D USE_BGRA=ON -D USE_I420=OFF .
     - make -j; exit_on_fail
     - check_epiphan_alive
     # -E => excluding VideoSourceFactory tests
@@ -253,11 +258,6 @@ epiphan-dvi2pcie-duo:
     - check_epiphan_alive
     # -E => excluding VideoSourceFactory tests
     - ctest -E Epiphan_DVI2PCIeDuo_VideoSourceFactory; exit_on_fail
-    # test VideoSourceFactory (needs both colour spaces enabled)
-    - cmake -D USE_BGRA=ON -D USE_I420=ON .
-    - make -j; exit_on_fail
-    - check_epiphan_alive
-    - ctest -R Epiphan_DVI2PCIeDuo_VideoSourceFactory; exit_on_fail
     # Epiphan SDK
     # dummy var, to induce width_offset in test_epiphan_py_module.py
     # see definition of width_offset in test_epiphan_py_module.py (Epiphan DVI2PCIe Duo tests)
