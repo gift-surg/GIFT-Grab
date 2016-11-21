@@ -296,7 +296,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
              , return_value_policy<reference_existing_object, with_custodian_and_ward_postcall<1, 0> >()
         )
         .def("get_instance", &gg::VideoSourceFactory::get_instance
-             , return_internal_reference<>()
+             , return_value_policy<reference_existing_object>()
         )
         .staticmethod("get_instance")
     ;
