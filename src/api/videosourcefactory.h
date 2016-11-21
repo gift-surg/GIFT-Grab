@@ -92,6 +92,9 @@ public:
     //! fails
     //! \throw DeviceOffline if connection attempt
     //! OK, but device offline (i.e. getting no frames)
+    //! \sa free_device if the intention is to connect
+    //! to \c device with another \c colour than the
+    //! one \c device is currently connected to
     //!
     IVideoSource * get_device(enum Device device,
                               enum ColourSpace colour);
