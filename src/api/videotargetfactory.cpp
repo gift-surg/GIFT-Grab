@@ -29,19 +29,23 @@ VideoTargetFactory & VideoTargetFactory::get_instance()
 IVideoTarget * VideoTargetFactory::create_file_writer(enum Storage codec,
                                                       const std::string filename)
 {
+    IVideoTarget * target = nullptr;
     switch (codec)
     {
     case File_XviD:
 #ifdef USE_OPENCV
-        return new VideoTargetOpenCV("XVID");
+        target = new VideoTargetOpenCV("XVID");
+        break;
 #endif
     case File_HEVC:
 #ifdef USE_FFMPEG
-        return new VideoTargetFFmpeg("HEVC");
+        target = new VideoTargetFFmpeg("HEVC");
+        break;
 #endif
     case File_VP9:
 #ifdef USE_FFMPEG
-        return new VideoTargetFFmpeg("VP9");
+        target = new VideoTargetFFmpeg("VP9");
+        break;
 #endif
     default:
         std::string msg;
@@ -50,6 +54,12 @@ IVideoTarget * VideoTargetFactory::create_file_writer(enum Storage codec,
            .append(" not supported");
         throw VideoTargetError(msg);
     }
+
+    if (target != nullptr)
+        // TODO #34
+        target->init(filename, 30.0);
+
+    return target;
 }
 
 }
