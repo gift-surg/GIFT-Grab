@@ -284,7 +284,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .staticmethod("writer")
     ;
 
-    class_<gg::VideoSourceFactory>("VideoSourceFactory", no_init)
+    class_<gg::VideoSourceFactory, boost::noncopyable>("VideoSourceFactory", no_init)
         .def("get_device", &gg::VideoSourceFactory::get_device
              /* Keep returned pointer (0) alive as long as factory (1) alive.
               * Boost.Python documentation says reference_existing_object is

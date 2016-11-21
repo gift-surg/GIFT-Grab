@@ -107,6 +107,9 @@ public:
     //! become unusable
     //!
     void free_device(enum Device device);
+
+protected:
+    DISALLOW_COPY_AND_ASSIGNMENT(VideoSourceFactory);
 };
 
 }
