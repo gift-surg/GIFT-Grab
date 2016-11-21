@@ -132,6 +132,13 @@ void translate_VideoSourceError(gg::VideoSourceError const & e)
     PyErr_SetString(PyExc_RuntimeError, msg.c_str());
 }
 
+void translate_DeviceAlreadyConnected(gg::DeviceAlreadyConnected const & e)
+{
+    std::string msg;
+    msg.append("DeviceAlreadyConnected: ").append(e.what());
+    PyErr_SetString(PyExc_IOError, msg.c_str());
+}
+
 void translate_DeviceNotFound(gg::DeviceNotFound const & e)
 {
     std::string msg;
@@ -165,6 +172,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     PyEval_InitThreads();
 
     register_exception_translator<gg::VideoSourceError>(&translate_VideoSourceError);
+    register_exception_translator<gg::DeviceAlreadyConnected>(&translate_DeviceAlreadyConnected);
     register_exception_translator<gg::DeviceNotFound>(&translate_DeviceNotFound);
     register_exception_translator<gg::DeviceOffline>(&translate_DeviceOffline);
     register_exception_translator<gg::VideoTargetError>(&translate_VideoTargetError);
