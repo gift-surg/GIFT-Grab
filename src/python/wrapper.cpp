@@ -277,15 +277,6 @@ BOOST_PYTHON_MODULE(pygiftgrab)
 #endif // USE_OPENCV
 
     class_<gg::Factory>("Factory", no_init)
-        .def("connect", &gg::Factory::connect,
-             /* because client should never delete returned
-              * object on its own, but should rather call
-              * disconnect when done
-              */
-             return_value_policy<reference_existing_object>())
-        .staticmethod("connect")
-        .def("disconnect", &gg::Factory::disconnect)
-        .staticmethod("disconnect")
         .def("writer", &gg::Factory::writer,
              // because ownership is passed to client
              return_value_policy<manage_new_object>())
