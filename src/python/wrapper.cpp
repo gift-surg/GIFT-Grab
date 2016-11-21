@@ -1,5 +1,6 @@
 #include "factory.h"
 #include "videosourcefactory.h"
+#include "videotargetfactory.h"
 #include "except.h"
 #include "iobservable.h"
 #include "gil.h"
@@ -296,6 +297,23 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         )
         .def("free_device", &gg::VideoSourceFactory::free_device)
         .def("get_instance", &gg::VideoSourceFactory::get_instance
+             , return_value_policy<reference_existing_object>()
+        )
+        .staticmethod("get_instance")
+    ;
+
+    class_<gg::VideoTargetFactory, boost::noncopyable>("VideoTargetFactory", no_init)
+        .def("create_file_writer", &gg::VideoTargetFactory::create_file_writer,
+             /* We use manage_new_object here in order
+              * to give ownership is to client. Also
+              * this ensures that the newly created
+              * object will be destroyed as part of the
+              * Python object destruction procedure. See
+              * https://wiki.python.org/moin/boost.python/CallPolicy#manage_new_object
+              */
+             return_value_policy<manage_new_object>()
+        )
+        .def("get_instance", &gg::VideoTargetFactory::get_instance
              , return_value_policy<reference_existing_object>()
         )
         .staticmethod("get_instance")
