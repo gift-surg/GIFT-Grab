@@ -60,7 +60,7 @@ public:
 
 //!
 //! \brief Thrown if connection attempts by
-//! gg::Factory to requested device fail
+//! gg::VideoSourceFactory to requested device fail
 //!
 class DeviceNotFound : public BasicException {
 public:
