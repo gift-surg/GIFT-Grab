@@ -252,11 +252,6 @@ epiphan-dvi2pcie-duo:
     - make -j; exit_on_fail
     - check_epiphan_alive
     - ctest; exit_on_fail
-    # test both colour spaces
-    - cmake -D USE_BGRA=ON -D USE_I420=ON .
-    - make -j; exit_on_fail
-    - check_epiphan_alive
-    - ctest; exit_on_fail
     # Epiphan SDK
     # dummy var, to induce width_offset in test_epiphan_py_module.py
     # see definition of width_offset in test_epiphan_py_module.py (Epiphan DVI2PCIe Duo tests)
