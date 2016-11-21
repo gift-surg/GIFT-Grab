@@ -1,13 +1,13 @@
 from pytest import fail, yield_fixture, raises
 from subprocess import check_call
 from os import devnull, remove, listdir
-from pygiftgrab import Storage, Factory, VideoFrame, ColourSpace
+from pygiftgrab import Storage, VideoTargetFactory, VideoFrame, ColourSpace
 from giftgrab.utils import inspection
 
 
 # for easily removing created files when done
 tmp_file_prefix = 'tmp_GiftGrab_test_'
-target = None
+factory = None
 frame = None
 frame_with_colour_mismatch = None
 frame_rate = 60
@@ -35,7 +35,7 @@ def __storage2str(codec):
 def peri_test(codec, colour_space):
     # This section runs before each test
 
-    global target, frame, frame_with_colour_mismatch
+    global factory, frame, frame_with_colour_mismatch
     frame = VideoFrame(colour_space, 400, 640)
     if colour_space == ColourSpace.BGRA:
         colour_space_with_mismatch = ColourSpace.I420
@@ -43,9 +43,8 @@ def peri_test(codec, colour_space):
         colour_space_with_mismatch = ColourSpace.BGRA
     frame_with_colour_mismatch = VideoFrame(colour_space_with_mismatch,
                                             400, 640)
-    target = Factory.writer(codec)
-    if target is None:
-        raise RuntimeError('No ' + __storage2str(codec) + ' writer returned')
+    factory = VideoTargetFactory.get_instance()
+    assert factory is not None
 
     try:
         file_null = open(devnull, 'w')
@@ -72,7 +71,11 @@ def test_append_with_colour_mismatch(codec, colour_space):
 
     file_name = '%sappend_with_colour_mismatch.%s'\
                 % (tmp_file_prefix, __file_ext(codec))
-    target.init(file_name, 10)
+    target = None
+    target = factory.create_file_writer(codec,
+                                        file_name,
+                                        frame_rate)
+    assert target is not None
     with raises(RuntimeError):
         target.append(frame_with_colour_mismatch)
     target.finalise()
@@ -82,7 +85,11 @@ def test_frame_rate(codec):
     _frame_rate = 40
     file_name = '%sframe_rate.%s'\
                 % (tmp_file_prefix, __file_ext(codec))
-    target.init(file_name, _frame_rate)
+    target = None
+    target = factory.create_file_writer(codec,
+                                        file_name,
+                                        _frame_rate)
+    assert target is not None
     for i in range(10):
         target.append(frame)
     target.finalise()
@@ -95,7 +102,11 @@ def test_resolution(codec, colour_space):
     frame1920x1080 = VideoFrame(colour_space, cols, rows)
     file_name = '%sresolution.%s'\
                 % (tmp_file_prefix, __file_ext(codec))
-    target.init(file_name, frame_rate)
+    target = None
+    target = factory.create_file_writer(codec,
+                                        file_name,
+                                        frame_rate)
+    assert target is not None
     for i in range(10):
         target.append(frame1920x1080)
     target.finalise()
@@ -105,7 +116,11 @@ def test_resolution(codec, colour_space):
 def test_num_frames(codec):
     file_name = '%snum_frames.%s'\
                 % (tmp_file_prefix, __file_ext(codec))
-    target.init(file_name, frame_rate)
+    target = None
+    target = factory.create_file_writer(codec,
+                                        file_name,
+                                        frame_rate)
+    assert target is not None
     num_frames = 3 * frame_rate
     for i in range(num_frames):
         target.append(frame)
@@ -128,5 +143,9 @@ def test_filetype_checked(codec):
     assert not file_ext == __file_ext(codec)
     file_name = '%sfiletype_checked.%s'\
                 % (tmp_file_prefix, file_ext)
+    target = None
     with raises(RuntimeError):
-        target.init(file_name, frame_rate)
+        target = factory.create_file_writer(codec,
+                                            file_name,
+                                            frame_rate)
+    assert target is None
