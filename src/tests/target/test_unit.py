@@ -128,14 +128,14 @@ def test_num_frames():
 
 
 def test_filetype_checked(codec):
-    file_ext = 'rrr'
-    assert not file_ext == __file_ext(codec)
-    file_name = '%sfiletype_checked.%s'\
-                % (tmp_file_prefix, file_ext)
+    invalid_file_ext = 'rrr'
+    assert not invalid_file_ext == __file_ext(codec)
+    global factory, file_name
     target = None
-    global factory
     with raises(RuntimeError):
-        target = factory.create_file_writer(codec,
-                                            file_name,
-                                            frame_rate)
+        target = factory.create_file_writer(
+            codec,
+            '{}.{}'.format(file_name, invalid_file_ext),
+            frame_rate
+        )
     assert target is None
