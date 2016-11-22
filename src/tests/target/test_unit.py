@@ -90,7 +90,7 @@ def peri_test(codec, colour_space):
             remove(f)
 
 
-def test_append_with_colour_mismatch(codec, colour_space):
+def test_append_with_colour_mismatch(codec):
     if codec != Codec.Xvid:
         return
 
