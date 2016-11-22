@@ -96,14 +96,13 @@ def test_append_with_colour_mismatch(codec):
 
     with raises(RuntimeError):
         target.append(frame_with_colour_mismatch)
-    target.finalise()
 
 
 def test_frame_rate():
     global target, file_name, frame_rate
     for i in range(10):
         target.append(frame)
-    target.finalise()
+    del target
     assert inspection.frame_rate(file_name) == frame_rate
 
 
@@ -114,7 +113,7 @@ def test_resolution(colour_space):
     global target, file_name
     for i in range(10):
         target.append(frame1920x1080)
-    target.finalise()
+    del target
     assert inspection.resolution(file_name) == (cols, rows)
 
 
@@ -123,7 +122,7 @@ def test_num_frames():
     num_frames = 3 * frame_rate
     for i in range(num_frames):
         target.append(frame)
-    target.finalise()
+    del target
     assert inspection.duration(file_name) * frame_rate == num_frames
 
 
