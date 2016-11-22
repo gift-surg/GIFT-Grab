@@ -109,19 +109,9 @@ public:
 class IVideoTargetWrapper : public gg::IVideoTarget, public wrapper<gg::IVideoTarget>
 {
 public:
-    void init(const std::string filepath, const float framerate)
-    {
-        this->get_override("init")(filepath, framerate);
-    }
-
     void append(const gg::VideoFrame & frame)
     {
         this->get_override("append")(frame);
-    }
-
-    void finalise()
-    {
-        this->get_override("finalise")();
     }
 };
 
@@ -260,19 +250,15 @@ BOOST_PYTHON_MODULE(pygiftgrab)
 
 #ifdef USE_FFMPEG
     class_<gg::VideoTargetFFmpeg, bases<gg::IVideoTarget>, boost::noncopyable>(
-                "VideoTargetFFmpeg", init<std::string>())
-        .def("init", &gg::VideoTargetFFmpeg::init)
+                "VideoTargetFFmpeg", init<std::string, std::string, float>())
         .def("append", &gg::VideoTargetFFmpeg::append)
-        .def("finalise", &gg::VideoTargetFFmpeg::finalise)
     ;
 #endif
 
 #ifdef USE_OPENCV
     class_<gg::VideoTargetOpenCV, bases<gg::IVideoTarget>, boost::noncopyable>(
-                "VideoTargetOpenCV", init<std::string>())
-        .def("init", &gg::VideoTargetOpenCV::init)
+                "VideoTargetOpenCV", init<std::string, std::string, float>())
         .def("append", &gg::VideoTargetOpenCV::append)
-        .def("finalise", &gg::VideoTargetOpenCV::finalise)
     ;
 #endif // USE_OPENCV
 

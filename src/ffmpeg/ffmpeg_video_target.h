@@ -16,6 +16,13 @@ class VideoTargetFFmpeg : public IVideoTarget
 {
 protected:
     //!
+    //! \brief \c finalise() proceeds only if
+    //! this is \c true, due to Issue #130
+    //! \sa finalise
+    //!
+    bool _is_finaliseable;
+
+    //!
     //! \brief
     //!
     std::string _filepath;
@@ -120,8 +127,15 @@ public:
     //! \brief Constructor defining what \c codec to
     //! use for encoding
     //! \param codec `HEVC` or `VP9`
+    //! \param filename
+    //! \param frame_rate
+    //! \throw VideoTargetError with a detailed error message
+    //! if \c fourcc not supported or if the target cannot be
+    //! initialised for some reason
     //!
-    VideoTargetFFmpeg(const std::string codec);
+    VideoTargetFFmpeg(const std::string codec,
+                      const std::string filename,
+                      const float frame_rate);
 
     //!
     //! \brief
@@ -129,9 +143,10 @@ public:
     virtual ~VideoTargetFFmpeg();
 
 public:
-    void init(const std::string filepath, const float framerate);
-
     void append(const VideoFrame & frame);
+
+protected:
+    void init(const std::string filepath, const float framerate);
 
     void finalise();
 

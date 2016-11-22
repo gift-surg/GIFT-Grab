@@ -3,7 +3,9 @@
 namespace gg
 {
 
-VideoTargetOpenCV::VideoTargetOpenCV(const std::string fourcc)
+VideoTargetOpenCV::VideoTargetOpenCV(const std::string fourcc,
+                                     const std::string filename,
+                                     const float frame_rate)
 {
     if (fourcc != "XVID") // currently only XviD supported
     {
@@ -15,11 +17,13 @@ VideoTargetOpenCV::VideoTargetOpenCV(const std::string fourcc)
     }
     else
         _fourcc = fourcc;
+
+    init(filename, frame_rate);
 }
 
 VideoTargetOpenCV::~VideoTargetOpenCV()
 {
-    // nop
+    finalise();
 }
 
 void VideoTargetOpenCV::init(const std::string filepath, const float framerate)

@@ -44,9 +44,15 @@ public:
     //! \brief Constructor featuring a \c fourcc code as in
     //! http://docs.opencv.org/2.4/doc/tutorials/highgui/video-write/video-write.html
     //! \param fourcc
-    //! \throw VideoTargetError if \c fourcc not supported
+    //! \param filename
+    //! \param frame_rate
+    //! \throw VideoTargetError with a detailed error message
+    //! if \c fourcc not supported or if the target cannot be
+    //! initialised for some reason
     //!
-    VideoTargetOpenCV(const std::string fourcc = "XVID");
+    VideoTargetOpenCV(const std::string fourcc,
+                      const std::string filename,
+                      const float frame_rate);
 
     //!
     //! \brief
@@ -54,9 +60,10 @@ public:
     virtual ~VideoTargetOpenCV();
 
 public:
-    void init(const std::string filepath, const float framerate);
-
     void append(const VideoFrame & frame);
+
+protected:
+    void init(const std::string filepath, const float framerate);
 
     void finalise();
 

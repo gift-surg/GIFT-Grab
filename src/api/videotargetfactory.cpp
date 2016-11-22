@@ -35,17 +35,17 @@ IVideoTarget * VideoTargetFactory::create_file_writer(enum Codec codec,
     {
     case Xvid:
 #ifdef USE_OPENCV
-        target = new VideoTargetOpenCV("XVID");
+        target = new VideoTargetOpenCV("XVID", filename, frame_rate);
         break;
 #endif
     case HEVC:
 #ifdef USE_FFMPEG
-        target = new VideoTargetFFmpeg("HEVC");
+        target = new VideoTargetFFmpeg("HEVC", filename, frame_rate);
         break;
 #endif
     case VP9:
 #ifdef USE_FFMPEG
-        target = new VideoTargetFFmpeg("VP9");
+        target = new VideoTargetFFmpeg("VP9", filename, frame_rate);
         break;
 #endif
     default:
@@ -55,10 +55,6 @@ IVideoTarget * VideoTargetFactory::create_file_writer(enum Codec codec,
            .append(" not supported");
         throw VideoTargetError(msg);
     }
-
-    if (target != nullptr)
-        // TODO delete after #34
-        target->init(filename, frame_rate);
 
     return target;
 }

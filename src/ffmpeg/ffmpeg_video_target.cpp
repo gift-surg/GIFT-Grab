@@ -25,7 +25,10 @@ const std::string VideoTargetFFmpeg::_CODEC_NAME_HEVC_NVENC = "nvenc_hevc";
 const std::string VideoTargetFFmpeg::_CODEC_NAME_VP9_LIBVPX = "libvpx-vp9";
 
 
-VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
+VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec,
+                                     const std::string filename,
+                                     const float frame_rate) :
+    _is_finaliseable(false),
     _codec(NULL),
     _codec_name(""),
     _frame(NULL),
@@ -63,11 +66,13 @@ VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
     }
 
     av_register_all();
+
+    init(filename, frame_rate);
 }
 
 VideoTargetFFmpeg::~VideoTargetFFmpeg()
 {
-    // nop
+    finalise();
 }
 
 void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
@@ -109,6 +114,9 @@ void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
 
 void VideoTargetFFmpeg::append(const VideoFrame & frame)
 {
+    // Issue #130
+    _is_finaliseable = true;
+
     { // START auto_cpu_timer scope
 #ifdef GENERATE_PERFORMANCE_OUTPUT
     boost::timer::auto_cpu_timer t(this_class_str + "1-ffmpeg_frame" + timer_format_str);
@@ -409,6 +417,10 @@ void VideoTargetFFmpeg::encode_and_write(AVFrame * frame, int & got_output)
 
 void VideoTargetFFmpeg::finalise()
 {
+    // Issue #130
+    if (not _is_finaliseable)
+        return;
+
     /* This condition means that append
      * has been called at least once
      * successfully (see Issue#36)
