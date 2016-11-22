@@ -260,7 +260,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
 
 #ifdef USE_FFMPEG
     class_<gg::VideoTargetFFmpeg, bases<gg::IVideoTarget>, boost::noncopyable>(
-                "VideoTargetFFmpeg", init<std::string>())
+                "VideoTargetFFmpeg", init<std::string, std::string, float>())
         .def("init", &gg::VideoTargetFFmpeg::init)
         .def("append", &gg::VideoTargetFFmpeg::append)
         .def("finalise", &gg::VideoTargetFFmpeg::finalise)
@@ -269,7 +269,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
 
 #ifdef USE_OPENCV
     class_<gg::VideoTargetOpenCV, bases<gg::IVideoTarget>, boost::noncopyable>(
-                "VideoTargetOpenCV", init<std::string>())
+                "VideoTargetOpenCV", init<std::string, std::string, float>())
         .def("init", &gg::VideoTargetOpenCV::init)
         .def("append", &gg::VideoTargetOpenCV::append)
         .def("finalise", &gg::VideoTargetOpenCV::finalise)

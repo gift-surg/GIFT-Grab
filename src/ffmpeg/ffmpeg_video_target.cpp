@@ -25,7 +25,9 @@ const std::string VideoTargetFFmpeg::_CODEC_NAME_HEVC_NVENC = "nvenc_hevc";
 const std::string VideoTargetFFmpeg::_CODEC_NAME_VP9_LIBVPX = "libvpx-vp9";
 
 
-VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
+VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec,
+                                     const std::string filename,
+                                     const float frame_rate) :
     _is_finaliseable(false),
     _codec(NULL),
     _codec_name(""),
@@ -64,6 +66,8 @@ VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
     }
 
     av_register_all();
+
+    init(filename, frame_rate);
 }
 
 VideoTargetFFmpeg::~VideoTargetFFmpeg()
