@@ -1,12 +1,15 @@
 #include "include_catch.h"
 #include "videotargetfactory.h"
 #include "videoframe.h"
+#include <cstdio>
+#include <vector>
 
 
 gg::Codec codec;
 std::string extension;
 float frame_rate = 30.0;
 gg::ColourSpace colour;
+std::vector<std::string> filenames;
 
 
 //!
@@ -30,6 +33,8 @@ std::string generate_random_filename()
     std::string filename = "./test_video_target_factory_";
     filename.append(std::string(timestamp));
     filename.append(extension);
+
+    filenames.push_back(filename);
 
     return filename;
 }
@@ -89,7 +94,10 @@ int main(int argc, char * argv[])
         printf("Synopsis: %s HEVC|Xvid|VP9 BGRA|I420\n", argv[0]);
         return EXIT_FAILURE;
     }
-    return Catch::Session().run();
+    int ret = Catch::Session().run();
+    for (std::string filename : filenames)
+        std::remove(filename.c_str());
+    return ret;
 }
 
 TEST_CASE( "get_instance returns singleton", "[VideoTargetFactory]" )
