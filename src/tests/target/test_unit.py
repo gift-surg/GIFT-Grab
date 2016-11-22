@@ -93,7 +93,7 @@ def test_append_with_colour_mismatch(codec, colour_space):
 
 
 def test_frame_rate(codec):
-    global target, file_name
+    global target, file_name, frame_rate
     for i in range(10):
         target.append(frame)
     target.finalise()
