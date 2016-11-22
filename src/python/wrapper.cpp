@@ -188,10 +188,10 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .value("DVI2PCIeDuo_DVI", gg::Device::DVI2PCIeDuo_DVI)
     ;
 
-    enum_<gg::Storage>("Storage")
-        .value("File_HEVC", gg::Storage::File_HEVC)
-        .value("File_XviD", gg::Storage::File_XviD)
-        .value("File_VP9", gg::Storage::File_VP9)
+    enum_<gg::Codec>("Codec")
+        .value("File_HEVC", gg::Codec::File_HEVC)
+        .value("File_XviD", gg::Codec::File_XviD)
+        .value("File_VP9", gg::Codec::File_VP9)
     ;
 
     class_<gg::VideoFrame>("VideoFrame", init<enum gg::ColourSpace, bool>())

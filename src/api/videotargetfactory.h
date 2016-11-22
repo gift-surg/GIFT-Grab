@@ -18,7 +18,6 @@ namespace gg
 //! principle.
 //!
 //! \sa IVideoTarget
-//! \sa Storage
 //!
 class VideoTargetFactory
 {
@@ -67,7 +66,7 @@ public:
     //! notably wrong file extension or invalid \c
     //! frame_rate
     //!
-    IVideoTarget * create_file_writer(enum Storage codec,
+    IVideoTarget * create_file_writer(enum Codec codec,
                                       const std::string filename,
                                       const float frame_rate);
 

@@ -3,7 +3,7 @@
 #include "videoframe.h"
 
 
-gg::Storage codec;
+gg::Codec codec;
 std::string extension;
 float frame_rate = 30.0;
 gg::ColourSpace colour;

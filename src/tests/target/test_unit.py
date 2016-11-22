@@ -4,7 +4,7 @@ from os import devnull, remove, listdir
 from string import ascii_uppercase
 from random import choice
 from time import strftime
-from pygiftgrab import Storage, VideoTargetFactory, VideoFrame, ColourSpace
+from pygiftgrab import Codec, VideoTargetFactory, VideoFrame, ColourSpace
 from giftgrab.utils import inspection
 
 
@@ -19,20 +19,20 @@ frame_rate = 60
 
 
 def __file_ext(codec):
-    if codec == Storage.File_HEVC:
+    if codec == Codec.File_HEVC:
         return 'mp4'
-    elif codec == Storage.File_XviD:
+    elif codec == Codec.File_XviD:
         return 'avi'
-    elif codec == Storage.File_VP9:
+    elif codec == Codec.File_VP9:
         return 'webm'
 
 
-def __storage2str(codec):
-    if codec == Storage.File_HEVC:
+def __codec2str(codec):
+    if codec == Codec.File_HEVC:
         return 'HEVC'
-    elif codec == Storage.File_XviD:
+    elif codec == Codec.File_XviD:
         return 'Xvid'
-    elif codec == Storage.File_VP9:
+    elif codec == Codec.File_VP9:
         return 'VP9'
 
 
@@ -84,7 +84,7 @@ def peri_test(codec, colour_space):
 
 
 def test_append_with_colour_mismatch(codec, colour_space):
-    if codec != Storage.File_XviD:
+    if codec != Codec.File_XviD:
         return
 
     with raises(RuntimeError):

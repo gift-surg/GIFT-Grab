@@ -4,9 +4,9 @@ namespace gg
 {
 
 //!
-//! \brief Lists supported video saving options
+//! \brief Lists supported video codecs
 //!
-enum Storage
+enum Codec
 {
     File_XviD,
     File_HEVC,

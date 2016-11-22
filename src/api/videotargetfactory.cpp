@@ -26,7 +26,7 @@ VideoTargetFactory & VideoTargetFactory::get_instance()
     return _factory_singleton;
 }
 
-IVideoTarget * VideoTargetFactory::create_file_writer(enum Storage codec,
+IVideoTarget * VideoTargetFactory::create_file_writer(enum Codec codec,
                                                       const std::string filename,
                                                       const float frame_rate)
 {
