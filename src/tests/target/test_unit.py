@@ -78,9 +78,9 @@ def peri_test(codec, colour_space):
 
     # This section runs after each test
 
-    # for f in listdir('.'):
-    #     if str(f).startswith(tmp_file_prefix):
-    #         remove(f)
+    for f in listdir('.'):
+        if str(f).startswith(tmp_file_prefix):
+            remove(f)
 
 
 def test_append_with_colour_mismatch(codec, colour_space):
