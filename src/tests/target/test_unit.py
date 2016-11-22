@@ -9,7 +9,7 @@ from giftgrab.utils import inspection
 
 
 # for easily removing created files when done
-tmp_file_prefix = 'tmp_GiftGrab_test_'
+tmp_file_prefix = 'tmp_GiftGrab_test'
 factory = None
 target = None
 frame = None
