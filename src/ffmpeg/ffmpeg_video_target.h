@@ -16,6 +16,13 @@ class VideoTargetFFmpeg : public IVideoTarget
 {
 protected:
     //!
+    //! \brief \c finalise() proceeds only if
+    //! this is \c true, due to Issue #130
+    //! \sa finalise
+    //!
+    bool _is_finaliseable;
+
+    //!
     //! \brief
     //!
     std::string _filepath;
