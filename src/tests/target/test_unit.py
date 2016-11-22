@@ -107,7 +107,7 @@ def test_frame_rate():
     assert inspection.frame_rate(file_name) == frame_rate
 
 
-def test_resolution(codec, colour_space):
+def test_resolution(colour_space):
     rows = 1080
     cols = 1920
     frame1920x1080 = VideoFrame(colour_space, cols, rows)
