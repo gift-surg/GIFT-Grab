@@ -221,7 +221,7 @@ pypi-epiphan-dvi2pcie-duo:
     - gift-pypi
     - gift-epiphan-dvi2pcie-duo
   only:
-    - 121-standardise-factory-pattern-for-sources
+    - 122-standardise-factory-pattern-for-targets
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 epiphan-dvi2pcie-duo:
@@ -274,4 +274,4 @@ epiphan-dvi2pcie-duo:
     - gift-linux
     - gift-epiphan-dvi2pcie-duo
   only:
-    - 121-standardise-factory-pattern-for-sources
+    - 122-standardise-factory-pattern-for-targets
