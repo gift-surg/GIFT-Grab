@@ -15,7 +15,7 @@ def pytest_generate_tests(metafunc):
         if case_insensitive == 'hevc':
             codec = Codec.HEVC
         elif case_insensitive == 'xvid':
-            codec = Codec.XviD
+            codec = Codec.Xvid
         elif case_insensitive == 'vp9':
             codec = Codec.VP9
         else:

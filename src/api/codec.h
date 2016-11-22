@@ -8,7 +8,7 @@ namespace gg
 //!
 enum Codec
 {
-    XviD,
+    Xvid,
     HEVC,
     VP9
 };

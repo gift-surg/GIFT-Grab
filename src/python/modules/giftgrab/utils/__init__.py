@@ -17,7 +17,7 @@ def __extension(codec):
     @param codec one of the codecs supported by
     in pygiftgrab
     """
-    if codec == gg.Codec.XviD:
+    if codec == gg.Codec.Xvid:
         return '.avi'
     elif codec == gg.Codec.HEVC:
         return '.mp4'
@@ -68,7 +68,7 @@ def record_epiphan_dvi2pcieduo_sdi_bgra_xvid():
     port = gg.Device.DVI2PCIeDuo_SDI
     colour_space = gg.ColourSpace.BGRA
     frame = gg.VideoFrame(colour_space, True)
-    codec = gg.Codec.XviD
+    codec = gg.Codec.Xvid
     __record_epiphan_dvi2pcieduo(port,
                                  colour_space,
                                  frame,
@@ -104,7 +104,7 @@ def record_epiphan_dvi2pcieduo_sdi_i420_xvid():
     port = gg.Device.DVI2PCIeDuo_SDI
     colour_space = gg.ColourSpace.I420
     frame = gg.VideoFrame(colour_space, True)
-    codec = gg.Codec.XviD
+    codec = gg.Codec.Xvid
     __record_epiphan_dvi2pcieduo(port,
                                  colour_space,
                                  frame,
@@ -140,7 +140,7 @@ def record_epiphan_dvi2pcieduo_dvi_bgra_xvid():
     port = gg.Device.DVI2PCIeDuo_DVI
     colour_space = gg.ColourSpace.BGRA
     frame = gg.VideoFrame(colour_space, True)
-    codec = gg.Codec.XviD
+    codec = gg.Codec.Xvid
     __record_epiphan_dvi2pcieduo(port,
                                  colour_space,
                                  frame,
@@ -176,7 +176,7 @@ def record_epiphan_dvi2pcieduo_dvi_i420_xvid():
     port = gg.Device.DVI2PCIeDuo_DVI
     colour_space = gg.ColourSpace.I420
     frame = gg.VideoFrame(colour_space, True)
-    codec = gg.Codec.XviD
+    codec = gg.Codec.Xvid
     __record_epiphan_dvi2pcieduo(port,
                                  colour_space,
                                  frame,

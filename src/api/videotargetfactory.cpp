@@ -33,7 +33,7 @@ IVideoTarget * VideoTargetFactory::create_file_writer(enum Codec codec,
     IVideoTarget * target = nullptr;
     switch (codec)
     {
-    case XviD:
+    case Xvid:
 #ifdef USE_OPENCV
         target = new VideoTargetOpenCV("XVID");
         break;

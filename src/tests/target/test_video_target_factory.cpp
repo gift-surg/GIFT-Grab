@@ -67,7 +67,7 @@ int main(int argc, char * argv[])
         }
         else if (strcmp(argv[1], "Xvid") == 0)
         {
-            codec = gg::XviD;
+            codec = gg::Xvid;
             extension = ".avi";
         }
         else if (strcmp(argv[1], "VP9") == 0)

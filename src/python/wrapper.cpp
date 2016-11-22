@@ -190,7 +190,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
 
     enum_<gg::Codec>("Codec")
         .value("HEVC", gg::Codec::HEVC)
-        .value("XviD", gg::Codec::XviD)
+        .value("Xvid", gg::Codec::Xvid)
         .value("VP9", gg::Codec::VP9)
     ;
 
