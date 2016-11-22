@@ -8,9 +8,9 @@ namespace gg
 //!
 enum Codec
 {
-    File_XviD,
-    File_HEVC,
-    File_VP9
+    XviD,
+    HEVC,
+    VP9
 };
 
 }

@@ -62,17 +62,17 @@ int main(int argc, char * argv[])
     {
         if (strcmp(argv[1], "HEVC") == 0)
         {
-            codec = gg::File_HEVC;
+            codec = gg::HEVC;
             extension = ".mp4";
         }
         else if (strcmp(argv[1], "Xvid") == 0)
         {
-            codec = gg::File_XviD;
+            codec = gg::XviD;
             extension = ".avi";
         }
         else if (strcmp(argv[1], "VP9") == 0)
         {
-            codec = gg::File_VP9;
+            codec = gg::VP9;
             extension = ".webm";
         }
         else

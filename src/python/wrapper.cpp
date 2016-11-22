@@ -189,9 +189,9 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     ;
 
     enum_<gg::Codec>("Codec")
-        .value("File_HEVC", gg::Codec::File_HEVC)
-        .value("File_XviD", gg::Codec::File_XviD)
-        .value("File_VP9", gg::Codec::File_VP9)
+        .value("HEVC", gg::Codec::HEVC)
+        .value("XviD", gg::Codec::XviD)
+        .value("VP9", gg::Codec::VP9)
     ;
 
     class_<gg::VideoFrame>("VideoFrame", init<enum gg::ColourSpace, bool>())

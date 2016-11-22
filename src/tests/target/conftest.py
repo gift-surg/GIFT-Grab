@@ -13,11 +13,11 @@ def pytest_generate_tests(metafunc):
         codec_str = str(metafunc.config.option.codec)
         case_insensitive = codec_str.lower()
         if case_insensitive == 'hevc':
-            codec = Codec.File_HEVC
+            codec = Codec.HEVC
         elif case_insensitive == 'xvid':
-            codec = Codec.File_XviD
+            codec = Codec.XviD
         elif case_insensitive == 'vp9':
-            codec = Codec.File_VP9
+            codec = Codec.VP9
         else:
             raise RuntimeError('Could not recognise codec ' +
                                codec_str)

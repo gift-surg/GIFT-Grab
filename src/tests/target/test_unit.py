@@ -19,20 +19,20 @@ frame_rate = 60
 
 
 def __file_ext(codec):
-    if codec == Codec.File_HEVC:
+    if codec == Codec.HEVC:
         return 'mp4'
-    elif codec == Codec.File_XviD:
+    elif codec == Codec.XviD:
         return 'avi'
-    elif codec == Codec.File_VP9:
+    elif codec == Codec.VP9:
         return 'webm'
 
 
 def __codec2str(codec):
-    if codec == Codec.File_HEVC:
+    if codec == Codec.HEVC:
         return 'HEVC'
-    elif codec == Codec.File_XviD:
+    elif codec == Codec.XviD:
         return 'Xvid'
-    elif codec == Codec.File_VP9:
+    elif codec == Codec.VP9:
         return 'VP9'
 
 
@@ -84,7 +84,7 @@ def peri_test(codec, colour_space):
 
 
 def test_append_with_colour_mismatch(codec, colour_space):
-    if codec != Codec.File_XviD:
+    if codec != Codec.XviD:
         return
 
     with raises(RuntimeError):
