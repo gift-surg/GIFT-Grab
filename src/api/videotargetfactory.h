@@ -1,7 +1,7 @@
 #pragma once
 
 #include "macros.h"
-#include "storage.h"
+#include "codec.h"
 #include "ivideotarget.h"
 
 namespace gg
