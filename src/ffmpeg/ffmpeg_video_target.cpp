@@ -67,7 +67,7 @@ VideoTargetFFmpeg::VideoTargetFFmpeg(const std::string codec) :
 
 VideoTargetFFmpeg::~VideoTargetFFmpeg()
 {
-    // nop
+    finalise();
 }
 
 void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
