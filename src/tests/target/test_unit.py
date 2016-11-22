@@ -1,4 +1,4 @@
-from pytest import fail, yield_fixture, raises
+from pytest import yield_fixture, raises
 from subprocess import check_call
 from os import devnull, remove, listdir
 from string import ascii_uppercase
@@ -40,24 +40,30 @@ def __codec2str(codec):
 def peri_test(codec, colour_space):
     # This section runs before each test
 
-    global factory, tmp_file_prefix, file_name, target
-    global frame, frame_with_colour_mismatch, frame_rate
+    global frame
     frame = VideoFrame(colour_space, 400, 640)
+
+    global frame_with_colour_mismatch
     if colour_space == ColourSpace.BGRA:
         colour_space_with_mismatch = ColourSpace.I420
     else:
         colour_space_with_mismatch = ColourSpace.BGRA
     frame_with_colour_mismatch = VideoFrame(colour_space_with_mismatch,
                                             400, 640)
+
+    global factory
     factory = VideoTargetFactory.get_instance()
     assert factory is not None
 
+    global file_name
     file_name = '{}_{}-{}.{}'.format(
         tmp_file_prefix,
         strftime('%Y-%m-%d-%H-%M-%S'),
         ''.join(choice(ascii_uppercase) for _ in range(5)),
         __file_ext(codec)
     )
+
+    global target, frame_rate
     target = None
     target = factory.create_file_writer(codec,
                                         file_name,
@@ -78,6 +84,7 @@ def peri_test(codec, colour_space):
 
     # This section runs after each test
 
+    global tmp_file_prefix
     for f in listdir('.'):
         if str(f).startswith(tmp_file_prefix):
             remove(f)
