@@ -37,15 +37,6 @@ public:
 
 public:
     //!
-    //! \brief Initialise a file writer
-    //! \param filepath
-    //! \param framerate how many frames per second
-    //! \throw VideoTargetError if writer cannot
-    //! be initialised, e.g. for IO reasons
-    //!
-    virtual void init(const std::string filepath, const float framerate) = 0;
-
-    //!
     //! \brief Append \c frame to output
     //! \param frame the caller is responsible for making
     //! sure the colour space of \c frame matches that of
@@ -58,17 +49,27 @@ public:
     //!
     virtual void append(const VideoFrame & frame) = 0;
 
+    void update(VideoFrame & frame) override
+    {
+        append(frame);
+    }
+
+protected:
+    //!
+    //! \brief Initialise a file writer
+    //! \param filepath
+    //! \param framerate how many frames per second
+    //! \throw VideoTargetError if writer cannot
+    //! be initialised, e.g. for IO reasons
+    //!
+    virtual void init(const std::string filepath, const float framerate) = 0;
+
     //!
     //! \brief Finalise writer, e.g. close file
     //! \throw VideoTargetError if writer cannot
     //! be finalised, e.g. for IO reasons
     //!
     virtual void finalise() = 0;
-
-    void update(VideoFrame & frame) override
-    {
-        append(frame);
-    }
 
 protected:
     //!

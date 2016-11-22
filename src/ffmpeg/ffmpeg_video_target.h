@@ -143,9 +143,10 @@ public:
     virtual ~VideoTargetFFmpeg();
 
 public:
-    void init(const std::string filepath, const float framerate);
-
     void append(const VideoFrame & frame);
+
+protected:
+    void init(const std::string filepath, const float framerate);
 
     void finalise();
 
