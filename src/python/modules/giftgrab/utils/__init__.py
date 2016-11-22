@@ -58,7 +58,6 @@ def __record_epiphan_dvi2pcieduo(port,
     for _ in range(num_frames):
         epiphan.get_frame(frame)
         writer.append(frame)
-    writer.finalise()
 
 
 num_frames = 30
