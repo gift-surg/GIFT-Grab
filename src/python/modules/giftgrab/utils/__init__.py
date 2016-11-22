@@ -14,7 +14,7 @@ def __unique_file_path():
 def __extension(codec):
     """Infer file extension from passed `codec`.
 
-    @param codec one of the codecs supported by
+    @param codec one of the codecs supported
     in pygiftgrab
     """
     if codec == gg.Codec.Xvid:
