@@ -14,14 +14,14 @@ def __unique_file_path():
 def __extension(codec):
     """Infer file extension from passed `codec`.
 
-    @param codec one of the storage formats defined
+    @param codec one of the codecs supported
     in pygiftgrab
     """
-    if codec == gg.Storage.File_XviD:
+    if codec == gg.Codec.Xvid:
         return '.avi'
-    elif codec == gg.Storage.File_HEVC:
+    elif codec == gg.Codec.HEVC:
         return '.mp4'
-    elif codec == gg.Storage.File_VP9:
+    elif codec == gg.Codec.VP9:
         return '.webm'
     else:
         raise ValueError('Codec unknown')
@@ -47,11 +47,14 @@ def __record_epiphan_dvi2pcieduo(port,
     which is automatically inferred using `codec`
     @param codec as defined in pygiftgrab
     """
-    factory = gg.VideoSourceFactory.get_instance()
-    epiphan = factory.get_device(port, colour_space)
-    writer = gg.Factory.writer(codec)
+    source_factory = gg.VideoSourceFactory.get_instance()
+    epiphan = source_factory.get_device(port, colour_space)
+    target_factory = gg.VideoTargetFactory.get_instance()
     frame_rate = 30
-    writer.init(__unique_file_path() + __extension(codec), frame_rate)
+    filename = __unique_file_path() + __extension(codec)
+    writer = target_factory.create_file_writer(codec,
+                                               filename,
+                                               frame_rate)
     for _ in range(num_frames):
         epiphan.get_frame(frame)
         writer.append(frame)
@@ -65,7 +68,7 @@ def record_epiphan_dvi2pcieduo_sdi_bgra_xvid():
     port = gg.Device.DVI2PCIeDuo_SDI
     colour_space = gg.ColourSpace.BGRA
     frame = gg.VideoFrame(colour_space, True)
-    codec = gg.Storage.File_XviD
+    codec = gg.Codec.Xvid
     __record_epiphan_dvi2pcieduo(port,
                                  colour_space,
                                  frame,
@@ -77,7 +80,7 @@ def record_epiphan_dvi2pcieduo_sdi_bgra_hevc():
     port = gg.Device.DVI2PCIeDuo_SDI
     colour_space = gg.ColourSpace.BGRA
     frame = gg.VideoFrame(colour_space, True)
-    codec = gg.Storage.File_HEVC
+    codec = gg.Codec.HEVC
     __record_epiphan_dvi2pcieduo(port,
                                  colour_space,
                                  frame,
@@ -89,7 +92,7 @@ def record_epiphan_dvi2pcieduo_sdi_bgra_vp9():
     port = gg.Device.DVI2PCIeDuo_SDI
     colour_space = gg.ColourSpace.BGRA
     frame = gg.VideoFrame(colour_space, True)
-    codec = gg.Storage.File_VP9
+    codec = gg.Codec.VP9
     __record_epiphan_dvi2pcieduo(port,
                                  colour_space,
                                  frame,
@@ -101,7 +104,7 @@ def record_epiphan_dvi2pcieduo_sdi_i420_xvid():
     port = gg.Device.DVI2PCIeDuo_SDI
     colour_space = gg.ColourSpace.I420
     frame = gg.VideoFrame(colour_space, True)
-    codec = gg.Storage.File_XviD
+    codec = gg.Codec.Xvid
     __record_epiphan_dvi2pcieduo(port,
                                  colour_space,
                                  frame,
@@ -113,7 +116,7 @@ def record_epiphan_dvi2pcieduo_sdi_i420_hevc():
     port = gg.Device.DVI2PCIeDuo_SDI
     colour_space = gg.ColourSpace.I420
     frame = gg.VideoFrame(colour_space, True)
-    codec = gg.Storage.File_HEVC
+    codec = gg.Codec.HEVC
     __record_epiphan_dvi2pcieduo(port,
                                  colour_space,
                                  frame,
@@ -125,7 +128,7 @@ def record_epiphan_dvi2pcieduo_sdi_i420_vp9():
     port = gg.Device.DVI2PCIeDuo_SDI
     colour_space = gg.ColourSpace.I420
     frame = gg.VideoFrame(colour_space, True)
-    codec = gg.Storage.File_VP9
+    codec = gg.Codec.VP9
     __record_epiphan_dvi2pcieduo(port,
                                  colour_space,
                                  frame,
@@ -137,7 +140,7 @@ def record_epiphan_dvi2pcieduo_dvi_bgra_xvid():
     port = gg.Device.DVI2PCIeDuo_DVI
     colour_space = gg.ColourSpace.BGRA
     frame = gg.VideoFrame(colour_space, True)
-    codec = gg.Storage.File_XviD
+    codec = gg.Codec.Xvid
     __record_epiphan_dvi2pcieduo(port,
                                  colour_space,
                                  frame,
@@ -149,7 +152,7 @@ def record_epiphan_dvi2pcieduo_dvi_bgra_hevc():
     port = gg.Device.DVI2PCIeDuo_DVI
     colour_space = gg.ColourSpace.BGRA
     frame = gg.VideoFrame(colour_space, True)
-    codec = gg.Storage.File_HEVC
+    codec = gg.Codec.HEVC
     __record_epiphan_dvi2pcieduo(port,
                                  colour_space,
                                  frame,
@@ -161,7 +164,7 @@ def record_epiphan_dvi2pcieduo_dvi_bgra_vp9():
     port = gg.Device.DVI2PCIeDuo_DVI
     colour_space = gg.ColourSpace.BGRA
     frame = gg.VideoFrame(colour_space, True)
-    codec = gg.Storage.File_VP9
+    codec = gg.Codec.VP9
     __record_epiphan_dvi2pcieduo(port,
                                  colour_space,
                                  frame,
@@ -173,7 +176,7 @@ def record_epiphan_dvi2pcieduo_dvi_i420_xvid():
     port = gg.Device.DVI2PCIeDuo_DVI
     colour_space = gg.ColourSpace.I420
     frame = gg.VideoFrame(colour_space, True)
-    codec = gg.Storage.File_XviD
+    codec = gg.Codec.Xvid
     __record_epiphan_dvi2pcieduo(port,
                                  colour_space,
                                  frame,
@@ -185,7 +188,7 @@ def record_epiphan_dvi2pcieduo_dvi_i420_hevc():
     port = gg.Device.DVI2PCIeDuo_DVI
     colour_space = gg.ColourSpace.I420
     frame = gg.VideoFrame(colour_space, True)
-    codec = gg.Storage.File_HEVC
+    codec = gg.Codec.HEVC
     __record_epiphan_dvi2pcieduo(port,
                                  colour_space,
                                  frame,
@@ -197,7 +200,7 @@ def record_epiphan_dvi2pcieduo_dvi_i420_vp9():
     port = gg.Device.DVI2PCIeDuo_DVI
     colour_space = gg.ColourSpace.I420
     frame = gg.VideoFrame(colour_space, True)
-    codec = gg.Storage.File_VP9
+    codec = gg.Codec.VP9
     __record_epiphan_dvi2pcieduo(port,
                                  colour_space,
                                  frame,

@@ -1,5 +1,5 @@
-#include "factory.h"
 #include "videosourcefactory.h"
+#include "videotargetfactory.h"
 #include "except.h"
 #include "iobservable.h"
 #include "gil.h"
@@ -188,10 +188,10 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .value("DVI2PCIeDuo_DVI", gg::Device::DVI2PCIeDuo_DVI)
     ;
 
-    enum_<gg::Storage>("Storage")
-        .value("File_HEVC", gg::Storage::File_HEVC)
-        .value("File_XviD", gg::Storage::File_XviD)
-        .value("File_VP9", gg::Storage::File_VP9)
+    enum_<gg::Codec>("Codec")
+        .value("HEVC", gg::Codec::HEVC)
+        .value("Xvid", gg::Codec::Xvid)
+        .value("VP9", gg::Codec::VP9)
     ;
 
     class_<gg::VideoFrame>("VideoFrame", init<enum gg::ColourSpace, bool>())
@@ -276,13 +276,6 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     ;
 #endif // USE_OPENCV
 
-    class_<gg::Factory>("Factory", no_init)
-        .def("writer", &gg::Factory::writer,
-             // because ownership is passed to client
-             return_value_policy<manage_new_object>())
-        .staticmethod("writer")
-    ;
-
     class_<gg::VideoSourceFactory, boost::noncopyable>("VideoSourceFactory", no_init)
         .def("get_device", &gg::VideoSourceFactory::get_device
              /* Keep returned pointer (0) alive as long as factory (1) alive.
@@ -296,6 +289,23 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         )
         .def("free_device", &gg::VideoSourceFactory::free_device)
         .def("get_instance", &gg::VideoSourceFactory::get_instance
+             , return_value_policy<reference_existing_object>()
+        )
+        .staticmethod("get_instance")
+    ;
+
+    class_<gg::VideoTargetFactory, boost::noncopyable>("VideoTargetFactory", no_init)
+        .def("create_file_writer", &gg::VideoTargetFactory::create_file_writer,
+             /* We use manage_new_object here in order
+              * to give ownership is to client. Also
+              * this ensures that the newly created
+              * object will be destroyed as part of the
+              * Python object destruction procedure. See
+              * https://wiki.python.org/moin/boost.python/CallPolicy#manage_new_object
+              */
+             return_value_policy<manage_new_object>()
+        )
+        .def("get_instance", &gg::VideoTargetFactory::get_instance
              , return_value_policy<reference_existing_object>()
         )
         .staticmethod("get_instance")

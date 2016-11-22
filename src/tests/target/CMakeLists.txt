@@ -15,6 +15,17 @@ if(USE_VP9)
     LIST(APPEND CODECS VP9)
 endif(USE_VP9)
 
+# VideoTargetFactory
+SET(VIDEO_TARGET_FACTORY_TEST test_video_target_factory)
+ADD_EXECUTABLE(
+    ${VIDEO_TARGET_FACTORY_TEST}
+    test_video_target_factory.cpp
+)
+TARGET_LINK_LIBRARIES(
+    ${VIDEO_TARGET_FACTORY_TEST}
+    ${LIBS} ${NAME}
+)
+
 # generate tests
 foreach(CODEC ${CODECS})
     foreach(COLOUR_SPACE ${COLOUR_SPACES})
@@ -24,6 +35,12 @@ foreach(CODEC ${CODECS})
             SET(NAME_TEST Test_${CODEC}_${COLOUR_SPACE})
             ADD_TEST(NAME ${NAME_TEST}
                 COMMAND py.test --codec=${CODEC} --colour-space=${COLOUR_SPACE} test_unit.py
+            )
+            LIST(APPEND TESTS_LIST ${NAME_TEST})
+
+            SET(NAME_TEST Test_VideoTargetFactory_${CODEC}_${COLOUR_SPACE})
+            ADD_TEST(NAME ${NAME_TEST}
+                COMMAND ${VIDEO_TARGET_FACTORY_TEST} ${CODEC} ${COLOUR_SPACE}
             )
             LIST(APPEND TESTS_LIST ${NAME_TEST})
         endif(CODEC STREQUAL Xvid AND COLOUR_SPACE STREQUAL I420)

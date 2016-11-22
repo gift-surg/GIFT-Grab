@@ -45,7 +45,7 @@ Supported hardware
 Supported video formats
 -----------------------
 
-* [XviD](https://www.xvid.com/) (saved as [AVI](https://msdn.microsoft.com/en-us/library/windows/desktop/dd318189(v=vs.85).aspx))
+* [Xvid](https://www.xvid.com/) (saved as [AVI](https://msdn.microsoft.com/en-us/library/windows/desktop/dd318189(v=vs.85).aspx))
 * [HEVC (H.265)](http://www.itu.int/ITU-T/recommendations/rec.aspx?rec=11885) (saved as [MP4](http://www.iso.org/iso/catalogue_detail.htm?csnumber=38538))
 * [VP9](http://www.webmproject.org/vp9/) (saved as [WebM](https://www.webmproject.org/users/))
 
