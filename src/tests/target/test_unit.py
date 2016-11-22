@@ -118,8 +118,8 @@ def test_resolution(colour_space):
     assert inspection.resolution(file_name) == (cols, rows)
 
 
-def test_num_frames(codec):
-    global target, file_name
+def test_num_frames():
+    global target, file_name, frame, frame_rate
     num_frames = 3 * frame_rate
     for i in range(num_frames):
         target.append(frame)
