@@ -1,4 +1,4 @@
-from pytest import mark, yield_fixture, fail
+from pytest import mark, yield_fixture, fail, raises
 from pygiftgrab import VideoFrame, ColourSpace
 # TODO: what if no NumPy?
 import numpy as np
@@ -25,6 +25,21 @@ def test_data():
     data_np = frame.data()
     assert data_np.dtype == np.int8
     assert frame.data_length() == data_np.size
+
+
+@mark.numpy_compatibility
+def test_data_length():
+    global frame, cols, rows
+    data_np = frame.data()
+    data_len = frame.data_length()
+
+    with raises(IndexError) as e:
+        data_np[data_len]
+
+    try:
+        data_np[data_len - 1]
+    except IndexError as e:
+        fail(e.message)
 
 
 @mark.numpy_compatibility
