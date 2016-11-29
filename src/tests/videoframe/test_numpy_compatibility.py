@@ -1,9 +1,7 @@
 from pytest import mark, yield_fixture, fail, raises
 from pygiftgrab import VideoFrame, ColourSpace
-# TODO: what if no NumPy?
 import numpy as np
 
-# TODO: Include value tests
 
 frame = None
 cols = 1920
