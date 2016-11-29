@@ -3,6 +3,7 @@ variables:
   SCRATCH_DIR: "/home/gitlab-runner/giftgrab-scratch"
   CTEST_OUTPUT_ON_FAILURE: "1"
   EpiphanSDK_DIR: "/home/gitlab-runner/environments/giftgrab/opt/epiphan_sdk-3.30.3.0007"
+  BOOST_163_ROOT_DIR: "/home/gitlab-runner/environments/giftgrab/boost163"
 
 before_script:
   - rm -rf $SCRATCH_DIR
@@ -62,6 +63,11 @@ linux:
     - make install
     # VP9 support
     - cmake -D USE_VP9=ON .
+    - make -j; exit_on_fail
+    - ctest; exit_on_fail
+    - make install
+    # NumPy support
+    - cmake -D BOOST_ROOT="$BOOST_163_ROOT_DIR" -D USE_NUMPY=ON .
     - make -j; exit_on_fail
     - ctest; exit_on_fail
     - make install
