@@ -21,7 +21,7 @@ def peri_test(colour_space):
 def test_data():
     global frame, cols, rows
     data_np = frame.data()
-    assert data_np.dtype == np.int8
+    assert data_np.dtype == np.uint8
     assert frame.data_length() == data_np.size
 
 
