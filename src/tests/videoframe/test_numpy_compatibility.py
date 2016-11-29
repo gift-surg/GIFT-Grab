@@ -63,10 +63,12 @@ def test_access(colour_space):
                 data_np[index * 4 + 1]  # Green channel
                 data_np[index * 4 + 2]  # Red channel
                 data_np[index * 4 + 3]  # Alpha channel
+
             elif colour_space == ColourSpace.I420:
                 # see https://wiki.videolan.org/YUV/#I420
                 data_np[index]         # Y plane
                 data_np[index * 1.25]  # U plane
                 data_np[index * 1.5]   # V plane
+
         except IndexError as e:
             fail(e.message)
