@@ -24,10 +24,43 @@
 
 using namespace boost::python;
 
-#ifdef USE_NUMPY
 class VideoFrameNumPyWrapper : public gg::VideoFrame, public wrapper<gg::VideoFrame>
 {
 public:
+    //!
+    //! \brief
+    //! \param rhs
+    //!
+    VideoFrameNumPyWrapper(const gg::VideoFrame & rhs)
+        : gg::VideoFrame(rhs)
+    {
+        // nop
+    }
+
+    //!
+    //! \brief
+    //! \param colour
+    //! \param cols
+    //! \param rows
+    //!
+    VideoFrameNumPyWrapper(enum gg::ColourSpace colour, size_t cols, size_t rows)
+        : gg::VideoFrame(colour, cols, rows)
+    {
+        // nop
+    }
+
+    //!
+    //! \brief
+    //! \param colour
+    //! \param manage_data
+    //!
+    VideoFrameNumPyWrapper(enum gg::ColourSpace colour, bool manage_data)
+        : gg::VideoFrame(colour, manage_data)
+    {
+        // nop
+    }
+
+#ifdef USE_NUMPY
     //!
     //! \brief Create a NumPy array referencing gg::VideoFrame::data()
     //! \return
@@ -45,8 +78,8 @@ public:
                     boost::python::object()
                );
     }
-};
 #endif
+};
 
 class IObservableWrapper : public gg::IObservable, public wrapper<gg::IObservable>
 {
@@ -214,10 +247,11 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .value("VP9", gg::Codec::VP9)
     ;
 
-    class_<gg::VideoFrame>("VideoFrame", init<enum gg::ColourSpace, bool>())
+    class_<VideoFrameNumPyWrapper>("VideoFrame", init<enum gg::ColourSpace, bool>())
         .def(init<enum gg::ColourSpace, const size_t, const size_t>())
-        .def("rows", &gg::VideoFrame::rows)
-        .def("cols", &gg::VideoFrame::cols)
+        .def("rows", &VideoFrameNumPyWrapper::rows)
+        .def("cols", &VideoFrameNumPyWrapper::cols)
+        .def("data_length", &VideoFrameNumPyWrapper::data_length)
 #ifdef USE_NUMPY
         .def("data", &VideoFrameNumPyWrapper::data_as_ndarray)
 #endif
