@@ -66,7 +66,7 @@ Features can be customised as per the combinations listed below. Please note tha
 * `-D USE_HEVC=ON -D ENABLE_NONFREE=ON -D USE_NVENC=ON` for hardware-accelerated HEVC support (requires a supported GPU, FFmpeg, pkg-config and NVENC).
 * `-D USE_VP9=ON` for VP9 support (requires FFmpeg, pkg-config and libvpx).
 * `-D BUILD_PYTHON=ON` for GIFT-Grab Python API (requires Python and Boost.Python).
-* `-D BUILD_PYTHON=ON -D USE_NUMPY=ON` for NumPy support (**experimental**, requires Python and [Boost.Python 1.63](http://www.boost.org/doc/libs/1_63_0_b1/libs/python/doc/html/numpy/index.html) or newer).
+* `-D BUILD_PYTHON=ON -D USE_NUMPY=ON` for [NumPy](http://www.numpy.org/) support (**experimental**, requires Python and [Boost.Python 1.63](http://www.boost.org/doc/libs/1_63_0_b1/libs/python/doc/html/numpy/index.html) or newer).
 * To quickly see whether GIFT-Grab works on your system, turn on tests with `-D BUILD_TESTS=ON -D BUILD_PYTHON=ON` (requires Python, Boost.Python, Catch [will be automatically downloaded from the internet as part of the build process] and pytest). Then run `ctest` or `make test` in the build directory.
 
 **To use the GIFT-Grab C++ API** in your software: include `FIND_PACKAGE(GiftGrab)` in your CMake file to discover the `GiftGrab_INCLUDE_DIRS` and `GiftGrab_LIBS` CMake variables (respectively for GIFT-Grab header directories to include and GIFT-Grab libraries to link against).
