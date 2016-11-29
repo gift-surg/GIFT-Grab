@@ -18,8 +18,35 @@
 #endif
 #include <boost/python.hpp>
 #include <boost/python/exception_translator.hpp>
+#ifdef USE_NUMPY
+#include <boost/python/numpy.hpp>
+#endif
 
 using namespace boost::python;
+
+#ifdef USE_NUMPY
+class VideoFrameNumPyWrapper : public gg::VideoFrame, public wrapper<gg::VideoFrame>
+{
+public:
+    //!
+    //! \brief Create a NumPy array referencing gg::VideoFrame::data()
+    //! \return
+    //!
+    boost::python::numpy::ndarray data_as_ndarray()
+    {
+        return boost::python::numpy::from_data(
+                    this->data(),
+                    boost::python::numpy::dtype::get_builtin<uint8_t>(),
+                    // shape
+                    boost::python::make_tuple(data_length()),
+                    // stride, i.e. 1 byte to go to next entry in this case
+                    boost::python::make_tuple(sizeof(uint8_t)),
+                    // owner (dangerous to pass None)
+                    boost::python::object()
+               );
+    }
+};
+#endif
 
 class IObservableWrapper : public gg::IObservable, public wrapper<gg::IObservable>
 {
@@ -160,6 +187,9 @@ void translate_ObserverError(gg::ObserverError const & e)
 BOOST_PYTHON_MODULE(pygiftgrab)
 {
     PyEval_InitThreads();
+#ifdef USE_NUMPY
+    boost::python::numpy::initialize();
+#endif
 
     register_exception_translator<gg::VideoSourceError>(&translate_VideoSourceError);
     register_exception_translator<gg::DeviceAlreadyConnected>(&translate_DeviceAlreadyConnected);
@@ -188,6 +218,9 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .def(init<enum gg::ColourSpace, const size_t, const size_t>())
         .def("rows", &gg::VideoFrame::rows)
         .def("cols", &gg::VideoFrame::cols)
+#ifdef USE_NUMPY
+        .def("data", &VideoFrameNumPyWrapper::data_as_ndarray)
+#endif
     ;
 
     class_<IObservableWrapper,boost::noncopyable>("IObservable", no_init)
