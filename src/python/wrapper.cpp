@@ -257,7 +257,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
 #endif
     ;
 
-    class_<IObservableWrapper,boost::noncopyable>("IObservable", no_init)
+    class_<IObservableWrapper, boost::noncopyable>("IObservable", no_init)
         .def("attach", &IObservableWrapper::attach)
         .def("detach", &IObservableWrapper::detach)
     ;
