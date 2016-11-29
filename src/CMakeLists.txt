@@ -43,6 +43,8 @@ OPTION(BUILD_TESTS
     "Tests (requires pytest)" OFF)
 OPTION(BUILD_PYTHON
     "GIFT-Grab Python API (requires Python and Boost.Python)" OFF)
+OPTION(USE_NUMPY
+    "Build support for exposing video data as NumPy datatypes (requires Python, Boost.Python and Boost.NumPy)" OFF)
 OPTION(USE_BGRA
     "Capture video in BGRA colour space (requires OpenCV)" ON)
 OPTION(USE_I420
