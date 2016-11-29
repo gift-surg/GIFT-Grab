@@ -28,7 +28,9 @@ class VideoFrameNumPyWrapper : public gg::VideoFrame, public wrapper<gg::VideoFr
 {
 public:
     //!
-    //! \brief
+    //! \brief Copy constructor needs to be defined
+    //! here as well for compatibility with exposed
+    //! interface
     //! \param rhs
     //!
     VideoFrameNumPyWrapper(const gg::VideoFrame & rhs)
@@ -38,23 +40,29 @@ public:
     }
 
     //!
-    //! \brief
+    //! \brief This constructor needs to be defined
+    //! here as well for compatibility with exposed
+    //! interface
     //! \param colour
     //! \param cols
     //! \param rows
     //!
-    VideoFrameNumPyWrapper(enum gg::ColourSpace colour, size_t cols, size_t rows)
+    VideoFrameNumPyWrapper(enum gg::ColourSpace colour,
+                           size_t cols, size_t rows)
         : gg::VideoFrame(colour, cols, rows)
     {
         // nop
     }
 
     //!
-    //! \brief
+    //! \brief This constructor needs to be defined
+    //! here as well for compatibility with exposed
+    //! interface
     //! \param colour
     //! \param manage_data
     //!
-    VideoFrameNumPyWrapper(enum gg::ColourSpace colour, bool manage_data)
+    VideoFrameNumPyWrapper(enum gg::ColourSpace colour,
+                           bool manage_data)
         : gg::VideoFrame(colour, manage_data)
     {
         // nop
