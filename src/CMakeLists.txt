@@ -116,6 +116,11 @@ if(USE_HEVC OR USE_VP9)
     SET(USE_FFMPEG ON CACHE BOOL "OFF ON" FORCE)
 endif()
 
+# Check whether USE_NUMPY specified with BUILD_PYTHON
+if(USE_NUMPY AND NOT BUILD_PYTHON)
+    MESSAGE(FATAL_ERROR "USE_NUMPY can only be activated together with BUILD_PYTHON")
+endif(USE_NUMPY AND NOT BUILD_PYTHON)
+
 # Library name
 SET(NAME giftgrab)
 
