@@ -76,7 +76,7 @@ public:
     boost::python::numpy::ndarray data_as_ndarray()
     {
         return boost::python::numpy::from_data(
-                    this->data(),
+                    gg::VideoFrame::data(),
                     boost::python::numpy::dtype::get_builtin<uint8_t>(),
                     // shape
                     boost::python::make_tuple(data_length()),
