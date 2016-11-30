@@ -261,7 +261,7 @@ pypi-epiphan-dvi2pcie-duo:
     - gift-pypi
     - gift-epiphan-dvi2pcie-duo
   only:
-    - 132-expose-video-data-to-python-for-processing
+    - this-branch-should-never-exist
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 epiphan-dvi2pcie-duo:
@@ -319,4 +319,4 @@ epiphan-dvi2pcie-duo:
     - gift-linux
     - gift-epiphan-dvi2pcie-duo
   only:
-    - 132-expose-video-data-to-python-for-processing
+    - this-branch-should-never-exist
