@@ -67,6 +67,7 @@ linux:
     - ctest; exit_on_fail
     - make install
     # NumPy support
+    # TODO: remove BOOST_ROOT parameter after issue #133
     - cmake -D BOOST_ROOT="$BOOST_163_ROOT_DIR" -D USE_NUMPY=ON .
     - make -j; exit_on_fail
     - ctest; exit_on_fail
