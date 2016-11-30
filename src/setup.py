@@ -536,6 +536,7 @@ setup(
         'console_scripts': console_scripts,
     },
     package_data={'giftgrab.tests': [join('target', '*.py'),
+                                     join('videoframe', '*.py'),
                                      join('epiphan', 'dvi2pcieduo', '*.py'),
                                      join('epiphan', 'dvi2pcieduo', 'data', '*.yml')]}
 )
