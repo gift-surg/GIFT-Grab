@@ -88,6 +88,7 @@ class GiftGrabInstallCommand(install):
                    ('vp9', None, None),
                    ('nvenc', None, None),
                    ('enable-nonfree', None, None),
+                   ('numpy', None, None),
                    ('cmake-install-prefix=', None, None)]
 
 
@@ -115,6 +116,8 @@ class GiftGrabInstallCommand(install):
                 str_rep += ' (NVENC)'
             elif self.x265 and self.enable_gpl:
                 str_rep += ' (x265)'
+        if self.numpy:
+            str_rep += ' NumPy'
         if not str_rep: str_rep = 'no features'
         return str_rep.rstrip(',')
 
@@ -132,6 +135,7 @@ class GiftGrabInstallCommand(install):
         self.vp9 = None
         self.nvenc = None
         self.enable_nonfree = None
+        self.numpy = None
 
 
     def finalize_options(self):
@@ -371,6 +375,8 @@ class GiftGrabInstallCommand(install):
             cmake_args.append('-DUSE_BGRA=OFF')
         if self.no_i420:
             cmake_args.append('-DUSE_I420=OFF')
+        if self.numpy:
+            cmake_args.append('-DUSE_NUMPY=ON')
         cmake_args.append('-DCMAKE_INSTALL_PREFIX=%s' % (
                           cmake_install_prefix()))
         cmd = ['cmake', self.here]
