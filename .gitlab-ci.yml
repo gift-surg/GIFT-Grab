@@ -302,4 +302,4 @@ epiphan-dvi2pcie-duo:
     - gift-linux
     - gift-epiphan-dvi2pcie-duo
   only:
-    - 34-use-raii-for-factory-methods
+    - 132-expose-video-data-to-python-for-processing
