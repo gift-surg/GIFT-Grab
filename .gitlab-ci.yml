@@ -237,6 +237,23 @@ pypi-epiphan-dvi2pcie-duo:
     - ls -alh ./*.mp4
     - ls -alh ./*.webm
     - rm -f ./*.mp4 ./*.avi ./*.webm
+    # NumPy support
+    # TODO: delete this line after issue #133
+    - export BOOST_ROOT="$BOOST_163_ROOT_DIR"
+    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--enable-nonfree" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--epiphansdk" --install-option="--numpy" --upgrade "$PyPI_INSTALLER"
+    - test-giftgrab-epiphan-dvi2pcieduo-i420; exit_on_fail
+    - edd-dvi-i420-hevc; exit_on_fail
+    - edd-sdi-i420-hevc; exit_on_fail
+    - edd-dvi-i420-vp9; exit_on_fail
+    - edd-sdi-i420-vp9; exit_on_fail
+    - ls -alh ./*.mp4
+    - ls -alh ./*.webm
+    - rm -f ./*.mp4 ./*.avi ./*.webm
+    # Run the actual NumPy tests
+    - pip install numpy
+    - test-giftgrab-numpy-i420; exit_on_fail
+    # TODO: delete this line after issue #133
+    - unset BOOST_ROOT
     - unset USE_EPIPHANSDK  # remove dummy var
     - deactivate
   tags:
