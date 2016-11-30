@@ -67,9 +67,7 @@ linux:
     - ctest; exit_on_fail
     - make install
     # NumPy support
-    # TODO: delete this line after issue #133
-    - export BOOST_ROOT="$BOOST_163_ROOT_DIR"
-    - cmake -D USE_NUMPY=ON .
+    - cmake -D BOOST_ROOT="$BOOST_163_ROOT_DIR" -D USE_NUMPY=ON .
     - make -j; exit_on_fail
     - ctest; exit_on_fail
     - make install
@@ -79,8 +77,6 @@ linux:
     # no ctest: only checking whether doc building
     # properly here
     - make install
-    # TODO: delete this line after issue #133
-    - unset BOOST_ROOT
   tags:
     - gift-linux
 
