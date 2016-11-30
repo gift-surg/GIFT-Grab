@@ -137,6 +137,7 @@ pypi:
     - test-giftgrab-vp9-bgra; exit_on_fail
     - test-giftgrab-vp9-i420; exit_on_fail
     # Run the actual NumPy tests
+    - pip install numpy
     - test-giftgrab-numpy-bgra; exit_on_fail
     - test-giftgrab-numpy-i420; exit_on_fail
     # TODO: delete this line after issue #133
