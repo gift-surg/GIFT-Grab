@@ -80,6 +80,7 @@ Features can be customised as per the combinations listed below. Please note tha
 * `--install-option="--hevc" --install-option="--enable-gpl" --install-option="--x265"` to use x265 instead of kvazaar for HEVC support (requires FFmpeg, pkg-config and x265).
 * `--install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc"` for hardware-accelerated HEVC support (requires a supported GPU, FFmpeg, pkg-config and NVENC).
 * `--install-option="--vp9"` for VP9 support (requires FFmpeg, pkg-config and libvpx).
+* `--install-option="--numpy"` for [NumPy](http://www.numpy.org/) support (**experimental**, requires [Boost.Python 1.63](http://www.boost.org/doc/libs/1_63_0_b1/libs/python/doc/html/numpy/index.html) or newer).
 
 **To quickly test whether the GIFT-Grab Python API works** run:
 
@@ -88,6 +89,7 @@ Features can be customised as per the combinations listed below. Please note tha
 * `edd-<port>-i420-<codec>` (e.g. `edd-dvi-i420-vp9`) to record 30 frames into a timestamp-named video file, where:
    * `<port>` is one of `dvi` or `sdi`
    * `<codec>` is one of `xvid`, `hevc`, or `vp9`
+* `test-giftgrab-numpy-<colour_space>` to test NumPy support, provided GIFT-Grab was built with it (requires NumPy, obviously).
 
 Funding
 -------
