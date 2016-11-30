@@ -37,6 +37,9 @@ if(USE_I420)
     LIST(APPEND COLOUR_SPACES I420)
 endif(USE_I420)
 
+# test VideoFrame
+SUBDIRS(videoframe)
+
 # common configuration
 if(USE_HEVC OR USE_XVID OR USE_VP9)
     SUBDIRS(target)

@@ -43,6 +43,8 @@ OPTION(BUILD_TESTS
     "Tests (requires pytest)" OFF)
 OPTION(BUILD_PYTHON
     "GIFT-Grab Python API (requires Python and Boost.Python)" OFF)
+OPTION(USE_NUMPY
+    "Build support for exposing video data as NumPy datatypes (requires Python, Boost.Python and Boost.NumPy)" OFF)
 OPTION(USE_BGRA
     "Capture video in BGRA colour space (requires OpenCV)" ON)
 OPTION(USE_I420
@@ -113,6 +115,11 @@ endif(USE_EPIPHAN_DVI2PCIE_DUO AND USE_I420)
 if(USE_HEVC OR USE_VP9)
     SET(USE_FFMPEG ON CACHE BOOL "OFF ON" FORCE)
 endif()
+
+# Check whether USE_NUMPY specified with BUILD_PYTHON
+if(USE_NUMPY AND NOT BUILD_PYTHON)
+    MESSAGE(FATAL_ERROR "USE_NUMPY can only be activated together with BUILD_PYTHON")
+endif(USE_NUMPY AND NOT BUILD_PYTHON)
 
 # Library name
 SET(NAME giftgrab)
@@ -230,6 +237,9 @@ if(BUILD_PYTHON)
     LIST(APPEND LIBS ${PYTHON_LIBRARIES} ${Boost_LIBRARIES})
 
     ADD_DEFINITIONS(-DBUILD_PYTHON)
+    if(USE_NUMPY)
+        ADD_DEFINITIONS(-DUSE_NUMPY)
+    endif(USE_NUMPY)
     INCLUDE_DIRECTORIES(python)
 endif(BUILD_PYTHON)
 

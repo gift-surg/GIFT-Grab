@@ -11,6 +11,8 @@ epiphan_dvi2pcieduo_working_dir = abspath(
 epiphan_dvi2pcieduo_config_dir = abspath(
     resource_filename('giftgrab.tests',
                       join('epiphan', 'dvi2pcieduo', 'data')))
+videoframe_working_dir = abspath(
+    resource_filename('giftgrab.tests', 'videoframe'))
 
 
 def __run_target_tests(codec, colour_space):
@@ -59,9 +61,23 @@ def __run_epiphan_tests(colour_space):
     # if ret: exit(ret)
 
 
+def __run_numpy_tests(colour_space):
+    ret = main(['--colour-space=%s' % (colour_space),
+                videoframe_working_dir, '-m', 'numpy_compatibility'])
+    if ret: exit(ret)
+
+
 def test_epiphan_dvi2pcieduo_bgra():
     __run_epiphan_tests('BGRA')
 
 
 def test_epiphan_dvi2pcieduo_i420():
     __run_epiphan_tests('I420')
+
+
+def test_numpy_bgra():
+    __run_numpy_tests('BGRA')
+
+
+def test_numpy_i420():
+    __run_numpy_tests('I420')

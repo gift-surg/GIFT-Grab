@@ -96,3 +96,14 @@ libVLC (experimental)
 1. `../vlc-3.0.0-git/bootstrap`
 1. `../vlc-3.0.0-git/configure`
 1. `./compile` and `make install`
+
+Boost.Python with NumPy support
+-------------------------------
+
+The current Boost.Python version installable from the Ubuntu repositories does not provide the functionality GIFT-Grab needs for its NumPy support. However you can install the 1.63.0 beta version as follows:
+
+1. `wget https://sourceforge.net/projects/boost/files/boost/1.63.0.beta.1/boost_1_63_0_b1.tar.bz2`
+1. `tar xvfj boost_1_63_0_b1.tar.bz2`
+1. `cd boost_1_63_0`
+1. `./bootstrap.sh --with-libraries=python` (`--with-libraries=python` deactivates all other Boost components, ensuring minimum compilation time)
+1. `./b2 install`
