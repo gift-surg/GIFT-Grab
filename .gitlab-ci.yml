@@ -9,7 +9,7 @@ before_script:
   - mkdir $SCRATCH_DIR
   - export GiftGrab_SOURCE_DIR="$(pwd)/src"
   - source "$CI_SCRIPTS_DIR/utils.sh"
-  - export BOOST_163_ROOT_DIR="/home/gitlab-runner/environments/giftgrab/boost163"
+  - export BOOST_163_ROOT_DIR=/home/gitlab-runner/environments/giftgrab/boost163
 
 stages:
   - install
