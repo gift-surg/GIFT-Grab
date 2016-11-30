@@ -9,6 +9,7 @@ before_script:
   - mkdir $SCRATCH_DIR
   - export GiftGrab_SOURCE_DIR="$(pwd)/src"
   - source "$CI_SCRIPTS_DIR/utils.sh"
+  - export BOOST_163_ROOT_DIR="/home/gitlab-runner/environments/giftgrab/boost163"
 
 stages:
   - install
@@ -66,7 +67,6 @@ linux:
     - ctest; exit_on_fail
     - make install
     # NumPy support
-    - export BOOST_163_ROOT_DIR="/home/gitlab-runner/environments/giftgrab/boost163"
     - cmake -D BOOST_ROOT="$BOOST_163_ROOT_DIR" -D USE_NUMPY=ON .
     - make -j; exit_on_fail
     - ctest; exit_on_fail
