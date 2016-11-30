@@ -68,7 +68,7 @@ linux:
     - make install
     # NumPy support
     # TODO: delete this line after issue #133
-    - export BOOST_ROOT=$BOOST_163_ROOT_DIR
+    - export BOOST_ROOT="$BOOST_163_ROOT_DIR"
     - cmake -D USE_NUMPY=ON .
     - make -j; exit_on_fail
     - ctest; exit_on_fail
