@@ -7,6 +7,7 @@
 #include <cstring>
 #include <fstream>
 #include <vector>
+#include <ctime>
 
 gg::Device device;
 gg::ColourSpace colour;
@@ -65,8 +66,7 @@ public:
               sum_durations = 0.0;
         for (size_t i = 0; i < _timestamps.size() - 1; i++)
         {
-            duration<float> difference = _timestamps[i + 1] - _timestamps[i];
-            float cur_duration = difference.count();
+            float cur_duration = duration_ms(_timestamps[i], _timestamps[i + 1]);
             sum_durations += cur_duration;
             if (cur_duration < min_duration)
                 min_duration = cur_duration;
@@ -86,8 +86,10 @@ public:
     }
 
     //!
-    //! \brief Output collected timestamps, as well
-    //! as computed statistics to CSV file with \c
+    //! \brief Output timestamp for each \c update()
+    //! call as well as the time duration between
+    //! each consecutive call pair, as well as the
+    //! computed statistics to CSV file with \c
     //! filename
     //! \param filename nop if empty
     //! \sa statistics()
@@ -97,28 +99,103 @@ public:
     //!
     void report(std::string filename)
     {
-        float max_fr, min_fr, avg_fr;
-        size_t n_timestamps;
-        if (not statistics(max_fr, min_fr, avg_fr, n_timestamps))
-            // nothing to output
-            return;
-
+        // Open file
         std::ofstream outfile;
         outfile.open(filename);
         if (not outfile.is_open())
             throw std::ios_base::failure(
                     filename.append(" could not be opened"));
-        std::string delimiter(",\n");
-        outfile << n_timestamps << delimiter;
-        outfile << max_fr << delimiter;
-        outfile << min_fr << delimiter;
-        outfile << avg_fr << delimiter;
-        for (timestamp ts: _timestamps)
+
+        // CSV format
+        std::string delimiter(", ");
+
+        // Get statistics
+        float max_fr, min_fr, avg_fr;
+        size_t n_timestamps;
+        if (statistics(max_fr, min_fr, avg_fr, n_timestamps))
         {
-            std::time_t t = system_clock::to_time_t(ts);
-            outfile << std::ctime(&t) << delimiter;
+            // Write header
+            outfile << "Nr. of timestamps" << delimiter
+                    << "Max. frame rate (fps)" << delimiter
+                    << "Min. frame rate (fps)" << delimiter
+                    << "Avg. frame rate (fps)" << std::endl;
+            // Write data
+            outfile << n_timestamps << delimiter
+                    << max_fr << delimiter
+                    << min_fr << delimiter
+                    << avg_fr << std::endl;
         }
+        else
+            outfile << "Statistics could not be computed"
+                    << std::endl;
+
+        // Write timestamps and inter-frame durations
+        if (n_timestamps > 0)
+        {
+            char buffer [80];
+            typedef duration<int, std::ratio_multiply<hours::period, std::ratio<24> >::type> days;
+
+            // Write header
+            outfile << "Frame timestamp (date-time)" << delimiter
+                    << "Inter-frame duration (ms)" << std::endl;
+            // Write data
+            for (timestamp ts : _timestamps)
+            {
+                // Nicely format date-time for human-readability
+                time_t tt = system_clock::to_time_t(ts);
+                tm local_tm = *localtime(&tt);
+                strftime (buffer, 80, "%Y/%m/%d %H:%M:%S", &local_tm);
+
+                // Append millisecond resolution to human-readable timestamp
+                system_clock::duration tp = ts.time_since_epoch();
+                days d = duration_cast<days>(tp);
+                tp -= d;
+                hours h = duration_cast<hours>(tp);
+                tp -= h;
+                minutes m = duration_cast<minutes>(tp);
+                tp -= m;
+                seconds s = duration_cast<seconds>(tp);
+                tp -= s;
+                milliseconds ms = duration_cast<milliseconds>(tp);
+                tp -= ms;
+                sprintf(buffer, "%s.%03lu", buffer, ms.count());
+
+                // Current inter-frame duration
+                float cur_duration = duration_ms(_timestamps[0], ts);
+
+                // Debugging output
+                std::cout << d.count() << "d " << h.count() << ':'
+                          << m.count() << ':' << s.count() << '.' << ms.count();
+                std::cout << " " << tp.count() << "["
+                          << system_clock::duration::period::num << '/'
+                          << system_clock::duration::period::den << "]";
+                std::cout << " " << cur_duration << "ms [inter-frame]";
+                std::cout << std::endl;
+
+                // Actual output to CSV file
+                outfile << buffer << delimiter
+                        << cur_duration << std::endl;
+            }
+        }
+        else
+            outfile << "No timestamps"
+                    << std::endl;
+
+        // Close file
         outfile.close();
+    }
+
+protected:
+    //!
+    //! \brief Get duration between two timestamps in milliseconds
+    //! \param t0
+    //! \param t1
+    //! \return
+    //!
+    float duration_ms(const timestamp & t0, const timestamp & t1)
+    {
+        duration<float> difference = duration_cast<seconds>(t1 - t0);
+        return difference.count();
     }
 };
 
