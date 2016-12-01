@@ -53,8 +53,35 @@ public:
                     float & avg_frame_rate,
                     size_t & n_timestamps)
     {
-        // TODO
-        return false;
+        if (_timestamps.empty() or _timestamps.size() < 10)
+            return false;
+
+        n_timestamps = _timestamps.size();
+
+        // unit: sec
+        float min_duration = std::numeric_limits<float>::max(),
+              max_duration = std::numeric_limits<float>::min(),
+              sum_durations = 0.0;
+        for (size_t i = 0; i < _timestamps.size() - 1; i++)
+        {
+            duration<float> difference = _timestamps[i + 1] - _timestamps[i];
+            float cur_duration = difference.count();
+            sum_durations += cur_duration;
+            if (cur_duration < min_duration)
+                min_duration = cur_duration;
+            else if (cur_duration > max_duration)
+                max_duration = cur_duration;
+        }
+
+        if (min_duration <= 0.0 or max_duration <= 0.0
+            or sum_durations <= 0.0)
+            return false;
+
+        max_frame_rate = 1.0 / min_duration;
+        min_frame_rate = 1.0 / max_duration;
+        avg_frame_rate = (n_timestamps - 1) / sum_durations;
+
+        return true;
     }
 
     //!
