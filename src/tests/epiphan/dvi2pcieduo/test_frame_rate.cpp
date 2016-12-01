@@ -90,12 +90,30 @@ public:
     //! filename
     //! \param filename nop if empty
     //! \sa statistics()
-    //! \throw in case (non-empty) \c filename not
-    //! pointing to a valid file, writeable by user
+    //! \throw std::ios_base::failure in case the
+    //! (non-empty) \c filename does not point to a
+    //! valid file, writeable by user
     //!
     void report(std::string filename)
     {
+        float max_fr, min_fr, avg_fr;
+        size_t n_timestamps;
+        if (not statistics(max_fr, min_fr, avg_fr, n_timestamps))
+            // nothing to output
+            return;
+
+        std::ofstream outfile;
+        outfile.open(filename);
+        if (not outfile.is_open())
+            throw std::ios_base::failure(
+                    filename.append(" could not be opened"));
+        std::string delimiter(",\n");
+        outfile << n_timestamps << delimiter << std::endl;
+        outfile << max_fr << delimiter << std::endl;
+        outfile << min_fr << delimiter << std::endl;
+        outfile << avg_fr << delimiter << std::endl;
         // TODO
+        outfile.close();
     }
 };
 
