@@ -66,7 +66,7 @@ public:
               sum_durations = 0.0;
         for (size_t i = 0; i < _timestamps.size() - 1; i++)
         {
-            float cur_duration = duration_ms(_timestamps[i], _timestamps[i + 1]);
+            float cur_duration = duration_s(_timestamps[i], _timestamps[i + 1]);
             sum_durations += cur_duration;
             if (cur_duration < min_duration)
                 min_duration = cur_duration;
@@ -78,9 +78,9 @@ public:
             or sum_durations <= 0.0)
             return false;
 
-        max_frame_rate = 1000.0 / min_duration;
-        min_frame_rate = 1000.0 / max_duration;
-        avg_frame_rate = 1000.0 * (n_timestamps - 1) / sum_durations;
+        max_frame_rate = 1.0 / min_duration;
+        min_frame_rate = 1.0 / max_duration;
+        avg_frame_rate = (n_timestamps - 1) / sum_durations;
 
         return true;
     }
@@ -137,7 +137,7 @@ public:
 
             // Write header
             outfile << "Frame timestamp (date-time)" << delimiter
-                    << "Inter-frame duration (ms)" << std::endl;
+                    << "Duration since first frame (s)" << std::endl;
             // Write data
             for (timestamp ts : _timestamps)
             {
@@ -161,7 +161,7 @@ public:
                 sprintf(buffer, "%s.%03lu", buffer, ms.count());
 
                 // Current inter-frame duration
-                float cur_duration = duration_ms(_timestamps[0], ts);
+                float cur_duration = duration_s(_timestamps[0], ts);
 
                 // Debugging output
                 std::cout << d.count() << "d " << h.count() << ':'
@@ -169,7 +169,7 @@ public:
                 std::cout << " " << tp.count() << "["
                           << system_clock::duration::period::num << '/'
                           << system_clock::duration::period::den << "]";
-                std::cout << " " << cur_duration << "ms [inter-frame]";
+                std::cout << " " << cur_duration << "s [since first frame]";
                 std::cout << std::endl;
 
                 // Actual output to CSV file
@@ -187,14 +187,14 @@ public:
 
 protected:
     //!
-    //! \brief Get duration between two timestamps in milliseconds
+    //! \brief Get duration between two timestamps in seconds
     //! \param t0
     //! \param t1
     //! \return
     //!
-    float duration_ms(const timestamp & t0, const timestamp & t1)
+    float duration_s(const timestamp & t0, const timestamp & t1)
     {
-        duration<float> difference = duration_cast<seconds>(t1 - t0);
+        duration<float> difference = t1 - t0;
         return difference.count();
     }
 };
