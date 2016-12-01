@@ -34,7 +34,7 @@ protected:
 public:
     void update(gg::VideoFrame & frame) override
     {
-        // TODO
+        _timestamps.push_back(system_clock::now());
     }
 
     //!
