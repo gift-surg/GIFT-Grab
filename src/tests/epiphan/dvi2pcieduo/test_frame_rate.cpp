@@ -5,12 +5,17 @@
 #include <chrono>
 #include <iostream>
 #include <cstring>
+#include <fstream>
+#include <vector>
 
 gg::Device device;
 gg::ColourSpace colour;
 size_t test_duration; // seconds
 float frame_rate_to_check;
 std::string report_filename("");
+
+using namespace std::chrono;
+typedef std::vector< time_point<system_clock> > timestamps;
 
 //!
 //! \brief This gg::IObserver implementor
@@ -23,6 +28,9 @@ std::string report_filename("");
 //!
 class FrameRateTimer : public gg::IObserver
 {
+protected:
+    timestamps _timestamps;
+
 public:
     void update(gg::VideoFrame & frame) override
     {
