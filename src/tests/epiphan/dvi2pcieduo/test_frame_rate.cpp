@@ -78,9 +78,9 @@ public:
             or sum_durations <= 0.0)
             return false;
 
-        max_frame_rate = 1.0 / min_duration;
-        min_frame_rate = 1.0 / max_duration;
-        avg_frame_rate = (n_timestamps - 1) / sum_durations;
+        max_frame_rate = 1000.0 / min_duration;
+        min_frame_rate = 1000.0 / max_duration;
+        avg_frame_rate = 1000.0 * (n_timestamps - 1) / sum_durations;
 
         return true;
     }
