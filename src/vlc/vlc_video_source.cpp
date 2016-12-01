@@ -29,6 +29,26 @@ VideoSourceVLC::VideoSourceVLC(const std::string path)
     , _rows(0)
     , _sub(nullptr)
     , _path(path)
+    , _frame_rate(0)
+{
+    init_vlc();
+    run_vlc();
+    determine_full();
+}
+
+VideoSourceVLC::VideoSourceVLC(const std::string path,
+                               const unsigned int frame_rate)
+    : IVideoSource(gg::I420)
+    , _vlc_inst(nullptr)
+    , _vlc_mp(nullptr)
+    , _running(false)
+    , _video_buffer(nullptr)
+    , _data_length(0)
+    , _cols(0)
+    , _rows(0)
+    , _sub(nullptr)
+    , _path(path)
+    , _frame_rate(frame_rate)
 {
     init_vlc();
     run_vlc();
@@ -159,6 +179,9 @@ void VideoSourceVLC::run_vlc()
     sprintf(pipeline, "%s}", pipeline);
     // colour space specification
     sprintf(pipeline, "%s,vcodec=I420", pipeline);
+    // frame rate specification
+    if (_frame_rate > 0)
+        sprintf(pipeline, "%s,fps=%u", pipeline, _frame_rate);
     // close transcode step
     sprintf(pipeline, "%s}:", pipeline);
     // callbacks
