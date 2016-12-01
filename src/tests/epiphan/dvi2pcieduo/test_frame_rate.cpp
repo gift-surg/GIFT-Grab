@@ -15,7 +15,8 @@ float frame_rate_to_check;
 std::string report_filename("");
 
 using namespace std::chrono;
-typedef std::vector< time_point<system_clock> > timestamps;
+typedef time_point<system_clock> timestamp;
+typedef std::vector< timestamp > timestamps;
 
 //!
 //! \brief This gg::IObserver implementor
@@ -108,11 +109,15 @@ public:
             throw std::ios_base::failure(
                     filename.append(" could not be opened"));
         std::string delimiter(",\n");
-        outfile << n_timestamps << delimiter << std::endl;
-        outfile << max_fr << delimiter << std::endl;
-        outfile << min_fr << delimiter << std::endl;
-        outfile << avg_fr << delimiter << std::endl;
-        // TODO
+        outfile << n_timestamps << delimiter;
+        outfile << max_fr << delimiter;
+        outfile << min_fr << delimiter;
+        outfile << avg_fr << delimiter;
+        for (timestamp ts: _timestamps)
+        {
+            std::time_t t = system_clock::to_time_t(ts);
+            outfile << std::ctime(&t) << delimiter;
+        }
         outfile.close();
     }
 };
