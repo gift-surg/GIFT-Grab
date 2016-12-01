@@ -3,7 +3,14 @@
 #include "iobservable.h"
 #include <thread>
 #include <chrono>
-#include <cassert>
+#include <iostream>
+#include <cstring>
+
+gg::Device device;
+gg::ColourSpace colour;
+size_t test_duration; // seconds
+float frame_rate_to_check;
+std::string report_filename("");
 
 //!
 //! \brief This gg::IObserver implementor
@@ -46,8 +53,10 @@ public:
     //! \brief Output collected timestamps, as well
     //! as computed statistics to CSV file with \c
     //! filename
-    //! \param filename
+    //! \param filename nop if empty
     //! \sa statistics()
+    //! \throw in case (non-empty) \c filename not
+    //! pointing to a valid file, writeable by user
     //!
     void report(std::string filename)
     {
@@ -55,14 +64,58 @@ public:
     }
 };
 
+bool parse_args(int argc, char * argv[])
+{
+    if (argc < 5)
+        return false;
+
+    if (std::strcmp(argv[1], "DVI") == 0)
+        device = gg::DVI2PCIeDuo_DVI;
+    else if (std::strcmp(argv[1], "SDI") == 0)
+        device = gg::DVI2PCIeDuo_SDI;
+    else
+        return false;
+
+    if (std::strcmp(argv[2], "BGRA") == 0)
+        colour = gg::BGRA;
+    else if (std::strcmp(argv[2], "I420") == 0)
+        colour = gg::I420;
+    else
+        return false;
+
+    int test_duration_ = std::atoi(argv[3]);
+    if (test_duration_ <= 0)
+        return false;
+    else
+        test_duration = test_duration_;
+
+    double frame_rate_to_check_ = std::atof(argv[4]);
+    if (frame_rate_to_check_ <= 0.0)
+        return false;
+    else
+        frame_rate_to_check = frame_rate_to_check_;
+
+    if (argc >= 6)
+        report_filename = std::string(argv[5]);
+
+    return true;
+}
+
+void synopsis(int argc, char * argv[])
+{
+    printf("%s  DVI | SDI  BGRA | I420  <test_duration>"
+           "  <frame_rate_to_check>  [ <report_filename> ]"
+           "\n",
+           argv[0]);
+}
+
 int main(int argc, char * argv[])
 {
-    // TODO
-    gg::Device device = gg::DVI2PCIeDuo_DVI;
-    gg::ColourSpace colour = gg::I420;
-    size_t duration = 10; // seconds
-    float frame_rate = 10.0;
-    std::string report_filename("./timer_report.csv");
+    if (not parse_args(argc, argv))
+    {
+        synopsis(argc, argv);
+        return EXIT_FAILURE;
+    }
 
 //    gg::VideoSourceFactory & source_fac = gg::VideoSourceFactory::get_instance();
 //    IVideoSource * epiphan = source_fac.get_device(device, colour);
@@ -81,5 +134,6 @@ int main(int argc, char * argv[])
 
     timer.report(report_filename);
 
-    return avg_fr >= frame_rate and min_fr >= frame_rate ? EXIT_SUCCESS : EXIT_FAILURE;
+    return ( avg_fr >= frame_rate_to_check and
+             min_fr >= frame_rate_to_check ) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
