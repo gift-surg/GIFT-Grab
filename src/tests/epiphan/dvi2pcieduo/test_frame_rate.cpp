@@ -9,7 +9,6 @@
 #include <vector>
 #include <ctime>
 
-gg::Device device;
 gg::ColourSpace colour;
 size_t test_duration; // seconds
 float frame_rate_to_check;
@@ -17,7 +16,7 @@ std::string report_filename("");
 
 using namespace std::chrono;
 typedef time_point<system_clock> timestamp;
-typedef std::vector< timestamp > timestamps;
+typedef std::vector<timestamp> timestamps;
 
 //!
 //! \brief This gg::IObserver implementor
@@ -192,44 +191,37 @@ protected:
 
 bool parse_args(int argc, char * argv[])
 {
-    if (argc < 5)
+    if (argc < 4)
         return false;
 
-    if (std::strcmp(argv[1], "DVI") == 0)
-        device = gg::DVI2PCIeDuo_DVI;
-    else if (std::strcmp(argv[1], "SDI") == 0)
-        device = gg::DVI2PCIeDuo_SDI;
-    else
-        return false;
-
-    if (std::strcmp(argv[2], "BGRA") == 0)
+    if (std::strcmp(argv[1], "BGRA") == 0)
         colour = gg::BGRA;
-    else if (std::strcmp(argv[2], "I420") == 0)
+    else if (std::strcmp(argv[1], "I420") == 0)
         colour = gg::I420;
     else
         return false;
 
-    int test_duration_ = std::atoi(argv[3]);
+    int test_duration_ = std::atoi(argv[2]);
     if (test_duration_ <= 0)
         return false;
     else
         test_duration = test_duration_;
 
-    double frame_rate_to_check_ = std::atof(argv[4]);
+    double frame_rate_to_check_ = std::atof(argv[3]);
     if (frame_rate_to_check_ <= 0.0)
         return false;
     else
         frame_rate_to_check = frame_rate_to_check_;
 
-    if (argc >= 6)
-        report_filename = std::string(argv[5]);
+    if (argc >= 5)
+        report_filename = std::string(argv[4]);
 
     return true;
 }
 
 void synopsis(int argc, char * argv[])
 {
-    printf("%s  DVI | SDI  BGRA | I420  <test_duration>"
+    printf("%s  BGRA | I420  <test_duration>"
            "  <frame_rate_to_check>  [ <report_filename> ]"
            "\n",
            argv[0]);
@@ -244,22 +236,29 @@ int main(int argc, char * argv[])
     }
 
     gg::VideoSourceFactory & source_fac = gg::VideoSourceFactory::get_instance();
-    IVideoSource * epiphan = source_fac.get_device(device, colour);
+    IVideoSource * dvi = source_fac.get_device(gg::DVI2PCIeDuo_DVI, colour);
+    IVideoSource * sdi = source_fac.get_device(gg::DVI2PCIeDuo_SDI, colour);
 
-    FrameRateTimer timer;
-    epiphan->attach(timer);
+    FrameRateTimer dvi_timer, sdi_timer;
+    dvi->attach(dvi_timer);
+    sdi->attach(sdi_timer);
 
     std::this_thread::sleep_for(std::chrono::seconds(test_duration));
 
-    epiphan->detach(timer);
+    dvi->detach(dvi_timer);
+    sdi->detach(sdi_timer);
 
-    float max_fr, min_fr, avg_fr;
-    size_t n_timestamps;
-    if (not timer.statistics(max_fr, min_fr, avg_fr, n_timestamps))
+    float dvi_max_fr, dvi_min_fr, dvi_avg_fr,
+          sdi_max_fr, sdi_min_fr, sdi_avg_fr;
+    size_t dvi_n_timestamps, sdi_n_timestamps;
+    if (not dvi_timer.statistics(dvi_max_fr, dvi_min_fr, dvi_avg_fr, dvi_n_timestamps) or
+        not sdi_timer.statistics(sdi_max_fr, sdi_min_fr, sdi_avg_fr, sdi_n_timestamps))
         return EXIT_FAILURE;
 
-    timer.report(report_filename);
+    dvi_timer.report(report_filename.append("_DVI.csv"));
+    sdi_timer.report(report_filename.append("_SDI.csv"));
 
-    return ( avg_fr >= frame_rate_to_check and
-             min_fr >= frame_rate_to_check ) ? EXIT_SUCCESS : EXIT_FAILURE;
+    return ( dvi_avg_fr >= frame_rate_to_check and dvi_min_fr >= frame_rate_to_check and
+             sdi_avg_fr >= frame_rate_to_check and sdi_min_fr >= frame_rate_to_check )
+            ? EXIT_SUCCESS : EXIT_FAILURE;
 }
