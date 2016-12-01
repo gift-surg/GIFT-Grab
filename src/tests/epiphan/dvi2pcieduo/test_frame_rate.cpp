@@ -163,15 +163,6 @@ public:
                 // Current inter-frame duration
                 float cur_duration = duration_s(_timestamps[0], ts);
 
-                // Debugging output
-                std::cout << d.count() << "d " << h.count() << ':'
-                          << m.count() << ':' << s.count() << '.' << ms.count();
-                std::cout << " " << tp.count() << "["
-                          << system_clock::duration::period::num << '/'
-                          << system_clock::duration::period::den << "]";
-                std::cout << " " << cur_duration << "s [since first frame]";
-                std::cout << std::endl;
-
                 // Actual output to CSV file
                 outfile << buffer << delimiter
                         << cur_duration << std::endl;
