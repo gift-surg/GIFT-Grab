@@ -252,15 +252,15 @@ int main(int argc, char * argv[])
         return EXIT_FAILURE;
     }
 
-//    gg::VideoSourceFactory & source_fac = gg::VideoSourceFactory::get_instance();
-//    IVideoSource * epiphan = source_fac.get_device(device, colour);
+    gg::VideoSourceFactory & source_fac = gg::VideoSourceFactory::get_instance();
+    IVideoSource * epiphan = source_fac.get_device(device, colour);
 
     FrameRateTimer timer;
-//    epiphan->attach(timer);
+    epiphan->attach(timer);
 
-//    std::this_thread::sleep_for(std::chrono::seconds(duration));
+    std::this_thread::sleep_for(std::chrono::seconds(test_duration));
 
-//    epiphan->detach(timer);
+    epiphan->detach(timer);
 
     float max_fr, min_fr, avg_fr;
     size_t n_timestamps;
