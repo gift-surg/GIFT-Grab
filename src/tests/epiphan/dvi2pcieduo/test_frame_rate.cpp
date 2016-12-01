@@ -23,18 +23,6 @@ public:
     }
 
     //!
-    //! \brief Check whether the collected timestamps
-    //! are in line with \c frame_rate
-    //! \param frame_rate
-    //! \return
-    //!
-    bool frame_rate_ok(float frame_rate)
-    {
-        // TODO
-        return false;
-    }
-
-    //!
     //! \brief Get statistics based on currently
     //! available timestamp collection
     //! \param max_frame_rate fps
@@ -86,7 +74,6 @@ int main(int argc, char * argv[])
 
 //    epiphan->detach(timer);
 
-//    timer.report();
     float max_fr, min_fr, avg_fr;
     size_t n_timestamps;
     if (not timer.statistics(max_fr, min_fr, avg_fr, n_timestamps))
