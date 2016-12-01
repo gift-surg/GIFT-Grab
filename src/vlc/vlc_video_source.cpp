@@ -96,7 +96,10 @@ bool VideoSourceVLC::get_frame(VideoFrame & frame)
 
 double VideoSourceVLC::get_frame_rate()
 {
-    return libvlc_media_player_get_fps(_vlc_mp);
+    if (_frame_rate > 0)
+        return _frame_rate;
+    else
+        return libvlc_media_player_get_fps(_vlc_mp);
 }
 
 
