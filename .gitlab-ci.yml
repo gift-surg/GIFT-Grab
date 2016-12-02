@@ -397,7 +397,7 @@ pypi-epiphan-pearl:
     - gift-pypi
     - gift-epiphan-pearl
   only:
-    - 85-add-support-for-epiphan-pearl
+    - this-branch-does-not-exist
 
 ################## Device: Epiphan Pearl ##################
 epiphan-pearl:
@@ -430,4 +430,4 @@ epiphan-pearl:
     - gift-linux
     - gift-epiphan-pearl
   only:
-    - this-branch-should-never-exist
+    - this-branch-does-not-exist
