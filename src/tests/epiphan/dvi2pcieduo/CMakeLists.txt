@@ -11,7 +11,7 @@ LIST(APPEND PORTS SDI)
 LIST(APPEND PORTS DVI)
 
 # VideoSourceFactory
-SET(VIDEO_SOURCE_FACTORY_TEST test_video_source_factory)
+SET(VIDEO_SOURCE_FACTORY_TEST test_video_source_factory_epiphan_dvi2pcieduo)
 ADD_EXECUTABLE(
     ${VIDEO_SOURCE_FACTORY_TEST}
     ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/test_video_source_factory.cpp
