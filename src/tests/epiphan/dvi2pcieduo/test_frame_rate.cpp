@@ -1,5 +1,5 @@
 #include "videosourcefactory.h"
-#include "iobserver.h"
+#include "ffmpeg_video_target.h"
 #include "iobservable.h"
 #include <thread>
 #include <chrono>
@@ -9,17 +9,18 @@
 #include <vector>
 #include <ctime>
 
+std::vector<gg::Device> devices;
 gg::ColourSpace colour;
 size_t test_duration; // seconds
 float frame_rate_to_check;
-std::string report_filename("");
+std::string video_filename(""), report_filename("");
 
 using namespace std::chrono;
 typedef time_point<system_clock> timestamp;
 typedef std::vector<timestamp> timestamps;
 
 //!
-//! \brief This gg::IObserver implementor
+//! \brief This gg::VideoTargetFFmpeg extender
 //! records a timestamp every time it is
 //! updated.
 //!
@@ -27,15 +28,31 @@ typedef std::vector<timestamp> timestamps;
 //! rate of the gg::IObservable it was
 //! attached to.
 //!
-class FrameRateTimer : public gg::IObserver
+class FrameRateTimer : public gg::VideoTargetFFmpeg
 {
 protected:
     timestamps _timestamps;
 
 public:
+    //!
+    //! \brief Create a gg::VideoTargetFFmpeg for
+    //! HEVC
+    //! \param filename
+    //! \param frame_rate
+    //!
+    FrameRateTimer(const std::string filename,
+                   const float frame_rate)
+        : gg::VideoTargetFFmpeg("HEVC",
+                                filename,
+                                frame_rate)
+    {
+        // nop
+    }
+
     void update(gg::VideoFrame & frame) override
     {
         _timestamps.push_back(system_clock::now());
+        gg::VideoTargetFFmpeg::update(frame);
     }
 
     //!
@@ -191,38 +208,50 @@ protected:
 
 bool parse_args(int argc, char * argv[])
 {
-    if (argc < 4)
+    if (argc < 6)
         return false;
 
-    if (std::strcmp(argv[1], "BGRA") == 0)
+    if (std::strcmp(argv[1], "DVI") == 0 or
+        std::strcmp(argv[1], "2") == 0)
+        devices.push_back(gg::DVI2PCIeDuo_DVI);
+    if (std::strcmp(argv[1], "SDI") == 0 or
+        std::strcmp(argv[1], "2") == 0)
+        devices.push_back(gg::DVI2PCIeDuo_SDI);
+    if (devices.empty())
+        return false;
+
+    if (std::strcmp(argv[2], "BGRA") == 0)
         colour = gg::BGRA;
-    else if (std::strcmp(argv[1], "I420") == 0)
+    else if (std::strcmp(argv[2], "I420") == 0)
         colour = gg::I420;
     else
         return false;
 
-    int test_duration_ = std::atoi(argv[2]);
+    int test_duration_ = std::atoi(argv[3]);
     if (test_duration_ <= 0)
         return false;
     else
         test_duration = test_duration_;
 
-    double frame_rate_to_check_ = std::atof(argv[3]);
+    double frame_rate_to_check_ = std::atof(argv[4]);
     if (frame_rate_to_check_ <= 0.0)
         return false;
     else
         frame_rate_to_check = frame_rate_to_check_;
 
-    if (argc >= 5)
-        report_filename = std::string(argv[4]);
+    video_filename = std::string(argv[5]);
+
+    if (argc >= 7)
+        report_filename = std::string(argv[6]);
 
     return true;
 }
 
 void synopsis(int argc, char * argv[])
 {
-    printf("%s  BGRA | I420  <test_duration>"
-           "  <frame_rate_to_check>  [ <report_filename> ]"
+    printf("%s  DVI | SDI | 2  BGRA | I420  <test_duration>"
+           "  <frame_rate_to_check>  <video_filename>"
+           "  [ <report_filename> ]"
            "\n",
            argv[0]);
 }
@@ -236,29 +265,44 @@ int main(int argc, char * argv[])
     }
 
     gg::VideoSourceFactory & source_fac = gg::VideoSourceFactory::get_instance();
-    IVideoSource * dvi = source_fac.get_device(gg::DVI2PCIeDuo_DVI, colour);
-    IVideoSource * sdi = source_fac.get_device(gg::DVI2PCIeDuo_SDI, colour);
+    std::vector<IVideoSource *> sources;
+    for (gg::Device device : devices)
+    {
+        IVideoSource * source = source_fac.get_device(device, colour);
+        sources.push_back(source);
+    }
 
-    FrameRateTimer dvi_timer, sdi_timer;
-    dvi->attach(dvi_timer);
-    sdi->attach(sdi_timer);
+    std::vector<FrameRateTimer *> timers;
+    size_t i = 0;
+    for (IVideoSource * source : sources)
+    {
+        FrameRateTimer * timer = new FrameRateTimer(
+                video_filename + std::to_string(devices[i++]).append(".mp4"),
+                frame_rate_to_check);
+        source->attach(*timer);
+        timers.push_back(timer);
+    }
 
     std::this_thread::sleep_for(std::chrono::seconds(test_duration));
 
-    dvi->detach(dvi_timer);
-    sdi->detach(sdi_timer);
+    for (size_t i = 0; i < sources.size(); i++)
+        sources[i]->detach(*timers[i]);
 
-    float dvi_max_fr, dvi_min_fr, dvi_avg_fr,
-          sdi_max_fr, sdi_min_fr, sdi_avg_fr;
-    size_t dvi_n_timestamps, sdi_n_timestamps;
-    if (not dvi_timer.statistics(dvi_max_fr, dvi_min_fr, dvi_avg_fr, dvi_n_timestamps) or
-        not sdi_timer.statistics(sdi_max_fr, sdi_min_fr, sdi_avg_fr, sdi_n_timestamps))
-        return EXIT_FAILURE;
+    float max_frs[timers.size()], min_frs[timers.size()], avg_frs[timers.size()];
+    size_t n_timestamps[timers.size()];
+    for (size_t i = 0; i < timers.size(); i++)
+    {
+        timers[i]->report(report_filename + std::to_string(devices[i]).append(".csv"));
+        if (not timers[i]->statistics(max_frs[i], min_frs[i], avg_frs[i], n_timestamps[i]))
+            return EXIT_FAILURE;
+    }
 
-    dvi_timer.report(report_filename.append("_DVI.csv"));
-    sdi_timer.report(report_filename.append("_SDI.csv"));
+    for (FrameRateTimer * timer : timers)
+        delete timer;
 
-    return ( dvi_avg_fr >= frame_rate_to_check and dvi_min_fr >= frame_rate_to_check and
-             sdi_avg_fr >= frame_rate_to_check and sdi_min_fr >= frame_rate_to_check )
-            ? EXIT_SUCCESS : EXIT_FAILURE;
+    for (size_t i = 0; i < timers.size(); i++)
+        if (avg_frs[i] < frame_rate_to_check or min_frs[i] < frame_rate_to_check)
+            return EXIT_FAILURE;
+
+    return EXIT_SUCCESS;
 }

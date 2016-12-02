@@ -10,10 +10,12 @@ SET(CONFIG_DIR ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/data)
 LIST(APPEND PORTS SDI)
 LIST(APPEND PORTS DVI)
 
-# Frame rate in pure C++
-SET(FRAME_RATE_TEST test_frame_rate)
-ADD_EXECUTABLE(${FRAME_RATE_TEST} test_frame_rate.cpp)
-TARGET_LINK_LIBRARIES(${FRAME_RATE_TEST} ${LIBS} ${NAME})
+# Simultaneous grabbing + encoding frame rate in pure C++
+if(USE_FFMPEG)
+    SET(FRAME_RATE_TEST test_frame_rate)
+    ADD_EXECUTABLE(${FRAME_RATE_TEST} test_frame_rate.cpp)
+    TARGET_LINK_LIBRARIES(${FRAME_RATE_TEST} ${LIBS} ${NAME})
+endif(USE_FFMPEG)
 
 # VideoSourceFactory
 SET(VIDEO_SOURCE_FACTORY_TEST test_video_source_factory_epiphan_dvi2pcieduo)
