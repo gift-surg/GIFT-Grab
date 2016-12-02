@@ -49,3 +49,8 @@ endif(USE_HEVC OR USE_XVID OR USE_VP9)
 if(USE_EPIPHAN_DVI2PCIE_DUO)
     SUBDIRS(epiphan/dvi2pcieduo)
 endif(USE_EPIPHAN_DVI2PCIE_DUO)
+
+# Network sources tests
+if(USE_NETWORK_SOURCES)
+    SUBDIRS(network)
+endif(USE_NETWORK_SOURCES)
