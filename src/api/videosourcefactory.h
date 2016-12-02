@@ -111,6 +111,18 @@ public:
     //!
     void free_device(enum Device device);
 
+    //!
+    //! \brief Open connection to network connection
+    //! specified by given \c address
+    //! \param address
+    //! \param colour
+    //! \return
+    //! \throw NetworkSourceUnavailable if no
+    //! connection can be established
+    //!
+    IVideoSource * connect_network_source(std::string address,
+                                          enum ColourSpace colour);
+
 protected:
     DISALLOW_COPY_AND_ASSIGNMENT(VideoSourceFactory);
 };

@@ -216,4 +216,12 @@ void VideoSourceFactory::free_device(Device device)
     _devices[(int) device] = nullptr;
 }
 
+
+IVideoSource * VideoSourceFactory::connect_network_source(
+        std::string address, enum ColourSpace colour)
+{
+    // TODO
+    return nullptr;
+}
+
 }

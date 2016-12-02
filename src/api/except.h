@@ -158,4 +158,25 @@ public:
     //!
     virtual ~ObserverError() noexcept;
 };
+
+//!
+//! \brief Thrown in case of problems related
+//! to network video sources.
+//!
+class NetworkSourceUnavailable : public BasicException
+{
+public:
+    //!
+    //! \brief
+    //! \param detail
+    //!
+    NetworkSourceUnavailable(const std::string & detail);
+
+    //!
+    //! \brief
+    //! \sa BasicException::BasicException
+    //!
+    virtual ~NetworkSourceUnavailable() noexcept;
+};
+
 }
