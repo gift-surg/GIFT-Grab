@@ -116,7 +116,10 @@ public:
     //! specified by given \c address
     //! \param address
     //! \param colour
-    //! \return
+    //! \return pointer to the created video source.
+    //! The ownership of this object passes to the
+    //! caller. So the caller is responsible for
+    //! garbage-collecting it.
     //! \throw NetworkSourceUnavailable if no
     //! connection can be established
     //!
