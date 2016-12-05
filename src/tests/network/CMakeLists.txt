@@ -26,7 +26,7 @@ endforeach(COLOUR_SPACE)
 foreach(COLOUR_SPACE ${COLOUR_SPACES})
     SET(NAME_TEST Test_Network_${COLOUR_SPACE})
     ADD_TEST(NAME ${NAME_TEST}
-        COMMAND py.test --address=${NETWORK_SOURCE} --colour-space=${COLOUR_SPACE} test_unit.py
+        COMMAND py.test --address=${NETWORK_SOURCE_ADDRESS} --colour-space=${COLOUR_SPACE} test_unit.py
     )
     LIST(APPEND TESTS_LIST ${NAME_TEST})
 endforeach(COLOUR_SPACE)
