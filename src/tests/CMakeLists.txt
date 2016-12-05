@@ -1,6 +1,7 @@
 # to avoid copying stuff around
 SET(PYTHONPATH "${CMAKE_BINARY_DIR}:$ENV{PYTHONPATH}")
 SET(PYTHONPATH "${CMAKE_SOURCE_DIR}/python/modules:${PYTHONPATH}")
+SET(PYTHONPATH "${CMAKE_SOURCE_DIR}/tests:${PYTHONPATH}")
 
 # Obtain Catch header for testing
 SET(CATCH_DIR "${CMAKE_BINARY_DIR}/extern/Catch")
