@@ -1,5 +1,6 @@
 from pytest import yield_fixture, mark
 from pygiftgrab import VideoSourceFactory, VideoFrame, ColourSpace
+from time import sleep
 
 
 source = None
@@ -42,6 +43,15 @@ def peri_test(address, colour_space):
 
     global frame, frame_with_colour_mismatch, tmp_frame
     frame = VideoFrame(colour_space, False)
+    # TODO the loop is due to issue #135
+    n_attempts = 0
+    n_max_attempts = 10
+    while not source.get_frame(frame):
+        sleep(1)
+        n_attempts += 1
+        if n_attempts >= n_max_attempts:
+            break
+    assert source.get_frame(frame)
     tmp_frame = VideoFrame(colour_space, False)
     if colour_space == ColourSpace.BGRA:
         mismatch_colour_space = ColourSpace.I420
