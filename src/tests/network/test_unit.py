@@ -75,26 +75,6 @@ def test_get_frame():
 
 @mark.unit
 @mark.usefixtures('peri_test')
-def test_sub_frame():
-    global source, frame
-
-    # a first sub-frame
-    sub_x, sub_y, sub_width, sub_height = generate_sub_frame(2, 2, 3, 3)
-    source.set_sub_frame(sub_x, sub_y, sub_width, sub_height)
-    assert source.get_frame(frame)
-    assert frame.cols() == sub_width
-    assert frame.rows() == sub_height
-
-    # a second sub-frame
-    sub2_x, sub2_y, sub2_width, sub2_height = generate_sub_frame(6, 6, 5, 5)
-    source.set_sub_frame(sub2_x, sub2_y, sub2_width, sub2_height)
-    assert source.get_frame(frame)
-    assert frame.cols() == sub2_width
-    assert frame.rows() == sub2_height
-
-
-@mark.unit
-@mark.usefixtures('peri_test')
 def test_full_frame():
     # ensure sub frame set before testing full frame
     width, height = get_frame_dimensions()
