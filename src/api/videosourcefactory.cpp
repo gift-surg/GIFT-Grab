@@ -220,8 +220,14 @@ void VideoSourceFactory::free_device(Device device)
 IVideoSource * VideoSourceFactory::connect_network_source(
         std::string address, enum ColourSpace colour)
 {
-    // TODO
-    return nullptr;
+    IVideoSource * source = nullptr;
+#ifdef USE_LIBVLC
+    source = new gg::VideoSourceVLC(address);
+#else
+    throw VideoSourceError(
+        "Network sources supported only with libVLC");
+#endif
+    return source;
 }
 
 }
