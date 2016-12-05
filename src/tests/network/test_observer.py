@@ -1,6 +1,7 @@
 from pytest import mark
 from utils import FrameRateTimer
 import pygiftgrab as pgg
+import time
 
 
 @mark.observer_pattern
