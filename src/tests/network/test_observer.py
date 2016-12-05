@@ -1,7 +1,22 @@
 from pytest import mark
+from utils import FrameRateTimer
+import pygiftgrab as pgg
 
 
 @mark.observer_pattern
 def test_frame_rate(address, colour_space, frame_rate, observers):
-    # TODO
-    assert False
+    timers = []
+    for i in range(observers):
+        timers.append(FrameRateTimer(frame_rate))
+    factory = pgg.VideoSourceFactory.get_instance()
+    source = factory.connect_network_source(address, colour_space)
+
+    for timer in timers:
+        source.attach(timer)
+
+    time.sleep(120)  # listen for data these nr. of sec
+    for timer in timers:
+        source.detach(timer)
+
+    for timer in timers:
+        assert timer
