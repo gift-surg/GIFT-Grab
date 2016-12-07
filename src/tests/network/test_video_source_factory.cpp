@@ -10,7 +10,7 @@ std::chrono::duration<float, std::milli> network_source_delay;  // sec
 int main(int argc, char * argv[])
 {
     bool args_ok = true;
-    if (argc < 4)
+    if (argc < 3)
         args_ok = false;
     else
     {
@@ -27,11 +27,14 @@ int main(int argc, char * argv[])
         }
         else
             args_ok = false;
-        network_source_delay = std::chrono::duration<float, std::milli>(1000 * atof(argv[3]));
+        float network_source_delay_ = 0;
+        if (argc >= 4)
+            network_source_delay_ = 1000 * atof(argv[3]);
+        network_source_delay = std::chrono::duration<float, std::milli>(network_source_delay_);
     }
     if (not args_ok)
     {
-        printf("Synopsis: %s <network_source_address> BGRA|I420\n", argv[0]);
+        printf("Synopsis: %s <network_source_address> BGRA|I420 [ <network_source_delay> ]\n", argv[0]);
         return EXIT_FAILURE;
     }
     return Catch::Session().run();
