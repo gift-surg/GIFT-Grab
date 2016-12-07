@@ -5,6 +5,8 @@ from pygiftgrab import ColourSpace
 def pytest_addoption(parser):
     parser.addoption('--address', action='store',
                      help='Network source address')
+    parser.addoption('--init-delay', action='store', type=float,
+                     help='Network source initialisation delay (sec)')
     parser.addoption('--colour-space', action='store',
                      help='Colour space specification (BGRA or I420)')
     parser.addoption('--frame-rate', action='store', type=int,
@@ -16,6 +18,11 @@ def pytest_addoption(parser):
 @fixture(scope='session')
 def address(request):
     return request.config.getoption('--address')
+
+
+@fixture(scope='session')
+def init_delay(request):
+    return request.config.getoption('--init-delay')
 
 
 @fixture(scope='session')

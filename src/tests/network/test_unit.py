@@ -35,10 +35,11 @@ def get_frame_dimensions():
 
 
 @yield_fixture(scope='session')
-def peri_test(address, colour_space):
+def peri_test(address, colour_space, init_delay):
     factory = VideoSourceFactory.get_instance()
     global source
     source = factory.connect_network_source(address, colour_space)
+    sleep(init_delay)
     assert source is not None
 
     global frame, frame_with_colour_mismatch, tmp_frame
