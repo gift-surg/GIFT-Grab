@@ -101,6 +101,13 @@ if(USE_EPIPHAN_DVI2PCIE_DUO)
     endif(NOT USE_BGRA AND NOT USE_I420)
 endif(USE_EPIPHAN_DVI2PCIE_DUO)
 
+# Check at least one colour space activated if using network sources
+if(USE_NETWORK_SOURCES)
+    if(NOT USE_BGRA AND NOT USE_I420)
+        MESSAGE(FATAL_ERROR "At least one colour space must be activated to use network sources")
+    endif(NOT USE_BGRA AND NOT USE_I420)
+endif(USE_NETWORK_SOURCES)
+
 # Determine whether OpenCV needed
 if((USE_EPIPHAN_DVI2PCIE_DUO AND USE_BGRA) OR
     USE_XVID)
@@ -114,9 +121,9 @@ if(USE_EPIPHAN_DVI2PCIE_DUO AND USE_I420)
     endif(NOT USE_EPIPHANSDK)
 endif(USE_EPIPHAN_DVI2PCIE_DUO AND USE_I420)
 
-if(USE_NETWORK_SOURCES)
+if(USE_NETWORK_SOURCES AND USE_I420)
     SET(USE_LIBVLC ON CACHE BOOL "OFF ON" FORCE)
-endif(USE_NETWORK_SOURCES)
+endif(USE_NETWORK_SOURCES AND USE_I420)
 
 # Determine whether FFmpeg needed
 if(USE_HEVC OR USE_VP9)
