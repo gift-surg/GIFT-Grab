@@ -1,13 +1,16 @@
 #include "videosourcefactory.h"
 #include "include_catch.h"
+#include <thread>
+#include <chrono>
 
 std::string address;
 gg::ColourSpace colour, other_colour;
+std::chrono::duration<float, std::milli> network_source_delay;  // sec
 
 int main(int argc, char * argv[])
 {
     bool args_ok = true;
-    if (argc < 3)
+    if (argc < 4)
         args_ok = false;
     else
     {
@@ -24,6 +27,7 @@ int main(int argc, char * argv[])
         }
         else
             args_ok = false;
+        network_source_delay = std::chrono::duration<float, std::milli>(1000 * atof(argv[3]));
     }
     if (not args_ok)
     {
@@ -38,6 +42,7 @@ TEST_CASE( "connect_network_source returns connection", "[VideoSourceFactory]" )
     gg::VideoSourceFactory & factory =  gg::VideoSourceFactory::get_instance();
     IVideoSource * source = nullptr;
     source = factory.connect_network_source(address, colour);
+    std::this_thread::sleep_for(network_source_delay);
     REQUIRE_FALSE( source == nullptr );
     REQUIRE( source->get_colour() == colour );
 
