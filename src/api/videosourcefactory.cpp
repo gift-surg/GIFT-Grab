@@ -221,12 +221,23 @@ IVideoSource * VideoSourceFactory::connect_network_source(
         std::string address, enum ColourSpace colour)
 {
     IVideoSource * source = nullptr;
+    switch (colour)
+    {
+    case I420:
 #ifdef USE_LIBVLC
-    source = new gg::VideoSourceVLC(address);
+        source = new gg::VideoSourceVLC(address);
 #else
-    throw VideoSourceError(
-        "Network sources supported only with libVLC");
+        throw VideoSourceError(
+            "I420 colour space on network sources supported only with libVLC"
+        );
 #endif
+        break;
+    case BGRA:
+        throw VideoSourceError(
+            "BGRA colour space not supported for network sources"
+        );
+    }
+
     return source;
 }
 
