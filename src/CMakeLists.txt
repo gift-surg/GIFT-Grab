@@ -24,7 +24,7 @@ ADD_SUBDIRECTORY(cmake/cpp11)
 OPTION(USE_EPIPHAN_DVI2PCIE_DUO
     "Capture video with Epiphan DVI2PCIe Duo" OFF)
 OPTION(USE_NETWORK_SOURCES
-    "Capture video from network sources (requires libVLC)" OFF)
+    "Capture video from network sources" OFF)
 OPTION(USE_HEVC
     "Video encoding with HEVC (requires FFmpeg, pkg-config and kvazaar [default] or x265 [turn USE_X265 on])" OFF)
 OPTION(USE_X265
@@ -109,7 +109,7 @@ if(USE_NETWORK_SOURCES)
 endif(USE_NETWORK_SOURCES)
 
 # Determine whether OpenCV needed
-if((USE_EPIPHAN_DVI2PCIE_DUO AND USE_BGRA) OR
+if(((USE_EPIPHAN_DVI2PCIE_DUO OR USE_NETWORK_SOURCES) AND USE_BGRA) OR
     USE_XVID)
     SET(USE_OPENCV ON CACHE BOOL "OFF ON" FORCE)
 endif()

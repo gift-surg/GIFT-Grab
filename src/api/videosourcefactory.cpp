@@ -240,9 +240,21 @@ IVideoSource * VideoSourceFactory::connect_network_source(
 #endif
         break;
     case BGRA:
+#ifdef USE_OPENCV
+        try
+        {
+            source = new VideoSourceOpenCV(address.c_str());
+        }
+        catch (VideoSourceError & e)
+        {
+            throw NetworkSourceUnavailable(e.what());
+        }
+        break;
+#else
         throw VideoSourceError(
-            "BGRA colour space not supported for network sources"
+            "BGRA colour space on network sources supported only with OpenCV"
         );
+#endif
     }
 
     return source;
