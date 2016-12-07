@@ -192,6 +192,10 @@ void VideoSourceVLC::run_vlc()
     // empirically determined value that allows for initialisation
     // to succeed before any API functions are called on this object
     std::this_thread::sleep_for(std::chrono::milliseconds(350));
+
+    // ensure no error!
+    if (libvlc_media_player_get_state(_vlc_mp) == libvlc_Error)
+        throw gg::VideoSourceError(std::string("Could not open ").append(_path));
 }
 
 
