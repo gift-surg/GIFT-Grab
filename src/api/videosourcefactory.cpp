@@ -225,7 +225,14 @@ IVideoSource * VideoSourceFactory::connect_network_source(
     {
     case I420:
 #ifdef USE_LIBVLC
-        source = new gg::VideoSourceVLC(address);
+        try
+        {
+            source = new gg::VideoSourceVLC(address);
+        }
+        catch (VideoSourceError & e)
+        {
+            throw NetworkSourceUnavailable(e.what());
+        }
 #else
         throw VideoSourceError(
             "I420 colour space on network sources supported only with libVLC"
