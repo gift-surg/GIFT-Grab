@@ -8,10 +8,11 @@ VideoSourceOpenCV::VideoSourceOpenCV(const char * path)
     , _daemon(nullptr)
 {
     _cap.open(path);
-    if (!_cap.isOpened()) {
+    if (!_cap.isOpened())
+    {
         std::string error = std::string("Could not open the video source: ")
                             + path;
-        throw std::runtime_error(error);
+        throw gg::VideoSourceError(error);
     }
     _daemon = new gg::BroadcastDaemon(this);
     _daemon->start(get_frame_rate());
