@@ -75,6 +75,13 @@ private:
     cv::VideoCapture        _cap;
 
     //!
+    //! \brief This mutex to be locked when
+    //! accessing the buffer
+    //! \sa _buffer
+    //!
+    std::mutex _buffer_lock;
+
+    //!
     //! \brief Buffer for raw frames
     //!
     cv::Mat                 _buffer;

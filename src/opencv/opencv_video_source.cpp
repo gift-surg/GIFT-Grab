@@ -102,6 +102,8 @@ bool VideoSourceOpenCV::get_frame_dimensions(int &width, int & height)
 
 bool VideoSourceOpenCV::get_frame(gg::VideoFrame & frame)
 {
+    std::lock_guard<std::mutex> buffer_lock_guard(_buffer_lock);
+
     if (frame.colour() != _colour)
         return false;
 
