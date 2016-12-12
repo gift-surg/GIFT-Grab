@@ -243,7 +243,7 @@ class GiftGrabInstallCommand(install):
             self.__check_command(cmd, err_msg)
 
         # check libVLC and/or Epiphan SDK
-        if (self.epiphan_dvi2pcie_duo and not self.no_i420 \
+        if (self.epiphan_dvi2pcie_duo and not self.no_i420) \
            or (self.network_sources and not self.no_i420):
             if self.epiphansdk and self.enable_nonfree:
                 cmd = ['cmake', join(self.here, 'cmake', 'epiphansdk')]
