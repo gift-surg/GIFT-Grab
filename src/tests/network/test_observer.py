@@ -1,5 +1,10 @@
 from pytest import mark
-from giftgrab.tests.utils import FrameRateTimer
+try:
+    # in case of PyPI installation, this will work:
+    from giftgrab.tests.utils import FrameRateTimer
+except ImportError:
+    # in case of installation from source, this will work:
+    from utils import FrameRateTimer
 import pygiftgrab as pgg
 import time
 
