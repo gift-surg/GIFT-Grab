@@ -323,11 +323,10 @@ epiphan-dvi2pcie-duo:
 
 ################## Device: Epiphan Pearl #########################
 ################## Platform: PyPI ################################
-################## Target: All ###################################
-pypi-epiphan-pearl:
+pypi-network-sources:
   stage: test_pypi
   script:
-    - GiftGrab_PyPI_BUILD_DIR="$SCRATCH_DIR/pypi-epiphan-pearl"
+    - GiftGrab_PyPI_BUILD_DIR="$SCRATCH_DIR/pypi-network-sources"
     - GiftGrab_PyPI_INSTALL_DIR="$GiftGrab_PyPI_BUILD_DIR/install"
     - GiftGrab_venv=venv
     - rm -rf "$GiftGrab_PyPI_BUILD_DIR"
@@ -342,62 +341,34 @@ pypi-epiphan-pearl:
     - mv "$GiftGrab_PyPI_DIST_DIR" "$GiftGrab_PyPI_BUILD_DIR"
     - cd "$GiftGrab_PyPI_BUILD_DIR"
     - export EPIPHAN_PEARL_IP="128.16.14.129"
-    - export EPIPHAN_PEARL_MRL="rtsp://$EPIPHAN_PEARL_IP:554/stream.sdp"
+    - export EPIPHAN_PEARL_MRL="rtsp://$EPIPHAN_PEARL_IP:555/stream.sdp"
     - virtualenv $GiftGrab_venv
     - cd $GiftGrab_venv
     - source bin/activate
     - ls -alh ./*
     - PyPI_INSTALLER="../$GiftGrab_PyPI_DIST_DIR/$(ls ../$GiftGrab_PyPI_DIST_DIR | grep tar.gz)"
     - if [ -z "$PyPI_INSTALLER" ]; then exit 1; fi
-    # because pip seems to be getting confused about install options on Storz stack:
+    # because pip seems to be getting confused about install options sometimes:
     - pip install PyYAML
     - pip install pytest
-    # Epiphan Pearl support (BGRA only) # TODO #85
-    # - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-pearl" --install-option="--no-i420" --upgrade "$PyPI_INSTALLER"
-    # - check_epiphan_pearl_alive
-    # - test-giftgrab-epiphan-pearl-bgra; exit_on_fail
-    # - ep-bgra-hevc; exit_on_fail
-    # - ep-bgra-hevc; exit_on_fail
-    # - ep-bgra-xvid; exit_on_fail
-    # - ep-bgra-xvid; exit_on_fail
-    # - ep-bgra-vp9; exit_on_fail
-    # - ep-bgra-vp9; exit_on_fail
-    # Epiphan Pearl support (I420 only)
-    - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--vp9" --install-option="--epiphan-pearl" --install-option="--no-bgra" --upgrade "$PyPI_INSTALLER"
-    - check_epiphan_pearl_alive
-    - test-giftgrab-epiphan-pearl-i420; exit_on_fail
-    - ep-i420-hevc; exit_on_fail
-    - ep-i420-hevc; exit_on_fail
-    - ep-i420-vp9; exit_on_fail
-    - ep-i420-vp9; exit_on_fail
-    - ls -alh ./*.mp4
-    - ls -alh ./*.avi
-    - ls -alh ./*.webm
-    - rm -f ./*.mp4 ./*.avi ./*.webm
-    # Epiphan Pearl support (both BGRA and I420) TODO #85
-    # - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-pearl" --upgrade "$PyPI_INSTALLER"
-    # - test-giftgrab-epiphan-pearl-bgra; exit_on_fail
-    # - ep-bgra-hevc; exit_on_fail
-    # - ep-bgra-hevc; exit_on_fail
-    # - ep-bgra-xvid; exit_on_fail
-    # - ep-bgra-xvid; exit_on_fail
-    # - ep-bgra-vp9; exit_on_fail
-    # - ep-bgra-vp9; exit_on_fail
-    # - ep-i420-hevc; exit_on_fail
-    # - ep-i420-hevc; exit_on_fail
-    # - ep-i420-vp9; exit_on_fail
-    # - ep-i420-vp9; exit_on_fail
-    - ls -alh ./*.mp4
-    - ls -alh ./*.avi
-    - ls -alh ./*.webm
-    - rm -f ./*.mp4 ./*.avi ./*.webm
+    - export TESTING_NETWORK_SOURCE_ADDRESS=$EPIPHAN_PEARL_MRL
+    - export TESTING_NETWORK_SOURCE_FRAME_RATE=10
+    # test I420 colour space
+    - export TESTING_NETWORK_SOURCE_DELAY=7
+    - pip install -vvv --install-option="--network-sources" --install-option="--no-bgra" --install-option="--hevc" --install-option="--nvenc" --install-option="--enable-nonfree" --upgrade "$PyPI_INSTALLER"
+    - test-giftgrab-network-sources-i420; exit_on_fail
+    # test BGRA colour space
+    - unset TESTING_NETWORK_SOURCE_DELAY
+    - pip install -vvv --install-option="--network-sources" --install-option="--no-i420" --install-option="--hevc" --install-option="--nvenc" --install-option="--enable-nonfree" --upgrade "$PyPI_INSTALLER"
+    - test-giftgrab-network-sources-bgra; exit_on_fail
+    # deactivate virtual env
     - deactivate
   tags:
     - gift-linux
     - gift-pypi
     - gift-epiphan-pearl
   only:
-    - this-branch-does-not-exist
+    - 85-add-support-for-epiphan-pearl
 
 ################## Device: Epiphan Pearl ##################
 network-sources:
