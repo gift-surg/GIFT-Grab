@@ -35,12 +35,13 @@ Optional (depending on desired features, see "How to use" below):
 
 Please note that there are cross-dependencies between some of these external libraries. Check out [our tips and tricks](doc/tips.md) for details.
 
-Supported hardware
-------------------
+Supported video sources
+-----------------------
 
 * [Epiphan DVI2PCIe Duo](http://www.epiphan.com/products/dvi2pcie-duo/), with an acquisition frame rate of:
   * 19 frames per second (fps) if using libVLC
   * 40 fps if using Epiphan video grabber SDK
+* Network streams
 
 Supported video formats
 -----------------------
