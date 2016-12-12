@@ -78,7 +78,7 @@ class GiftGrabInstallCommand(install):
 
     user_options = install.user_options + \
                   [('epiphan-dvi2pcie-duo', None, None),
-                   ('network-sources', None, None)
+                   ('network-sources', None, None),
                    ('epiphansdk', None, None),
                    ('no-bgra', None, None),
                    ('no-i420', None, None),
