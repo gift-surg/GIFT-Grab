@@ -75,12 +75,15 @@ def __run_network_tests(colour_space):
                            ' needs to be set for testing network source support')
         )
     var_name = 'TESTING_NETWORK_SOURCE_FRAME_RATE'
-    testing_network_source_frame_rate = os.environ.get(var_name)
-    if testing_network_source_frame_rate is None:
+    testing_network_source_frame_rate_buffer = os.environ.get(var_name)
+    if testing_network_source_frame_rate_buffer is None:
         fail('%s %s %s' % ('Environment variable ',
                            var_name,
                            ' needs to be set for testing network source support')
         )
+    else:
+        testing_network_source_frame_rate = float(testing_network_source_frame_rate_buffer)
+
     var_name = 'TESTING_NETWORK_SOURCE_DELAY'
     testing_network_source_delay = 0.0
     if os.environ.get(var_name):
