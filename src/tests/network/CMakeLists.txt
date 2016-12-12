@@ -38,10 +38,10 @@ endforeach(COLOUR_SPACE)
 
 # Network source using the observer pattern
 foreach(COLOUR_SPACE ${COLOUR_SPACES})
-    SET(NAME_TEST Test_Network_ObserverPattern_${COLOUR_SPACE}_${NETWORK_SOURCE_FRAME_RATE}fps)
+    SET(NAME_TEST Test_Network_ObserverPattern_${COLOUR_SPACE}_${TESTING_NETWORK_SOURCE_FRAME_RATE}fps)
 
     ADD_TEST(NAME ${NAME_TEST}
-        COMMAND py.test --address=${NETWORK_SOURCE_ADDRESS} --colour-space=${COLOUR_SPACE} --frame-rate=${NETWORK_SOURCE_FRAME_RATE} --observers=3 --init-delay=${TESTING_NETWORK_SOURCE_DELAY} test_observer.py
+        COMMAND py.test --address=${NETWORK_SOURCE_ADDRESS} --colour-space=${COLOUR_SPACE} --frame-rate=${TESTING_NETWORK_SOURCE_FRAME_RATE} --observers=3 --init-delay=${TESTING_NETWORK_SOURCE_DELAY} test_observer.py
     )
     LIST(APPEND TESTS_LIST ${NAME_TEST})
 endforeach(COLOUR_SPACE)
