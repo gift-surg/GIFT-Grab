@@ -99,12 +99,12 @@ class GiftGrabInstallCommand(install):
         @return
         """
         str_rep = ''
+        if not self.no_bgra:
+            str_rep += 'BGRA,'
+        if not self.no_i420:
+            str_rep += 'I420,'
         if self.epiphan_dvi2pcie_duo:
-            str_rep += 'Epiphan DVI2PCIe Duo,'
-            if not self.no_bgra:
-                str_rep += ' BGRA,'
-            if not self.no_i420:
-                str_rep += ' I420,'
+            str_rep += ' Epiphan DVI2PCIe Duo,'
             if self.epiphansdk and self.enable_nonfree:
                 str_rep += ' using Epiphan SDK,'
         if self.network_sources:
