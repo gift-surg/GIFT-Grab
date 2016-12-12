@@ -1,5 +1,5 @@
 from pytest import mark
-from utils import FrameRateTimer
+from giftgrab.tests.utils import FrameRateTimer
 import pygiftgrab as pgg
 import time
 
