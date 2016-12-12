@@ -20,47 +20,28 @@ TARGET_LINK_LIBRARIES(
     ${LIBS} ${NAME}
 )
 foreach(COLOUR_SPACE ${COLOUR_SPACES})
-    # This is due to issue #135
-    if(COLOUR_SPACE STREQUAL "I420")
-        SET(NETWORK_SOURCE_DELAY_PARAM ${TESTING_NETWORK_SOURCE_DELAY})
-    endif(COLOUR_SPACE STREQUAL "I420")
-
     SET(NAME_TEST Test_Network_VideoSourceFactory_${COLOUR_SPACE})
     ADD_TEST(NAME ${NAME_TEST}
-        COMMAND ${VIDEO_SOURCE_FACTORY_TEST} ${NETWORK_SOURCE_ADDRESS} ${COLOUR_SPACE} ${NETWORK_SOURCE_DELAY_PARAM}
+        COMMAND ${VIDEO_SOURCE_FACTORY_TEST} ${NETWORK_SOURCE_ADDRESS} ${COLOUR_SPACE} ${TESTING_NETWORK_SOURCE_DELAY}
     )
     LIST(APPEND TESTS_LIST ${NAME_TEST})
 endforeach(COLOUR_SPACE)
 
 # The actual network source
 foreach(COLOUR_SPACE ${COLOUR_SPACES})
-    # This is due to issue #135
-    if(COLOUR_SPACE STREQUAL "I420")
-        SET(NETWORK_SOURCE_DELAY_VALUE ${TESTING_NETWORK_SOURCE_DELAY})
-    else(COLOUR_SPACE STREQUAL "I420")
-        SET(NETWORK_SOURCE_DELAY_VALUE 0)
-    endif(COLOUR_SPACE STREQUAL "I420")
-
     SET(NAME_TEST Test_Network_${COLOUR_SPACE})
     ADD_TEST(NAME ${NAME_TEST}
-        COMMAND py.test --address=${NETWORK_SOURCE_ADDRESS} --colour-space=${COLOUR_SPACE} --init-delay=${NETWORK_SOURCE_DELAY_VALUE} test_unit.py
+        COMMAND py.test --address=${NETWORK_SOURCE_ADDRESS} --colour-space=${COLOUR_SPACE} --init-delay=${TESTING_NETWORK_SOURCE_DELAY} test_unit.py
     )
     LIST(APPEND TESTS_LIST ${NAME_TEST})
 endforeach(COLOUR_SPACE)
 
 # Network source using the observer pattern
 foreach(COLOUR_SPACE ${COLOUR_SPACES})
-    # This is due to issue #135
-    if(COLOUR_SPACE STREQUAL "I420")
-        SET(NETWORK_SOURCE_DELAY_VALUE ${TESTING_NETWORK_SOURCE_DELAY})
-    else(COLOUR_SPACE STREQUAL "I420")
-        SET(NETWORK_SOURCE_DELAY_VALUE 0)
-    endif(COLOUR_SPACE STREQUAL "I420")
-
     SET(NAME_TEST Test_Network_ObserverPattern_${COLOUR_SPACE}_${NETWORK_SOURCE_FRAME_RATE}fps)
 
     ADD_TEST(NAME ${NAME_TEST}
-        COMMAND py.test --address=${NETWORK_SOURCE_ADDRESS} --colour-space=${COLOUR_SPACE} --frame-rate=${NETWORK_SOURCE_FRAME_RATE} --observers=3 --init-delay=${NETWORK_SOURCE_DELAY_VALUE} test_observer.py
+        COMMAND py.test --address=${NETWORK_SOURCE_ADDRESS} --colour-space=${COLOUR_SPACE} --frame-rate=${NETWORK_SOURCE_FRAME_RATE} --observers=3 --init-delay=${TESTING_NETWORK_SOURCE_DELAY} test_observer.py
     )
     LIST(APPEND TESTS_LIST ${NAME_TEST})
 endforeach(COLOUR_SPACE)
