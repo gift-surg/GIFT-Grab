@@ -5,6 +5,11 @@ FILE(COPY
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
 )
 
+# If user has not defined network source delay
+if(NOT DEFINED TESTING_NETWORK_SOURCE_DELAY)
+    SET(TESTING_NETWORK_SOURCE_DELAY 0.0)
+endif(NOT DEFINED TESTING_NETWORK_SOURCE_DELAY)
+
 # VideoSourceFactory
 SET(VIDEO_SOURCE_FACTORY_TEST test_video_source_factory_network_source)
 ADD_EXECUTABLE(
