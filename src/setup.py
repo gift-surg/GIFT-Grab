@@ -78,6 +78,7 @@ class GiftGrabInstallCommand(install):
 
     user_options = install.user_options + \
                   [('epiphan-dvi2pcie-duo', None, None),
+                   ('network-sources', None, None)
                    ('epiphansdk', None, None),
                    ('no-bgra', None, None),
                    ('no-i420', None, None),
@@ -106,6 +107,8 @@ class GiftGrabInstallCommand(install):
                 str_rep += ' I420,'
             if self.epiphansdk and self.enable_nonfree:
                 str_rep += ' using Epiphan SDK,'
+        if self.network_sources:
+            str_rep += ' Network sources,'
         if self.xvid:
             str_rep += ' Xvid,'
         if self.vp9:
@@ -125,6 +128,7 @@ class GiftGrabInstallCommand(install):
     def initialize_options(self):
         install.initialize_options(self)
         self.epiphan_dvi2pcie_duo = None
+        self.network_sources = None
         self.epiphansdk = None
         self.no_bgra = None
         self.no_i420 = None
@@ -228,6 +232,7 @@ class GiftGrabInstallCommand(install):
 
         # check OpenCV
         if (self.epiphan_dvi2pcie_duo and not self.no_bgra) \
+           or (self.network_sources and not self.no_bgra) \
            or self.xvid:
             cmd = ['cmake', join(join(self.here, 'cmake'), 'opencv')]
             err_msg = '%s\n%s%s' % (
@@ -237,15 +242,17 @@ class GiftGrabInstallCommand(install):
             )
             self.__check_command(cmd, err_msg)
 
-        # check libVLC
-        if self.epiphan_dvi2pcie_duo and not self.no_i420:
+        # check libVLC and/or Epiphan SDK
+        if (self.epiphan_dvi2pcie_duo and not self.no_i420 \
+           or (self.network_sources and not self.no_i420):
             if self.epiphansdk and self.enable_nonfree:
                 cmd = ['cmake', join(self.here, 'cmake', 'epiphansdk')]
                 err_msg = '%s' % (
                     'Epiphan SDK does not seem to be available on your system.',
                 )
                 self.__check_command(cmd, err_msg)
-            else:
+
+            if self.network_sources or not self.epiphansdk:
                 cmd = ['cmake', join(join(self.here, 'cmake'), 'libvlc')]
                 err_msg = '%s\n%s%s' % (
                     'libVLC does not seem to be installed on your system.',
@@ -359,6 +366,8 @@ class GiftGrabInstallCommand(install):
             if self.epiphansdk:
                 cmake_args.append('-DENABLE_NONFREE=ON')
                 cmake_args.append('-DUSE_EPIPHANSDK=ON')
+        if self.network_sources:
+            cmake_args.append('-DUSE_NETWORK_SOURCES=ON')
         if self.xvid:
             cmake_args.append('-DUSE_XVID=ON')
         if self.hevc:
