@@ -76,7 +76,7 @@ def __run_network_tests(colour_space):
         )
     var_name = 'TESTING_NETWORK_SOURCE_FRAME_RATE'
     testing_network_source_frame_rate = os.environ.get(var_name)
-    if testing_network_source_address is None:
+    if testing_network_source_frame_rate is None:
         fail('%s %s %s' % ('Environment variable ',
                            var_name,
                            ' needs to be set for testing network source support')
@@ -86,7 +86,7 @@ def __run_network_tests(colour_space):
     if os.environ.get(var_name):
         testing_network_source_delay_buffer = os.environ.get(var_name)
         try:
-            testing_network_source_frame_rate = float(testing_network_source_delay_buffer)
+            testing_network_source_delay = float(testing_network_source_delay_buffer)
         except ValueError as e:
             fail('Could not parse %s value %s' % (var_name,
                                                   testing_network_source_delay_buffer)
