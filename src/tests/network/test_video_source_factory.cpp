@@ -59,6 +59,19 @@ TEST_CASE( "connect_network_source returns connection", "[VideoSourceFactory]" )
     delete source;
 }
 
+TEST_CASE( "Valid but uavailable network source address throws exception", "[VideoSourceFactory]" )
+{
+    gg::VideoSourceFactory & factory =  gg::VideoSourceFactory::get_instance();
+    IVideoSource * source = nullptr;
+    REQUIRE_THROWS_AS(
+        source = factory.connect_network_source("rtsp://localhost:554/stream.sdp", colour),
+        gg::NetworkSourceUnavailable
+    );
+    REQUIRE( source == nullptr );
+
+    delete source;
+}
+
 TEST_CASE( "Invalid network source address throws exception", "[VideoSourceFactory]" )
 {
     gg::VideoSourceFactory & factory =  gg::VideoSourceFactory::get_instance();
