@@ -93,6 +93,10 @@ Features can be customised as per the combinations listed below. Please note tha
    * `<port>` is one of `dvi` or `sdi`
    * `<codec>` is one of `xvid`, `hevc`, or `vp9`
 * `test-giftgrab-numpy-<colour_space>` to test NumPy support, provided GIFT-Grab was built with it (requires NumPy, obviously).
+* `test-giftgrab-network-sources-<colour_space>` to test support for network sources, provided GIFT-Grab was built with it. This requires the following environment variables to be set:
+   * `TESTING_NETWORK_SOURCE_ADDRESS`: the [MRL of your network source](https://wiki.videolan.org/Media_resource_locator) for testing
+   * `TESTING_NETWORK_SOURCE_FRAME_RATE`: the frame rate you want to test against
+   * `TESTING_NETWORK_SOURCE_DELAY`: the initialisation time of your network source in seconds (e.g. current GIFT-Grab I420 network source support needs typically 5 to 10 sec., floating point values can be specified as well). This is optional and if not set, assumed to be 0.0 sec.
 
 Funding
 -------
