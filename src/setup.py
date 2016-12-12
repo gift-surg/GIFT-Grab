@@ -488,6 +488,9 @@ for colour_space in ['bgra', 'i420']:
 #'test-giftgrab-epiphan-dvi2pcieduo-bgra=giftgrab.tests:test_epiphan_dvi2pcieduo_bgra',
 console_scripts = console_scripts +\
                   ['test-giftgrab-epiphan-dvi2pcieduo-i420=giftgrab.tests:test_epiphan_dvi2pcieduo_i420']
+console_scripts = console_scripts +\
+                  ['test-giftgrab-network-sources-bgra=giftgrab.tests:test_network_sources_bgra',
+                   'test-giftgrab-network-sources-i420=giftgrab.tests:test_network_sources_i420']
 setup(
     name='gift-grab',
     version='16.08.24rc1',
