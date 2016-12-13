@@ -106,7 +106,7 @@ def __run_network_tests(colour_space):
     observers = 3
     ret = main(['--address=%s' % (testing_network_source_address),
                 '--colour-space=%s' % (colour_space),
-                '--frame-rate=%f' % (testing_network_source_frame_rate),
+                '--frame-rate=%i' % (testing_network_source_frame_rate),
                 '--observers=%i' % (observers),
                 '--init-delay=%f' % (testing_network_source_delay),
                 network_sources_working_dir, '-m', 'observer_pattern'])
