@@ -154,6 +154,10 @@ IVideoSource * VideoSourceFactory::get_device(Device device,
         }
         break;
 
+    // Blackmagic DeckLink SDI 4K ========================================
+    case DeckLinkSDI4K:
+        throw VideoSourceError("Blackmagic DeckLink SDI 4K support not implemented yet");
+
     // unsupported device ========================================
     default:
         std::string msg;

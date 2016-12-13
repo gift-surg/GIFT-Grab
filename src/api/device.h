@@ -14,8 +14,9 @@ static const size_t NUM_DEVICES = 2;
 //!
 enum Device
 {
-    DVI2PCIeDuo_DVI,
-    DVI2PCIeDuo_SDI
+    DVI2PCIeDuo_DVI
+    , DVI2PCIeDuo_SDI
+    , DeckLinkSDI4K
 };
 
 }
