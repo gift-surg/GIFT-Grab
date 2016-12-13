@@ -25,6 +25,8 @@ OPTION(USE_EPIPHAN_DVI2PCIE_DUO
     "Capture video with Epiphan DVI2PCIe Duo" OFF)
 OPTION(USE_NETWORK_SOURCES
     "Capture video from network sources" OFF)
+OPTION(USE_BLACKMAGIC_DECKLINK_SDI_4K
+    "Capture video with Blackmagic DeckLink SDI 4K" OFF)
 OPTION(USE_HEVC
     "Video encoding with HEVC (requires FFmpeg, pkg-config and kvazaar [default] or x265 [turn USE_X265 on])" OFF)
 OPTION(USE_X265
@@ -107,6 +109,13 @@ if(USE_NETWORK_SOURCES)
         MESSAGE(FATAL_ERROR "At least one colour space must be activated to use network sources")
     endif(NOT USE_BGRA AND NOT USE_I420)
 endif(USE_NETWORK_SOURCES)
+
+# Check at least one colour space activated if using Blackmagic DeckLink SDI 4K
+if(USE_BLACKMAGIC_DECKLINK_SDI_4K)
+    if(NOT USE_BGRA AND NOT USE_I420)
+        MESSAGE(FATAL_ERROR "At least one colour space must be activated to use Blackmagic DeckLink SDI 4K")
+    endif(NOT USE_BGRA AND NOT USE_I420)
+endif(USE_BLACKMAGIC_DECKLINK_SDI_4K)
 
 # Determine whether OpenCV needed
 if(((USE_EPIPHAN_DVI2PCIE_DUO OR USE_NETWORK_SOURCES) AND USE_BGRA) OR
