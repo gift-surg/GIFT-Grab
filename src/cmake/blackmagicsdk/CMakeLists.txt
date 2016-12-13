@@ -14,9 +14,6 @@ SET(DeckLinkAPI_LIB decklinkapi)
 ADD_LIBRARY(${DeckLinkAPI_LIB}
     ${BlackmagicSDK_INCLUDE_DIRS}/DeckLinkAPIDispatch.cpp
 )
-TARGET_LINK_LIBRARIES(${DeckLinkAPI_LIB}
-    ${CMAKE_THREAD_LIBS_INIT}
-)
 
 SET(BlackmagicSDK_LIBS
     ${DeckLinkAPI_LIB}
