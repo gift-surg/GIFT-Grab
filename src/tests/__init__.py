@@ -82,7 +82,7 @@ def __run_network_tests(colour_space):
                            ' needs to be set for testing network source support')
         )
     else:
-        testing_network_source_frame_rate = float(testing_network_source_frame_rate_buffer)
+        testing_network_source_frame_rate = int(testing_network_source_frame_rate_buffer)
 
     var_name = 'TESTING_NETWORK_SOURCE_DELAY'
     testing_network_source_delay = 0.0
