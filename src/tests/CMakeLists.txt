@@ -55,3 +55,8 @@ endif(USE_EPIPHAN_DVI2PCIE_DUO)
 if(USE_NETWORK_SOURCES)
     SUBDIRS(network)
 endif(USE_NETWORK_SOURCES)
+
+# Blackmagic DeckLink SDI 4K tests
+if(USE_BLACKMAGIC_DECKLINK_SDI_4K)
+    SUBDIRS(blackmagic/decklinksdi4k)
+endif(USE_BLACKMAGIC_DECKLINK_SDI_4K)
