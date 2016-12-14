@@ -2,6 +2,7 @@
 
 #include "ivideosource.h"
 #include "macros.h"
+#include <DeckLinkAPI.h>
 
 namespace gg
 {
@@ -12,7 +13,9 @@ namespace gg
 //!
 //! \author Based on the work by Luis Carlos Garcia-Peraza-Herrera
 //!
-class VideoSourceBlackmagicSDK : public IVideoSource
+class VideoSourceBlackmagicSDK
+    : public IVideoSource
+    , public IDeckLinkInputCallback
 {
 protected:
     //!
@@ -46,6 +49,25 @@ public:
     void set_sub_frame(int x, int y, int width, int height) override;
 
     void get_full_frame() override;
+
+    // IDeckLinkInputCallback overrides:
+
+    HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, LPVOID * ppv);
+
+    ULONG STDMETHODCALLTYPE AddRef(void);
+
+    ULONG STDMETHODCALLTYPE Release(void);
+
+    HRESULT STDMETHODCALLTYPE VideoInputFormatChanged(
+        BMDVideoInputFormatChangedEvents events,
+        IDeckLinkDisplayMode * display_mode,
+        BMDDetectedVideoInputFormatFlags format_flags
+    );
+
+    HRESULT STDMETHODCALLTYPE VideoInputFrameArrived(
+        IDeckLinkVideoInputFrame * video_frame,
+        IDeckLinkAudioInputPacket * audio_packet
+    );
 
 private:
     DISALLOW_COPY_AND_ASSIGNMENT(VideoSourceBlackmagicSDK);

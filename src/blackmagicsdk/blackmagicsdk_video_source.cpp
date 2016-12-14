@@ -54,4 +54,41 @@ void VideoSourceBlackmagicSDK::get_full_frame()
     // TODO
 }
 
+
+HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::QueryInterface(REFIID iid, LPVOID * ppv)
+{
+    // TODO
+}
+
+
+ULONG STDMETHODCALLTYPE VideoSourceBlackmagicSDK::AddRef(void)
+{
+    // TODO
+}
+
+
+ULONG STDMETHODCALLTYPE VideoSourceBlackmagicSDK::Release(void)
+{
+    // TODO
+}
+
+
+HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::VideoInputFormatChanged(
+    BMDVideoInputFormatChangedEvents events,
+    IDeckLinkDisplayMode * display_mode,
+    BMDDetectedVideoInputFormatFlags format_flags
+)
+{
+    // TODO
+}
+
+
+HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::VideoInputFrameArrived(
+    IDeckLinkVideoInputFrame * video_frame,
+    IDeckLinkAudioInputPacket * audio_packet
+)
+{
+    // TODO
+}
+
 }
