@@ -16,7 +16,8 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK()
 }
 
 
-VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(ColourSpace colour)
+VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
+                                                   ColourSpace colour)
     : IVideoSource(colour)
     , _video_buffer(nullptr)
     , _video_buffer_length(0)
@@ -32,8 +33,29 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(ColourSpace colour)
         throw VideoSourceError("DeckLink drivers do not appear to be installed");
     }
 
+    HRESULT res;
+
+    // Get the desired DeckLink index (port)
+    int idx = deck_link_index;
+    while ((res = deck_link_iterator->Next(&_deck_link)) == S_OK)
+    {
+        if (idx == 0)
+            break;
+        --idx;
+
+        _deck_link->Release();
+    }
     if (deck_link_iterator != nullptr)
         deck_link_iterator->Release();
+
+    // If no glory, release everything and throw exception
+    if (res != S_OK or _deck_link == nullptr)
+    {
+        release_deck_link();
+        throw VideoSourceError(
+            std::string("Could not get DeckLink device ").append(std::to_string(deck_link_index))
+        );
+    }
 }
 
 

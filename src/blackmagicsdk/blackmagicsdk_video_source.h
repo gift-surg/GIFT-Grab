@@ -55,11 +55,14 @@ public:
     //! \brief Initialise communication with a Blackmagic
     //! framegrabber for capturing frames in the passed \c colour
     //! space
+    //! \param deck_link_index The identifier index of the
+    //! DeckLink card (port) to connect to
     //! \param colour
     //! \throw VideoSourceError with a detailed error message if
     //! connection attempt fails
     //!
-    VideoSourceBlackmagicSDK(ColourSpace colour);
+    VideoSourceBlackmagicSDK(size_t deck_link_index,
+                             ColourSpace colour);
 
     //!
     //! \brief Finalise communication with used framegrabber and
