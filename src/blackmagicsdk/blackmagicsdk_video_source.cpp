@@ -88,16 +88,74 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
         throw VideoSourceError("Could not set the callback of Blackmagic DeckLink device");
     }
 
-    // Enable video input
-    res = _deck_link_input->EnableVideoInput(
-        bmdModeHD1080p6000, bmdFormat8BitBGRA,
-        bmdVideoInputFlagDefault | bmdVideoInputEnableFormatDetection
-    );
-    // No glory: release everything and throw exception
-    if (res != S_OK)
+    // Try to set the first available of the following modes (in descending frame-rate order)
+    std::vector<BMDDisplayMode> display_modes =
+        { bmdModeHD1080p6000, bmdModeHD1080p5994, bmdModeHD1080p50,
+          bmdModeHD1080p30, bmdModeHD1080p2997, bmdModeHD1080p25,
+          bmdModeHD1080p24, bmdModeHD1080p2398 };
+    // and BGRA as pixel format
+    BMDPixelFormat pixel_format = bmdFormat8BitBGRA;
+    // and these video flags
+    BMDVideoInputFlags video_input_flags = bmdVideoInputFlagDefault | bmdVideoInputEnableFormatDetection;
+    // These two are output variables
+    BMDDisplayModeSupport display_mode_support;
+    IDeckLinkDisplayMode * deck_link_display_mode = nullptr;
+    // Flag for indicating the result of the video input enable attempt
+    bool enabled_video_input = false;
+    // And an error string to be set according to any failing intermediate step
+    std::string error_msg = "";
+
+    // Now loop through the set of modes
+    for (BMDDisplayMode display_mode : display_modes)
+    {
+        // Check whether the mode is supported
+        res = _deck_link_input->DoesSupportVideoMode(
+            display_mode, pixel_format, video_input_flags,
+            &display_mode_support, &deck_link_display_mode
+        );
+        // No glory (could not even check mode support)
+        if (res != S_OK or deck_link_display_mode == nullptr)
+        {
+            error_msg = "Could not check video mode support of Blackmagic DeckLink device";
+            break;
+        }
+
+        // If mode supported, set it and exit loop
+        if (display_mode_support == bmdDisplayModeSupported)
+        {
+            // Enable video input
+            res = _deck_link_input->EnableVideoInput(display_mode,
+                                                     pixel_format,
+                                                     video_input_flags);
+            // No glory
+            if (res != S_OK)
+            {
+                error_msg = "Could not enable video input of Blackmagic DeckLink device";
+                break;
+            }
+        }
+
+        // Release the DeckLink display mode object at each iteration
+        if (deck_link_display_mode != nullptr)
+            deck_link_display_mode->Release();
+
+        if (enabled_video_input)
+            break;
+    }
+
+    // Release the DeckLink display mode object in case loop pre-maturely broken
+    if (deck_link_display_mode != nullptr)
+        deck_link_display_mode->Release();
+
+    // No glory (loop exited without success): release everything and throw exception
+    if (not enabled_video_input)
     {
         release_deck_link();
-        throw VideoSourceError("Could not enable video input of Blackmagic DeckLink device");
+        // If all modes checked, and none is supported!
+        if (error_msg.empty())
+            error_msg = "Could not enable video input of Blackmagic DeckLink device";
+        // Else: an intermediate step went wrong, so put that into the exception
+        throw VideoSourceError(error_msg);
     }
 
     // Disable audio input
