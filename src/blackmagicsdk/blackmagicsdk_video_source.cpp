@@ -85,6 +85,18 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
         release_deck_link();
         throw VideoSourceError("Could not set the callback of Blackmagic DeckLink device");
     }
+
+    // Enable video input
+    res = _deck_link_input->EnableVideoInput(
+        bmdModeHD1080p6000, bmdFormat8BitBGRA,
+        bmdVideoInputFlagDefault | bmdVideoInputEnableFormatDetection
+    );
+    // No glory: release everything and throw exception
+    if (res != S_OK)
+    {
+        release_deck_link();
+        throw VideoSourceError("Could not enable video input of Blackmagic DeckLink device");
+    }
 }
 
 
