@@ -3,6 +3,7 @@
 #include "ivideosource.h"
 #include "macros.h"
 #include <DeckLinkAPI.h>
+#include <mutex>
 
 namespace gg
 {
@@ -18,6 +19,13 @@ class VideoSourceBlackmagicSDK
     , public IDeckLinkInputCallback
 {
 protected:
+    //!
+    //! \brief This mutex will be locked when writing to or
+    //! reading from the data buffer
+    //! \sa _video_buffer
+    //!
+    std::mutex _data_lock;
+
     //!
     //! \brief Buffer for a video frame
     //!
