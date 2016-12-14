@@ -146,6 +146,8 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
                 error_msg = "Could not enable video input of Blackmagic DeckLink device";
                 break;
             }
+
+            enabled_video_input = true;
         }
 
         // Release the DeckLink display mode object at each iteration
