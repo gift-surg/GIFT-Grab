@@ -150,7 +150,10 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
 
         // Release the DeckLink display mode object at each iteration
         if (deck_link_display_mode != nullptr)
+        {
             deck_link_display_mode->Release();
+            deck_link_display_mode = nullptr;
+        }
 
         if (enabled_video_input)
             break;
