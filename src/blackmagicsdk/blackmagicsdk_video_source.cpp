@@ -108,17 +108,35 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
         release_deck_link();
         throw VideoSourceError("Could not disable audio input of Blackmagic DeckLink device");
     }
+
+    // Start streaming
+    _running = true;
+    res = _deck_link_input->StartStreams();
+    // No glory: release everything and throw exception
+    if (res != S_OK)
+    {
+        _running = false;
+        release_deck_link();
+        throw VideoSourceError("Could not start streaming from the Blackmagic DeckLink device");
+    }
 }
 
 
 VideoSourceBlackmagicSDK::~VideoSourceBlackmagicSDK()
 {
+    // Make sure streamer thread not trying to access buffer
+    std::lock_guard<std::mutex> data_lock_guard(_data_lock);
+    _running = false;
+
+    // Stop streaming and disable enabled inputs
+    _deck_link_input->StopStreams();
+    _deck_link_input->DisableVideoInput();
+
     // Release DeckLink members
     release_deck_link();
 
     // Release allocated memory
     free(_video_buffer);
-    // TODO
 }
 
 
