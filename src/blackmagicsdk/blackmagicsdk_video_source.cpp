@@ -59,8 +59,7 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
     }
     if (deck_link_iterator != nullptr)
         deck_link_iterator->Release();
-
-    // If no glory, release everything and throw exception
+    // No glory: release everything and throw exception
     if (res != S_OK or _deck_link == nullptr)
     {
         release_deck_link();
@@ -69,10 +68,9 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
         );
     }
 
-    // Else, get the input interface of connected DeckLink port
+    // Get the input interface of connected DeckLink port
     res = _deck_link->QueryInterface(IID_IDeckLinkInput, reinterpret_cast<void **>(&_deck_link_input));
-
-    // Could not obtain the input interface, so throw exception
+    // No glory: release everything and throw exception
     if (res != S_OK)
     {
         release_deck_link();
@@ -83,7 +81,10 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
 
 VideoSourceBlackmagicSDK::~VideoSourceBlackmagicSDK()
 {
+    // Release DeckLink members
     release_deck_link();
+
+    // Release allocated memory
     free(_video_buffer);
     // TODO
 }
