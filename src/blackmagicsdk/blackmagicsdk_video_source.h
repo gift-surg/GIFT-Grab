@@ -34,6 +34,16 @@ protected:
     //!
     VideoFrame _buffer_video_frame;
 
+    //!
+    //! \brief Manages the connection to the DeckLink hardware
+    //!
+    IDeckLink * _deck_link;
+
+    //!
+    //! \brief Manages the input from the DeckLink hardware
+    //!
+    IDeckLinkInput * _deck_link_input;
+
 protected:
     //!
     //! \brief Default constructor that initialises nothing
@@ -85,6 +95,13 @@ public:
         IDeckLinkVideoInputFrame * video_frame,
         IDeckLinkAudioInputPacket * audio_packet
     );
+
+protected:
+    //!
+    //! \brief Release all data structures and members
+    //! related to DeckLink devices
+    //!
+    void release_deck_link() noexcept;
 
 private:
     DISALLOW_COPY_AND_ASSIGNMENT(VideoSourceBlackmagicSDK);

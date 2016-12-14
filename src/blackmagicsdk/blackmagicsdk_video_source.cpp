@@ -21,13 +21,15 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(ColourSpace colour)
     , _video_buffer(nullptr)
     , _video_buffer_length(0)
     , _buffer_video_frame(VideoFrame(colour, false)) // TODO manage data?
+    , _deck_link(nullptr)
+    , _deck_link_input(nullptr)
 {
-    // TODO
 }
 
 
 VideoSourceBlackmagicSDK::~VideoSourceBlackmagicSDK()
 {
+    release_deck_link();
     free(_video_buffer);
     // TODO
 }
@@ -99,6 +101,21 @@ HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::VideoInputFrameArrived(
 )
 {
     // TODO
+}
+
+
+void VideoSourceBlackmagicSDK::release_deck_link() noexcept
+{
+    this->Release();
+
+    if (_deck_link_input != nullptr)
+    {
+        _deck_link_input->Release();
+        _deck_link_input = nullptr;
+    }
+
+    if (_deck_link != nullptr)
+        _deck_link->Release();
 }
 
 }
