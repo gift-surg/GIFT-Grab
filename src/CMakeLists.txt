@@ -254,6 +254,7 @@ if(USE_BLACKMAGICSDK)
     LIST(APPEND LIBS ${BlackmagicSDK_LIBS})
     ADD_DEFINITIONS(-DUSE_BLACKMAGICSDK)
 
+    INCLUDE_DIRECTORIES(blackmagicsdk)
     LIST(APPEND HEADERS blackmagicsdk/blackmagicsdk_video_source.h)
     LIST(APPEND SOURCES blackmagicsdk/blackmagicsdk_video_source.cpp)
 endif(USE_BLACKMAGICSDK)
