@@ -5,6 +5,12 @@ namespace gg
 
 VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK()
     : IVideoSource()
+    , _video_buffer(nullptr)
+    , _video_buffer_length(0)
+    // This constructor should never be called,
+    // therefore setting I420 arbitrarily for the
+    // buffer video frame here.
+    , _buffer_video_frame(VideoFrame(I420))
 {
     // nop
 }
@@ -12,6 +18,9 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK()
 
 VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(ColourSpace colour)
     : IVideoSource(colour)
+    , _video_buffer(nullptr)
+    , _video_buffer_length(0)
+    , _buffer_video_frame(VideoFrame(colour, false)) // TODO manage data?
 {
     // TODO
 }
@@ -19,6 +28,7 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(ColourSpace colour)
 
 VideoSourceBlackmagicSDK::~VideoSourceBlackmagicSDK()
 {
+    free(_video_buffer);
     // TODO
 }
 

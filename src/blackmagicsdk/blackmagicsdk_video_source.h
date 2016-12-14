@@ -19,6 +19,23 @@ class VideoSourceBlackmagicSDK
 {
 protected:
     //!
+    //! \brief Buffer for a video frame
+    //!
+    uint8_t * _video_buffer;
+
+    //!
+    //! \brief Total amount of memory allocated for a video frame
+    //!
+    size_t _video_buffer_length;
+
+    //!
+    //! \brief This video frame object will be used for notifying
+    //! the observers
+    //!
+    VideoFrame _buffer_video_frame;
+
+protected:
+    //!
     //! \brief Default constructor that initialises nothing
     //!
     VideoSourceBlackmagicSDK();
