@@ -56,6 +56,16 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
             std::string("Could not get DeckLink device ").append(std::to_string(deck_link_index))
         );
     }
+
+    // Else, get the input interface of connected DeckLink port
+    res = _deck_link->QueryInterface(IID_IDeckLinkInput, reinterpret_cast<void **>(&_deck_link_input));
+
+    // Could not obtain the input interface, so throw exception
+    if (res != S_OK)
+    {
+        release_deck_link();
+        throw VideoSourceError("Could not connect to any Blackmagic DeckLink device");
+    }
 }
 
 
