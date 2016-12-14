@@ -125,6 +125,17 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
         // If mode supported, set it and exit loop
         if (display_mode_support == bmdDisplayModeSupported)
         {
+            // Get frame rate of DeckLink device
+            BMDTimeValue frame_rate_duration, frame_rate_scale;
+            res = deck_link_display_mode->GetFrameRate(&frame_rate_duration, &frame_rate_scale);
+            // No glory
+            if (res != S_OK)
+            {
+                error_msg = "Could not infer frame rate of Blackmagic DeckLink device";
+                break;
+            }
+            _frame_rate = (double) frame_rate_scale / (double) frame_rate_duration;
+
             // Enable video input
             res = _deck_link_input->EnableVideoInput(display_mode,
                                                      pixel_format,
