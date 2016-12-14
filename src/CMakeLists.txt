@@ -253,6 +253,9 @@ if(USE_BLACKMAGICSDK)
     INCLUDE_DIRECTORIES(${BlackmagicSDK_INCLUDE_DIRS})
     LIST(APPEND LIBS ${BlackmagicSDK_LIBS})
     ADD_DEFINITIONS(-DUSE_BLACKMAGICSDK)
+
+    LIST(APPEND HEADERS blackmagicsdk/blackmagicsdk_video_source.h)
+    LIST(APPEND SOURCES blackmagicsdk/blackmagicsdk_video_source.cpp)
 endif(USE_BLACKMAGICSDK)
 
 # Performance benchmarking
