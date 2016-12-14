@@ -24,6 +24,16 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(ColourSpace colour)
     , _deck_link(nullptr)
     , _deck_link_input(nullptr)
 {
+    // Get an iterator through the available DeckLink ports
+    IDeckLinkIterator * deck_link_iterator = CreateDeckLinkIteratorInstance();
+    if (deck_link_iterator == nullptr)
+    {
+        release_deck_link();
+        throw VideoSourceError("DeckLink drivers do not appear to be installed");
+    }
+
+    if (deck_link_iterator != nullptr)
+        deck_link_iterator->Release();
 }
 
 
