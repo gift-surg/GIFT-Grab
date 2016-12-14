@@ -20,6 +20,11 @@ class VideoSourceBlackmagicSDK
 {
 protected:
     //!
+    //! \brief
+    //!
+    double _frame_rate;
+
+    //!
     //! \brief This mutex will be locked when writing to or
     //! reading from the data buffer
     //! \sa _video_buffer

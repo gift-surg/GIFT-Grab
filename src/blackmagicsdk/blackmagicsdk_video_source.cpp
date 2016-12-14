@@ -5,6 +5,7 @@ namespace gg
 
 VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK()
     : IVideoSource()
+    , _frame_rate(0.0)
     , _video_buffer(nullptr)
     , _video_buffer_length(0)
     // This constructor should never be called,
@@ -20,6 +21,7 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK()
 VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
                                                    ColourSpace colour)
     : IVideoSource(colour)
+    , _frame_rate(0.0)
     , _video_buffer(nullptr)
     , _video_buffer_length(0)
     , _buffer_video_frame(VideoFrame(colour, false)) // TODO manage data?
@@ -213,8 +215,7 @@ bool VideoSourceBlackmagicSDK::get_frame(VideoFrame & frame)
 
 double VideoSourceBlackmagicSDK::get_frame_rate()
 {
-    // TODO
-    return 0;
+    return _frame_rate;
 }
 
 
