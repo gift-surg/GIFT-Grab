@@ -12,7 +12,7 @@ SET(BlackmagicSDK_INCLUDE_DIRS
 INCLUDE_DIRECTORIES(${BlackmagicSDK_INCLUDE_DIRS})
 
 SET(DeckLinkAPI_LIB decklinkapi)
-ADD_LIBRARY(${DeckLinkAPI_LIB}
+ADD_LIBRARY(${DeckLinkAPI_LIB} SHARED
     $ENV{BlackmagicSDK_DIR}/Linux/include/DeckLinkAPIDispatch.cpp
 )
 
