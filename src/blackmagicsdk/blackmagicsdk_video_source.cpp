@@ -25,6 +25,18 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
     , _deck_link(nullptr)
     , _deck_link_input(nullptr)
 {
+    switch(_colour)
+    {
+    case BGRA:
+        break;
+    case I420:
+    default:
+        release_deck_link();
+        throw VideoSourceError(
+            "BlackmagicSDK video source supports only BGRA"
+        );
+    }
+
     // Get an iterator through the available DeckLink ports
     IDeckLinkIterator * deck_link_iterator = CreateDeckLinkIteratorInstance();
     if (deck_link_iterator == nullptr)
