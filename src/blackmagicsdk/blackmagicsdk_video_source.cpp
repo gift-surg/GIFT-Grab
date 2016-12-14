@@ -8,6 +8,8 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK()
     , _frame_rate(0.0)
     , _video_buffer(nullptr)
     , _video_buffer_length(0)
+    , _cols(0)
+    , _rows(0)
     // This constructor should never be called,
     // therefore setting I420 arbitrarily for the
     // buffer video frame here.
@@ -24,6 +26,8 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
     , _frame_rate(0.0)
     , _video_buffer(nullptr)
     , _video_buffer_length(0)
+    , _cols(0)
+    , _rows(0)
     , _buffer_video_frame(VideoFrame(colour, false)) // TODO manage data?
     , _deck_link(nullptr)
     , _deck_link_input(nullptr)
@@ -206,19 +210,21 @@ VideoSourceBlackmagicSDK::~VideoSourceBlackmagicSDK()
 
     // Stop streaming and disable enabled inputs
     _deck_link_input->StopStreams();
-    _deck_link_input->DisableVideoInput();
 
     // Release DeckLink members
     release_deck_link();
-
-    // Release allocated memory
-    free(_video_buffer);
 }
 
 
 bool VideoSourceBlackmagicSDK::get_frame_dimensions(int & width, int & height)
 {
     // TODO
+    if (_cols <= 0 or _rows <= 0)
+        return false;
+
+    width = _cols;
+    height = _rows;
+    return true;
 }
 
 

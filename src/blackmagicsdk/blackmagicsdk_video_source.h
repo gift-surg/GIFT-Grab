@@ -42,6 +42,16 @@ protected:
     size_t _video_buffer_length;
 
     //!
+    //! \brief Video frame width
+    //!
+    size_t _cols;
+
+    //!
+    //! \brief Video frame height
+    //!
+    size_t _rows;
+
+    //!
     //! \brief This video frame object will be used for notifying
     //! the observers
     //!
