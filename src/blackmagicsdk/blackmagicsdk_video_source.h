@@ -52,6 +52,11 @@ protected:
     //!
     IDeckLinkInput * _deck_link_input;
 
+    //!
+    //! \brief Flag indicating streaming status
+    //!
+    bool _running;
+
 protected:
     //!
     //! \brief Default constructor that initialises nothing

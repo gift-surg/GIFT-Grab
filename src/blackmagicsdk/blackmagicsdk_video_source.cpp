@@ -11,6 +11,7 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK()
     // therefore setting I420 arbitrarily for the
     // buffer video frame here.
     , _buffer_video_frame(VideoFrame(I420))
+    , _running(false)
 {
     // nop
 }
@@ -24,6 +25,7 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
     , _buffer_video_frame(VideoFrame(colour, false)) // TODO manage data?
     , _deck_link(nullptr)
     , _deck_link_input(nullptr)
+    , _running(false)
 {
     switch(_colour)
     {
