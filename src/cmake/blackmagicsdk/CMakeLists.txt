@@ -9,10 +9,11 @@ SET(BlackmagicSDK_INCLUDE_DIRS
     $ENV{BlackmagicSDK_DIR}/Linux/include
     CACHE INTERNAL "Blackmagic Desktop Video SDK include dirs"
 )
+INCLUDE_DIRECTORIES(${BlackmagicSDK_INCLUDE_DIRS})
 
 SET(DeckLinkAPI_LIB decklinkapi)
 ADD_LIBRARY(${DeckLinkAPI_LIB}
-    ${BlackmagicSDK_INCLUDE_DIRS}/DeckLinkAPIDispatch.cpp
+    $ENV{BlackmagicSDK_DIR}/Linux/include/DeckLinkAPIDispatch.cpp
 )
 
 SET(BlackmagicSDK_LIBS
