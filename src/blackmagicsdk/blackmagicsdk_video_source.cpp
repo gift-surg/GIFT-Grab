@@ -269,7 +269,10 @@ ULONG STDMETHODCALLTYPE VideoSourceBlackmagicSDK::AddRef(void)
 
 ULONG STDMETHODCALLTYPE VideoSourceBlackmagicSDK::Release(void)
 {
-    // TODO
+    int32_t new_n_ref = __sync_sub_and_fetch(&_n_ref, 1);
+    if (new_n_ref == 0)
+        delete this;
+    return new_n_ref;
 }
 
 
@@ -294,8 +297,6 @@ HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::VideoInputFrameArrived(
 
 void VideoSourceBlackmagicSDK::release_deck_link() noexcept
 {
-    this->Release();
-
     if (_deck_link_input != nullptr)
     {
         _deck_link_input->Release();
