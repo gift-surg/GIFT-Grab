@@ -218,7 +218,8 @@ VideoSourceBlackmagicSDK::~VideoSourceBlackmagicSDK()
 
 bool VideoSourceBlackmagicSDK::get_frame_dimensions(int & width, int & height)
 {
-    // TODO
+    // Make sure only this thread is accessing the cols and rows members now
+    std::lock_guard<std::mutex> data_lock_guard(_data_lock);
     if (_cols <= 0 or _rows <= 0)
         return false;
 
@@ -230,6 +231,9 @@ bool VideoSourceBlackmagicSDK::get_frame_dimensions(int & width, int & height)
 
 bool VideoSourceBlackmagicSDK::get_frame(VideoFrame & frame)
 {
+    // Make sure only this thread is accessing the video frame data now
+    std::lock_guard<std::mutex> data_lock_guard(_data_lock);
+
     if (_video_buffer_length > 0 and _cols > 0 and _rows > 0)
     {
         frame.init_from_specs(_video_buffer, _video_buffer_length, _cols, _rows);
