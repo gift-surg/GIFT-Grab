@@ -82,7 +82,7 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
     if (res != S_OK)
     {
         release_deck_link();
-        throw VideoSourceError("Could not connect to any Blackmagic DeckLink device");
+        throw VideoSourceError("Could not get the Blackmagic DeckLink input interface");
     }
 
     // Set this object (IDeckLinkInputCallback instance) as callback
@@ -175,7 +175,8 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
         release_deck_link();
         // If all modes checked, and none is supported!
         if (error_msg.empty())
-            error_msg = "Could not enable video input of Blackmagic DeckLink device";
+            error_msg = "Your Blackmagic DeckLink device does not "
+                        "seem to support a 1080p mode";
         // Else: an intermediate step went wrong, so put that into the exception
         throw VideoSourceError(error_msg);
     }
