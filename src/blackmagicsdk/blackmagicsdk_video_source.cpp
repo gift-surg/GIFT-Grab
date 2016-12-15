@@ -264,7 +264,7 @@ void VideoSourceBlackmagicSDK::get_full_frame()
 
 HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::QueryInterface(REFIID iid, LPVOID * ppv)
 {
-    // TODO
+    return E_NOINTERFACE;
 }
 
 
