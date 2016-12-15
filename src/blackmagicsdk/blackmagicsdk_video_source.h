@@ -72,6 +72,12 @@ protected:
     //!
     bool _running;
 
+    //!
+    //! \brief Reference count
+    //! \sa AddRef()
+    //!
+    int32_t _n_ref;
+
 protected:
     //!
     //! \brief Default constructor that initialises nothing

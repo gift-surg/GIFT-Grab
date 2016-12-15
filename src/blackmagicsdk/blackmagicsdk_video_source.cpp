@@ -270,7 +270,7 @@ HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::QueryInterface(REFIID iid, L
 
 ULONG STDMETHODCALLTYPE VideoSourceBlackmagicSDK::AddRef(void)
 {
-    // TODO
+    return __sync_add_and_fetch(&_n_ref, 1);
 }
 
 
