@@ -290,7 +290,47 @@ HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::VideoInputFrameArrived(
     IDeckLinkAudioInputPacket * audio_packet
 )
 {
-    // TODO
+    // Not processing the audio packet, but only the video
+    // frame for the time being
+    if (video_frame == nullptr)
+        // nop if no data
+        return S_OK;
+
+    // Nr. of bytes of received data
+    size_t n_bytes = video_frame->GetRowBytes() * video_frame->GetHeight();
+
+    // Make sure only this thread is accessing the buffer now
+    std::lock_guard<std::mutex> data_lock_guard(_data_lock);
+
+    // Extend buffer if more memory needed than already allocated
+    if (n_bytes > _video_buffer_length)
+        _video_buffer = reinterpret_cast<uint8_t *>(
+                    realloc(_video_buffer, n_bytes * sizeof(uint8_t))
+        );
+    if (_video_buffer == nullptr) // something's terribly wrong!
+        // nop if something's terribly wrong!
+        return S_OK;
+
+    // Get the new data into the buffer
+    HRESULT res = video_frame->GetBytes(
+        reinterpret_cast<void **>(&_video_buffer)
+    );
+    // If data could not be read into the buffer, return
+    if (FAILED(res))
+        return res;
+    // Set video frame specs according to new data
+    _video_buffer_length = n_bytes;
+    _cols = video_frame->GetWidth();
+    _rows = video_frame->GetHeight();
+
+    // Propagate new video frame to observers
+    _buffer_video_frame.init_from_specs(
+        _video_buffer, _video_buffer_length, _cols, _rows
+    );
+    this->notify(_buffer_video_frame);
+
+    // Everything went fine, return success
+    return S_OK;
 }
 
 
