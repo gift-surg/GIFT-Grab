@@ -75,6 +75,7 @@ protected:
     //!
     //! \brief Reference count
     //! \sa AddRef()
+    //! \sa Release()
     //!
     int32_t _n_ref;
 
