@@ -230,8 +230,13 @@ bool VideoSourceBlackmagicSDK::get_frame_dimensions(int & width, int & height)
 
 bool VideoSourceBlackmagicSDK::get_frame(VideoFrame & frame)
 {
-    // TODO
-    return false;
+    if (_video_buffer_length > 0 and _cols > 0 and _rows > 0)
+    {
+        frame.init_from_specs(_video_buffer, _video_buffer_length, _cols, _rows);
+        return true;
+    }
+    else
+        return false;
 }
 
 
