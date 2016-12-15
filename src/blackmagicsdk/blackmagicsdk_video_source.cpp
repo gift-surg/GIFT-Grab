@@ -181,15 +181,6 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
         throw VideoSourceError(error_msg);
     }
 
-    // Disable audio input
-    res = _deck_link_input->DisableAudioInput();
-    // No glory: release everything and throw exception
-    if (res != S_OK)
-    {
-        release_deck_link();
-        throw VideoSourceError("Could not disable audio input of Blackmagic DeckLink device");
-    }
-
     // Start streaming
     _running = true;
     res = _deck_link_input->StartStreams();
