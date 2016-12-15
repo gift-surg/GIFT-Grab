@@ -263,16 +263,15 @@ HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::QueryInterface(REFIID iid, L
 
 ULONG STDMETHODCALLTYPE VideoSourceBlackmagicSDK::AddRef(void)
 {
-    return __sync_add_and_fetch(&_n_ref, 1);
+    __sync_add_and_fetch(&_n_ref, 1);
+    return _n_ref;
 }
 
 
 ULONG STDMETHODCALLTYPE VideoSourceBlackmagicSDK::Release(void)
 {
-    int32_t new_n_ref = __sync_sub_and_fetch(&_n_ref, 1);
-    if (new_n_ref == 0)
-        delete this;
-    return new_n_ref;
+    __sync_sub_and_fetch(&_n_ref, 1);
+    return _n_ref;
 }
 
 
