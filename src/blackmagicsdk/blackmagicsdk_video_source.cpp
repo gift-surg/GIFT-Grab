@@ -35,13 +35,14 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
 {
     switch(_colour)
     {
-    case BGRA:
+    case UYVY:
         break;
+    case BGRA:
     case I420:
     default:
         release_deck_link();
         throw VideoSourceError(
-            "BlackmagicSDK video source supports only BGRA"
+            "BlackmagicSDK video source supports only the UYVY colour space"
         );
     }
 
@@ -100,7 +101,7 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
           bmdModeHD1080p30, bmdModeHD1080p2997, bmdModeHD1080p25,
           bmdModeHD1080p24, bmdModeHD1080p2398 };
     // and BGRA as pixel format
-    BMDPixelFormat pixel_format = bmdFormat8BitBGRA;
+    BMDPixelFormat pixel_format = bmdFormat8BitYUV;
     // and these video flags
     BMDVideoInputFlags video_input_flags = bmdVideoInputFlagDefault | bmdVideoInputEnableFormatDetection;
     // These two are output variables
