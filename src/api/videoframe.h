@@ -28,8 +28,9 @@ namespace gg
 //!
 enum ColourSpace
 {
-    BGRA,
-    I420
+    BGRA
+    , I420
+    , UYVY
 };
 
 //!

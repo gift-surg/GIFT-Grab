@@ -181,8 +181,11 @@ void VideoFrame::set_dimensions(size_t cols, size_t rows)
         if (_rows % 2 == 1) ++_rows;
         break;
     case BGRA:
+    case UYVY:
     default:
         // nop
+        // Also not caring if colour space not set properly,
+        // as this function is for internal use only
         break;
     }
 }
@@ -218,6 +221,9 @@ size_t VideoFrame::get_data_length() const
     case I420:
         // 1 for Y plane, 0.5 for UV plane
         return _cols * _rows * 1.5; // both dimensions always even due to set_dimensions()
+
+    case UYVY:
+        return _cols * _rows * 2; // 2 bytes per pixel, see http://www.fourcc.org/pixel-format/yuv-uyvy/
 
     default:
         throw BasicException("Colour space indicator not set properly, cannot compute memory requirement");
