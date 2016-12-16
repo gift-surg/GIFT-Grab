@@ -97,9 +97,7 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
 
     // Try to set the first available of the following modes (in descending frame-rate order)
     std::vector<BMDDisplayMode> display_modes =
-        { bmdModeHD1080p6000, bmdModeHD1080p5994, bmdModeHD1080p50,
-          bmdModeHD1080p30, bmdModeHD1080p2997, bmdModeHD1080p25,
-          bmdModeHD1080p24, bmdModeHD1080p2398 };
+        { bmdModeHD1080i6000, bmdModeHD1080i5994, bmdModeHD1080i50 };
     // and BGRA as pixel format
     BMDPixelFormat pixel_format = bmdFormat8BitYUV;
     // and these video flags
