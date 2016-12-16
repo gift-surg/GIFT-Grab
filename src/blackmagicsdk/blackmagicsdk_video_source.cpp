@@ -224,6 +224,9 @@ bool VideoSourceBlackmagicSDK::get_frame_dimensions(int & width, int & height)
 
 bool VideoSourceBlackmagicSDK::get_frame(VideoFrame & frame)
 {
+    if (frame.colour() != _colour)
+        return false;
+
     // Make sure only this thread is accessing the video frame data now
     std::lock_guard<std::mutex> data_lock_guard(_data_lock);
 
