@@ -120,7 +120,7 @@ protected:
     //! \brief
     //! \sa _sws_context
     //!
-    int _bgra_stride[1];
+    int _stride[1];
 
 public:
     //!
