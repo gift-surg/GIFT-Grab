@@ -141,6 +141,19 @@ protected:
     //!
     void release_deck_link() noexcept;
 
+    //!
+    //! \brief Throw a VideoSourceError with the specified
+    //! \c error_msg, after releasing DeckLink allocations
+    //! \param error_msg
+    //! \throw VideoSourceError
+    //! \sa release_deck_link()
+    //!
+    inline void bail(std::string error_msg)
+    {
+        release_deck_link();
+        throw VideoSourceError(error_msg);
+    }
+
 private:
     DISALLOW_COPY_AND_ASSIGNMENT(VideoSourceBlackmagicSDK);
 };

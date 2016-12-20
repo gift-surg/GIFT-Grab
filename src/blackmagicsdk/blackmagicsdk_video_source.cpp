@@ -100,9 +100,6 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
         throw VideoSourceError("Could not set the callback of Blackmagic DeckLink device");
     }
 
-    // Try to set the first available of the following modes (in descending frame-rate order)
-    std::vector<BMDDisplayMode> display_modes =
-        { bmdModeHD1080i6000, bmdModeHD1080i5994, bmdModeHD1080i50 };
     // and these video flags
     BMDVideoInputFlags video_input_flags = bmdVideoInputFlagDefault | bmdVideoInputEnableFormatDetection;
     // These two are output variables
@@ -110,11 +107,9 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
     IDeckLinkDisplayMode * deck_link_display_mode = nullptr;
     // Flag for indicating the result of the video input enable attempt
     bool enabled_video_input = false;
-    // And an error string to be set according to any failing intermediate step
-    std::string error_msg = "";
 
-    // Now loop through the set of modes
-    for (BMDDisplayMode display_mode : display_modes)
+    // Set the input format (i.e. display mode)
+    BMDDisplayMode display_mode = bmdModeHD1080i6000;
     {
         // Check whether the mode is supported
         res = _deck_link_input->DoesSupportVideoMode(
@@ -123,10 +118,7 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
         );
         // No glory (could not even check mode support)
         if (res != S_OK or deck_link_display_mode == nullptr)
-        {
-            error_msg = "Could not check video mode support of Blackmagic DeckLink device";
-            break;
-        }
+            bail("Could not check video mode support of Blackmagic DeckLink device");
 
         // If mode supported, set it and exit loop
         if (display_mode_support == bmdDisplayModeSupported)
@@ -136,10 +128,7 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
             res = deck_link_display_mode->GetFrameRate(&frame_rate_duration, &frame_rate_scale);
             // No glory
             if (res != S_OK)
-            {
-                error_msg = "Could not infer frame rate of Blackmagic DeckLink device";
-                break;
-            }
+                bail("Could not infer frame rate of Blackmagic DeckLink device");
             _frame_rate = (double) frame_rate_scale / (double) frame_rate_duration;
 
             // Enable video input
@@ -148,10 +137,7 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
                                                      video_input_flags);
             // No glory
             if (res != S_OK)
-            {
-                error_msg = "Could not enable video input of Blackmagic DeckLink device";
-                break;
-            }
+                bail("Could not enable video input of Blackmagic DeckLink device");
 
             enabled_video_input = true;
         }
@@ -162,9 +148,6 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
             deck_link_display_mode->Release();
             deck_link_display_mode = nullptr;
         }
-
-        if (enabled_video_input)
-            break;
     }
 
     // Release the DeckLink display mode object in case loop pre-maturely broken
@@ -173,15 +156,7 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
 
     // No glory (loop exited without success): release everything and throw exception
     if (not enabled_video_input)
-    {
-        release_deck_link();
-        // If all modes checked, and none is supported!
-        if (error_msg.empty())
-            error_msg = "Your Blackmagic DeckLink device does not "
-                        "seem to support a 1080p mode";
-        // Else: an intermediate step went wrong, so put that into the exception
-        throw VideoSourceError(error_msg);
-    }
+        bail("Could not enable video input on your Blackmagic DeckLink device");
 
     // Start streaming
     _running = true;
@@ -190,8 +165,7 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
     if (res != S_OK)
     {
         _running = false;
-        release_deck_link();
-        throw VideoSourceError("Could not start streaming from the Blackmagic DeckLink device");
+        bail("Could not start streaming from the Blackmagic DeckLink device");
     }
 }
 
