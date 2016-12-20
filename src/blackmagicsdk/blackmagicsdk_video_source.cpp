@@ -45,19 +45,13 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
         break;
     case I420:
     default:
-        release_deck_link();
-        throw VideoSourceError(
-            "BlackmagicSDK video source supports only the BGRA and UYVY colour spaces"
-        );
+        bail("BlackmagicSDK video source supports only the BGRA and UYVY colour spaces");
     }
 
     // Get an iterator through the available DeckLink ports
     IDeckLinkIterator * deck_link_iterator = CreateDeckLinkIteratorInstance();
     if (deck_link_iterator == nullptr)
-    {
-        release_deck_link();
-        throw VideoSourceError("DeckLink drivers do not appear to be installed");
-    }
+        bail("DeckLink drivers do not appear to be installed");
 
     HRESULT res;
 
@@ -75,30 +69,21 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
         deck_link_iterator->Release();
     // No glory: release everything and throw exception
     if (res != S_OK or _deck_link == nullptr)
-    {
-        release_deck_link();
-        throw VideoSourceError(
+        bail(
             std::string("Could not get DeckLink device ").append(std::to_string(deck_link_index))
         );
-    }
 
     // Get the input interface of connected DeckLink port
     res = _deck_link->QueryInterface(IID_IDeckLinkInput, reinterpret_cast<void **>(&_deck_link_input));
     // No glory: release everything and throw exception
     if (res != S_OK)
-    {
-        release_deck_link();
-        throw VideoSourceError("Could not get the Blackmagic DeckLink input interface");
-    }
+        bail("Could not get the Blackmagic DeckLink input interface");
 
     // Set this object (IDeckLinkInputCallback instance) as callback
     res = _deck_link_input->SetCallback(this);
     // No glory: release everything and throw exception
     if (res != S_OK)
-    {
-        release_deck_link();
-        throw VideoSourceError("Could not set the callback of Blackmagic DeckLink device");
-    }
+        bail("Could not set the callback of Blackmagic DeckLink device");
 
     // Set the input format (i.e. display mode)
     BMDDisplayMode display_mode;
