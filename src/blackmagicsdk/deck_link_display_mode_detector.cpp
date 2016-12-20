@@ -28,46 +28,46 @@ DeckLinkDisplayModeDetector::DeckLinkDisplayModeDetector(IDeckLinkInput * deck_l
     BMDDisplayModeSupport display_mode_support;
     IDeckLinkDisplayMode * deck_link_display_mode = nullptr;
     HRESULT res;
-    // TODO
-    bool video_mode_supported = true;
 
-    // TODO
-    _display_mode = bmdModeHD1080i6000;
-
-    // Check whether the mode is supported
-    res = _deck_link_input->DoesSupportVideoMode(
-        _display_mode, _pixel_format, _video_input_flags,
-        &display_mode_support, &deck_link_display_mode
-    );
-    // No glory (could not even check mode support)
-    if (res != S_OK or deck_link_display_mode == nullptr)
+    for (BMDDisplayMode display_mode : _display_modes_to_check)
     {
-        video_mode_supported = false;
-        _error_msg = "Could not check video mode support of Blackmagic DeckLink device";
-    }
-    else
-    {
-        // If mode supported, then get frame rate
-        if (display_mode_support == bmdDisplayModeSupported)
+        // Check whether the mode is supported
+        _display_mode = display_mode;
+        res = _deck_link_input->DoesSupportVideoMode(
+            _display_mode, _pixel_format, _video_input_flags,
+            &display_mode_support, &deck_link_display_mode
+        );
+        // No glory (could not even check mode support)
+        if (res != S_OK)
         {
-            // Get frame rate of DeckLink device
-            BMDTimeValue frame_rate_duration, frame_rate_scale;
-            res = deck_link_display_mode->GetFrameRate(&frame_rate_duration, &frame_rate_scale);
-            // No glory
-            if (res != S_OK)
-            {
-                video_mode_supported = false;
-                _error_msg = "Could not infer frame rate of Blackmagic DeckLink device";
-            }
-            else
-                _frame_rate = (double) frame_rate_scale / (double) frame_rate_duration;
+            _error_msg = "Could not check video mode support of Blackmagic DeckLink device";
+            break;
+        }
+
+        // Mode not supported: go to next one
+        if (display_mode_support != bmdDisplayModeSupported
+            or deck_link_display_mode == nullptr)
+            continue;
+
+        // Glory!
+        if (_display_mode != bmdModeUnknown)
+            break;
+    }
+
+    // If mode supported, then get frame rate
+    if (_display_mode != bmdModeUnknown)
+    {
+        // Get frame rate of DeckLink device
+        BMDTimeValue frame_rate_duration, frame_rate_scale;
+        res = deck_link_display_mode->GetFrameRate(&frame_rate_duration, &frame_rate_scale);
+        // No glory
+        if (res != S_OK)
+        {
+            _display_mode = bmdModeUnknown;
+            _error_msg = "Could not infer frame rate of Blackmagic DeckLink device";
         }
         else
-        {
-            video_mode_supported = false;
-            // TODO
-            _error_msg = "Your DeckLink device does not support 1080i @ 60 Hz";
-        }
+            _frame_rate = (double) frame_rate_scale / (double) frame_rate_duration;
     }
 
     // Release the DeckLink display mode object
@@ -76,9 +76,6 @@ DeckLinkDisplayModeDetector::DeckLinkDisplayModeDetector(IDeckLinkInput * deck_l
         deck_link_display_mode->Release();
         deck_link_display_mode = nullptr;
     }
-
-    if (not video_mode_supported)
-        _display_mode = bmdModeUnknown;
 }
 
 
