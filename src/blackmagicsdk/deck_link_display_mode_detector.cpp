@@ -24,7 +24,7 @@ DeckLinkDisplayModeDetector::DeckLinkDisplayModeDetector(IDeckLinkInput * deck_l
     , _frame_rate(0.0)
     , _error_msg("")
 {
-    // TODO
+    // nop
 }
 
 
