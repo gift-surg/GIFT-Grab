@@ -55,7 +55,16 @@ DeckLinkDisplayModeDetector::DeckLinkDisplayModeDetector(IDeckLinkInput * deck_l
         if (res != S_OK) // No glory: check next display mode
             continue;
 
-        // Disable video input
+        // Start streaming for checking input coming
+        res = _deck_link_input->StartStreams();
+        if (res != S_OK) // No glory: check next display mode
+        {
+            _deck_link_input->DisableVideoInput();
+            continue;
+        }
+
+        // Stop streaming and disable video input
+        _deck_link_input->StopStreams();
         _deck_link_input->DisableVideoInput();
 
         // Glory!
