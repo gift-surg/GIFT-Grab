@@ -50,6 +50,14 @@ DeckLinkDisplayModeDetector::DeckLinkDisplayModeDetector(IDeckLinkInput * deck_l
             or deck_link_display_mode == nullptr)
             continue;
 
+        // Enable video input for checking input coming
+        res = _deck_link_input->EnableVideoInput(display_mode, _pixel_format, _video_input_flags);
+        if (res != S_OK) // No glory: check next display mode
+            continue;
+
+        // Disable video input
+        _deck_link_input->DisableVideoInput();
+
         // Glory!
         if (_display_mode != bmdModeUnknown)
             break;
