@@ -104,8 +104,7 @@ double DeckLinkDisplayModeDetector::get_frame_rate() noexcept
 
 std::string DeckLinkDisplayModeDetector::get_error_msg() noexcept
 {
-    // TODO
-    return "";
+    return _error_msg;
 }
 
 
