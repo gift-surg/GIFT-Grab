@@ -36,8 +36,63 @@ DeckLinkDisplayModeDetector::~DeckLinkDisplayModeDetector()
 
 BMDDisplayMode DeckLinkDisplayModeDetector::get_display_mode() noexcept
 {
+    // These are output and result variables
+    BMDDisplayModeSupport display_mode_support;
+    IDeckLinkDisplayMode * deck_link_display_mode = nullptr;
+    HRESULT res;
     // TODO
-    return bmdModeUnknown;
+    bool video_mode_supported = true;
+
+    // TODO
+    _display_mode = bmdModeHD1080i6000;
+
+    // Check whether the mode is supported
+    res = _deck_link_input->DoesSupportVideoMode(
+        _display_mode, _pixel_format, _video_input_flags,
+        &display_mode_support, &deck_link_display_mode
+    );
+    // No glory (could not even check mode support)
+    if (res != S_OK or deck_link_display_mode == nullptr)
+    {
+        video_mode_supported = false;
+        _error_msg = "Could not check video mode support of Blackmagic DeckLink device";
+    }
+    else
+    {
+        // If mode supported, then get frame rate
+        if (display_mode_support == bmdDisplayModeSupported)
+        {
+            // Get frame rate of DeckLink device
+            BMDTimeValue frame_rate_duration, frame_rate_scale;
+            res = deck_link_display_mode->GetFrameRate(&frame_rate_duration, &frame_rate_scale);
+            // No glory
+            if (res != S_OK)
+            {
+                video_mode_supported = false;
+                _error_msg = "Could not infer frame rate of Blackmagic DeckLink device";
+            }
+            else
+                _frame_rate = (double) frame_rate_scale / (double) frame_rate_duration;
+        }
+        else
+        {
+            video_mode_supported = false;
+            // TODO
+            _error_msg = "Your DeckLink device does not support 1080i @ 60 Hz";
+        }
+    }
+
+    // Release the DeckLink display mode object
+    if (deck_link_display_mode != nullptr)
+    {
+        deck_link_display_mode->Release();
+        deck_link_display_mode = nullptr;
+    }
+
+    if (not video_mode_supported)
+        _display_mode = bmdModeUnknown;
+
+    return _display_mode;
 }
 
 
