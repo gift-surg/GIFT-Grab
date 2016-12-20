@@ -56,6 +56,12 @@ protected:
     //!
     std::string _error_msg;
 
+    //!
+    //! \brief Flag indicating whether the streaming
+    //! thread is running
+    //!
+    bool _running;
+
 protected:
     //!
     //! \brief Default constructor that should not be used

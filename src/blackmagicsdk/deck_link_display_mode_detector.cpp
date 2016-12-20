@@ -1,4 +1,6 @@
 #include "deck_link_display_mode_detector.h"
+#include <thread>
+#include <chrono>
 
 namespace gg
 {
@@ -7,6 +9,7 @@ DeckLinkDisplayModeDetector::DeckLinkDisplayModeDetector()
     : _deck_link_input(nullptr)
     , _display_mode(bmdModeUnknown)
     , _error_msg("This constructor should never be used")
+    , _running(false)
 {
     // nop
 }
@@ -23,6 +26,7 @@ DeckLinkDisplayModeDetector::DeckLinkDisplayModeDetector(IDeckLinkInput * deck_l
     , _display_mode(bmdModeUnknown)
     , _frame_rate(0.0)
     , _error_msg("")
+    , _running(false)
 {
     // These are output and result variables
     BMDDisplayModeSupport display_mode_support;
@@ -56,12 +60,18 @@ DeckLinkDisplayModeDetector::DeckLinkDisplayModeDetector(IDeckLinkInput * deck_l
             continue;
 
         // Start streaming for checking input coming
+        _running = true;
         res = _deck_link_input->StartStreams();
         if (res != S_OK) // No glory: check next display mode
         {
+            _running = false;
             _deck_link_input->DisableVideoInput();
             continue;
         }
+
+        // Allow input to come through
+        while (_running)
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
         // Stop streaming and disable video input
         _deck_link_input->StopStreams();
@@ -158,11 +168,14 @@ HRESULT STDMETHODCALLTYPE DeckLinkDisplayModeDetector::VideoInputFrameArrived(
     IDeckLinkAudioInputPacket * audio_packet
 )
 {
-    if (video_frame != nullptr)
+    if (_running)
     {
-        if (not (video_frame->GetFlags() & bmdFrameHasNoInputSource))
-            // TODO
-            ;
+        if (video_frame != nullptr)
+        {
+            if (video_frame->GetFlags() & bmdFrameHasNoInputSource)
+                _display_mode = bmdModeUnknown;
+            _running = false;
+        }
     }
     return S_OK;
 }
