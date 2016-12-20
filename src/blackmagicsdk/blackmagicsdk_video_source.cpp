@@ -80,18 +80,18 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
     if (res != S_OK)
         bail("Could not get the Blackmagic DeckLink input interface");
 
-    // Set this object (IDeckLinkInputCallback instance) as callback
-    res = _deck_link_input->SetCallback(this);
-    // No glory: release everything and throw exception
-    if (res != S_OK)
-        bail("Could not set the callback of Blackmagic DeckLink device");
-
     // Set the input format (i.e. display mode)
     BMDDisplayMode display_mode;
     std::string error_msg = "";
     BMDVideoInputFlags video_input_flags = bmdVideoInputFlagDefault | bmdVideoInputEnableFormatDetection;
     if (not detect_input_format(pixel_format, video_input_flags, display_mode, _frame_rate, error_msg))
         bail(error_msg);
+
+    // Set this object (IDeckLinkInputCallback instance) as callback
+    res = _deck_link_input->SetCallback(this);
+    // No glory: release everything and throw exception
+    if (res != S_OK)
+        bail("Could not set the callback of Blackmagic DeckLink device");
 
     // Enable video input
     res = _deck_link_input->EnableVideoInput(display_mode,

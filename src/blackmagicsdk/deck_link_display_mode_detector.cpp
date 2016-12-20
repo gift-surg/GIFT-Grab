@@ -29,6 +29,7 @@ DeckLinkDisplayModeDetector::DeckLinkDisplayModeDetector(IDeckLinkInput * deck_l
     IDeckLinkDisplayMode * deck_link_display_mode = nullptr;
     HRESULT res;
 
+    _deck_link_input->SetCallback(this);
     for (BMDDisplayMode display_mode : _display_modes_to_check)
     {
         // Check whether the mode is supported
@@ -53,6 +54,7 @@ DeckLinkDisplayModeDetector::DeckLinkDisplayModeDetector(IDeckLinkInput * deck_l
         if (_display_mode != bmdModeUnknown)
             break;
     }
+    _deck_link_input->SetCallback(nullptr);
 
     // If mode supported, then get frame rate
     if (_display_mode != bmdModeUnknown)
