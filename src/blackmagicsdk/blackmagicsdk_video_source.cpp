@@ -100,63 +100,20 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
         throw VideoSourceError("Could not set the callback of Blackmagic DeckLink device");
     }
 
-    // and these video flags
-    BMDVideoInputFlags video_input_flags = bmdVideoInputFlagDefault | bmdVideoInputEnableFormatDetection;
-    // These two are output variables
-    BMDDisplayModeSupport display_mode_support;
-    IDeckLinkDisplayMode * deck_link_display_mode = nullptr;
-    // Flag for indicating the result of the video input enable attempt
-    bool enabled_video_input = false;
-
     // Set the input format (i.e. display mode)
-    BMDDisplayMode display_mode = bmdModeHD1080i6000;
-    {
-        // Check whether the mode is supported
-        res = _deck_link_input->DoesSupportVideoMode(
-            display_mode, pixel_format, video_input_flags,
-            &display_mode_support, &deck_link_display_mode
-        );
-        // No glory (could not even check mode support)
-        if (res != S_OK or deck_link_display_mode == nullptr)
-            bail("Could not check video mode support of Blackmagic DeckLink device");
+    BMDDisplayMode display_mode;
+    std::string error_msg = "";
+    BMDVideoInputFlags video_input_flags = bmdVideoInputFlagDefault | bmdVideoInputEnableFormatDetection;
+    if (not detect_input_format(pixel_format, video_input_flags, display_mode, _frame_rate, error_msg))
+        bail(error_msg);
 
-        // If mode supported, set it and exit loop
-        if (display_mode_support == bmdDisplayModeSupported)
-        {
-            // Get frame rate of DeckLink device
-            BMDTimeValue frame_rate_duration, frame_rate_scale;
-            res = deck_link_display_mode->GetFrameRate(&frame_rate_duration, &frame_rate_scale);
-            // No glory
-            if (res != S_OK)
-                bail("Could not infer frame rate of Blackmagic DeckLink device");
-            _frame_rate = (double) frame_rate_scale / (double) frame_rate_duration;
-
-            // Enable video input
-            res = _deck_link_input->EnableVideoInput(display_mode,
-                                                     pixel_format,
-                                                     video_input_flags);
-            // No glory
-            if (res != S_OK)
-                bail("Could not enable video input of Blackmagic DeckLink device");
-
-            enabled_video_input = true;
-        }
-
-        // Release the DeckLink display mode object at each iteration
-        if (deck_link_display_mode != nullptr)
-        {
-            deck_link_display_mode->Release();
-            deck_link_display_mode = nullptr;
-        }
-    }
-
-    // Release the DeckLink display mode object in case loop pre-maturely broken
-    if (deck_link_display_mode != nullptr)
-        deck_link_display_mode->Release();
-
-    // No glory (loop exited without success): release everything and throw exception
-    if (not enabled_video_input)
-        bail("Could not enable video input on your Blackmagic DeckLink device");
+    // Enable video input
+    res = _deck_link_input->EnableVideoInput(display_mode,
+                                             pixel_format,
+                                             video_input_flags);
+    // No glory
+    if (res != S_OK)
+        bail("Could not enable video input of Blackmagic DeckLink device");
 
     // Start streaming
     _running = true;
@@ -323,6 +280,71 @@ void VideoSourceBlackmagicSDK::release_deck_link() noexcept
 
     if (_deck_link != nullptr)
         _deck_link->Release();
+}
+
+
+bool VideoSourceBlackmagicSDK::detect_input_format(BMDPixelFormat pixel_format,
+                                                   BMDVideoInputFlags video_input_flags,
+                                                   BMDDisplayMode & display_mode,
+                                                   double & frame_rate,
+                                                   std::string & error_msg) noexcept
+{
+    // These are output and result variables
+    BMDDisplayModeSupport display_mode_support;
+    IDeckLinkDisplayMode * deck_link_display_mode = nullptr;
+    HRESULT res;
+    bool detected = true;
+
+    // TODO
+    BMDDisplayMode display_mode_ = bmdModeHD1080i6000;
+
+    // Check whether the mode is supported
+    res = _deck_link_input->DoesSupportVideoMode(
+        display_mode_, pixel_format, video_input_flags,
+        &display_mode_support, &deck_link_display_mode
+    );
+    // No glory (could not even check mode support)
+    if (res != S_OK or deck_link_display_mode == nullptr)
+    {
+        detected = false;
+        error_msg = "Could not check video mode support of Blackmagic DeckLink device";
+    }
+    else
+    {
+        // If mode supported, then get frame rate
+        if (display_mode_support == bmdDisplayModeSupported)
+        {
+            // Get frame rate of DeckLink device
+            BMDTimeValue frame_rate_duration, frame_rate_scale;
+            res = deck_link_display_mode->GetFrameRate(&frame_rate_duration, &frame_rate_scale);
+            // No glory
+            if (res != S_OK)
+            {
+                detected = false;
+                error_msg = "Could not infer frame rate of Blackmagic DeckLink device";
+            }
+            else
+                frame_rate = (double) frame_rate_scale / (double) frame_rate_duration;
+        }
+        else
+        {
+            detected = false;
+            // TODO
+            error_msg = "TODO";
+        }
+    }
+
+    // Release the DeckLink display mode object
+    if (deck_link_display_mode != nullptr)
+    {
+        deck_link_display_mode->Release();
+        deck_link_display_mode = nullptr;
+    }
+
+    if (detected)
+        display_mode = display_mode_;
+
+    return detected;
 }
 
 }

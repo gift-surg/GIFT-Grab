@@ -142,6 +142,24 @@ protected:
     void release_deck_link() noexcept;
 
     //!
+    //! \brief Try to detect the input video format, i.e.
+    //! the display mode as well as the frame rate
+    //! \param pixel_format Use this pixel format
+    //! \param video_input_flags Use these video flags
+    //! \param display_mode
+    //! \param frame_rate
+    //! \param error_msg
+    //! \return \c true on success, \c false otherwise,
+    //! accompanied by a detailed error message, which
+    //! could be used for instance for throwing an exception
+    //!
+    bool detect_input_format(BMDPixelFormat pixel_format,
+                             BMDVideoInputFlags video_input_flags,
+                             BMDDisplayMode & display_mode,
+                             double & frame_rate,
+                             std::string & error_msg) noexcept;
+
+    //!
     //! \brief Throw a VideoSourceError with the specified
     //! \c error_msg, after releasing DeckLink allocations
     //! \param error_msg
