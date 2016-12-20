@@ -43,8 +43,7 @@ BMDDisplayMode DeckLinkDisplayModeDetector::get_display_mode() noexcept
 
 double DeckLinkDisplayModeDetector::get_frame_rate() noexcept
 {
-    // TODO
-    return 0.0;
+    return _frame_rate;
 }
 
 
