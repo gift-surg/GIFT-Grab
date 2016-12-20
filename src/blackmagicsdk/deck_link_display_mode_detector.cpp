@@ -24,18 +24,6 @@ DeckLinkDisplayModeDetector::DeckLinkDisplayModeDetector(IDeckLinkInput * deck_l
     , _frame_rate(0.0)
     , _error_msg("")
 {
-    // nop
-}
-
-
-DeckLinkDisplayModeDetector::~DeckLinkDisplayModeDetector()
-{
-    // nop
-}
-
-
-BMDDisplayMode DeckLinkDisplayModeDetector::get_display_mode() noexcept
-{
     // These are output and result variables
     BMDDisplayModeSupport display_mode_support;
     IDeckLinkDisplayMode * deck_link_display_mode = nullptr;
@@ -91,7 +79,17 @@ BMDDisplayMode DeckLinkDisplayModeDetector::get_display_mode() noexcept
 
     if (not video_mode_supported)
         _display_mode = bmdModeUnknown;
+}
 
+
+DeckLinkDisplayModeDetector::~DeckLinkDisplayModeDetector()
+{
+    // nop
+}
+
+
+BMDDisplayMode DeckLinkDisplayModeDetector::get_display_mode() noexcept
+{
     return _display_mode;
 }
 

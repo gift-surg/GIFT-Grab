@@ -65,8 +65,12 @@ protected:
 
 public:
     //!
-    //! \brief Check whether \c deck_link_input is receiving any
-    //! input in the \c BMDDisplayMode it is configured with
+    //! \brief Sequentially try all the display modes passed,
+    //! and stop at the first one that actually works.
+    //!
+    //! Also infer the frame rate of the video input using
+    //! the mechanics of Blackmagic Design SDK.
+    //!
     //! \param deck_link_input It is the caller's responsibility
     //! to ensure the lifetime of the object pointed to by this
     //! pointer is at least as long as the object constructed by
@@ -92,9 +96,8 @@ public:
 
 public:
     //!
-    //! \brief Sequentially try all the display modes
-    //! passed to the constructor, and stop at the first
-    //! one that actually works
+    //! \brief
+    //!
     //! \return The display mode that works, if at all,
     //! or \c bmdModeUnknown if none of the passed display
     //! modes work
@@ -102,26 +105,15 @@ public:
     BMDDisplayMode get_display_mode() noexcept;
 
     //!
-    //! \brief Infer the frame rate of the video input
-    //! using the mechanics of Blackmagic Design SDK.
-    //!
-    //! Calling this method only works after \c
-    //! get_display_mode() has been invoked.
-    //!
+    //! \brief
     //! \return
-    //! \sa get_display_mode()
     //!
     double get_frame_rate() noexcept;
 
     //!
     //! \brief Get the last detailed error message set
-    //!
-    //! Calling this method before \c get_display_mode()
-    //! has been invoked does not make any sense.
-    //!
     //! \return a detailed message describing the last
     //! encountered error
-    //! \sa get_display_mode()
     //!
     std::string get_error_msg() noexcept;
 
