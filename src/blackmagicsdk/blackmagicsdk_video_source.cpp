@@ -33,16 +33,21 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
     , _deck_link_input(nullptr)
     , _running(false)
 {
+    // Pixel format, i.e. colour space
+    BMDPixelFormat pixel_format;
     switch(_colour)
     {
-    case UYVY:
-        break;
     case BGRA:
+        pixel_format = bmdFormat8BitBGRA;
+        break;
+    case UYVY:
+        pixel_format = bmdFormat8BitYUV;
+        break;
     case I420:
     default:
         release_deck_link();
         throw VideoSourceError(
-            "BlackmagicSDK video source supports only the UYVY colour space"
+            "BlackmagicSDK video source supports only the BGRA and UYVY colour spaces"
         );
     }
 
@@ -98,8 +103,6 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
     // Try to set the first available of the following modes (in descending frame-rate order)
     std::vector<BMDDisplayMode> display_modes =
         { bmdModeHD1080i6000, bmdModeHD1080i5994, bmdModeHD1080i50 };
-    // and BGRA as pixel format
-    BMDPixelFormat pixel_format = bmdFormat8BitYUV;
     // and these video flags
     BMDVideoInputFlags video_input_flags = bmdVideoInputFlagDefault | bmdVideoInputEnableFormatDetection;
     // These two are output variables
