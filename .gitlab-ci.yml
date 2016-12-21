@@ -368,7 +368,7 @@ pypi-network-sources:
     - gift-pypi
     - gift-epiphan-pearl
   only:
-    - 85-add-support-for-epiphan-pearl
+    - this-branch-should-never-exist
 
 ################## Device: Epiphan Pearl ##################
 network-sources:
@@ -394,4 +394,4 @@ network-sources:
     - gift-linux
     - gift-epiphan-pearl
   only:
-    - 85-add-support-for-epiphan-pearl
+    - this-branch-should-never-exist
