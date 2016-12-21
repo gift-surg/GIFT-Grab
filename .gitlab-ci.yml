@@ -326,12 +326,6 @@ epiphan-dvi2pcie-duo:
 pypi-network-sources:
   stage: test_pypi
   script:
-    # prepare environment
-    - export GIFT_ADELIE_GIFTGRAB_ENV_ROOT=/home/gitlab-runner/environments/giftgrab/usr/local
-    # for custom libVLC
-    - export LIBVLC_INCLUDE_PATH="$GIFT_ADELIE_GIFTGRAB_ENV_ROOT/include"
-    - export LIBVLC_LIBRARY_PATH="$GIFT_ADELIE_GIFTGRAB_ENV_ROOT/lib"
-    # directories for use in the build and install process
     - GiftGrab_PyPI_BUILD_DIR="$SCRATCH_DIR/pypi-network-sources"
     - GiftGrab_PyPI_INSTALL_DIR="$GiftGrab_PyPI_BUILD_DIR/install"
     - GiftGrab_venv=venv
@@ -381,11 +375,6 @@ network-sources:
   stage: test_cmake
   script:
     # prepare environment
-    - export GIFT_ADELIE_GIFTGRAB_ENV_ROOT=/home/gitlab-runner/environments/giftgrab/usr/local
-    # for custom libVLC
-    - export LIBVLC_INCLUDE_PATH="$GIFT_ADELIE_GIFTGRAB_ENV_ROOT/include"
-    - export LIBVLC_LIBRARY_PATH="$GIFT_ADELIE_GIFTGRAB_ENV_ROOT/lib"
-    # directories for use in the build and install process
     - export GiftGrab_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab-network-sources"
     - export INSTALL_DIR="$SCRATCH_DIR/install-network-sources"
     - rm -rf "$GiftGrab_BUILD_DIR"
