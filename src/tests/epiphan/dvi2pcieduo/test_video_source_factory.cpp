@@ -89,7 +89,6 @@ TEST_CASE( "get_device does not create duplicate", "[VideoSourceFactory]" )
     REQUIRE( source_duplicate == nullptr );
 }
 
-#ifdef USE_EPIPHANSDK  // due to issue #125
 TEST_CASE( "free_device garbage-collects device", "[VideoSourceFactory]" )
 {
     gg::VideoSourceFactory & factory = gg::VideoSourceFactory::get_instance();
@@ -108,7 +107,5 @@ TEST_CASE( "free_device garbage-collects device", "[VideoSourceFactory]" )
     source = factory.get_device(device, other_colour);
     REQUIRE_FALSE( source == nullptr );
 }
-#endif
-
 #endif
 #endif
