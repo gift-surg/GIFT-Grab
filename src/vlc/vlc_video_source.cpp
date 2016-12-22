@@ -191,7 +191,7 @@ void VideoSourceVLC::run_vlc()
 
     // empirically determined value that allows for initialisation
     // to succeed before any API functions are called on this object
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
     // ensure no error!
     if (libvlc_media_player_get_state(_vlc_mp) == libvlc_Error)
