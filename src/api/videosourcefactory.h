@@ -95,6 +95,10 @@ public:
     //! \sa free_device if the intention is to connect
     //! to \c device with another \c colour than the
     //! one \c device is currently connected to
+    //! \throw VideoSourceError if GIFT-Grab not built
+    //! with options required for the passed \c device
+    //! and \c colour combination OR if there was a
+    //! problem constructing the requested video source
     //!
     IVideoSource * get_device(enum Device device,
                               enum ColourSpace colour);
@@ -110,6 +114,25 @@ public:
     //! become unusable
     //!
     void free_device(enum Device device);
+
+    //!
+    //! \brief Open connection to network connection
+    //! specified by given \c address
+    //! \param address
+    //! \param colour
+    //! \return pointer to the created video source.
+    //! The ownership of this object passes to the
+    //! caller. So the caller is responsible for
+    //! garbage-collecting it.
+    //! \throw NetworkSourceUnavailable if no
+    //! connection can be established
+    //! \throw VideoSourceError if GIFT-Grab not built
+    //! with options required for the passed \c device
+    //! and \c colour combination OR if there was a
+    //! problem constructing the requested video source
+    //!
+    IVideoSource * connect_network_source(std::string address,
+                                          enum ColourSpace colour);
 
 protected:
     DISALLOW_COPY_AND_ASSIGNMENT(VideoSourceFactory);

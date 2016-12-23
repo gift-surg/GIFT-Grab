@@ -349,6 +349,9 @@ BOOST_PYTHON_MODULE(pygiftgrab)
              , return_value_policy<reference_existing_object, with_custodian_and_ward_postcall<1, 0> >()
         )
         .def("free_device", &gg::VideoSourceFactory::free_device)
+        .def("connect_network_source", &gg::VideoSourceFactory::connect_network_source
+             // see note below about manage_new_object
+             , return_value_policy<manage_new_object>())
         .def("get_instance", &gg::VideoSourceFactory::get_instance
              , return_value_policy<reference_existing_object>()
         )

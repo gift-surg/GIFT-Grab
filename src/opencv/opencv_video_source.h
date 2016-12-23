@@ -15,12 +15,15 @@
 //! Can be used for reading files as well as streaming
 //! from devices
 //!
-class VideoSourceOpenCV: public IVideoSource
+class VideoSourceOpenCV : public IVideoSource
 {
 public:
     //!
-    //! \brief Read in video file specified by \c path
-    //! \param path
+    //! \brief Connect to the video source specified
+    //! by \c path
+    //! \param path either a file or a network source
+    //! \throw gg::VideoSourceError if the video source
+    //! specified by \c path cannot be opened
     //!
     VideoSourceOpenCV(const char *path);
 
@@ -70,6 +73,13 @@ private:
     //! \brief OpenCV capture object
     //!
     cv::VideoCapture        _cap;
+
+    //!
+    //! \brief This mutex to be locked when
+    //! accessing the buffer
+    //! \sa _buffer
+    //!
+    std::mutex _buffer_lock;
 
     //!
     //! \brief Buffer for raw frames

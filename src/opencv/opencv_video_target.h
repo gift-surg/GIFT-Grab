@@ -2,6 +2,10 @@
 
 #include "ivideotarget.h"
 #include "except.h"
+#include <opencv2/core/version.hpp>
+#if CV_MAJOR_VERSION == 3
+#include <opencv2/opencv.hpp>
+#endif
 
 namespace gg
 {

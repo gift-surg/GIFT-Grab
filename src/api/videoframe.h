@@ -4,6 +4,14 @@
 #include <opencv2/core/core.hpp>
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
+#include <opencv2/core/version.hpp>
+#if CV_MAJOR_VERSION == 3
+#include <opencv2/imgproc/imgproc.hpp>
+namespace cv
+{
+    using std::vector;
+}
+#endif
 #endif // USE_OPENCV
 
 #include <memory>

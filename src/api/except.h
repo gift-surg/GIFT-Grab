@@ -139,6 +139,10 @@ public:
     virtual ~VideoSourceError() noexcept;
 };
 
+//!
+//! \brief Thrown in case of errors related to
+//! connecting video observers to video sources.
+//!
 class ObserverError : public BasicException
 {
 public:
@@ -149,9 +153,30 @@ public:
     ObserverError(const std::string & detail);
 
     //!
-    //! \brief ~ObserverError
+    //! \brief
     //! \sa BasicException::BasicException
     //!
     virtual ~ObserverError() noexcept;
 };
+
+//!
+//! \brief Thrown in case of problems related
+//! to network video sources.
+//!
+class NetworkSourceUnavailable : public BasicException
+{
+public:
+    //!
+    //! \brief
+    //! \param detail
+    //!
+    NetworkSourceUnavailable(const std::string & detail);
+
+    //!
+    //! \brief
+    //! \sa BasicException::BasicException
+    //!
+    virtual ~NetworkSourceUnavailable() noexcept;
+};
+
 }

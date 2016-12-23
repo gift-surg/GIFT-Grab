@@ -216,4 +216,48 @@ void VideoSourceFactory::free_device(Device device)
     _devices[(int) device] = nullptr;
 }
 
+
+IVideoSource * VideoSourceFactory::connect_network_source(
+        std::string address, enum ColourSpace colour)
+{
+    IVideoSource * source = nullptr;
+    switch (colour)
+    {
+    case I420:
+#ifdef USE_LIBVLC
+        try
+        {
+            source = new gg::VideoSourceVLC(address);
+        }
+        catch (VideoSourceError & e)
+        {
+            throw NetworkSourceUnavailable(e.what());
+        }
+#else
+        throw VideoSourceError(
+            "I420 colour space on network sources supported only with libVLC"
+        );
+#endif
+        break;
+    case BGRA:
+#ifdef USE_OPENCV
+        try
+        {
+            source = new VideoSourceOpenCV(address.c_str());
+        }
+        catch (VideoSourceError & e)
+        {
+            throw NetworkSourceUnavailable(e.what());
+        }
+        break;
+#else
+        throw VideoSourceError(
+            "BGRA colour space on network sources supported only with OpenCV"
+        );
+#endif
+    }
+
+    return source;
+}
+
 }

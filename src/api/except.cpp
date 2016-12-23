@@ -84,4 +84,16 @@ ObserverError::~ObserverError() noexcept
 
 }
 
+NetworkSourceUnavailable::NetworkSourceUnavailable(
+        const std::string & detail)
+    : BasicException(detail)
+{
+
+}
+
+NetworkSourceUnavailable::~NetworkSourceUnavailable() noexcept
+{
+
+}
+
 }

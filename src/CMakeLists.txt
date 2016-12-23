@@ -23,6 +23,8 @@ ADD_SUBDIRECTORY(cmake/cpp11)
 # Configurable options, depending on desired functionality
 OPTION(USE_EPIPHAN_DVI2PCIE_DUO
     "Capture video with Epiphan DVI2PCIe Duo" OFF)
+OPTION(USE_NETWORK_SOURCES
+    "Capture video from network sources" OFF)
 OPTION(USE_HEVC
     "Video encoding with HEVC (requires FFmpeg, pkg-config and kvazaar [default] or x265 [turn USE_X265 on])" OFF)
 OPTION(USE_X265
@@ -99,17 +101,29 @@ if(USE_EPIPHAN_DVI2PCIE_DUO)
     endif(NOT USE_BGRA AND NOT USE_I420)
 endif(USE_EPIPHAN_DVI2PCIE_DUO)
 
+# Check at least one colour space activated if using network sources
+if(USE_NETWORK_SOURCES)
+    if(NOT USE_BGRA AND NOT USE_I420)
+        MESSAGE(FATAL_ERROR "At least one colour space must be activated to use network sources")
+    endif(NOT USE_BGRA AND NOT USE_I420)
+endif(USE_NETWORK_SOURCES)
+
 # Determine whether OpenCV needed
-if((USE_EPIPHAN_DVI2PCIE_DUO AND USE_BGRA) OR
+if(((USE_EPIPHAN_DVI2PCIE_DUO OR USE_NETWORK_SOURCES) AND USE_BGRA) OR
     USE_XVID)
     SET(USE_OPENCV ON CACHE BOOL "OFF ON" FORCE)
 endif()
 
+# Determine whether VLC needed
 if(USE_EPIPHAN_DVI2PCIE_DUO AND USE_I420)
     if(NOT USE_EPIPHANSDK)
         SET(USE_LIBVLC ON CACHE BOOL "OFF ON" FORCE)
     endif(NOT USE_EPIPHANSDK)
 endif(USE_EPIPHAN_DVI2PCIE_DUO AND USE_I420)
+
+if(USE_NETWORK_SOURCES AND USE_I420)
+    SET(USE_LIBVLC ON CACHE BOOL "OFF ON" FORCE)
+endif(USE_NETWORK_SOURCES AND USE_I420)
 
 # Determine whether FFmpeg needed
 if(USE_HEVC OR USE_VP9)

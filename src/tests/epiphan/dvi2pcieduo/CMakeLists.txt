@@ -11,7 +11,7 @@ LIST(APPEND PORTS SDI)
 LIST(APPEND PORTS DVI)
 
 # VideoSourceFactory
-SET(VIDEO_SOURCE_FACTORY_TEST test_video_source_factory)
+SET(VIDEO_SOURCE_FACTORY_TEST test_video_source_factory_epiphan_dvi2pcieduo)
 ADD_EXECUTABLE(
     ${VIDEO_SOURCE_FACTORY_TEST}
     ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/test_video_source_factory.cpp
@@ -56,7 +56,7 @@ foreach(COLOUR_SPACE ${COLOUR_SPACES})
     foreach(PORT ${PORTS})
         if(COLOUR_SPACE STREQUAL "I420")
             if(USE_EPIPHANSDK)
-                SET(FRAME_RATE 40)
+                SET(FRAME_RATE 30)
             elseif(USE_LIBVLC)
                 SET(FRAME_RATE 19)
             endif(USE_EPIPHANSDK)
