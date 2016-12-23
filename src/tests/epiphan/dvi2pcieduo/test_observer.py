@@ -71,7 +71,7 @@ def test_frame_rate(port, colour_space, frame_rate, observers):
     for timer in timers:
         source.attach(timer)
 
-    time.sleep(120)  # listen for data these nr. of sec
+    time.sleep(60)  # listen for data these nr. of sec
     for timer in timers:
         source.detach(timer)
 
