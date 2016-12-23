@@ -51,7 +51,7 @@ class FrameRateTimer(pgg.IObserver):
         if use_numpy:
             intervals = timestamps[1:] - timestamps[0]
             frame_rates = np.array(
-                [(i + 1) / (interval / np.timedelta64(1, 's')) 
+                [(i + 1) / (interval / np.timedelta64(1, 's'))
                     for i, interval in enumerate(intervals)]
             )
             return np.min(frame_rates) >= self._frame_rate
