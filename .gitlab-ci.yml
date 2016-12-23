@@ -240,7 +240,7 @@ pypi-epiphan-dvi2pcie-duo:
     - gift-pypi
     - gift-epiphan-dvi2pcie-duo
   only:
-    - 117-frame-rates-decreased-when-using-the-observer-pattern
+    - this-branch-should-never-exist
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 epiphan-dvi2pcie-duo:
@@ -290,7 +290,7 @@ epiphan-dvi2pcie-duo:
     - gift-linux
     - gift-epiphan-dvi2pcie-duo
   only:
-    - 117-frame-rates-decreased-when-using-the-observer-pattern
+    - 85-add-support-for-epiphan-pearl
 
 ################## Device: Epiphan Pearl #########################
 ################## Platform: PyPI ################################
