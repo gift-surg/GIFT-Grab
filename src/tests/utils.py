@@ -16,9 +16,11 @@ class FrameRateTimer(pgg.IObserver):
     sent at the specified frame rate.
     """
 
-    def __init__(self, frame_rate):
+    def __init__(self, frame_rate, init_time = 0):
         super(FrameRateTimer, self).__init__()
         self._frame_rate = frame_rate
+        # all data for this initial period (in sec) will be discarded
+        self._init_time = init_time
         if use_numpy:
             self._timestamps = np.array([], dtype='datetime64[us]')
         else:
@@ -37,21 +39,29 @@ class FrameRateTimer(pgg.IObserver):
         all saved timestamps, i.e. ready for next round.
         """
         global use_numpy
+        n_init_items = int(self._init_time * self._frame_rate)
         if use_numpy:
-            diffs = self._timestamps[1:] - self._timestamps[:-1]
-            if len(diffs) == 0:
-                return False
-            return np.count_nonzero(
-                       diffs > np.timedelta64(1000000 / self._frame_rate, 'us')
-                   ) == 0
+            if n_init_items >= self._timestamps.size:
+                raise IndexError('Not enough data collected')
         else:
-            pairs = zip(self._timestamps[:-1], self._timestamps[1:])
-            diffs = map(
-                (lambda p: (p[1] - p[0]).microseconds / 1000.0),
-                pairs
+            if n_init_items >= len(self._timestamps):
+                raise IndexError('Not enough data collected')
+        timestamps = self._timestamps[n_init_items:]
+
+        if use_numpy:
+            intervals = timestamps[1:] - timestamps[0]
+            frame_rates = np.array(
+                [(i + 1) / (interval / np.timedelta64(1, 's')) 
+                    for i, interval in enumerate(intervals)]
             )
-            del self._timestamps[:]
-            return max(diffs) <= 1000.0 / self._frame_rate
+            return np.min(frame_rates) >= self._frame_rate
+        else:
+            intervals = [
+                (timestamp - timestamps[0]).total_seconds()
+                    for timestamp in timestamps[1:]
+            ]
+            frame_rates = [(i + 1) / interval for i, interval in enumerate(intervals)]
+            return min(frame_rates) >= self._frame_rate
 
     def __nonzero__(self):
         if self.__bool__():
