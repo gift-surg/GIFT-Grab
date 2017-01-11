@@ -70,7 +70,7 @@ IVideoSource * VideoSourceFactory::get_device(Device device,
 #ifdef USE_LIBVLC
             try
             {
-                src = new VideoSourceVLC("v4l2:///dev/video0:chroma=I420");
+                src = new VideoSourceVLC("v4l2:///dev/video0:chroma=I420", 60);
             }
             catch (VideoSourceError & e)
             {
@@ -122,7 +122,7 @@ IVideoSource * VideoSourceFactory::get_device(Device device,
 #ifdef USE_LIBVLC
             try
             {
-                src = new VideoSourceVLC("v4l2:///dev/video1:chroma=I420");
+                src = new VideoSourceVLC("v4l2:///dev/video1:chroma=I420", 60);
             }
             catch (VideoSourceError & e)
             {

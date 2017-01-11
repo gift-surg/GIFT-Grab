@@ -10,6 +10,13 @@ SET(CONFIG_DIR ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/data)
 LIST(APPEND PORTS SDI)
 LIST(APPEND PORTS DVI)
 
+# Simultaneous grabbing + encoding frame rate in pure C++
+if(USE_FFMPEG)
+    SET(FRAME_RATE_TEST test_frame_rate)
+    ADD_EXECUTABLE(${FRAME_RATE_TEST} test_frame_rate.cpp)
+    TARGET_LINK_LIBRARIES(${FRAME_RATE_TEST} ${LIBS} ${NAME})
+endif(USE_FFMPEG)
+
 # VideoSourceFactory
 SET(VIDEO_SOURCE_FACTORY_TEST test_video_source_factory_epiphan_dvi2pcieduo)
 ADD_EXECUTABLE(
@@ -55,13 +62,9 @@ endforeach(COLOUR_SPACE)
 foreach(COLOUR_SPACE ${COLOUR_SPACES})
     foreach(PORT ${PORTS})
         if(COLOUR_SPACE STREQUAL "I420")
-            if(USE_EPIPHANSDK)
-                SET(FRAME_RATE 30)
-            elseif(USE_LIBVLC)
-                SET(FRAME_RATE 19)
-            endif(USE_EPIPHANSDK)
+            SET(FRAME_RATE 57)
         elseif(COLOUR_SPACE STREQUAL "BGRA")
-            SET(FRAME_RATE 30)
+            SET(FRAME_RATE 28)
         endif(COLOUR_SPACE STREQUAL "I420")
         SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_ObserverPattern_${PORT}_${COLOUR_SPACE}_${FRAME_RATE}fps)
 

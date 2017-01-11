@@ -97,6 +97,12 @@ protected:
     //!
     FrameBox * _sub;
 
+    //!
+    //! \brief The frame rate for devices or network
+    //! streams
+    //!
+    unsigned int _frame_rate;
+
 public:
     //!
     //! \brief Initialise video source using given \c path
@@ -114,6 +120,20 @@ public:
     //! in case \c path cannot be opened
     //!
     VideoSourceVLC(const std::string path);
+
+    //!
+    //! \brief Open connection to a device or network
+    //! stream specified by \c path. This constructor is not
+    //! suitable for video files, where the \c frame_rate is
+    //! encoded in the file. Apart from this, its behaviour
+    //! is the same as VideoSourceVLC(const std::string path).
+    //! \param path
+    //! \param frame_rate
+    //!
+    //! \sa VideoSourceVLC(const std::string path)
+    //!
+    VideoSourceVLC(const std::string path,
+                   const unsigned int frame_rate);
 
     //!
     //! \brief Stop streaming and finalise current video
