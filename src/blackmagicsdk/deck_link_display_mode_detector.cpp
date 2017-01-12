@@ -45,6 +45,7 @@ DeckLinkDisplayModeDetector::DeckLinkDisplayModeDetector(IDeckLinkInput * deck_l
         // No glory (could not even check mode support)
         if (res != S_OK)
         {
+            _display_mode = bmdModeUnknown;
             _error_msg = "Could not check video mode support of Blackmagic DeckLink device";
             break;
         }
@@ -52,12 +53,18 @@ DeckLinkDisplayModeDetector::DeckLinkDisplayModeDetector(IDeckLinkInput * deck_l
         // Mode not supported: go to next one
         if (display_mode_support != bmdDisplayModeSupported
             or deck_link_display_mode == nullptr)
+        {
+            _display_mode = bmdModeUnknown;
             continue;
+        }
 
         // Enable video input for checking input coming
         res = _deck_link_input->EnableVideoInput(display_mode, _pixel_format, _video_input_flags);
         if (res != S_OK) // No glory: check next display mode
+        {
+            _display_mode = bmdModeUnknown;
             continue;
+        }
 
         // Start streaming for checking input coming
         _running = true;
@@ -66,6 +73,7 @@ DeckLinkDisplayModeDetector::DeckLinkDisplayModeDetector(IDeckLinkInput * deck_l
         {
             _running = false;
             _deck_link_input->DisableVideoInput();
+            _display_mode = bmdModeUnknown;
             continue;
         }
 
