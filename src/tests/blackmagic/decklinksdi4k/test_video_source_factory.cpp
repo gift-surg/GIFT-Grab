@@ -2,33 +2,10 @@
 #include "include_catch.h"
 
 gg::Device device = gg::DeckLinkSDI4K;
-gg::ColourSpace colour, other_colour;
+gg::ColourSpace colour = gg::UYVY;
 
-int main(int argc, char * argv[])
+int main()
 {
-    bool args_ok = true;
-    if (argc < 2)
-        args_ok = false;
-    else
-    {
-        if (strcmp(argv[1], "BGRA") == 0)
-        {
-            colour = gg::BGRA;
-            other_colour = gg::UYVY;
-        }
-        else if (strcmp(argv[1], "UYVY") == 0)
-        {
-            colour = gg::UYVY;
-            other_colour = gg::BGRA;
-        }
-        else
-            args_ok = false;
-    }
-    if (not args_ok)
-    {
-        printf("Synopsis: %s BGRA|UYVY\n", argv[0]);
-        return EXIT_FAILURE;
-    }
     return Catch::Session().run();
 }
 
@@ -57,18 +34,6 @@ TEST_CASE( "get_device returns singleton", "[VideoSourceFactory]" )
     REQUIRE( source == source_ );
 }
 
-TEST_CASE( "get_device does not create duplicate", "[VideoSourceFactory]" )
-{
-    gg::VideoSourceFactory & factory = gg::VideoSourceFactory::get_instance();
-    IVideoSource * source = factory.get_device(device, colour);
-    IVideoSource * source_duplicate = nullptr;
-    REQUIRE_THROWS_AS(
-        source_duplicate = factory.get_device(device, other_colour),
-        gg::DeviceAlreadyConnected
-    );
-    REQUIRE( source_duplicate == nullptr );
-}
-
 TEST_CASE( "free_device garbage-collects device", "[VideoSourceFactory]" )
 {
     gg::VideoSourceFactory & factory = gg::VideoSourceFactory::get_instance();
@@ -81,7 +46,5 @@ TEST_CASE( "free_device garbage-collects device", "[VideoSourceFactory]" )
     REQUIRE( frame.cols() > 0 );
     REQUIRE( frame.rows() > 0 );
     factory.free_device(device);
-    source = nullptr;
-    source = factory.get_device(device, other_colour);
-    REQUIRE_FALSE( source == nullptr );
+    REQUIRE_FALSE( source == factory.get_device(device, colour) );
 }
