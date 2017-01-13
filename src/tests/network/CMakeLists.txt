@@ -20,6 +20,10 @@ TARGET_LINK_LIBRARIES(
     ${LIBS} ${NAME}
 )
 foreach(COLOUR_SPACE ${COLOUR_SPACES})
+    if(COLOUR_SPACE STREQUAL UYVY)
+        continue()
+    endif(COLOUR_SPACE STREQUAL UYVY)
+
     SET(NAME_TEST Test_Network_VideoSourceFactory_${COLOUR_SPACE})
     ADD_TEST(NAME ${NAME_TEST}
         COMMAND ${VIDEO_SOURCE_FACTORY_TEST} ${TESTING_NETWORK_SOURCE_ADDRESS} ${COLOUR_SPACE} ${TESTING_NETWORK_SOURCE_DELAY}
@@ -29,6 +33,10 @@ endforeach(COLOUR_SPACE)
 
 # The actual network source
 foreach(COLOUR_SPACE ${COLOUR_SPACES})
+    if(COLOUR_SPACE STREQUAL UYVY)
+        continue()
+    endif(COLOUR_SPACE STREQUAL UYVY)
+
     SET(NAME_TEST Test_Network_${COLOUR_SPACE})
     ADD_TEST(NAME ${NAME_TEST}
         COMMAND py.test --address=${TESTING_NETWORK_SOURCE_ADDRESS} --colour-space=${COLOUR_SPACE} --init-delay=${TESTING_NETWORK_SOURCE_DELAY} test_unit.py
@@ -38,6 +46,10 @@ endforeach(COLOUR_SPACE)
 
 # Network source using the observer pattern
 foreach(COLOUR_SPACE ${COLOUR_SPACES})
+    if(COLOUR_SPACE STREQUAL UYVY)
+        continue()
+    endif(COLOUR_SPACE STREQUAL UYVY)
+
     SET(NAME_TEST Test_Network_ObserverPattern_${COLOUR_SPACE}_${TESTING_NETWORK_SOURCE_FRAME_RATE}fps)
 
     ADD_TEST(NAME ${NAME_TEST}
