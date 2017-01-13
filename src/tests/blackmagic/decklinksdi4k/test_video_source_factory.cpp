@@ -14,11 +14,11 @@ int main(int argc, char * argv[])
         if (strcmp(argv[1], "BGRA") == 0)
         {
             colour = gg::BGRA;
-            other_colour = gg::I420;
+            other_colour = gg::UYVY;
         }
-        else if (strcmp(argv[1], "I420") == 0)
+        else if (strcmp(argv[1], "UYVY") == 0)
         {
-            colour = gg::I420;
+            colour = gg::UYVY;
             other_colour = gg::BGRA;
         }
         else
@@ -26,7 +26,7 @@ int main(int argc, char * argv[])
     }
     if (not args_ok)
     {
-        printf("Synopsis: %s BGRA|I420\n", argv[0]);
+        printf("Synopsis: %s BGRA|UYVY\n", argv[0]);
         return EXIT_FAILURE;
     }
     return Catch::Session().run();
