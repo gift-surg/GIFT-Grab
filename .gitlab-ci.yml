@@ -368,6 +368,39 @@ network-sources:
     - this-branch-should-never-exist
 
 ################## Device: Blackmagic DeckLink SDI 4K ##################
+pypi-blackmagic-decklink-sdi-4k:
+  stage: test_pypi
+  script:
+    - GiftGrab_PyPI_BUILD_DIR="$SCRATCH_DIR/pypi-blackmagic-decklink-sdi-4k"
+    - GiftGrab_PyPI_INSTALL_DIR="$GiftGrab_PyPI_BUILD_DIR/install"
+    - GiftGrab_venv=venv
+    - rm -rf "$GiftGrab_PyPI_BUILD_DIR"
+    - mkdir "$GiftGrab_PyPI_BUILD_DIR"
+    - rm -rf "$GiftGrab_PyPI_INSTALL_DIR"
+    - mkdir "$GiftGrab_PyPI_INSTALL_DIR"
+    - cd "$GiftGrab_PyPI_BUILD_DIR"
+    - export GiftGrab_PyPI_DIST_DIR=dist
+    - rm -rfv "$GiftGrab_PyPI_DIST_DIR"
+    - cd "$GiftGrab_SOURCE_DIR"
+    - python setup.py sdist
+    - mv "$GiftGrab_PyPI_DIST_DIR" "$GiftGrab_PyPI_BUILD_DIR"
+    - cd "$GiftGrab_PyPI_BUILD_DIR"
+    - virtualenv $GiftGrab_venv
+    - cd $GiftGrab_venv
+    - source bin/activate
+    - ls -alh ./*
+    - PyPI_INSTALLER="../$GiftGrab_PyPI_DIST_DIR/$(ls ../$GiftGrab_PyPI_DIST_DIR | grep tar.gz)"
+    - if [ -z "$PyPI_INSTALLER" ]; then exit 1; fi
+    # because pip seems to be getting confused about install options sometimes:
+    - pip install PyYAML
+    - pip install pytest
+    - pip install -vvv --install-option="--blackmagic-decklink-sdi-4k" --install-option="--enable-nonfree" --upgrade "$PyPI_INSTALLER"
+    # run tests
+    - test-giftgrab-network-sources-bgra; exit_on_fail
+    - test-giftgrab-network-sources-uyvy; exit_on_fail
+    # deactivate virtual env
+    - deactivate
+
 blackmagic-decklink-sdi-4k:
   stage: test_cmake
   script:
