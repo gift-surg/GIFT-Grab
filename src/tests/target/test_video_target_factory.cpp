@@ -86,12 +86,14 @@ int main(int argc, char * argv[])
             colour = gg::BGRA;
         else if (strcmp(argv[2], "I420") == 0)
             colour = gg::I420;
+        else if (strcmp(argv[2], "UYVY") == 0)
+            colour = gg::UYVY;
         else
             args_ok = false;
     }
     if (not args_ok)
     {
-        printf("Synopsis: %s HEVC|Xvid|VP9 BGRA|I420\n", argv[0]);
+        printf("Synopsis: %s HEVC|Xvid|VP9 BGRA|I420|UYVY\n", argv[0]);
         return EXIT_FAILURE;
     }
     int ret = Catch::Session().run();
