@@ -159,6 +159,7 @@ IVideoSource * VideoSourceFactory::get_device(Device device,
 
     // Blackmagic DeckLink SDI 4K ========================================
     case DeckLinkSDI4K:
+#ifdef USE_BLACKMAGICSDK
         switch (colour)
         {
 
@@ -175,6 +176,11 @@ IVideoSource * VideoSourceFactory::get_device(Device device,
                                    " Blackmagic DeckLink SDI 4K");
         }
         src = new VideoSourceBlackmagicSDK(0, colour);
+#else
+        throw VideoSourceError(
+            "Blackmagic DeckLink SDI 4K supported only through"
+            " Blackmagic Desktop Video SDK");
+#endif
         break;
 
     // unsupported device ========================================
