@@ -25,7 +25,8 @@ DeckLinkDisplayModeDetector::DeckLinkDisplayModeDetector(IDeckLinkInput * deck_l
     , _video_input_flags(video_input_flags)
     , _display_mode(bmdModeUnknown)
     , _frame_rate(0.0)
-    , _error_msg("")
+    // to be reset upon determining display mode
+    , _error_msg("Could not determine display mode (unknown reason)")
     , _running(false)
 {
     // These are output and result variables
@@ -87,7 +88,10 @@ DeckLinkDisplayModeDetector::DeckLinkDisplayModeDetector(IDeckLinkInput * deck_l
 
         // Glory!
         if (_display_mode != bmdModeUnknown)
+        {
+            _error_msg = "";
             break;
+        }
     }
     _deck_link_input->SetCallback(nullptr);
 
