@@ -35,6 +35,7 @@ endforeach(COLOUR_SPACE)
 # Blackmagic DeckLink SDI 4K using the observer design pattern
 foreach(COLOUR_SPACE ${COLOUR_SPACES})
     SET(NAME_TEST Test_Blackmagic_DeckLinkSDI4K_ObserverPattern_${COLOUR_SPACE})
+    SET(FRAME_RATE 57)
     ADD_TEST(NAME ${NAME_TEST}
         COMMAND py.test --colour-space=${COLOUR_SPACE} --frame-rate=${FRAME_RATE} --observers=3 test_observer.py
     )
