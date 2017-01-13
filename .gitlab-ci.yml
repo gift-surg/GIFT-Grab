@@ -366,3 +366,21 @@ network-sources:
     - gift-epiphan-pearl
   only:
     - this-branch-should-never-exist
+
+################## Device: Blackmagic DeckLink SDI 4K ##################
+blackmagic-decklink-sdi-4k:
+  stage: test_cmake
+  script:
+    # prepare environment
+    - export BlackmagicSDK_DIR="/home/gitlab-runner/environments/giftgrab/opt/Blackmagic DeckLink SDK 10.4/SDK"
+    - export GiftGrab_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab-blackmagic-decklink-sdi-4k"
+    - rm -rf "$GiftGrab_BUILD_DIR"
+    - mkdir -p "$GiftGrab_BUILD_DIR"
+    - cd "$GiftGrab_BUILD_DIR"
+    - cmake -D BUILD_PYTHON=ON -D BUILD_TESTS=ON -D USE_BLACKMAGIC_DECKLINK_SDI_4K=ON -D ENABLE_NONFREE=ON "$GiftGrab_SOURCE_DIR"
+    - make -j; exit_on_fail
+    - ctest; exit_on_fail
+  tags:
+    - gift-blackmagic-decklink-sdi-4k
+  only:
+    - 5-add-support-for-blackmagic
