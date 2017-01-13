@@ -114,13 +114,11 @@ endif(USE_NETWORK_SOURCES)
 
 # Check at least one colour space activated if using Blackmagic DeckLink SDI 4K
 if(USE_BLACKMAGIC_DECKLINK_SDI_4K)
-    if(NOT USE_BGRA AND NOT USE_UYVY)
-        MESSAGE(FATAL_ERROR "At least one colour space must be activated to use Blackmagic DeckLink SDI 4K")
-    endif(NOT USE_BGRA AND NOT USE_UYVY)
-    # Blackmagic SDK does not support I420
-    SET(USE_I420 OFF CACHE BOOL "ON OFF" FORCE)
+    if(NOT USE_UYVY)
+        MESSAGE(FATAL_ERROR "UYVY colour space must be activated to use Blackmagic DeckLink SDI 4K")
+    endif(NOT USE_UYVY)
 else(USE_BLACKMAGIC_DECKLINK_SDI_4K)
-    # Currently only Blackmagic SDK supports UYVY
+    # UYVY supported only for Blackmagic DeckLink SDI 4K currently
     SET(USE_UYVY OFF CACHE BOOL "ON OFF" FORCE)
 endif(USE_BLACKMAGIC_DECKLINK_SDI_4K)
 
