@@ -231,6 +231,7 @@ void VideoSourceFactory::free_device(Device device)
     {
     case DVI2PCIeDuo_DVI:
     case DVI2PCIeDuo_SDI:
+    case DeckLinkSDI4K:
         break; // everything up to here is recognised
     default:
         std::string msg;
