@@ -37,6 +37,9 @@ endif(USE_BGRA)
 if(USE_I420)
     LIST(APPEND COLOUR_SPACES I420)
 endif(USE_I420)
+if(USE_UYVY)
+    LIST(APPEND COLOUR_SPACES UYVY)
+endif(USE_UYVY)
 
 # test VideoFrame
 SUBDIRS(videoframe)
