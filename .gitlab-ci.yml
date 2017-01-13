@@ -373,6 +373,8 @@ blackmagic-decklink-sdi-4k:
   script:
     # prepare environment
     - export BlackmagicSDK_DIR="/home/gitlab-runner/environments/giftgrab/opt/Blackmagic DeckLink SDK 10.4/SDK"
+    # custom Boost
+    - export BOOST_ROOT="/home/gitlab-runner/environments/giftgrab/usr/local"
     - export GiftGrab_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab-blackmagic-decklink-sdi-4k"
     - rm -rf "$GiftGrab_BUILD_DIR"
     - mkdir -p "$GiftGrab_BUILD_DIR"
