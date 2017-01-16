@@ -79,6 +79,10 @@ if(USE_EPIPHANSDK AND NOT ENABLE_NONFREE)
     MESSAGE(FATAL_ERROR
         "Epiphan video grabbing SDK has a proprietary licence: you must explicitly enable non-free (ENABLE_NONFREE=ON) to build GIFT-Grab with Epiphan video grabbing SDK support.")
 endif(USE_EPIPHANSDK AND NOT ENABLE_NONFREE)
+if(USE_BLACKMAGIC_DECKLINK_SDI_4K AND NOT ENABLE_NONFREE)
+    MESSAGE(FATAL_ERROR
+        "Blackmagic Desktop Video SDK has a proprietary licence: you must explicitly enable non-free (ENABLE_NONFREE=ON) to build GIFT-Grab with Blackmagic DeckLink SDI 4K support")
+endif(USE_BLACKMAGIC_DECKLINK_SDI_4K AND NOT ENABLE_NONFREE)
 
 # Check GPL explicitly enabled for relevant components
 if(USE_X265 AND NOT ENABLE_GPL)
