@@ -111,6 +111,14 @@ public:
 
     double get_frame_rate() override;
 
+    //!
+    //! \brief Not implemented: throws VideoSourceError
+    //! \param x
+    //! \param y
+    //! \param width
+    //! \param height
+    //! \throw VideoSourceError
+    //!
     void set_sub_frame(int x, int y, int width, int height) override;
 
     void get_full_frame() override;

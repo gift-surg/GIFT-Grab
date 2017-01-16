@@ -173,13 +173,14 @@ double VideoSourceBlackmagicSDK::get_frame_rate()
 
 void VideoSourceBlackmagicSDK::set_sub_frame(int x, int y, int width, int height)
 {
-    // TODO
+    // issue #147
+    throw VideoSourceError("Blackmagic does not support cropping yet");
 }
 
 
 void VideoSourceBlackmagicSDK::get_full_frame()
 {
-    // TODO
+    // nop: set_sub_frame currently not implemented
 }
 
 
