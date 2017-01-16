@@ -242,6 +242,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     enum_<gg::ColourSpace>("ColourSpace")
         .value("BGRA", gg::ColourSpace::BGRA)
         .value("I420", gg::ColourSpace::I420)
+        .value("UYVY", gg::ColourSpace::UYVY)
     ;
 
     enum_<gg::Device>("Device")
