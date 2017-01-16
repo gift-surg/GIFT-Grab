@@ -68,5 +68,10 @@ def test_access(colour_space):
                 data_np[index * 1.25]  # U plane
                 data_np[index * 1.5]   # V plane
 
+            elif colour_space == ColourSpace.UYVY:
+                # see http://www.fourcc.org/pixel-format/yuv-uyvy/
+                data_np[index * 2]
+                data_np[index * 2 + 1]
+
         except IndexError as e:
             fail(e.message)
