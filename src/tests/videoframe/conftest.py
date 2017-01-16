@@ -15,6 +15,8 @@ def colour_space(request):
         return ColourSpace.BGRA
     elif case_insensitive == 'i420':
         return ColourSpace.I420
+    elif case_insensitive == 'uyvy':
+        return ColourSpace.UYVY
     else:
         raise RuntimeError('Could not recognise colour space ' +
                            colour_space)
