@@ -74,30 +74,3 @@ def test_get_frame():
     assert frame.cols() > 0
 
     assert not source.get_frame(frame_with_colour_mismatch)
-
-
-@mark.unit
-@mark.usefixtures('peri_test')
-def test_sub_frame():
-    source.set_sub_frame(sub_x, sub_y,
-                         sub_width, sub_height)
-    assert source.get_frame(frame)
-    assert frame.cols() == sub_width
-    assert frame.rows() == sub_height
-
-    source.set_sub_frame(sub2_x, sub2_y,
-                         sub2_width, sub2_height)
-    assert source.get_frame(frame)
-    assert frame.cols() == sub2_width
-    assert frame.rows() == sub2_height
-
-
-@mark.unit
-@mark.usefixtures('peri_test')
-def test_full_frame():
-    source.set_sub_frame(sub_x, sub_y,
-                         sub_width, sub_height)
-    source.get_full_frame()
-    assert source.get_frame(frame)
-    assert frame.cols() == width
-    assert frame.rows() == height
