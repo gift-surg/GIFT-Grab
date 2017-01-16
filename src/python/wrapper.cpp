@@ -13,6 +13,9 @@
 #ifdef USE_LIBVLC
 #include "vlc_video_source.h"
 #endif
+#ifdef USE_BLACKMAGICSDK
+#include "blackmagicsdk_video_source.h"
+#endif
 #ifdef USE_FFMPEG
 #include "ffmpeg_video_target.h"
 #endif
@@ -311,6 +314,19 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .def("get_frame_rate", &gg::VideoSourceVLC::get_frame_rate)
         .def("set_sub_frame", &gg::VideoSourceVLC::set_sub_frame)
         .def("get_full_frame", &gg::VideoSourceVLC::get_full_frame)
+        .def("attach", &gg::IObservable::attach, &IObservableWrapper::default_attach)
+        .def("detach", &gg::IObservable::detach, &IObservableWrapper::default_detach)
+    ;
+#endif
+
+#ifdef USE_BLACKMAGICSDK
+    class_<gg::VideoSourceBlackmagicSDK, bases<IVideoSource>, boost::noncopyable>(
+                "VideoSourceBlackmagicSDK", init<size_t, gg::ColourSpace>())
+        .def("get_frame", &gg::VideoSourceBlackmagicSDK::get_frame)
+        .def("get_frame_dimensions", &gg::VideoSourceBlackmagicSDK::get_frame_dimensions)
+        .def("get_frame_rate", &gg::VideoSourceBlackmagicSDK::get_frame_rate)
+        .def("set_sub_frame", &gg::VideoSourceBlackmagicSDK::set_sub_frame)
+        .def("get_full_frame", &gg::VideoSourceBlackmagicSDK::get_full_frame)
         .def("attach", &gg::IObservable::attach, &IObservableWrapper::default_attach)
         .def("detach", &gg::IObservable::detach, &IObservableWrapper::default_detach)
     ;
