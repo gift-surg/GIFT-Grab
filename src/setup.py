@@ -45,6 +45,17 @@ def cmake_install_prefix():
     return join(pip_root(), 'giftgrab')
 
 
+def create_symlink(target_path, link_path):
+    """Create symbolic link using appropriate OS calls.
+    """
+
+    # will create temp link first, and then move to actual one
+    # to prevent "already exists" error
+    tmp_link_path = link_path + '.tmp'
+    link(target_path, tmp_link_path)
+    rename(tmp_link_path, link_path)
+
+
 class GiftGrabPyExtension(Extension):
 
     """This class is used for adding GiftGrab Python
@@ -435,11 +446,7 @@ class GiftGrabInstallCommand(install):
                str(self)
                )
         )
-        # will create temp link first, and then move to actual one
-        # to prevent "already exists" error
-        tmp_pylib_link = pylib_link + '.tmp'
-        link(pylib_path, tmp_pylib_link)
-        rename(tmp_pylib_link, pylib_link)
+        create_symlink(pylib_path, pylib_link)
         print('+++++ INFO +++++\n%s %s %s %s\n\n' % (
               'Created symlink',
               pylib_link,
