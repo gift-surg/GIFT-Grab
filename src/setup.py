@@ -545,7 +545,7 @@ setup(
              'hardware-accelerated video encoding,'
              'GPU-accelerated video encoding,'
              'real-time video encoding, codec, Xvid, H.265, HEVC, VP9,'
-             'Epiphan DVI2PCIe Duo, medical imaging,'
+             'Epiphan DVI2PCIe Duo, Blackmagic DeckLink SDI 4K, medical imaging,'
              'FFmpeg, OpenCV, kvazaar, x265, NVENC'
              'GIFT-Surg',
 
