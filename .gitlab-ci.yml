@@ -371,6 +371,8 @@ network-sources:
 pypi-blackmagic-decklink-sdi-4k:
   stage: test_pypi
   script:
+    # prepare environment
+    - export BlackmagicSDK_DIR="/home/gitlab-runner/environments/giftgrab/opt/Blackmagic DeckLink SDK 10.4/SDK"
     - GiftGrab_PyPI_BUILD_DIR="$SCRATCH_DIR/pypi-blackmagic-decklink-sdi-4k"
     - GiftGrab_PyPI_INSTALL_DIR="$GiftGrab_PyPI_BUILD_DIR/install"
     - GiftGrab_venv=venv
