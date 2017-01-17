@@ -503,7 +503,8 @@ for colour_space in ['bgra', 'i420']:
 # Disabled the BGRA tests of Epiphan DVI2PCIe Duo (currently using OpenCV) until issue #115 is resolved
 #'test-giftgrab-epiphan-dvi2pcieduo-bgra=giftgrab.tests:test_epiphan_dvi2pcieduo_bgra',
 console_scripts = console_scripts +\
-                  ['test-giftgrab-epiphan-dvi2pcieduo-i420=giftgrab.tests:test_epiphan_dvi2pcieduo_i420']
+                  ['test-giftgrab-epiphan-dvi2pcieduo-i420=giftgrab.tests:test_epiphan_dvi2pcieduo_i420',
+                   'test-giftgrab-blackmagic-decklinksdi4k-uyvy=giftgrab.tests:test_blackmagic_decklinksdi4k_uyvy']
 console_scripts = console_scripts +\
                   ['test-giftgrab-network-sources-bgra=giftgrab.tests:test_network_sources_bgra',
                    'test-giftgrab-network-sources-i420=giftgrab.tests:test_network_sources_i420']

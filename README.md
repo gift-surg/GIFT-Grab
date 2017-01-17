@@ -94,6 +94,7 @@ Features can be customised as per the combinations listed below. Please note tha
 * `edd-<port>-i420-<codec>` (e.g. `edd-dvi-i420-vp9`) to record 30 frames into a timestamp-named video file, where:
    * `<port>` is one of `dvi` or `sdi`
    * `<codec>` is one of `xvid`, `hevc`, or `vp9`
+* `test-giftgrab-blackmagic-decklinksdi4k-uyvy` to test Blackmagic DeckLink SDI 4K support
 * `test-giftgrab-numpy-<colour_space>` to test NumPy support, provided GIFT-Grab was built with it (requires NumPy, obviously).
 * `test-giftgrab-network-sources-<colour_space>` to test support for network sources, provided GIFT-Grab was built with it. This requires the following environment variables to be set:
    * `TESTING_NETWORK_SOURCE_ADDRESS`: the [MRL of your network source](https://wiki.videolan.org/Media_resource_locator) for testing
