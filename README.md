@@ -25,6 +25,7 @@ Optional (depending on desired features, see "How to use" below):
 * [libvpx](https://www.webmproject.org/code/) (tested with 1.3.0)
 * [libVLC (VLC SDK)](https://wiki.videolan.org/LibVLC/) (tested with 3.0.0 [nighly build ID: 20160913-0237](http://nightlies.videolan.org/build/source/?C=M;O=D))
 * [Epiphan video grabber SDK](https://www.epiphan.com/support/) (tested with 3.30.3.0007, **note that Epiphan SDK has a proprietary licence, so "non-free" components need to be enabled - see below - when building GIFT-Grab with Epiphan SDK**)
+* [Blackmagic Desktop Video SDK](https://www.blackmagicdesign.com/support) (tested with 10.4, **note that Blackmagic Desktop Video SDK has a proprietary licence, so "non-free" components need to be enabled - see below - when building GIFT-Grab with support for Blackmagic cards**)
 * [Python](https://www.python.org/) (tested with 2.7)
 * [Boost.Python](http://www.boost.org/doc/libs/release/libs/python/) (tested with 1.54.0, and 1.63.0 beta 1 for the NumPy support)
 * [pkg-config](https://www.freedesktop.org/wiki/Software/pkg-config/)
@@ -59,6 +60,7 @@ Features can be customised as per the combinations listed below. Please note tha
 
 * `-D USE_EPIPHAN_DVI2PCIE_DUO=ON` for Epiphan DVI2PCIe Duo support (requires OpenCV and libVLC). OpenCV and libVLC are needed for capturing in the BGRA and [I420](https://wiki.videolan.org/YUV/#I420) colour spaces respectively. Both options are active by default. Append `-D USE_BGRA=OFF` or `-D USE_I420=OFF` to deactivate the respective option.
 * `-D USE_EPIPHAN_DVI2PCIE_DUO=ON -D ENABLE_NONFREE=ON -D USE_EPIPHANSDK=ON` for Epiphan DVI2PCIe Duo support with Epiphan SDK (requires zlib, pthreads and Epiphan video grabber SDK - see [our tips and tricks](doc/tips.md) on how to install this). This currently works only with the I420 colour space capture (active by default).
+* `-D USE_BLACKMAGIC_DECKLINK_SDI_4K=ON -D ENABLE_NONFREE=ON` for Blackmagic DeckLink SDI 4K support (requires Blackmagic Desktop Video SDK). This currently works only with the [UYVY](https://wiki.videolan.org/YUV#UYVY) colour space (active by default).
 * `-D USE_NETWORK_SOURCES=ON` to activate support for network (e.g. RTP) sources (requires OpenCV and libVLC). OpenCV and libVLC are needed for capturing in the BGRA and [I420](https://wiki.videolan.org/YUV/#I420) colour spaces respectively. Both options are active by default. Append `-D USE_BGRA=OFF` or `-D USE_I420=OFF` to deactivate the respective option.
 * `-D USE_XVID=ON` for Xvid support (requires OpenCV).
 * `-D USE_HEVC=ON` for HEVC support (requires FFmpeg, pkg-config and kvazaar).
