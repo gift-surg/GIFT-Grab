@@ -398,8 +398,7 @@ pypi-blackmagic-decklink-sdi-4k:
     - pip install pytest
     - pip install -vvv --install-option="--blackmagic-decklink-sdi-4k" --install-option="--enable-nonfree" --upgrade "$PyPI_INSTALLER"
     # run tests
-    - test-giftgrab-network-sources-bgra; exit_on_fail
-    - test-giftgrab-network-sources-uyvy; exit_on_fail
+    - test-giftgrab-blackmagic-decklinksdi4k-uyvy; exit_on_fail
     # deactivate virtual env
     - deactivate
 
