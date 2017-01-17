@@ -372,7 +372,7 @@ pypi-blackmagic-decklink-sdi-4k:
   stage: test_pypi
   script:
     # prepare environment
-    - export BlackmagicSDK_DIR="/home/gitlab-runner/environments/giftgrab/opt/Blackmagic DeckLink SDK 10.4/SDK"
+    - export BlackmagicSDK_DIR="/home/gitlab-runner/environments/giftgrab/opt/Blackmagic_DeckLink_SDK_10.4/SDK"
     - GiftGrab_PyPI_BUILD_DIR="$SCRATCH_DIR/pypi-blackmagic-decklink-sdi-4k"
     - GiftGrab_PyPI_INSTALL_DIR="$GiftGrab_PyPI_BUILD_DIR/install"
     - GiftGrab_venv=venv
@@ -406,7 +406,7 @@ blackmagic-decklink-sdi-4k:
   stage: test_cmake
   script:
     # prepare environment
-    - export BlackmagicSDK_DIR="/home/gitlab-runner/environments/giftgrab/opt/Blackmagic DeckLink SDK 10.4/SDK"
+    - export BlackmagicSDK_DIR="/home/gitlab-runner/environments/giftgrab/opt/Blackmagic_DeckLink_SDK_10.4/SDK"
     # custom Boost
     - export BOOST_ROOT="/home/gitlab-runner/environments/giftgrab/usr/local"
     - export GiftGrab_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab-blackmagic-decklink-sdi-4k"

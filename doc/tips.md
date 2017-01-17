@@ -26,6 +26,7 @@ Blackmagic Drivers and Blackmagic Desktop Video SDK
 ---------------------------------------------------
 
 1. Download and unpack [Blackmagic Desktop Video SDK](https://www.blackmagicdesign.com/support).
+1. If the resulting folder name has spaces e.g. `Blackmagic DeckLink SDK 10.4`, replace spaces with an underscore, e.g. `Blackmagic_DeckLink_SDK_10.4`.
 1. (Optional) Move the resulting folder to a system folder, e.g. `/opt`, for easy access by all users.
 1. Specify the **absolute** path of the `SDK` sub-folder of this folder as the `BlackmagicSDK_DIR` environment variable, e.g. `export BlackmagicSDK_DIR="/opt/Blackmagic DeckLink SDK 10.4/SDK"`.
 1. Install the driver package appropriate for your system (e.g. `/opt/Blackmagic DeckLink SDK 10.4/deb/amd64/desktopvideo_10.8.4a4_amd64.deb` for a 64-bit Ubuntu Linux).
