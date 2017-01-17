@@ -40,6 +40,7 @@ Supported video sources
 -----------------------
 
 * [Epiphan DVI2PCIe Duo](http://www.epiphan.com/products/dvi2pcie-duo/)
+* [Blackmagic DeckLink SDI 4K](https://www.blackmagicdesign.com/products/decklink/models)
 * Network streams
 
 Supported video formats
