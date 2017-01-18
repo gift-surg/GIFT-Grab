@@ -263,6 +263,7 @@ if(USE_BLACKMAGICSDK)
     INCLUDE_DIRECTORIES(blackmagicsdk)
     LIST(APPEND HEADERS blackmagicsdk/blackmagicsdk_video_source.h)
     LIST(APPEND SOURCES blackmagicsdk/blackmagicsdk_video_source.cpp)
+    LIST(APPEND HEADERS blackmagicsdk/deck_link_display_mode_detector.h)
     LIST(APPEND SOURCES blackmagicsdk/deck_link_display_mode_detector.cpp)
 endif(USE_BLACKMAGICSDK)
 
