@@ -13,10 +13,7 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK()
     , _video_buffer_length(0)
     , _cols(0)
     , _rows(0)
-    // This constructor should never be called,
-    // therefore setting I420 arbitrarily for the
-    // buffer video frame here.
-    , _buffer_video_frame(VideoFrame(I420))
+    , _buffer_video_frame(VideoFrame(UYVY))
     , _running(false)
 {
     // nop
@@ -40,15 +37,13 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
     BMDPixelFormat pixel_format;
     switch(_colour)
     {
-    case BGRA:
-        pixel_format = bmdFormat8BitBGRA;
-        break;
     case UYVY:
         pixel_format = bmdFormat8BitYUV;
         break;
+    case BGRA:
     case I420:
     default:
-        bail("BlackmagicSDK video source supports only the BGRA and UYVY colour spaces");
+        bail("BlackmagicSDK video source supports only the UYVY colour space");
     }
 
     // Get an iterator through the available DeckLink ports
