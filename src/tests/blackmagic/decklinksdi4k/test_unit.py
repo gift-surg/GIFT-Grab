@@ -34,7 +34,7 @@ def peri_test(colour_space):
     global frame, frame_with_colour_mismatch
     frame = VideoFrame(colour_space, False)
     if colour_space == ColourSpace.BGRA:
-        mismatch_colour_space = ColourSpace.I420
+        mismatch_colour_space = ColourSpace.UYVY
     else:
         mismatch_colour_space = ColourSpace.BGRA
     frame_with_colour_mismatch = VideoFrame(mismatch_colour_space, False)
