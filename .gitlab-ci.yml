@@ -240,7 +240,7 @@ pypi-epiphan-dvi2pcie-duo:
     - gift-pypi
     - gift-epiphan-dvi2pcie-duo
   only:
-    - 5-add-support-for-blackmagic
+    - this-branch-should-never-exist
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 epiphan-dvi2pcie-duo:
@@ -290,7 +290,7 @@ epiphan-dvi2pcie-duo:
     - gift-linux
     - gift-epiphan-dvi2pcie-duo
   only:
-    - 5-add-support-for-blackmagic
+    - this-branch-should-never-exist
 
 ################## Device: Epiphan Pearl #########################
 ################## Platform: PyPI ################################
@@ -339,7 +339,7 @@ pypi-network-sources:
     - gift-pypi
     - gift-epiphan-pearl
   only:
-    - this-branch-should-never-exist
+    - 5-add-support-for-blackmagic
 
 ################## Device: Epiphan Pearl ##################
 network-sources:
@@ -365,7 +365,7 @@ network-sources:
     - gift-linux
     - gift-epiphan-pearl
   only:
-    - this-branch-should-never-exist
+    - 5-add-support-for-blackmagic
 
 ################## Device: Blackmagic DeckLink SDI 4K ##################
 pypi-blackmagic-decklink-sdi-4k:
