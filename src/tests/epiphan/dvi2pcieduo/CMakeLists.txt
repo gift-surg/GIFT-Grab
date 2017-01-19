@@ -28,6 +28,10 @@ TARGET_LINK_LIBRARIES(
     ${LIBS} ${NAME}
 )
 foreach(COLOUR_SPACE ${COLOUR_SPACES})
+    if(COLOUR_SPACE STREQUAL UYVY)
+        continue()
+    endif(COLOUR_SPACE STREQUAL UYVY)
+
     foreach(PORT ${PORTS})
         SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_VideoSourceFactory_${PORT}_${COLOUR_SPACE})
         ADD_TEST(NAME ${NAME_TEST}
@@ -39,6 +43,10 @@ endforeach(COLOUR_SPACE)
 
 # SDI and DVI ports on their own
 foreach(COLOUR_SPACE ${COLOUR_SPACES})
+    if(COLOUR_SPACE STREQUAL UYVY)
+        continue()
+    endif(COLOUR_SPACE STREQUAL UYVY)
+
     foreach(PORT ${PORTS})
         SET(NAME_TEST Test_Epiphan_DVI2PCIeDuo_${PORT}_${COLOUR_SPACE})
         ADD_TEST(NAME ${NAME_TEST}
@@ -60,6 +68,10 @@ endforeach(COLOUR_SPACE)
 
 # Both ports of Epiphan DVI2PCIe Duo using the observer pattern
 foreach(COLOUR_SPACE ${COLOUR_SPACES})
+    if(COLOUR_SPACE STREQUAL UYVY)
+        continue()
+    endif(COLOUR_SPACE STREQUAL UYVY)
+
     foreach(PORT ${PORTS})
         if(COLOUR_SPACE STREQUAL "I420")
             SET(FRAME_RATE 57)

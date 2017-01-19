@@ -15,6 +15,9 @@ network_sources_working_dir = abspath(
 epiphan_dvi2pcieduo_config_dir = abspath(
     resource_filename('giftgrab.tests',
                       join('epiphan', 'dvi2pcieduo', 'data')))
+blackmagic_decklinksdi4k_working_dir = abspath(
+    resource_filename('giftgrab.tests',
+                      join('blackmagic', 'decklinksdi4k')))
 videoframe_working_dir = abspath(
     resource_filename('giftgrab.tests', 'videoframe'))
 
@@ -63,6 +66,18 @@ def __run_epiphan_tests(colour_space):
     #             '--config-dir=%s' % (epiphan_dvi2pcieduo_config_dir),
     #             epiphan_dvi2pcieduo_working_dir, '-m', 'epiphan_py_module'])
     # if ret: exit(ret)
+
+
+def __run_blackmagic_tests(colour_space):
+    ret = main(['--colour-space=%s' % (colour_space),
+                blackmagic_decklinksdi4k_working_dir, '-m', 'unit'])
+    if ret: exit(ret)
+
+    ret = main(['--colour-space=%s' % (colour_space),
+                '--frame-rate=27',
+                '--observers=3',
+                blackmagic_decklinksdi4k_working_dir, '-m', 'observer_pattern'])
+    if ret: exit(ret)
 
 
 def __run_network_tests(colour_space):
@@ -125,6 +140,10 @@ def test_epiphan_dvi2pcieduo_bgra():
 
 def test_epiphan_dvi2pcieduo_i420():
     __run_epiphan_tests('I420')
+
+
+def test_blackmagic_decklinksdi4k_uyvy():
+    __run_blackmagic_tests('UYVY')
 
 
 def test_network_sources_bgra():

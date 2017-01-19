@@ -130,6 +130,9 @@ void VideoTargetFFmpeg::append(const VideoFrame & frame)
     case ColourSpace::I420:
         colour = AV_PIX_FMT_YUV420P;
         break;
+    case ColourSpace::UYVY:
+        colour = AV_PIX_FMT_UYVY422;
+        break;
     default:
         throw VideoTargetError("Only BGRA and I420 colour spaces supported currently");
         break;
@@ -253,6 +256,9 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
             frame->linesize[1] = frame->width / 2;
             frame->linesize[2] = frame->width / 2;
             break;
+        case AV_PIX_FMT_UYVY422:
+            _pixel_depth = 16; // bits-per-pixel
+            break;
         default:
             throw VideoTargetError("Colour space not supported");
         }
@@ -289,9 +295,10 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
         switch(colour_space)
         {
         case AV_PIX_FMT_BGRA:
+        case AV_PIX_FMT_UYVY422:
             /* Open context for converting BGRA pixels to YUV420p */
             _sws_context = sws_getContext(
-                        width, height, AV_PIX_FMT_BGRA,
+                        width, height, colour_space,
                         width, height, _stream->codec->pix_fmt,
                         0, NULL, NULL, NULL);
             if (_sws_context == NULL)
@@ -313,7 +320,19 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
         _packet.data = NULL;    // packet data will be allocated by the encoder
         _packet.size = 0;
 
-        _bgra_stride[0] = 4*width;
+        switch(colour_space)
+        {
+        case AV_PIX_FMT_BGRA:
+            _stride[0] = 4 * width;
+            break;
+        case AV_PIX_FMT_UYVY422:
+            _stride[0] = 2 * width;
+            break;
+        case AV_PIX_FMT_YUV420P:
+        default:
+            // nop
+            break;
+        }
 
         _first_frame = false;
     }
@@ -346,10 +365,11 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
     switch(colour_space)
     {
     case AV_PIX_FMT_BGRA:
+    case AV_PIX_FMT_UYVY422:
         _src_data_ptr[0] = data;
         /* convert pixel format */
         sws_scale(_sws_context,
-                  _src_data_ptr, _bgra_stride, // BGRA has one plane
+                  _src_data_ptr, _stride, // BGRA and UYVY have one plane each
                   0, height,
                   frame->data, frame->linesize
                   );

@@ -5,7 +5,7 @@ def pytest_addoption(parser):
     parser.addoption('--codec', action='store',
                      help='Codec (HEVC, Xvid, or VP9)')
     parser.addoption('--colour-space', action='store',
-                     help='Colour space specification (BGRA or I420)')
+                     help='Colour space specification (BGRA, I420, or UYVY)')
 
 
 def pytest_generate_tests(metafunc):
@@ -30,6 +30,8 @@ def pytest_generate_tests(metafunc):
             colour_space = ColourSpace.BGRA
         elif case_insensitive == 'i420':
             colour_space = ColourSpace.I420
+        elif case_insensitive == 'uyvy':
+            colour_space = ColourSpace.UYVY
         else:
             raise RuntimeError('Could not recognise colour space ' +
                                colour_space_str)

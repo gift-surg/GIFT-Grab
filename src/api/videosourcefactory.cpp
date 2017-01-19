@@ -8,6 +8,9 @@
 #ifdef USE_LIBVLC
 #include "vlc_video_source.h"
 #endif
+#ifdef USE_BLACKMAGICSDK
+#include "blackmagicsdk_video_source.h"
+#endif
 
 namespace gg
 {
@@ -154,6 +157,32 @@ IVideoSource * VideoSourceFactory::get_device(Device device,
         }
         break;
 
+    // Blackmagic DeckLink SDI 4K ========================================
+    case DeckLinkSDI4K:
+#ifdef USE_BLACKMAGICSDK
+        switch (colour)
+        {
+
+        // BGRA ========================================
+        case BGRA:
+        // UYVY ========================================
+        case UYVY:
+            break;
+
+        // I420 ========================================
+        case I420:
+        default:
+            throw VideoSourceError("Colour space not supported for"
+                                   " Blackmagic DeckLink SDI 4K");
+        }
+        src = new VideoSourceBlackmagicSDK(0, colour);
+#else
+        throw VideoSourceError(
+            "Blackmagic DeckLink SDI 4K supported only through"
+            " Blackmagic Desktop Video SDK");
+#endif
+        break;
+
     // unsupported device ========================================
     default:
         std::string msg;
@@ -202,6 +231,7 @@ void VideoSourceFactory::free_device(Device device)
     {
     case DVI2PCIeDuo_DVI:
     case DVI2PCIeDuo_SDI:
+    case DeckLinkSDI4K:
         break; // everything up to here is recognised
     default:
         std::string msg;

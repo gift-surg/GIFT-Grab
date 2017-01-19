@@ -25,6 +25,8 @@ OPTION(USE_EPIPHAN_DVI2PCIE_DUO
     "Capture video with Epiphan DVI2PCIe Duo" OFF)
 OPTION(USE_NETWORK_SOURCES
     "Capture video from network sources" OFF)
+OPTION(USE_BLACKMAGIC_DECKLINK_SDI_4K
+    "Capture video with Blackmagic DeckLink SDI 4K" OFF)
 OPTION(USE_HEVC
     "Video encoding with HEVC (requires FFmpeg, pkg-config and kvazaar [default] or x265 [turn USE_X265 on])" OFF)
 OPTION(USE_X265
@@ -51,6 +53,8 @@ OPTION(USE_BGRA
     "Capture video in BGRA colour space (requires OpenCV)" ON)
 OPTION(USE_I420
     "Capture video in I420 colour space (requires libVLC)" ON)
+OPTION(USE_UYVY
+    "Capture video in UYVY colour space (currently only for Blackmagic DeckLink SDI 4K)" ON)
 OPTION(USE_EPIPHANSDK
     "Use Epiphan video grabbing SDK (requires zlib and ptreads)" OFF)
 OPTION(GENERATE_PERFORMANCE_OUTPUT
@@ -75,6 +79,10 @@ if(USE_EPIPHANSDK AND NOT ENABLE_NONFREE)
     MESSAGE(FATAL_ERROR
         "Epiphan video grabbing SDK has a proprietary licence: you must explicitly enable non-free (ENABLE_NONFREE=ON) to build GIFT-Grab with Epiphan video grabbing SDK support.")
 endif(USE_EPIPHANSDK AND NOT ENABLE_NONFREE)
+if(USE_BLACKMAGIC_DECKLINK_SDI_4K AND NOT ENABLE_NONFREE)
+    MESSAGE(FATAL_ERROR
+        "Blackmagic Desktop Video SDK has a proprietary licence: you must explicitly enable non-free (ENABLE_NONFREE=ON) to build GIFT-Grab with Blackmagic DeckLink SDI 4K support")
+endif(USE_BLACKMAGIC_DECKLINK_SDI_4K AND NOT ENABLE_NONFREE)
 
 # Check GPL explicitly enabled for relevant components
 if(USE_X265 AND NOT ENABLE_GPL)
@@ -108,6 +116,13 @@ if(USE_NETWORK_SOURCES)
     endif(NOT USE_BGRA AND NOT USE_I420)
 endif(USE_NETWORK_SOURCES)
 
+# Check at least one colour space activated if using Blackmagic DeckLink SDI 4K
+if(USE_BLACKMAGIC_DECKLINK_SDI_4K)
+    if(NOT USE_UYVY)
+        MESSAGE(FATAL_ERROR "UYVY colour space must be activated to use Blackmagic DeckLink SDI 4K")
+    endif(NOT USE_UYVY)
+endif(USE_BLACKMAGIC_DECKLINK_SDI_4K)
+
 # Determine whether OpenCV needed
 if(((USE_EPIPHAN_DVI2PCIE_DUO OR USE_NETWORK_SOURCES) AND USE_BGRA) OR
     USE_XVID)
@@ -120,10 +135,14 @@ if(USE_EPIPHAN_DVI2PCIE_DUO AND USE_I420)
         SET(USE_LIBVLC ON CACHE BOOL "OFF ON" FORCE)
     endif(NOT USE_EPIPHANSDK)
 endif(USE_EPIPHAN_DVI2PCIE_DUO AND USE_I420)
-
 if(USE_NETWORK_SOURCES AND USE_I420)
     SET(USE_LIBVLC ON CACHE BOOL "OFF ON" FORCE)
 endif(USE_NETWORK_SOURCES AND USE_I420)
+
+# Determine if Blackmagic Desktop Video SDK needed
+if(USE_BLACKMAGIC_DECKLINK_SDI_4K)
+    SET(USE_BLACKMAGICSDK ON CACHE BOOL "OFF ON" FORCE)
+endif(USE_BLACKMAGIC_DECKLINK_SDI_4K)
 
 # Determine whether FFmpeg needed
 if(USE_HEVC OR USE_VP9)
@@ -233,6 +252,20 @@ if(USE_EPIPHANSDK)
     LIST(APPEND HEADERS epiphansdk/epiphansdk_video_source.h)
     LIST(APPEND SOURCES epiphansdk/epiphansdk_video_source.cpp)
 endif(USE_EPIPHANSDK)
+
+# Blackmagic SDK video source
+if(USE_BLACKMAGICSDK)
+    ADD_SUBDIRECTORY(cmake/blackmagicsdk)
+    INCLUDE_DIRECTORIES(${BlackmagicSDK_INCLUDE_DIRS})
+    LIST(APPEND LIBS ${BlackmagicSDK_LIBS})
+    ADD_DEFINITIONS(-DUSE_BLACKMAGICSDK)
+
+    INCLUDE_DIRECTORIES(blackmagicsdk)
+    LIST(APPEND HEADERS blackmagicsdk/blackmagicsdk_video_source.h)
+    LIST(APPEND SOURCES blackmagicsdk/blackmagicsdk_video_source.cpp)
+    LIST(APPEND HEADERS blackmagicsdk/deck_link_display_mode_detector.h)
+    LIST(APPEND SOURCES blackmagicsdk/deck_link_display_mode_detector.cpp)
+endif(USE_BLACKMAGICSDK)
 
 # Performance benchmarking
 if(GENERATE_PERFORMANCE_OUTPUT)

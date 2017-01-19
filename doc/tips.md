@@ -22,6 +22,17 @@ Epiphan Video Grabbing SDK
 1. (Optional) Move the top folder (i.e. the one resulting from unpacking the archive) to a system folder, e.g. `/opt`, for easy access by all users.
 1. Specify this folder's **absolute** path as the `EpiphanSDK_DIR` environment variable, e.g. `export EpiphanSDK_DIR="/opt/epiphan_sdk-3.30.3.0007"`.
 
+Blackmagic Drivers and Blackmagic Desktop Video SDK
+---------------------------------------------------
+
+1. Download and unpack [Blackmagic Desktop Video SDK](https://www.blackmagicdesign.com/support).
+1. If the resulting folder name has spaces e.g. `Blackmagic DeckLink SDK 10.4`, replace spaces with an underscore, e.g. `Blackmagic_DeckLink_SDK_10.4`.
+1. (Optional) Move the resulting folder to a system folder, e.g. `/opt`, for easy access by all users.
+1. Specify the **absolute** path of the `SDK` sub-folder of this folder as the `BlackmagicSDK_DIR` environment variable, e.g. `export BlackmagicSDK_DIR="/opt/Blackmagic DeckLink SDK 10.4/SDK"`.
+1. Install the driver package appropriate for your system (e.g. `/opt/Blackmagic DeckLink SDK 10.4/deb/amd64/desktopvideo_10.8.4a4_amd64.deb` for a 64-bit Ubuntu Linux).
+1. (Optional) Install the MediaExpress application using the package appropriate for your system (e.g. `/opt/Blackmagic DeckLink SDK 10.4/deb/amd64/mediaexpress_3.5.3a1_amd64.deb` for a 64-bit Ubuntu Linux).
+1. Check your Blackmagic card's firmware status, and update it if necessary.
+
 OpenCV
 ------
 
