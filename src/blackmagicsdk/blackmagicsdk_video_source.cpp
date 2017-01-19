@@ -205,7 +205,8 @@ HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::VideoInputFormatChanged(
     BMDDetectedVideoInputFormatFlags format_flags
 )
 {
-    // TODO
+    // not supported yet: see issue #149
+    return S_OK;
 }
 
 
