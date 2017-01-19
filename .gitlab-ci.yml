@@ -403,6 +403,10 @@ pypi-blackmagic-decklink-sdi-4k:
     - test-giftgrab-blackmagic-decklinksdi4k-uyvy; exit_on_fail
     # deactivate virtual env
     - deactivate
+  tags:
+    - gift-blackmagic-decklink-sdi-4k
+  only:
+    - 5-add-support-for-blackmagic
 
 blackmagic-decklink-sdi-4k:
   stage: test_cmake
