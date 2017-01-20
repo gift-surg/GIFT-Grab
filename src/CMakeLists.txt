@@ -27,6 +27,8 @@ OPTION(USE_NETWORK_SOURCES
     "Capture video from network sources" OFF)
 OPTION(USE_BLACKMAGIC_DECKLINK_SDI_4K
     "Capture video with Blackmagic DeckLink SDI 4K" OFF)
+OPTION(USE_FILES
+    "Support for reading video files" OFF)
 OPTION(USE_HEVC
     "Video encoding with HEVC (requires FFmpeg, pkg-config and kvazaar [default] or x265 [turn USE_X265 on])" OFF)
 OPTION(USE_X265

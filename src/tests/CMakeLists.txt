@@ -66,3 +66,8 @@ endif(USE_NETWORK_SOURCES)
 if(USE_BLACKMAGIC_DECKLINK_SDI_4K)
     SUBDIRS(blackmagic/decklinksdi4k)
 endif(USE_BLACKMAGIC_DECKLINK_SDI_4K)
+
+# Support for reading video files
+if(USE_FILES)
+    ADD_SUBDIRECTORY(files)
+endif(USE_FILES)
