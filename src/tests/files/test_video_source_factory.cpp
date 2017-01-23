@@ -1,16 +1,75 @@
 #include "include_catch.h"
 #include "codec.h"
 #include "videoframe.h"
+#include "videosourcefactory.h"
+#include <thread>
+#include <chrono>
 
 
 gg::Codec codec;
 gg::ColourSpace colour;
+std::string filepath = "";
+double frame_rate = -1.0;
+size_t frame_count = 0;
+size_t frame_width = 0;
+size_t frame_height = 0;
+std::chrono::milliseconds video_duration; // inferred
 
+
+class FileChecker : public gg::IObserver
+{
+protected:
+    IVideoSource * _file_reader;
+    std::vector<gg::VideoFrame> _frames;
+
+public:
+    FileChecker(IVideoSource * file_reader)
+        : gg::IObserver()
+        , _file_reader(file_reader)
+    {
+        if (_file_reader != nullptr)
+            _file_reader->attach(*this);
+    }
+
+    ~FileChecker()
+    {
+        if (_file_reader != nullptr)
+            _file_reader->detach(*this);
+    }
+
+public:
+    void update(gg::VideoFrame & frame)
+    {
+        _frames.push_back(frame);
+    }
+
+    bool check(double frame_rate, size_t frame_count,
+               size_t frame_width, size_t frame_height)
+    {
+        if (_file_reader != nullptr)
+            _file_reader->detach(*this);
+        if (_file_reader == nullptr)
+            return false;
+        if (_file_reader->get_frame_rate() != frame_rate)
+            return false;
+        // TODO
+        if (_frames.size() < frame_count)
+            return false;
+        for (gg::VideoFrame frame : _frames)
+        {
+            if (frame.cols() != frame_width)
+                return false;
+            if (frame.rows() != frame_height)
+                return false;
+        }
+        return true;
+    }
+};
 
 int main(int argc, char * argv[])
 {
     bool args_ok = true;
-    if (argc < 3)
+    if (argc < 8)
         args_ok = false;
     else
     {
@@ -36,19 +95,86 @@ int main(int argc, char * argv[])
             colour = gg::UYVY;
         else
             args_ok = false;
+        filepath = std::string(argv[3]);
+        frame_rate = std::atof(argv[4]);
+        if (frame_rate <= 0)
+            args_ok = false;
+        frame_count = std::atoi(argv[5]);
+        if (frame_count <= 0)
+            args_ok = false;
+        frame_width = std::atoi(argv[6]);
+        if (frame_width <= 0)
+            args_ok = false;
+        frame_height = std::atoi(argv[7]);
+        if (frame_height <= 0)
+            args_ok = false;
     }
     if (not args_ok)
     {
-        printf("Synopsis: %s HEVC|Xvid|VP9 BGRA|I420|UYVY\n", argv[0]);
+        printf("Synopsis: %s HEVC|Xvid|VP9 BGRA|I420|UYVY"
+               " <filepath> <frame_rate> <frame_count>"
+               " <frame_width> <frame_height>\n", argv[0]);
         return EXIT_FAILURE;
     }
+    video_duration = std::chrono::milliseconds(
+                static_cast<size_t>(1000 * frame_count / frame_rate)
+                );
+
     int ret = Catch::Session().run();
 
     return ret;
 }
 
-// TODO
-TEST_CASE( "failing test", "[VideoSourceFactory]" )
+TEST_CASE( "create_file_reader with valid file path returns"
+           " ready-to-use file reader object (RAII)",
+           "[VideoSourceFactory]" )
 {
-    FAIL( "tests not implemented yet" );
+    gg::VideoSourceFactory & factory = gg::VideoSourceFactory::get_instance();
+
+    IVideoSource * source = nullptr;
+
+    source = factory.create_file_reader(filepath, codec, colour);
+    REQUIRE( source != nullptr );
+
+    FileChecker file_checker(source);
+    std::this_thread::sleep_for(video_duration);
+    REQUIRE( file_checker.check(frame_rate, frame_count,
+                                frame_width, frame_height) );
+
+    delete source;
+}
+
+TEST_CASE( "create_file_reader can re-open file when reader"
+           " goes out of scope", "[VideoSourceFactory]" )
+{
+    gg::VideoSourceFactory & factory = gg::VideoSourceFactory::get_instance();
+
+    IVideoSource * source = nullptr;
+
+    { // artificial scope for file reader
+        source = factory.create_file_reader(filepath, codec, colour);
+        REQUIRE( source != nullptr );
+        delete source;
+        source = nullptr;
+    }
+
+    source = factory.create_file_reader(filepath, codec, colour);
+    FileChecker file_checker(source);
+    std::this_thread::sleep_for(video_duration);
+    REQUIRE( file_checker.check(frame_rate, frame_count,
+                                frame_width, frame_height) );
+
+    delete source;
+}
+
+TEST_CASE( "create_file_reader with invalid path throws exception",
+           "[VideoSourceFactory]" )
+{
+    gg::VideoSourceFactory & factory = gg::VideoSourceFactory::get_instance();
+
+    IVideoSource * source = nullptr;
+    REQUIRE_THROWS_AS( source = factory.create_file_reader(
+                "/this/path/should/never/exist.video", codec, colour),
+                       gg::VideoSourceError );
+    REQUIRE( source == nullptr );
 }

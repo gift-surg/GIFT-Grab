@@ -43,6 +43,7 @@ foreach(CODEC ${CODECS})
         SET(NAME_TEST Test_VideoSourceFactory_Files_${CODEC}_${COLOUR_SPACE})
         ADD_TEST(NAME ${NAME_TEST}
             COMMAND ${VIDEO_SOURCE_FACTORY_TEST} ${CODEC} ${COLOUR_SPACE}
+            /this/file/does/not/exist.video 30 5 1920 1080
         )
         LIST(APPEND TESTS_LIST ${NAME_TEST})
     endforeach(COLOUR_SPACE)
