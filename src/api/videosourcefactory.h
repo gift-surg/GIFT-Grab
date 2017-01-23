@@ -2,6 +2,7 @@
 
 #include "ivideosource.h"
 #include "device.h"
+#include "codec.h"
 
 namespace gg
 {
@@ -133,6 +134,28 @@ public:
     //!
     IVideoSource * connect_network_source(std::string address,
                                           enum ColourSpace colour);
+
+    //!
+    //! \brief Create a reader to read \c colour_space
+    //! frames format from \c filepath encoded using \c
+    //! codec
+    //! \param filepath
+    //! \param codec
+    //! \param colour_space
+    //! \return a polymorphic video file reader. The
+    //! ownership of this returned object passes to the
+    //! caller. The reader behaves like other video
+    //! sources as far the callback paradigm (observer
+    //! pattern) is concerned. Calling the \c get_frame
+    //! method on this object leads to undefined
+    //! behaviour, and hence should be avoided.
+    //! \throw VideoSourceError with a detailed error
+    //! message if opening of \c filepath fails for any
+    //! reason
+    //!
+    IVideoSource * create_file_reader(const std::string filepath,
+                                      enum Codec codec,
+                                      enum ColourSpace colour_space);
 
 protected:
     DISALLOW_COPY_AND_ASSIGNMENT(VideoSourceFactory);
