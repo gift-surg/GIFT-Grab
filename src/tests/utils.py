@@ -68,3 +68,49 @@ class FrameRateTimer(pgg.IObserver):
             return 1
         else:
             return 0
+
+
+class FileChecker(pgg.IObserver):
+    """Descendant of GIFT-Grab's `Observer`, which
+    listens to an `Observable` reading video frames
+    from files and reports the file reader's specs,
+    e.g. frame rate, frame count.
+    """
+
+    def __init__(self, file_reader):
+        super(FileChecker, self).__init__()
+        self._file_reader = file_reader
+        self._frames = []
+
+    def attach(self):
+        if self._file_reader is not None:
+            self._file_reader.attach(self)
+
+    def detach(self):
+        if self._file_reader is not None:
+            self._file_reader.detach(self)
+
+    def update(self, frame):
+        self._frames.append(frame)
+
+    def assert_data(self):
+        return len(self._frames) > 0
+
+    def assert_specs(self, colour,
+                     frame_rate, frame_count,
+                     frame_width, frame_height):
+        self.detach()
+        if self._file_reader is None:
+            return False
+        if self._file_reader.get_frame_rate() != frame_rate:
+            return False
+        if len(self._frames) != frame_count:
+            return False
+        for frame in self._frames:
+            if frame.colour() != colour:
+                return False
+            if frame.cols() != frame_width:
+                return False
+            if frame.rows() != frame_height:
+                return False
+        return True
