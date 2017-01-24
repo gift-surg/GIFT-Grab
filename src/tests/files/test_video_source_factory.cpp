@@ -14,6 +14,7 @@ size_t frame_count = 0;
 size_t frame_width = 0;
 size_t frame_height = 0;
 std::chrono::milliseconds video_duration; // inferred
+std::chrono::milliseconds quarter_video_duration; // inferred
 
 
 class FileChecker : public gg::IObserver
@@ -123,6 +124,9 @@ int main(int argc, char * argv[])
     video_duration = std::chrono::milliseconds(
                 static_cast<size_t>(1000 * frame_count / frame_rate)
                 );
+    quarter_video_duration = std::chrono::milliseconds(
+                static_cast<size_t>(250 * frame_count / frame_rate)
+                );
 
     int ret = Catch::Session().run();
 
@@ -162,6 +166,7 @@ TEST_CASE( "create_file_reader returns reader that releases"
         source = factory.create_file_reader(filepath, codec, colour);
         REQUIRE( source != nullptr );
         FileChecker file_checker_1(source);
+        std::this_thread::sleep_for(quarter_video_duration);
         REQUIRE( file_checker_1.assert_data() );
         delete source;
         source = nullptr;
