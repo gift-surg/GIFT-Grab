@@ -57,8 +57,7 @@ public:
             return false;
         if (_file_reader->get_frame_rate() != frame_rate)
             return false;
-        // TODO
-        if (_frames.size() < frame_count)
+        if (_frames.size() != frame_count)
             return false;
         for (gg::VideoFrame frame : _frames)
         {

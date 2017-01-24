@@ -151,7 +151,9 @@ public:
     //! sources as far the callback paradigm (observer
     //! pattern) is concerned. Calling the \c get_frame
     //! method on this object leads to undefined
-    //! behaviour, and hence should be avoided.
+    //! behaviour, and hence should be avoided. The reader
+    //! stops sending out data once all video frames in
+    //! the opened file are exhausted.
     //! \throw VideoSourceError with a detailed error
     //! message if opening of \c filepath fails for any
     //! reason
