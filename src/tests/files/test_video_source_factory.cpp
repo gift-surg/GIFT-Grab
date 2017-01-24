@@ -43,8 +43,13 @@ public:
         _frames.push_back(frame);
     }
 
-    bool check(double frame_rate, size_t frame_count,
-               size_t frame_width, size_t frame_height)
+    bool assert_data()
+    {
+        return not _frames.empty();
+    }
+
+    bool assert_specs(double frame_rate, size_t frame_count,
+                      size_t frame_width, size_t frame_height)
     {
         if (_file_reader != nullptr)
             _file_reader->detach(*this);
@@ -138,31 +143,39 @@ TEST_CASE( "create_file_reader with valid file path returns"
 
     FileChecker file_checker(source);
     std::this_thread::sleep_for(video_duration);
-    REQUIRE( file_checker.check(frame_rate, frame_count,
-                                frame_width, frame_height) );
+    REQUIRE(
+        file_checker.assert_specs(
+            frame_rate, frame_count, frame_width, frame_height
+        )
+    );
 
     delete source;
 }
 
 TEST_CASE( "create_file_reader can re-open file when reader"
-           " goes out of scope", "[VideoSourceFactory]" )
+           " is destroyed", "[VideoSourceFactory]" )
 {
     gg::VideoSourceFactory & factory = gg::VideoSourceFactory::get_instance();
 
     IVideoSource * source = nullptr;
 
-    { // artificial scope for file reader
+    { // artificial scope for file_checker_1
         source = factory.create_file_reader(filepath, codec, colour);
         REQUIRE( source != nullptr );
+        FileChecker file_checker_1(source);
+        REQUIRE( file_checker_1.assert_data() );
         delete source;
         source = nullptr;
     }
 
     source = factory.create_file_reader(filepath, codec, colour);
-    FileChecker file_checker(source);
+    FileChecker file_checker_2(source);
     std::this_thread::sleep_for(video_duration);
-    REQUIRE( file_checker.check(frame_rate, frame_count,
-                                frame_width, frame_height) );
+    REQUIRE(
+        file_checker_2.assert_specs(
+            frame_rate, frame_count, frame_width, frame_height
+        )
+    );
 
     delete source;
 }
@@ -173,8 +186,11 @@ TEST_CASE( "create_file_reader with invalid path throws exception",
     gg::VideoSourceFactory & factory = gg::VideoSourceFactory::get_instance();
 
     IVideoSource * source = nullptr;
-    REQUIRE_THROWS_AS( source = factory.create_file_reader(
-                "/this/path/should/never/exist.video", codec, colour),
-                       gg::VideoSourceError );
+    REQUIRE_THROWS_AS(
+        source = factory.create_file_reader(
+            "/this/path/should/never/exist.video", codec, colour
+        ),
+        gg::VideoSourceError
+    );
     REQUIRE( source == nullptr );
 }
