@@ -49,7 +49,8 @@ public:
         return not _frames.empty();
     }
 
-    bool assert_specs(double frame_rate, size_t frame_count,
+    bool assert_specs(enum gg::ColourSpace colour,
+                      double frame_rate, size_t frame_count,
                       size_t frame_width, size_t frame_height)
     {
         if (_file_reader != nullptr)
@@ -62,6 +63,8 @@ public:
             return false;
         for (gg::VideoFrame frame : _frames)
         {
+            if (frame.colour() != colour)
+                return false;
             if (frame.cols() != frame_width)
                 return false;
             if (frame.rows() != frame_height)
@@ -148,7 +151,9 @@ TEST_CASE( "create_file_reader with valid file path returns"
     std::this_thread::sleep_for(video_duration);
     REQUIRE(
         file_checker.assert_specs(
-            frame_rate, frame_count, frame_width, frame_height
+            colour,
+            frame_rate, frame_count,
+            frame_width, frame_height
         )
     );
 
@@ -177,7 +182,9 @@ TEST_CASE( "create_file_reader returns reader that releases"
     std::this_thread::sleep_for(video_duration);
     REQUIRE(
         file_checker_2.assert_specs(
-            frame_rate, frame_count, frame_width, frame_height
+            colour,
+            frame_rate, frame_count,
+            frame_width, frame_height
         )
     );
 
