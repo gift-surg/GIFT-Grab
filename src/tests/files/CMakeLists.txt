@@ -25,25 +25,29 @@ TARGET_LINK_LIBRARIES(
 )
 
 # generate tests
+SET(FILEPATH /this/file/does/not/exist.video)
+SET(FRAME_RATE 30)
+SET(FRAME_COUNT 5)
+SET(FRAME_WIDTH 1920)
+SET(FRAME_HEIGHT 1080)
 foreach(CODEC ${CODECS})
     foreach(COLOUR_SPACE ${COLOUR_SPACES})
-        SET(NAME_TEST Test_${CODEC}_${COLOUR_SPACE})
-
-        ADD_TEST(NAME ${NAME_TEST}
-            COMMAND py.test --codec=${CODEC} --colour-space=${COLOUR_SPACE} test_observer.py
-        )
-        LIST(APPEND TESTS_LIST ${NAME_TEST})
-
         SET(NAME_TEST Test_Files_ObserverPattern_${CODEC}_${COLOUR_SPACE})
         ADD_TEST(NAME ${NAME_TEST}
-            COMMAND py.test --codec=${CODEC} --colour-space=${COLOUR_SPACE} test_observer.py
+            COMMAND py.test --codec=${CODEC} --colour-space=${COLOUR_SPACE}
+            --filepath=${FILEPATH}
+            --frame-rate=${FRAME_RATE} --frame-count=${FRAME_COUNT}
+            --frame-width=${FRAME_WIDTH} --frame-height=${FRAME_HEIGHT}
+            test_observer.py
         )
         LIST(APPEND TESTS_LIST ${NAME_TEST})
 
         SET(NAME_TEST Test_VideoSourceFactory_Files_${CODEC}_${COLOUR_SPACE})
         ADD_TEST(NAME ${NAME_TEST}
             COMMAND ${VIDEO_SOURCE_FACTORY_TEST} ${CODEC} ${COLOUR_SPACE}
-            /this/file/does/not/exist.video 30 5 1920 1080
+            ${FILEPATH}
+            ${FRAME_RATE} ${FRAME_COUNT}
+            ${FRAME_WIDTH} ${FRAME_HEIGHT}
         )
         LIST(APPEND TESTS_LIST ${NAME_TEST})
     endforeach(COLOUR_SPACE)
