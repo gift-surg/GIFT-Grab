@@ -1,5 +1,5 @@
 FILE(COPY
-    ${CMAKE_SOURCE_DIR}/tests/files/test_unit.py
+    ${CMAKE_SOURCE_DIR}/tests/files/test_observer.py
     ${CMAKE_SOURCE_DIR}/tests/files/conftest.py
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
 )
@@ -30,13 +30,13 @@ foreach(CODEC ${CODECS})
         SET(NAME_TEST Test_${CODEC}_${COLOUR_SPACE})
 
         ADD_TEST(NAME ${NAME_TEST}
-            COMMAND py.test --codec=${CODEC} --colour-space=${COLOUR_SPACE} test_unit.py
+            COMMAND py.test --codec=${CODEC} --colour-space=${COLOUR_SPACE} test_observer.py
         )
         LIST(APPEND TESTS_LIST ${NAME_TEST})
 
-        SET(NAME_TEST Test_Files_${CODEC}_${COLOUR_SPACE})
+        SET(NAME_TEST Test_Files_ObserverPattern_${CODEC}_${COLOUR_SPACE})
         ADD_TEST(NAME ${NAME_TEST}
-            COMMAND py.test --codec=${CODEC} --colour-space=${COLOUR_SPACE} test_unit.py
+            COMMAND py.test --codec=${CODEC} --colour-space=${COLOUR_SPACE} test_observer.py
         )
         LIST(APPEND TESTS_LIST ${NAME_TEST})
 
