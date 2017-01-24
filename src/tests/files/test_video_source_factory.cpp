@@ -151,8 +151,8 @@ TEST_CASE( "create_file_reader with valid file path returns"
     delete source;
 }
 
-TEST_CASE( "create_file_reader can re-open file when reader"
-           " is destroyed", "[VideoSourceFactory]" )
+TEST_CASE( "create_file_reader returns reader that releases"
+           " file on destruction", "[VideoSourceFactory]" )
 {
     gg::VideoSourceFactory & factory = gg::VideoSourceFactory::get_instance();
 
