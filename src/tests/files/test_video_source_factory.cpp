@@ -28,20 +28,30 @@ public:
         : gg::IObserver()
         , _file_reader(file_reader)
     {
-        if (_file_reader != nullptr)
-            _file_reader->attach(*this);
+        // nop
     }
 
     ~FileChecker()
     {
-        if (_file_reader != nullptr)
-            _file_reader->detach(*this);
+        // nop
     }
 
 public:
     void update(gg::VideoFrame & frame)
     {
         _frames.push_back(frame);
+    }
+
+    void attach()
+    {
+        if (_file_reader != nullptr)
+            _file_reader->attach(*this);
+    }
+
+    void detach()
+    {
+        if (_file_reader != nullptr)
+            _file_reader->detach(*this);
     }
 
     bool assert_data()
@@ -53,8 +63,6 @@ public:
                       double frame_rate, size_t frame_count,
                       size_t frame_width, size_t frame_height)
     {
-        if (_file_reader != nullptr)
-            _file_reader->detach(*this);
         if (_file_reader == nullptr)
             return false;
         if (_file_reader->get_frame_rate() != frame_rate)
@@ -148,7 +156,9 @@ TEST_CASE( "create_file_reader with valid file path returns"
     REQUIRE( source != nullptr );
 
     FileChecker file_checker(source);
+    file_checker.attach();
     std::this_thread::sleep_for(video_duration);
+    file_checker.detach();
     REQUIRE(
         file_checker.assert_specs(
             colour,
@@ -171,7 +181,9 @@ TEST_CASE( "create_file_reader returns reader that releases"
         source = factory.create_file_reader(filepath, codec, colour);
         REQUIRE( source != nullptr );
         FileChecker file_checker_1(source);
+        file_checker_1.attach();
         std::this_thread::sleep_for(quarter_video_duration);
+        file_checker_1.detach();
         REQUIRE( file_checker_1.assert_data() );
         delete source;
         source = nullptr;
@@ -179,7 +191,9 @@ TEST_CASE( "create_file_reader returns reader that releases"
 
     source = factory.create_file_reader(filepath, codec, colour);
     FileChecker file_checker_2(source);
+    file_checker_2.attach();
     std::this_thread::sleep_for(video_duration);
+    file_checker_2.detach();
     REQUIRE(
         file_checker_2.assert_specs(
             colour,
