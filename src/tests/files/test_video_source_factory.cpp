@@ -76,6 +76,20 @@ public:
             if (frame.cols() != frame_width or
                 frame.rows() != frame_height)
                 return false;
+            size_t data_length = frame.data_length(), exp_data_length;
+            switch (colour)
+            {
+            case gg::BGRA:
+                exp_data_length = frame_width * frame_height * 4;
+                break;
+            case gg::I420:
+                exp_data_length = frame_width * frame_height * 1.5;
+                break;
+            case gg::UYVY:
+                exp_data_length = frame_width * frame_height * 2;
+                break;
+            }
+            if (data_length != exp_data_length)
                 return false;
         }
         return true;
