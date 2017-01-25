@@ -296,8 +296,40 @@ IVideoSource * VideoSourceFactory::create_file_reader(
         enum Codec codec,
         enum ColourSpace colour_space)
 {
-    // TODO
-    return nullptr;
+    switch(codec)
+    {
+    case Xvid:
+        switch(colour_space)
+        {
+        case BGRA:
+#ifdef USE_OPENCV
+            return new VideoSourceOpenCV(filepath.c_str());
+#else
+            throw VideoSourceError("Reading Xvid files in BGRA"
+                                   " colour space supported only"
+                                   " with OpenCV");
+#endif
+            break;
+        case I420:
+        case UYVY:
+        default:
+            throw VideoSourceError("Colour space not supported"
+                                   " for reading Xvid files");
+        }
+
+    case HEVC:
+        // TODO
+        return nullptr;
+        break;
+
+    case VP9:
+        // TODO
+        return nullptr;
+        break;
+
+    default:
+        throw VideoSourceError("Codec not recognised");
+    }
 }
 
 }
