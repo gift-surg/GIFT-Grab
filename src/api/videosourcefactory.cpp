@@ -11,6 +11,9 @@
 #ifdef USE_BLACKMAGICSDK
 #include "blackmagicsdk_video_source.h"
 #endif
+#ifdef USE_FFMPEG
+#include "ffmpeg_video_source.h"
+#endif
 
 namespace gg
 {
@@ -296,40 +299,60 @@ IVideoSource * VideoSourceFactory::create_file_reader(
         enum Codec codec,
         enum ColourSpace colour_space)
 {
+    std::string codec_str = "", colour_space_str = "";
     switch(codec)
     {
     case Xvid:
-        switch(colour_space)
-        {
-        case BGRA:
-#ifdef USE_OPENCV
-            return new VideoSourceOpenCV(filepath.c_str());
-#else
-            throw VideoSourceError("Reading Xvid files in BGRA"
-                                   " colour space supported only"
-                                   " with OpenCV");
-#endif
-            break;
-        case I420:
-        case UYVY:
-        default:
-            throw VideoSourceError("Colour space not supported"
-                                   " for reading Xvid files");
-        }
-
+        codec_str = "Xvid";
+        break;
     case HEVC:
-        // TODO
-        return nullptr;
+        codec_str = "HEVC";
         break;
-
     case VP9:
-        // TODO
-        return nullptr;
+        codec_str = "VP9";
         break;
-
     default:
-        throw VideoSourceError("Codec not recognised");
+        throw VideoSourceError("Codec not supported");
     }
+    switch(colour_space)
+    {
+    case BGRA:
+        colour_space_str = "BGRA";
+        break;
+    case I420:
+        colour_space_str = "I420";
+        break;
+    case UYVY:
+        colour_space_str = "UYVY";
+        break;
+    default:
+        throw VideoSourceError("Colour space not supported");
+    }
+
+    std::string error_msg = "", dependency = "";
+    if (codec == Xvid and colour_space == BGRA)
+    {
+#ifdef USE_OPENCV
+        return new VideoSourceOpenCV(filepath.c_str());
+#else
+        dependency = "OpenCV";
+#endif
+    }
+    else
+    {
+#ifdef USE_FFMPEG
+        return new VideoSourceFFmpeg(filepath, colour_space);
+#else
+        dependency = "FFmpeg";
+#endif
+    }
+
+    // if not returned to this point, something wrong!
+    error_msg.append("Reading ").append(codec_str)
+             .append(" files in ").append(colour_space_str)
+             .append(" colour space supported only")
+             .append(" with ").append(dependency);
+    throw VideoSourceError(error_msg);
 }
 
 }

@@ -147,7 +147,8 @@ if(USE_BLACKMAGIC_DECKLINK_SDI_4K)
 endif(USE_BLACKMAGIC_DECKLINK_SDI_4K)
 
 # Determine whether FFmpeg needed
-if(USE_HEVC OR USE_VP9)
+if(USE_HEVC OR USE_VP9 OR
+   (USE_FILES AND USE_XVID AND (USE_I420 OR USE_UYVY)))
     SET(USE_FFMPEG ON CACHE BOOL "OFF ON" FORCE)
 endif()
 
@@ -214,6 +215,8 @@ if(USE_FFMPEG)
     endif(USE_NVENC)
 
     INCLUDE_DIRECTORIES(ffmpeg)
+    LIST(APPEND HEADERS ffmpeg/ffmpeg_video_source.h)
+    LIST(APPEND SOURCES ffmpeg/ffmpeg_video_source.cpp)
     LIST(APPEND HEADERS ffmpeg/ffmpeg_video_target.h)
     LIST(APPEND SOURCES ffmpeg/ffmpeg_video_target.cpp)
 endif(USE_FFMPEG)
