@@ -109,8 +109,7 @@ class FileChecker(pgg.IObserver):
         for frame in self._frames:
             if frame.colour() != colour:
                 return False
-            if frame.cols() != frame_width:
-                return False
-            if frame.rows() != frame_height:
+            if frame.cols() != frame_width or\
+               frame.rows() != frame_height:
                 return False
         return True
