@@ -25,17 +25,24 @@ TARGET_LINK_LIBRARIES(
 )
 
 # generate tests
-SET(FILEPATH /this/file/does/not/exist.video)
+SET(FILEPATH ${CMAKE_SOURCE_DIR}/tests/files/data/video_15frames_30fps)
 SET(FRAME_RATE 30)
-SET(FRAME_COUNT 5)
+SET(FRAME_COUNT 15)
 SET(FRAME_WIDTH 1920)
 SET(FRAME_HEIGHT 1080)
 foreach(CODEC ${CODECS})
+    if(CODEC STREQUAL Xvid)
+        SET(EXTENSION .avi)
+    elseif(CODEC STREQUAL HEVC)
+        SET(EXTENSION .mp4)
+    elseif(CODEC STREQUAL VP9)
+        SET(EXTENSION .webm)
+    endif()
     foreach(COLOUR_SPACE ${COLOUR_SPACES})
         SET(NAME_TEST Test_Files_ObserverPattern_${CODEC}_${COLOUR_SPACE})
         ADD_TEST(NAME ${NAME_TEST}
             COMMAND py.test --codec=${CODEC} --colour-space=${COLOUR_SPACE}
-            --filepath=${FILEPATH}
+            --filepath=${FILEPATH}${EXTENSION}
             --frame-rate=${FRAME_RATE} --frame-count=${FRAME_COUNT}
             --frame-width=${FRAME_WIDTH} --frame-height=${FRAME_HEIGHT}
             test_observer.py
@@ -45,7 +52,7 @@ foreach(CODEC ${CODECS})
         SET(NAME_TEST Test_VideoSourceFactory_Files_${CODEC}_${COLOUR_SPACE})
         ADD_TEST(NAME ${NAME_TEST}
             COMMAND ${VIDEO_SOURCE_FACTORY_TEST} ${CODEC} ${COLOUR_SPACE}
-            ${FILEPATH}
+            ${FILEPATH}${EXTENSION}
             ${FRAME_RATE} ${FRAME_COUNT}
             ${FRAME_WIDTH} ${FRAME_HEIGHT}
         )
