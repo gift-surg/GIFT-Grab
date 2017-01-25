@@ -89,23 +89,26 @@ public:
         return true;
     }
 
-    bool assert_frame_data_lengths(enum gg::ColourSpace colour)
+    bool assert_frame_data_lengths(enum gg::ColourSpace colour,
+                                   size_t frame_width, size_t frame_height)
     {
+        size_t exp_data_length;
+        switch (colour)
+        {
+        case gg::BGRA:
+            exp_data_length = frame_width * frame_height * 4;
+            break;
+        case gg::I420:
+            exp_data_length = frame_width * frame_height * 1.5;
+            break;
+        case gg::UYVY:
+            exp_data_length = frame_width * frame_height * 2;
+            break;
+        }
+
         for (gg::VideoFrame frame : _frames)
         {
-            size_t data_length = frame.data_length(), exp_data_length;
-            switch (colour)
-            {
-            case gg::BGRA:
-                exp_data_length = frame_width * frame_height * 4;
-                break;
-            case gg::I420:
-                exp_data_length = frame_width * frame_height * 1.5;
-                break;
-            case gg::UYVY:
-                exp_data_length = frame_width * frame_height * 2;
-                break;
-            }
+            size_t data_length = frame.data_length();
             if (data_length != exp_data_length)
                 return false;
         }
@@ -194,7 +197,8 @@ TEST_CASE( "create_file_reader with valid file path returns"
     REQUIRE( file_checker.assert_frame_rate(frame_rate) );
     REQUIRE( file_checker.assert_frame_dimensions(frame_width, frame_height) );
     REQUIRE( file_checker.assert_data() );
-    REQUIRE( file_checker.assert_frame_data_lengths(colour) );
+    REQUIRE( file_checker.assert_frame_data_lengths(colour,
+                                                    frame_width, frame_height) );
 
     delete source;
 }
@@ -227,7 +231,8 @@ TEST_CASE( "create_file_reader returns reader that releases"
     REQUIRE( file_checker_2.assert_frame_rate(frame_rate) );
     REQUIRE( file_checker_2.assert_frame_dimensions(frame_width, frame_height) );
     REQUIRE( file_checker_2.assert_data() );
-    REQUIRE( file_checker_2.assert_frame_data_lengths(colour) );
+    REQUIRE( file_checker_2.assert_frame_data_lengths(colour,
+                                                      frame_width, frame_height) );
 
     delete source;
 }
