@@ -96,20 +96,37 @@ class FileChecker(pgg.IObserver):
     def assert_data(self):
         return len(self._frames) > 0
 
-    def assert_specs(self, colour,
-                     frame_rate, frame_count,
-                     frame_width, frame_height):
-        self.detach()
-        if self._file_reader is None:
-            return False
-        if self._file_reader.get_frame_rate() != frame_rate:
-            return False
-        if len(self._frames) <= 0:
-            return False
+    def assert_colour(self, colour):
         for frame in self._frames:
             if frame.colour() != colour:
                 return False
+        return True
+
+    def assert_frame_rate(self, frame_rate):
+        if self._file_reader.get_frame_rate() != frame_rate:
+            return False
+        else:
+            return True
+
+    def assert_frame_dimensions(self,
+                                frame_width, frame_height):
+        for frame in self._frames:
             if frame.cols() != frame_width or\
                frame.rows() != frame_height:
+                return False
+        return True
+
+    def assert_frame_data_lengths(self, colour,
+                                  frame_width, frame_height):
+        if colour == pgg.ColourSpace.BGRA:
+            exp_data_length = frame_width * frame_height * 4
+        elif colour == pgg.ColourSpace.I420:
+            exp_data_length = frame_width * frame_height * 1.5
+        elif colour == pgg.ColourSpace.UYVY:
+            exp_data_length = frame_width * frame_height * 2
+
+        for frame in self._frames:
+            data_length = frame.data_length()
+            if data_length != exp_data_length:
                 return False
         return True

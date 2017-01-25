@@ -39,12 +39,14 @@ def test_valid_filepath_returns_raii_reader(
 	file_checker = FileChecker(source)
 	file_checker.attach()
 	sleep(video_duration)
-	assert file_checker.assert_specs(
-		colour_space,
-		frame_rate, frame_count,
-		frame_width, frame_height
-	)
 	file_checker.detach()
+	assert file_checker.assert_colour(colour_space)
+	assert file_checker.assert_frame_rate(frame_rate)
+	assert file_checker.assert_frame_dimensions(
+		frame_width, frame_height)
+	assert file_checker.assert_data()
+	assert file_checker.assert_frame_data_lengths(
+		colour, frame_width, frame_height)
 
 
 @mark.observer_pattern
@@ -61,8 +63,8 @@ def test_reader_releases_file_on_destruction(
 	file_checker_1 = FileChecker(source)
 	file_checker_1.attach()
 	sleep(quarter_video_duration)
-	assert file_checker_1.assert_data()
 	file_checker_1.detach()
+	assert file_checker_1.assert_data()
 	del file_checker_1
 	del source
 
@@ -73,11 +75,14 @@ def test_reader_releases_file_on_destruction(
 	file_checker_2 = FileChecker(source)
 	file_checker_2.attach()
 	sleep(video_duration)
-	assert file_checker_2.assert_specs(
-		colour_space,
-		frame_rate, frame_count,
-		frame_width, frame_height
-	)
+	file_checker_2.detach()
+	assert file_checker_2.assert_colour(colour_space)
+	assert file_checker_2.assert_frame_rate(frame_rate)
+	assert file_checker_2.assert_frame_dimensions(
+		frame_width, frame_height)
+	assert file_checker_2.assert_data()
+	assert file_checker_2.assert_frame_data_lengths(
+		colour, frame_width, frame_height)
 
 
 @mark.observer_pattern
