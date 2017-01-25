@@ -67,15 +67,15 @@ public:
             return false;
         if (_file_reader->get_frame_rate() != frame_rate)
             return false;
-        if (_frames.size() != frame_count)
+        if (_frames.size() <= 0)
             return false;
         for (gg::VideoFrame frame : _frames)
         {
             if (frame.colour() != colour)
                 return false;
-            if (frame.cols() != frame_width)
+            if (frame.cols() != frame_width or
+                frame.rows() != frame_height)
                 return false;
-            if (frame.rows() != frame_height)
                 return false;
         }
         return true;
