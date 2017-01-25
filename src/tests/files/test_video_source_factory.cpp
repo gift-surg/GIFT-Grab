@@ -59,23 +59,40 @@ public:
         return not _frames.empty();
     }
 
-    bool assert_specs(enum gg::ColourSpace colour,
-                      double frame_rate, size_t frame_count,
-                      size_t frame_width, size_t frame_height)
+    bool assert_colour(enum gg::ColourSpace colour)
     {
-        if (_file_reader == nullptr)
-            return false;
-        if (_file_reader->get_frame_rate() != frame_rate)
-            return false;
-        if (_frames.size() <= 0)
-            return false;
         for (gg::VideoFrame frame : _frames)
         {
             if (frame.colour() != colour)
                 return false;
+        }
+        return true;
+    }
+
+    bool assert_frame_rate(double frame_rate)
+    {
+        if (_file_reader->get_frame_rate() != frame_rate)
+            return false;
+        else
+            return true;
+    }
+
+    bool assert_frame_dimensions(size_t frame_width,
+                                 size_t frame_height)
+    {
+        for (gg::VideoFrame frame : _frames)
+        {
             if (frame.cols() != frame_width or
                 frame.rows() != frame_height)
                 return false;
+        }
+        return true;
+    }
+
+    bool assert_frame_data_lengths(enum gg::ColourSpace colour)
+    {
+        for (gg::VideoFrame frame : _frames)
+        {
             size_t data_length = frame.data_length(), exp_data_length;
             switch (colour)
             {
@@ -173,13 +190,11 @@ TEST_CASE( "create_file_reader with valid file path returns"
     file_checker.attach();
     std::this_thread::sleep_for(video_duration);
     file_checker.detach();
-    REQUIRE(
-        file_checker.assert_specs(
-            colour,
-            frame_rate, frame_count,
-            frame_width, frame_height
-        )
-    );
+    REQUIRE( file_checker.assert_colour(colour) );
+    REQUIRE( file_checker.assert_frame_rate(frame_rate) );
+    REQUIRE( file_checker.assert_frame_dimensions(frame_width, frame_height) );
+    REQUIRE( file_checker.assert_data() );
+    REQUIRE( file_checker.assert_frame_data_lengths(colour) );
 
     delete source;
 }
@@ -208,13 +223,11 @@ TEST_CASE( "create_file_reader returns reader that releases"
     file_checker_2.attach();
     std::this_thread::sleep_for(video_duration);
     file_checker_2.detach();
-    REQUIRE(
-        file_checker_2.assert_specs(
-            colour,
-            frame_rate, frame_count,
-            frame_width, frame_height
-        )
-    );
+    REQUIRE( file_checker_2.assert_colour(colour) );
+    REQUIRE( file_checker_2.assert_frame_rate(frame_rate) );
+    REQUIRE( file_checker_2.assert_frame_dimensions(frame_width, frame_height) );
+    REQUIRE( file_checker_2.assert_data() );
+    REQUIRE( file_checker_2.assert_frame_data_lengths(colour) );
 
     delete source;
 }
