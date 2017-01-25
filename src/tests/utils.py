@@ -104,7 +104,7 @@ class FileChecker(pgg.IObserver):
             return False
         if self._file_reader.get_frame_rate() != frame_rate:
             return False
-        if len(self._frames) != frame_count:
+        if len(self._frames) <= 0:
             return False
         for frame in self._frames:
             if frame.colour() != colour:
