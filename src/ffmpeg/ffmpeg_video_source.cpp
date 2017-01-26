@@ -22,7 +22,7 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     , refcount(0)
     , video_stream(nullptr)
     , video_dec_ctx(nullptr)
-    , frame(nullptr)
+    , _avframe(nullptr)
     , video_frame_count(0)
     , _data(nullptr)
     , _data_length(0)
@@ -70,8 +70,8 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     if (video_stream == nullptr)
         throw VideoSourceError("Could not find video stream in source");
 
-    frame = av_frame_alloc();
-    if (frame == nullptr)
+    _avframe = av_frame_alloc();
+    if (_avframe == nullptr)
         throw VideoSourceError("Could not allocate frame");
 
     /* initialize packet, set data to NULL, let the demuxer fill it */
@@ -95,7 +95,7 @@ VideoSourceFFmpeg::~VideoSourceFFmpeg()
 
     avcodec_close(video_dec_ctx);
     avformat_close_input(&fmt_ctx);
-    av_frame_free(&frame);
+    av_frame_free(&_avframe);
     av_free(video_dst_data[0]);
 
     if (_data_length > 0)
