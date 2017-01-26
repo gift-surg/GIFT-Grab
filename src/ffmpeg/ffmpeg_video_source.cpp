@@ -67,9 +67,9 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
         throw VideoSourceError("Could not allocate frame");
 
     /* initialize packet, set data to NULL, let the demuxer fill it */
-    av_init_packet(&pkt);
-    pkt.data = nullptr;
-    pkt.size = 0;
+    av_init_packet(&_avpacket);
+    _avpacket.data = nullptr;
+    _avpacket.size = 0;
 }
 
 
@@ -98,12 +98,12 @@ bool VideoSourceFFmpeg::get_frame_dimensions(int & width, int & height)
 
 bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
 {
-    if (av_read_frame(_avformat_context, &pkt) < 0)
+    if (av_read_frame(_avformat_context, &_avpacket) < 0)
         return false;
 
     int ret = 0, got_frame;
     bool success = true;
-    AVPacket orig_pkt = pkt;
+    AVPacket orig_pkt = _avpacket;
     size_t passes = 0;
     do
     {
@@ -113,8 +113,8 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
             success = false;
             break;
         }
-        pkt.data += ret;
-        pkt.size -= ret;
+        _avpacket.data += ret;
+        _avpacket.size -= ret;
 
         /* copy decoded frame to destination buffer:
          * this is required since rawvideo expects non aligned data */
@@ -124,7 +124,7 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
 
         passes++;
     }
-    while (pkt.size > 0);
+    while (_avpacket.size > 0);
     av_packet_unref(&orig_pkt);
 
     if (not success)
@@ -215,12 +215,12 @@ int VideoSourceFFmpeg::open_codec_context(
 int VideoSourceFFmpeg::decode_packet(int * got_frame, int cached)
 {
     int ret = 0;
-    int decoded = pkt.size;
+    int decoded = _avpacket.size;
     *got_frame = 0;
-    if (pkt.stream_index == video_stream_idx)
+    if (_avpacket.stream_index == video_stream_idx)
     {
         /* decode video frame */
-        ret = avcodec_decode_video2(video_dec_ctx, _avframe, got_frame, &pkt);
+        ret = avcodec_decode_video2(video_dec_ctx, _avframe, got_frame, &_avpacket);
         if (ret < 0)
             return ret;
 

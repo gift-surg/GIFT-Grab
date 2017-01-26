@@ -32,7 +32,12 @@ protected:
     int height;
     enum AVPixelFormat pix_fmt;
     AVFrame * _avframe;
-    AVPacket pkt;
+
+    //!
+    //! \brief FFmpeg packet to be used when
+    //! decoding frames
+    //!
+    AVPacket _avpacket;
     uint8_t * video_dst_data[4] = {nullptr};
     int video_dst_linesize[4];
     int video_dst_bufsize;
