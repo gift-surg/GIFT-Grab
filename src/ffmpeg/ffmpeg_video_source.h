@@ -26,7 +26,12 @@ protected:
     AVFormatContext * _avformat_context;
     int video_stream_idx;
     int refcount;
-    AVStream * video_stream;
+
+    //!
+    //! \brief FFmpeg video stream to be used
+    //! for reading frames from video source
+    //!
+    AVStream * _avstream;
     AVCodecContext * video_dec_ctx;
 
     //!

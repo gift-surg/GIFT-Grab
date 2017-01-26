@@ -19,7 +19,7 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     , _avformat_context(nullptr)
     , video_stream_idx(-1)
     , refcount(0)
-    , video_stream(nullptr)
+    , _avstream(nullptr)
     , video_dec_ctx(nullptr)
     , _avframe(nullptr)
 {
@@ -42,8 +42,8 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     if (open_codec_context(&video_stream_idx, _avformat_context,
                            AVMEDIA_TYPE_VIDEO, error_msg) >= 0)
     {
-        video_stream = _avformat_context->streams[video_stream_idx];
-        video_dec_ctx = video_stream->codec;
+        _avstream = _avformat_context->streams[video_stream_idx];
+        video_dec_ctx = _avstream->codec;
 
         /* allocate image where the decoded image will be put */
         _width = video_dec_ctx->width;
@@ -59,7 +59,7 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     else
         throw VideoSourceError(error_msg);
 
-    if (video_stream == nullptr)
+    if (_avstream == nullptr)
         throw VideoSourceError("Could not find video stream in source");
 
     _avframe = av_frame_alloc();
@@ -141,8 +141,8 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
 
 double VideoSourceFFmpeg::get_frame_rate()
 {
-    int num = video_stream->time_base.num;
-    int den = video_stream->time_base.den;
+    int num = _avstream->time_base.num;
+    int den = _avstream->time_base.den;
     if (num == 0)
         return 0.0;
     return static_cast<double>(den) / num;
