@@ -36,7 +36,6 @@ protected:
     uint8_t * video_dst_data[4] = {nullptr};
     int video_dst_linesize[4];
     int video_dst_bufsize;
-    int video_frame_count;
 
 protected:
     //!

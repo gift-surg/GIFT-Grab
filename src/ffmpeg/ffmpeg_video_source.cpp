@@ -22,7 +22,6 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     , video_stream(nullptr)
     , video_dec_ctx(nullptr)
     , _avframe(nullptr)
-    , video_frame_count(0)
 {
     int ret = 0;
     std::string error_msg = "";
