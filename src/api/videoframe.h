@@ -196,6 +196,19 @@ public:
         return _colour;
     }
 
+    //!
+    //! \brief Compute how much memory is needed to
+    //! accommodate a video frame in \c colour space
+    //! with \c cols and \c rows dimensions
+    //! \param colour
+    //! \param cols
+    //! \param rows
+    //! \throw BasicException if \c cols or \c rows
+    //! are 0 or \c colour is not supported
+    //!
+    static size_t required_data_length(enum ColourSpace colour,
+                                       size_t cols, size_t rows);
+
 protected:
     //!
     //! \brief Colour space, i.e. description
@@ -276,17 +289,6 @@ protected:
     //! \sa _rows
     //!
     void free_memory();
-
-    //!
-    //! \brief Compute how much memory is needed, based
-    //! on column and row specs
-    //! \sa _manage_data
-    //! \sa _cols
-    //! \sa _rows
-    //! \throw BasicException if \c _colour not set
-    //! properly
-    //!
-    size_t get_data_length() const;
 
     //!
     //! \brief Set all pixels of frame to black

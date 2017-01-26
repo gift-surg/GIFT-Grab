@@ -25,7 +25,7 @@ VideoFrame::VideoFrame(ColourSpace colour, size_t cols, size_t rows)
     , _data_length(0)
 {
     set_dimensions(cols, rows);
-    size_t data_length = get_data_length();
+    size_t data_length = required_data_length(_colour, _cols, _rows);
     allocate_memory(data_length);
     set_pixels_black();
 }
@@ -216,19 +216,23 @@ void VideoFrame::free_memory()
     }
 }
 
-size_t VideoFrame::get_data_length() const
+size_t VideoFrame::required_data_length(enum ColourSpace colour,
+                                        size_t cols, size_t rows)
 {
-    switch (_colour)
+    if (cols <= 0 or rows <= 0)
+        throw BasicException("Frame dimensions must be positive");
+
+    switch (colour)
     {
     case BGRA:
-        return _cols * _rows * 4;
+        return cols * rows * 4;
 
     case I420:
         // 1 for Y plane, 0.5 for UV plane
-        return _cols * _rows * 1.5; // both dimensions always even due to set_dimensions()
+        return cols * rows * 1.5; // both dimensions always even due to set_dimensions()
 
     case UYVY:
-        return _cols * _rows * 2; // 2 bytes per pixel, see http://www.fourcc.org/pixel-format/yuv-uyvy/
+        return cols * rows * 2; // 2 bytes per pixel, see http://www.fourcc.org/pixel-format/yuv-uyvy/
 
     default:
         throw BasicException("Colour space indicator not set properly, cannot compute memory requirement");
