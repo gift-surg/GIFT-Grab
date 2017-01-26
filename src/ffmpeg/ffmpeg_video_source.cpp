@@ -88,9 +88,8 @@ VideoSourceFFmpeg::~VideoSourceFFmpeg()
     /* flush cached frames */
     pkt.data = nullptr;
     pkt.size = 0;
-    std::string error_msg = "";
     do
-        decode_packet(&got_frame, 1, error_msg);
+        decode_packet(&got_frame, 1);
     while (got_frame);
 
     avcodec_close(video_dec_ctx);
@@ -145,7 +144,13 @@ int VideoSourceFFmpeg::open_codec_context(
 {
     // TODO
     return -1;
+}
 
+
+int VideoSourceFFmpeg::decode_packet(int * got_frame, int cached)
+{
+    // TODO
+    return -1;
 }
 
 }

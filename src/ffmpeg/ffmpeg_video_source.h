@@ -74,6 +74,8 @@ protected:
                            AVFormatContext * fmt_ctx,
                            enum AVMediaType type,
                            std::string & error_msg);
+
+    int decode_packet(int * got_frame, int cached);
 };
 
 }
