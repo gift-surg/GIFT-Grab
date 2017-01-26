@@ -24,7 +24,13 @@ protected:
     //! \brief FFmpeg format context
     //!
     AVFormatContext * _avformat_context;
-    int video_stream_idx;
+
+    //!
+    //! \brief Index of used FFmpeg video
+    //! stream
+    //! \sa _avstream
+    //!
+    int _avstream_idx;
     int refcount;
 
     //!

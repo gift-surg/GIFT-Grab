@@ -17,7 +17,7 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     : IVideoSource(colour_space)
     , _source_path(source_path)
     , _avformat_context(nullptr)
-    , video_stream_idx(-1)
+    , _avstream_idx(-1)
     , refcount(0)
     , _avstream(nullptr)
     , _avcodec_context(nullptr)
@@ -39,10 +39,10 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     if (avformat_find_stream_info(_avformat_context, nullptr) < 0)
         throw VideoSourceError("Could not find stream information");
 
-    if (open_codec_context(&video_stream_idx, _avformat_context,
+    if (open_codec_context(&_avstream_idx, _avformat_context,
                            AVMEDIA_TYPE_VIDEO, error_msg) >= 0)
     {
-        _avstream = _avformat_context->streams[video_stream_idx];
+        _avstream = _avformat_context->streams[_avstream_idx];
         _avcodec_context = _avstream->codec;
 
         /* allocate image where the decoded image will be put */
@@ -217,7 +217,7 @@ int VideoSourceFFmpeg::decode_packet(int * got_frame, int cached)
     int ret = 0;
     int decoded = _avpacket.size;
     *got_frame = 0;
-    if (_avpacket.stream_index == video_stream_idx)
+    if (_avpacket.stream_index == _avstream_idx)
     {
         /* decode video frame */
         ret = avcodec_decode_video2(_avcodec_context, _avframe, got_frame, &_avpacket);
