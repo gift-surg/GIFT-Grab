@@ -170,8 +170,50 @@ int VideoSourceFFmpeg::open_codec_context(
         int * stream_idx, AVFormatContext * fmt_ctx,
         enum AVMediaType type, std::string & error_msg)
 {
-    // TODO
-    return -1;
+    int ret, stream_index;
+    AVStream * st;
+    AVCodecContext * dec_ctx = nullptr;
+    AVCodec * dec = nullptr;
+    AVDictionary * opts = nullptr;
+
+    ret = av_find_best_stream(fmt_ctx, type, -1, -1, nullptr, 0);
+    if (ret < 0)
+    {
+        error_msg.append("Could not find ")
+                 .append(av_get_media_type_string(type))
+                 .append(" stream in source ")
+                 .append(src_filename);
+        return ret;
+    }
+    else
+    {
+        stream_index = ret;
+        st = fmt_ctx->streams[stream_index];
+
+        /* find decoder for the stream */
+        dec_ctx = st->codec;
+        dec = avcodec_find_decoder(dec_ctx->codec_id);
+        if (!dec)
+        {
+            error_msg.append("Failed to find ")
+                     .append(av_get_media_type_string(type))
+                     .append(" codec");
+            return AVERROR(EINVAL);
+        }
+
+        /* Init the decoders, with or without reference counting */
+        av_dict_set(&opts, "refcounted_frames", refcount ? "1" : "0", 0);
+        if ((ret = avcodec_open2(dec_ctx, dec, &opts)) < 0)
+        {
+            error_msg.append("Failed to open ")
+                     .append(av_get_media_type_string(type))
+                     .append(" codec");
+            return ret;
+        }
+        *stream_idx = stream_index;
+    }
+
+    return 0;
 }
 
 
