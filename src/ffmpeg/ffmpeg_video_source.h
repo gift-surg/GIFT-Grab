@@ -31,6 +31,11 @@ protected:
     int width;
     int height;
     enum AVPixelFormat pix_fmt;
+
+    //!
+    //! \brief FFmpeg frame to be used when
+    //! decoding frames
+    //!
     AVFrame * _avframe;
 
     //!
