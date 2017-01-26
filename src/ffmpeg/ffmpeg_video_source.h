@@ -68,11 +68,29 @@ public:
     void get_full_frame();
 
 protected:
+    //!
+    //! \brief Open the FFmpeg format context
+    //! \param stream_idx
+    //! \param fmt_ctx
+    //! \param type
+    //! \param error_msg
+    //! \return non-negative value on success,
+    //! negative value with a detailed \c error_msg
+    //! otherwise
+    //!
     int open_codec_context(int * stream_idx,
                            AVFormatContext * fmt_ctx,
                            enum AVMediaType type,
                            std::string & error_msg);
 
+    //!
+    //! \brief Decode current FFmpeg packet of
+    //! current FFmpeg frame
+    //! \param got_frame
+    //! \param cached
+    //! \return number of decoded bytes on success,
+    //! a negative value otherwise
+    //!
     int decode_packet(int * got_frame, int cached);
 };
 
