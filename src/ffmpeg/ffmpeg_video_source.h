@@ -38,7 +38,13 @@ protected:
     //! decoding frames
     //!
     AVPacket _avpacket;
-    uint8_t * video_dst_data[4] = {nullptr};
+
+    //!
+    //! \brief Data buffer to be used by
+    //! FFmpeg routines
+    //!
+    uint8_t * _data_buffer[4] = {nullptr};
+
     int video_dst_linesize[4];
     int video_dst_bufsize;
 
