@@ -14,7 +14,11 @@ namespace gg
 class VideoSourceFFmpeg : public IVideoSource
 {
 protected:
-    char * src_filename;
+    //!
+    //! \brief Path to the video source, e.g.
+    //! video file
+    //!
+    std::string _source_path;
     AVFormatContext * fmt_ctx;
     int video_stream_idx;
     int refcount;

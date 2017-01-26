@@ -15,7 +15,7 @@ VideoSourceFFmpeg::VideoSourceFFmpeg()
 VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
                                      enum ColourSpace colour_space)
     : IVideoSource(colour_space)
-    , src_filename(nullptr)
+    , _source_path(source_path)
     , fmt_ctx(nullptr)
     , video_stream_idx(-1)
     , refcount(0)
@@ -27,14 +27,13 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     int ret = 0;
     std::string error_msg = "";
 
-    src_filename = const_cast<char *>(source_path.c_str());
-
     av_register_all();
 
-    if (avformat_open_input(&fmt_ctx, src_filename, nullptr, nullptr) < 0)
+    if (avformat_open_input(&fmt_ctx, _source_path.c_str(),
+                            nullptr, nullptr) < 0)
     {
         error_msg.append("Could not open video source ")
-                 .append(source_path);
+                 .append(_source_path);
         throw VideoSourceError(error_msg);
     }
 
@@ -179,7 +178,7 @@ int VideoSourceFFmpeg::open_codec_context(
         error_msg.append("Could not find ")
                  .append(av_get_media_type_string(type))
                  .append(" stream in source ")
-                 .append(src_filename);
+                 .append(_source_path);
         return ret;
     }
     else
