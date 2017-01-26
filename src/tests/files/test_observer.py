@@ -18,6 +18,7 @@ quarter_video_duration = 0  # inferred, in sec
 def peri_test(codec, colour_space, filepath,
               frame_rate, frame_count,
               frame_width, frame_height):
+	global factory
 	factory = VideoSourceFactory.get_instance()
 	video_duration = frame_count / frame_rate
 	quarter_video_duration = video_duration / 4
@@ -25,12 +26,14 @@ def peri_test(codec, colour_space, filepath,
 
 
 @mark.observer_pattern
+@mark.usefixtures('peri_test')
 def test_valid_filepath_returns_raii_reader(
 	filepath, codec, colour_space,
 	frame_rate, frame_count,
 	frame_width, frame_height
 ):
 	source = None
+	global factory
 	source = factory.create_file_reader(
 		filepath, codec, colour_space
 	)
@@ -50,12 +53,14 @@ def test_valid_filepath_returns_raii_reader(
 
 
 @mark.observer_pattern
+@mark.usefixtures('peri_test')
 def test_reader_releases_file_on_destruction(
 	filepath, codec, colour_space,
 	frame_rate, frame_count,
 	frame_width, frame_height
 ):
 	source = None
+	global factory
 	source = factory.create_file_reader(
 		filepath, codec, colour_space
 	)
@@ -86,10 +91,12 @@ def test_reader_releases_file_on_destruction(
 
 
 @mark.observer_pattern
+@mark.usefixtures('peri_test')
 def test_invalid_filepath_throws_exception(
 	codec, colour_space
 ):
 	source = None
+	global factory
 	with raises(RuntimeError):
 		source = factory.create_file_reader(
             '/this/path/should/never/exist.video',
