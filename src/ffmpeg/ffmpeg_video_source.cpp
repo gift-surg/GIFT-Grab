@@ -61,9 +61,6 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     else
         throw VideoSourceError(error_msg);
 
-    // TODO
-    av_dump_format(fmt_ctx, 0, src_filename, 0);
-
     if (video_stream == nullptr)
         throw VideoSourceError("Could not find video stream in source");
 
