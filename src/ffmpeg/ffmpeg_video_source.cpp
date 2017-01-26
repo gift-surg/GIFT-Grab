@@ -155,8 +155,11 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
 
 double VideoSourceFFmpeg::get_frame_rate()
 {
-    // TODO
-    return 0.0;
+    int num = video_stream->time_base.num;
+    int den = video_stream->time_base.den;
+    if (num == 0)
+        return 0.0;
+    return static_cast<double>(den) / num;
 }
 
 
