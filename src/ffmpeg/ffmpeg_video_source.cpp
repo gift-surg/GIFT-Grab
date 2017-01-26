@@ -99,8 +99,14 @@ VideoSourceFFmpeg::~VideoSourceFFmpeg()
 
 bool VideoSourceFFmpeg::get_frame_dimensions(int & width, int & height)
 {
-    // TODO
-    return false;
+    if (this->width > 0 and this->height > 0)
+    {
+        width = this->width;
+        height = this->height;
+        return true;
+    }
+    else
+        return false;
 }
 
 
