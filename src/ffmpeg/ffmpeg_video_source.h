@@ -19,7 +19,11 @@ protected:
     //! video file
     //!
     std::string _source_path;
-    AVFormatContext * fmt_ctx;
+
+    //!
+    //! \brief FFmpeg format context
+    //!
+    AVFormatContext * _avformat_context;
     int video_stream_idx;
     int refcount;
     AVStream * video_stream;
@@ -83,7 +87,7 @@ protected:
     //! otherwise
     //!
     int open_codec_context(int * stream_idx,
-                           AVFormatContext * fmt_ctx,
+                           AVFormatContext * _avformat_context,
                            enum AVMediaType type,
                            std::string & error_msg);
 

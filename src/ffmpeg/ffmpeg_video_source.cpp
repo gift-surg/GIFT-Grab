@@ -16,7 +16,7 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
                                      enum ColourSpace colour_space)
     : IVideoSource(colour_space)
     , _source_path(source_path)
-    , fmt_ctx(nullptr)
+    , _avformat_context(nullptr)
     , video_stream_idx(-1)
     , refcount(0)
     , video_stream(nullptr)
@@ -29,7 +29,7 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
 
     av_register_all();
 
-    if (avformat_open_input(&fmt_ctx, _source_path.c_str(),
+    if (avformat_open_input(&_avformat_context, _source_path.c_str(),
                             nullptr, nullptr) < 0)
     {
         error_msg.append("Could not open video source ")
@@ -37,13 +37,13 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
         throw VideoSourceError(error_msg);
     }
 
-    if (avformat_find_stream_info(fmt_ctx, nullptr) < 0)
+    if (avformat_find_stream_info(_avformat_context, nullptr) < 0)
         throw VideoSourceError("Could not find stream information");
 
-    if (open_codec_context(&video_stream_idx, fmt_ctx,
+    if (open_codec_context(&video_stream_idx, _avformat_context,
                            AVMEDIA_TYPE_VIDEO, error_msg) >= 0)
     {
-        video_stream = fmt_ctx->streams[video_stream_idx];
+        video_stream = _avformat_context->streams[video_stream_idx];
         video_dec_ctx = video_stream->codec;
 
         /* allocate image where the decoded image will be put */
@@ -77,7 +77,7 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
 VideoSourceFFmpeg::~VideoSourceFFmpeg()
 {
     avcodec_close(video_dec_ctx);
-    avformat_close_input(&fmt_ctx);
+    avformat_close_input(&_avformat_context);
     av_frame_free(&_avframe);
     av_free(video_dst_data[0]);
     video_dst_bufsize = 0;
@@ -99,7 +99,7 @@ bool VideoSourceFFmpeg::get_frame_dimensions(int & width, int & height)
 
 bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
 {
-    if (av_read_frame(fmt_ctx, &pkt) < 0)
+    if (av_read_frame(_avformat_context, &pkt) < 0)
         return false;
 
     int ret = 0, got_frame;
