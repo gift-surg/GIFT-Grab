@@ -77,15 +77,6 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
 
 VideoSourceFFmpeg::~VideoSourceFFmpeg()
 {
-    // TODO: is this part needed?
-    int got_frame;
-    /* flush cached frames */
-    pkt.data = nullptr;
-    pkt.size = 0;
-    do
-        decode_packet(&got_frame, 1);
-    while (got_frame);
-
     avcodec_close(video_dec_ctx);
     avformat_close_input(&fmt_ctx);
     av_frame_free(&_avframe);
