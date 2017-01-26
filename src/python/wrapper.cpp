@@ -428,6 +428,8 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .def("rows", &VideoFrameNumPyWrapper::rows)
         .def("cols", &VideoFrameNumPyWrapper::cols)
         .def("data_length", &VideoFrameNumPyWrapper::data_length)
+        .def("required_data_length", &VideoFrameNumPyWrapper::required_data_length)
+        .staticmethod("required_data_length")
 #ifdef USE_NUMPY
         .def("data", &VideoFrameNumPyWrapper::data_as_flat_ndarray)
         .def("data", &VideoFrameNumPyWrapper::data_as_ndarray)
