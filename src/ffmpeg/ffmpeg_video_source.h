@@ -1,4 +1,8 @@
 #include "ivideosource.h"
+extern "C" {
+#include <libavformat/avformat.h>
+}
+
 
 namespace gg
 {
@@ -9,6 +13,25 @@ namespace gg
 //!
 class VideoSourceFFmpeg : public IVideoSource
 {
+protected:
+    char * src_filename;
+    AVFormatContext * fmt_ctx;
+    int video_stream_idx;
+    int refcount;
+    AVStream * video_stream;
+    AVCodecContext * video_dec_ctx;
+    int width;
+    int height;
+    enum AVPixelFormat pix_fmt;
+    AVFrame * frame;
+    AVPacket pkt;
+    uint8_t * video_dst_data[4] = {nullptr};
+    int video_dst_linesize[4];
+    int video_dst_bufsize;
+    int video_frame_count;
+    unsigned char * _data;
+    size_t _data_length;
+
 protected:
     //!
     //! \brief Default constructor that should not
@@ -45,6 +68,12 @@ public:
     void set_sub_frame(int x, int y, int width, int height);
 
     void get_full_frame();
+
+protected:
+    int open_codec_context(int * stream_idx,
+                           AVFormatContext * fmt_ctx,
+                           enum AVMediaType type,
+                           std::string & error_msg);
 };
 
 }
