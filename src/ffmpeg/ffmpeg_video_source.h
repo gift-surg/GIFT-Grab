@@ -29,8 +29,6 @@ protected:
     int video_dst_linesize[4];
     int video_dst_bufsize;
     int video_frame_count;
-    unsigned char * _data;
-    size_t _data_length;
 
 protected:
     //!

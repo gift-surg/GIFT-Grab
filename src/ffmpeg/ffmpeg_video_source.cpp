@@ -1,7 +1,6 @@
 #include "ffmpeg_video_source.h"
 extern "C" {
 #include <libavutil/imgutils.h>
-#include <libavutil/timestamp.h>
 }
 
 namespace gg
@@ -24,8 +23,6 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     , video_dec_ctx(nullptr)
     , _avframe(nullptr)
     , video_frame_count(0)
-    , _data(nullptr)
-    , _data_length(0)
 {
     int ret = 0;
     std::string error_msg = "";
@@ -96,12 +93,7 @@ VideoSourceFFmpeg::~VideoSourceFFmpeg()
     avformat_close_input(&fmt_ctx);
     av_frame_free(&_avframe);
     av_free(video_dst_data[0]);
-
-    if (_data_length > 0)
-    {
-        free(_data);
-        _data_length = 0;
-    }
+    video_dst_bufsize = 0;
 }
 
 
