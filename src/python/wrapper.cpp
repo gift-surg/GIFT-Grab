@@ -546,6 +546,11 @@ BOOST_PYTHON_MODULE(pygiftgrab)
              , return_value_policy<reference_existing_object>()
         )
         .staticmethod("get_instance")
+        .def("create_file_reader", &gg::VideoSourceFactory::create_file_reader,
+             // manage_new_object => give ownership caller
+             // see note below for create_file_writer
+             return_value_policy<manage_new_object>()
+        )
     ;
 
     class_<gg::VideoTargetFactory, boost::noncopyable>("VideoTargetFactory", no_init)
