@@ -83,7 +83,26 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
 
 VideoSourceFFmpeg::~VideoSourceFFmpeg()
 {
-    // TODO
+    // TODO: is this part needed?
+    int got_frame;
+    /* flush cached frames */
+    pkt.data = nullptr;
+    pkt.size = 0;
+    std::string error_msg = "";
+    do
+        decode_packet(&got_frame, 1, error_msg);
+    while (got_frame);
+
+    avcodec_close(video_dec_ctx);
+    avformat_close_input(&fmt_ctx);
+    av_frame_free(&frame);
+    av_free(video_dst_data[0]);
+
+    if (_data_length > 0)
+    {
+        free(_data);
+        _data_length = 0;
+    }
 }
 
 
