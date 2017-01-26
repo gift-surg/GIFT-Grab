@@ -106,8 +106,44 @@ bool VideoSourceFFmpeg::get_frame_dimensions(int & width, int & height)
 
 bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
 {
-    // TODO
-    return false;
+    if (av_read_frame(fmt_ctx, &pkt) < 0)
+        return false;
+
+    int ret = 0, got_frame;
+    bool success = true;
+    AVPacket orig_pkt = pkt;
+    size_t passes = 0;
+    do
+    {
+        ret = decode_packet(&got_frame, 0);
+        if (ret < 0)
+        {
+            success = false;
+            break;
+        }
+        pkt.data += ret;
+        pkt.size -= ret;
+
+        /* copy decoded frame to destination buffer:
+         * this is required since rawvideo expects non aligned data */
+        av_image_copy(video_dst_data, video_dst_linesize,
+                      (const uint8_t **)(_avframe->data), _avframe->linesize,
+                      pix_fmt, width, height);
+
+        passes++;
+    }
+    while (pkt.size > 0);
+    av_packet_unref(&orig_pkt);
+
+    if (not success)
+        return false;
+
+    // TODO - when are there multiple passes?
+    if (passes != 1)
+        return false;
+
+    frame.init_from_specs(video_dst_data[0], video_dst_bufsize, width, height);
+    return true;
 }
 
 
