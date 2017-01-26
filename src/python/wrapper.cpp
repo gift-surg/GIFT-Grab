@@ -17,6 +17,7 @@
 #include "blackmagicsdk_video_source.h"
 #endif
 #ifdef USE_FFMPEG
+#include "ffmpeg_video_source.h"
 #include "ffmpeg_video_target.h"
 #endif
 #include <boost/python.hpp>
@@ -508,6 +509,16 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     ;
 
 #ifdef USE_FFMPEG
+    class_<gg::VideoSourceFFmpeg, bases<IVideoSource>, boost::noncopyable>(
+                "VideoSourceFFmpeg", init<std::string, enum gg::ColourSpace, bool>())
+        .def("get_frame", &gg::VideoSourceFFmpeg::get_frame)
+        .def("get_frame_dimensions", &gg::VideoSourceFFmpeg::get_frame_dimensions)
+        .def("get_frame_rate", &gg::VideoSourceFFmpeg::get_frame_rate)
+        .def("set_sub_frame", &gg::VideoSourceFFmpeg::set_sub_frame)
+        .def("get_full_frame", &gg::VideoSourceFFmpeg::get_full_frame)
+        .def("attach", &gg::IObservable::attach, &IObservableWrapper::default_attach)
+        .def("detach", &gg::IObservable::detach, &IObservableWrapper::default_detach)
+    ;
     class_<gg::VideoTargetFFmpeg, bases<gg::IVideoTarget>, boost::noncopyable>(
                 "VideoTargetFFmpeg", init<std::string, std::string, float>())
         .def("append", &gg::VideoTargetFFmpeg::append)
