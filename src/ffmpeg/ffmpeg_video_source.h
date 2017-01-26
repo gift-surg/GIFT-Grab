@@ -30,7 +30,12 @@ protected:
     AVCodecContext * video_dec_ctx;
     int width;
     int height;
-    enum AVPixelFormat pix_fmt;
+
+    //!
+    //! \brief The pixel format of the video
+    //! source being read
+    //!
+    enum AVPixelFormat _avpixel_format;
 
     //!
     //! \brief FFmpeg frame to be used when
