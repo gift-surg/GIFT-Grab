@@ -219,8 +219,28 @@ int VideoSourceFFmpeg::open_codec_context(
 
 int VideoSourceFFmpeg::decode_packet(int * got_frame, int cached)
 {
-    // TODO
-    return -1;
+    int ret = 0;
+    int decoded = pkt.size;
+    *got_frame = 0;
+    if (pkt.stream_index == video_stream_idx)
+    {
+        /* decode video frame */
+        ret = avcodec_decode_video2(video_dec_ctx, _avframe, got_frame, &pkt);
+        if (ret < 0)
+            return ret;
+
+        if (*got_frame)
+        {
+            if (_avframe->width != width or _avframe->height != height or
+                _avframe->format != pix_fmt)
+                return -1;
+        }
+    }
+    /* If we use frame reference counting, we own the data and need
+     * to de-reference it when we don't use it anymore */
+    if (*got_frame and refcount)
+        av_frame_unref(_avframe);
+    return decoded;
 }
 
 }
