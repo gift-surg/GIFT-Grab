@@ -20,7 +20,7 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     , video_stream_idx(-1)
     , refcount(0)
     , _avstream(nullptr)
-    , video_dec_ctx(nullptr)
+    , _avcodec_context(nullptr)
     , _avframe(nullptr)
 {
     int ret = 0;
@@ -43,12 +43,12 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
                            AVMEDIA_TYPE_VIDEO, error_msg) >= 0)
     {
         _avstream = _avformat_context->streams[video_stream_idx];
-        video_dec_ctx = _avstream->codec;
+        _avcodec_context = _avstream->codec;
 
         /* allocate image where the decoded image will be put */
-        _width = video_dec_ctx->width;
-        _height = video_dec_ctx->height;
-        _avpixel_format = video_dec_ctx->pix_fmt;
+        _width = _avcodec_context->width;
+        _height = _avcodec_context->height;
+        _avpixel_format = _avcodec_context->pix_fmt;
         ret = av_image_alloc(_data_buffer, _data_buffer_linesizes,
                              _width, _height, _avpixel_format, 1);
         if (ret < 0)
@@ -75,7 +75,7 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
 
 VideoSourceFFmpeg::~VideoSourceFFmpeg()
 {
-    avcodec_close(video_dec_ctx);
+    avcodec_close(_avcodec_context);
     avformat_close_input(&_avformat_context);
     av_frame_free(&_avframe);
     av_free(_data_buffer[0]);
@@ -220,7 +220,7 @@ int VideoSourceFFmpeg::decode_packet(int * got_frame, int cached)
     if (_avpacket.stream_index == video_stream_idx)
     {
         /* decode video frame */
-        ret = avcodec_decode_video2(video_dec_ctx, _avframe, got_frame, &_avpacket);
+        ret = avcodec_decode_video2(_avcodec_context, _avframe, got_frame, &_avpacket);
         if (ret < 0)
             return ret;
 

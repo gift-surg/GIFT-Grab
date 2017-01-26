@@ -32,7 +32,7 @@ protected:
     //! for reading frames from video source
     //!
     AVStream * _avstream;
-    AVCodecContext * video_dec_ctx;
+    AVCodecContext * _avcodec_context;
 
     //!
     //! \brief Width of frames obtained from
