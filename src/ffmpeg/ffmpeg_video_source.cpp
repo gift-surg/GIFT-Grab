@@ -49,7 +49,7 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
         width = video_dec_ctx->width;
         height = video_dec_ctx->height;
         pix_fmt = video_dec_ctx->pix_fmt;
-        ret = av_image_alloc(_data_buffer, video_dst_linesize,
+        ret = av_image_alloc(_data_buffer, _data_buffer_linesizes,
                              width, height, pix_fmt, 1);
         if (ret < 0)
             throw VideoSourceError("Could not allocate"
@@ -118,7 +118,7 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
 
         /* copy decoded frame to destination buffer:
          * this is required since rawvideo expects non aligned data */
-        av_image_copy(_data_buffer, video_dst_linesize,
+        av_image_copy(_data_buffer, _data_buffer_linesizes,
                       (const uint8_t **)(_avframe->data), _avframe->linesize,
                       pix_fmt, width, height);
 

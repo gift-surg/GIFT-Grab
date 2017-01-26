@@ -45,7 +45,12 @@ protected:
     //!
     uint8_t * _data_buffer[4] = {nullptr};
 
-    int video_dst_linesize[4];
+    //!
+    //! \brief Linesizes to be used by FFmpeg
+    //! routines
+    //! \sa _data_buffer
+    //!
+    int _data_buffer_linesizes[4];
     int video_dst_bufsize;
 
 protected:
