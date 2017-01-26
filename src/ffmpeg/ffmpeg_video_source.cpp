@@ -142,11 +142,11 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
 
 double VideoSourceFFmpeg::get_frame_rate()
 {
-    int num = _avstream->time_base.num;
-    int den = _avstream->time_base.den;
+    int num = _avstream->avg_frame_rate.num;
+    int den = _avstream->avg_frame_rate.den;
     if (num == 0)
         return 0.0;
-    return static_cast<double>(den) / num;
+    return static_cast<double>(num) / den;
 }
 
 
