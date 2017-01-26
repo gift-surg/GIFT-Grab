@@ -13,12 +13,13 @@ VideoSourceFFmpeg::VideoSourceFFmpeg()
 
 
 VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
-                                     enum ColourSpace colour_space)
+                                     enum ColourSpace colour_space,
+                                     bool use_refcount)
     : IVideoSource(colour_space)
     , _source_path(source_path)
     , _avformat_context(nullptr)
     , _avstream_idx(-1)
-    , _use_refcount(false)
+    , _use_refcount(use_refcount)
     , _avstream(nullptr)
     , _avcodec_context(nullptr)
     , _avframe(nullptr)

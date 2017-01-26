@@ -117,12 +117,17 @@ public:
     //! specified \c colour_space
     //! \param source_path
     //! \param colour_space
+    //! \param use_refcount whether to use
+    //! reference counting to be able to keep a
+    //! copy of obtained data for longer than a
+    //! single decoding cycle
     //! \throw VideoSourceError with a detailed
     //! error message if \c source_path cannot be
     //! opened
     //!
     VideoSourceFFmpeg(std::string source_path,
-                      enum ColourSpace colour_space);
+                      enum ColourSpace colour_space,
+                      bool use_refcount = false);
 
     //!
     //! \brief
