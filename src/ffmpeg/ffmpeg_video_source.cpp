@@ -23,6 +23,7 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     , _avstream(nullptr)
     , _avcodec_context(nullptr)
     , _avframe(nullptr)
+    , _daemon(nullptr)
 {
     int ret = 0;
     std::string error_msg = "";
@@ -71,11 +72,16 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     av_init_packet(&_avpacket);
     _avpacket.data = nullptr;
     _avpacket.size = 0;
+
+    _daemon = new gg::BroadcastDaemon(this);
+    _daemon->start(get_frame_rate());
 }
 
 
 VideoSourceFFmpeg::~VideoSourceFFmpeg()
 {
+    delete _daemon;
+
     avcodec_close(_avcodec_context);
     avformat_close_input(&_avformat_context);
     av_frame_free(&_avframe);

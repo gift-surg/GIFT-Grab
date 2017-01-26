@@ -1,4 +1,5 @@
 #include "ivideosource.h"
+#include "broadcastdaemon.h"
 extern "C" {
 #include <libavformat/avformat.h>
 }
@@ -14,6 +15,13 @@ namespace gg
 class VideoSourceFFmpeg : public IVideoSource
 {
 protected:
+    //!
+    //! \brief Broadcast daemon that will keep
+    //! reading frames from the video source
+    //! and updating all observers
+    //!
+    gg::BroadcastDaemon * _daemon;
+
     //!
     //! \brief Path to the video source, e.g.
     //! video file
