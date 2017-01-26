@@ -51,7 +51,12 @@ protected:
     //! \sa _data_buffer
     //!
     int _data_buffer_linesizes[4];
-    int video_dst_bufsize;
+
+    //!
+    //! \brief Length of allocated data buffer
+    //! \sa _data_buffer
+    //!
+    int _data_buffer_length;
 
 protected:
     //!

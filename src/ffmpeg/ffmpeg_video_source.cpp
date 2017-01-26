@@ -54,7 +54,7 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
         if (ret < 0)
             throw VideoSourceError("Could not allocate"
                                    " raw video buffer");
-        video_dst_bufsize = ret;
+        _data_buffer_length = ret;
     }
     else
         throw VideoSourceError(error_msg);
@@ -79,7 +79,7 @@ VideoSourceFFmpeg::~VideoSourceFFmpeg()
     avformat_close_input(&_avformat_context);
     av_frame_free(&_avframe);
     av_free(_data_buffer[0]);
-    video_dst_bufsize = 0;
+    _data_buffer_length = 0;
 }
 
 
@@ -134,7 +134,7 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
     if (passes != 1)
         return false;
 
-    frame.init_from_specs(_data_buffer[0], video_dst_bufsize, width, height);
+    frame.init_from_specs(_data_buffer[0], _data_buffer_length, width, height);
     return true;
 }
 
