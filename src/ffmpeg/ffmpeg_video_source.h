@@ -31,7 +31,15 @@ protected:
     //! \sa _avstream
     //!
     int _avstream_idx;
-    int refcount;
+
+    //!
+    //! \brief Flag indicating whether the
+    //! reference counting frame system is to
+    //! be used so as to keep a copy of
+    //! obtained data for longer than a single
+    //! decoding cycle
+    //!
+    bool _use_refcount;
 
     //!
     //! \brief FFmpeg video stream to be used

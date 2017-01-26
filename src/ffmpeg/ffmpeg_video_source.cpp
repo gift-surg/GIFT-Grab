@@ -18,7 +18,7 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     , _source_path(source_path)
     , _avformat_context(nullptr)
     , _avstream_idx(-1)
-    , refcount(0)
+    , _use_refcount(false)
     , _avstream(nullptr)
     , _avcodec_context(nullptr)
     , _avframe(nullptr)
@@ -197,7 +197,7 @@ int VideoSourceFFmpeg::open_codec_context(
         }
 
         /* Init the decoders, with or without reference counting */
-        av_dict_set(&opts, "refcounted_frames", refcount ? "1" : "0", 0);
+        av_dict_set(&opts, "refcounted_frames", _use_refcount ? "1" : "0", 0);
         if ((ret = avcodec_open2(dec_ctx, dec, &opts)) < 0)
         {
             error_msg.append("Failed to open ")
@@ -233,7 +233,7 @@ int VideoSourceFFmpeg::decode_packet(int * got_frame, int cached)
     }
     /* If we use frame reference counting, we own the data and need
      * to de-reference it when we don't use it anymore */
-    if (*got_frame and refcount)
+    if (*got_frame and _use_refcount)
         av_frame_unref(_avframe);
     return decoded;
 }
