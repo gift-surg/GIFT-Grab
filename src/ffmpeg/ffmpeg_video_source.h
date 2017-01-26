@@ -28,8 +28,18 @@ protected:
     int refcount;
     AVStream * video_stream;
     AVCodecContext * video_dec_ctx;
-    int width;
-    int height;
+
+    //!
+    //! \brief Width of frames obtained from
+    //! video source being read
+    //!
+    int _width;
+
+    //!
+    //! \brief Height of frames obtained from
+    //! video source being read
+    //!
+    int _height;
 
     //!
     //! \brief The pixel format of the video
@@ -95,13 +105,13 @@ public:
     virtual ~VideoSourceFFmpeg();
 
 public:
-    bool get_frame_dimensions(int & width, int & height);
+    bool get_frame_dimensions(int & _width, int & _height);
 
     bool get_frame(VideoFrame & frame);
 
     double get_frame_rate();
 
-    void set_sub_frame(int x, int y, int width, int height);
+    void set_sub_frame(int x, int y, int _width, int _height);
 
     void get_full_frame();
 

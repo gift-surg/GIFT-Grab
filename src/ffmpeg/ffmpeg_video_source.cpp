@@ -46,11 +46,11 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
         video_dec_ctx = video_stream->codec;
 
         /* allocate image where the decoded image will be put */
-        width = video_dec_ctx->width;
-        height = video_dec_ctx->height;
+        _width = video_dec_ctx->width;
+        _height = video_dec_ctx->height;
         _avpixel_format = video_dec_ctx->pix_fmt;
         ret = av_image_alloc(_data_buffer, _data_buffer_linesizes,
-                             width, height, _avpixel_format, 1);
+                             _width, _height, _avpixel_format, 1);
         if (ret < 0)
             throw VideoSourceError("Could not allocate"
                                    " raw video buffer");
@@ -85,10 +85,10 @@ VideoSourceFFmpeg::~VideoSourceFFmpeg()
 
 bool VideoSourceFFmpeg::get_frame_dimensions(int & width, int & height)
 {
-    if (this->width > 0 and this->height > 0)
+    if (this->_width > 0 and this->_height > 0)
     {
-        width = this->width;
-        height = this->height;
+        width = this->_width;
+        height = this->_height;
         return true;
     }
     else
@@ -120,7 +120,7 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
          * this is required since rawvideo expects non aligned data */
         av_image_copy(_data_buffer, _data_buffer_linesizes,
                       (const uint8_t **)(_avframe->data), _avframe->linesize,
-                      _avpixel_format, width, height);
+                      _avpixel_format, _width, _height);
 
         passes++;
     }
@@ -134,7 +134,7 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
     if (passes != 1)
         return false;
 
-    frame.init_from_specs(_data_buffer[0], _data_buffer_length, width, height);
+    frame.init_from_specs(_data_buffer[0], _data_buffer_length, _width, _height);
     return true;
 }
 
@@ -226,7 +226,7 @@ int VideoSourceFFmpeg::decode_packet(int * got_frame, int cached)
 
         if (*got_frame)
         {
-            if (_avframe->width != width or _avframe->height != height or
+            if (_avframe->width != _width or _avframe->height != _height or
                 _avframe->format != _avpixel_format)
                 return -1;
         }
