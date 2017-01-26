@@ -38,6 +38,12 @@ protected:
     //! for reading frames from video source
     //!
     AVStream * _avstream;
+
+    //!
+    //! \brief FFmpeg codec context to be used
+    //! for decoding frames from video source
+    //! being read
+    //!
     AVCodecContext * _avcodec_context;
 
     //!
