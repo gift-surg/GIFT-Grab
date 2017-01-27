@@ -2,6 +2,8 @@
 #include "broadcastdaemon.h"
 extern "C" {
 #include <libavformat/avformat.h>
+#include <libswscale/swscale.h>
+
 }
 
 
@@ -81,10 +83,31 @@ protected:
     enum AVPixelFormat _avpixel_format;
 
     //!
+    //! \brief This is for converting pixel format
+    //! (e.g. from BGRA to YUV420p)
+    //!
+    SwsContext * _sws_context;
+
+    //!
+    //! \brief Source data stride for colour space
+    //! (chroma) conversion
+    //! \sa _sws_context
+    //!
+    int _stride[1];
+
+    //!
     //! \brief FFmpeg frame to be used when
     //! decoding frames
     //!
     AVFrame * _avframe;
+
+    //!
+    //! \brief FFmpeg frame to be used when video
+    //! source has a different colour format
+    //! (chroma) than the requested one
+    //! \sa _colour
+    //!
+    AVFrame * _avframe_converted;
 
     //!
     //! \brief FFmpeg packet to be used when

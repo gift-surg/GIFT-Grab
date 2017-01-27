@@ -23,6 +23,8 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     , _avstream(nullptr)
     , _avcodec_context(nullptr)
     , _avframe(nullptr)
+    , _avframe_converted(nullptr)
+    , _sws_context(nullptr)
     , _daemon(nullptr)
 {
     int ret = 0;
@@ -73,6 +75,80 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     _avpacket.data = nullptr;
     _avpacket.size = 0;
 
+    AVPixelFormat target_avpixel_format;
+    switch(_colour)
+    {
+    case BGRA:
+        target_avpixel_format = AV_PIX_FMT_BGRA;
+        break;
+    case I420:
+        target_avpixel_format = AV_PIX_FMT_YUV420P;
+        break;
+    case UYVY:
+        target_avpixel_format = AV_PIX_FMT_UYVY422;
+        break;
+    default:
+        throw VideoSourceError("Target colour space not supported");
+    }
+    if (_avpixel_format != target_avpixel_format)
+    {
+        switch(_avpixel_format)
+        {
+        case AV_PIX_FMT_BGRA:
+            _stride[0] = 4 * _width;
+            break;
+        case AV_PIX_FMT_UYVY422:
+            _stride[0] = 2 * _width;
+            break;
+        case AV_PIX_FMT_YUV420P:
+            // TODO: 1) is this correct? 2) odd width?
+            _stride[0] = 1.5 * _width;
+            break;
+        default:
+            throw VideoSourceError("Source colour space not supported");
+        }
+        _avframe_converted = av_frame_alloc();
+        if (_avframe_converted == nullptr)
+            throw VideoSourceError("Could not allocate conversion frame");
+        _avframe_converted->format = target_avpixel_format;
+        _avframe_converted->width  = _width;
+        _avframe_converted->height = _height;
+        int pixel_depth;
+        switch(target_avpixel_format)
+        {
+        case AV_PIX_FMT_BGRA:
+            pixel_depth = 32; // bits-per-pixel
+            break;
+        case AV_PIX_FMT_YUV420P:
+            pixel_depth = 12; // bits-per-pixel
+            /* TODO #54 - alignment by _pixel_depth causes problems
+             * due to buffer size mismatches between EpiphanSDK and
+             * FFmpeg, hence manually filling in linesizes (based on
+             * debugging measurements), in conj. with
+             * av_image_fill_pointers below
+             */
+            _avframe_converted->linesize[0] = _avframe_converted->width;
+            _avframe_converted->linesize[1] = _avframe_converted->width / 2;
+            _avframe_converted->linesize[2] = _avframe_converted->width / 2;
+            break;
+        case AV_PIX_FMT_UYVY422:
+            pixel_depth = 16; // bits-per-pixel
+            break;
+        default:
+            throw VideoSourceError("Colour space not supported");
+        }
+        ret = av_frame_get_buffer(_avframe_converted, pixel_depth);
+        if (ret < 0)
+            throw VideoSourceError("Could not allocate conversion buffer");
+
+        _sws_context = sws_getContext(
+                    _width, _height, _avpixel_format,
+                    _width, _height, target_avpixel_format,
+                    0, nullptr, nullptr, nullptr);
+        if (_sws_context == nullptr)
+            throw VideoSourceError("Could not allocate Sws context");
+    }
+
     _daemon = new gg::BroadcastDaemon(this);
     _daemon->start(get_frame_rate());
 }
@@ -82,9 +158,14 @@ VideoSourceFFmpeg::~VideoSourceFFmpeg()
 {
     delete _daemon;
 
+    if (_sws_context != nullptr)
+        sws_freeContext(_sws_context);
     avcodec_close(_avcodec_context);
     avformat_close_input(&_avformat_context);
     av_frame_free(&_avframe);
+    if (_avframe_converted != nullptr)
+        av_frame_free(&_avframe_converted);
+    delete[] _stride;
     av_free(_data_buffer[0]);
     _data_buffer_length = 0;
 }
@@ -123,10 +204,29 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
         _avpacket.data += ret;
         _avpacket.size -= ret;
 
+        // need to convert pixel format?
+        uint8_t ** data_ptr = nullptr;
+        int * data_linesize = nullptr;
+        if (_sws_context != nullptr)
+        {
+            sws_scale(_sws_context,
+                      _avframe->data, _stride,
+                      0, _height,
+                      _avframe_converted->data, _avframe_converted->linesize
+                      );
+            data_ptr = _avframe_converted->data;
+            data_linesize = _avframe_converted->linesize;
+        }
+        else
+        {
+            data_ptr = _avframe->data;
+            data_linesize = _avframe->linesize;
+        }
+
         /* copy decoded frame to destination buffer:
          * this is required since rawvideo expects non aligned data */
         av_image_copy(_data_buffer, _data_buffer_linesizes,
-                      (const uint8_t **)(_avframe->data), _avframe->linesize,
+                      const_cast<const uint8_t **>(data_ptr), data_linesize,
                       _avpixel_format, _width, _height);
 
         passes++;
