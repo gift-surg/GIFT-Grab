@@ -165,7 +165,6 @@ VideoSourceFFmpeg::~VideoSourceFFmpeg()
     av_frame_free(&_avframe);
     if (_avframe_converted != nullptr)
         av_frame_free(&_avframe_converted);
-    delete[] _stride;
     av_free(_data_buffer[0]);
     _data_buffer_length = 0;
 }
