@@ -204,8 +204,7 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
         _avpacket.size -= ret;
 
         // need to convert pixel format?
-        uint8_t ** data_ptr = nullptr;
-        int * data_linesize = nullptr;
+        AVFrame * avframe_ptr = nullptr;
         if (_sws_context != nullptr)
         {
             ret = sws_scale(_sws_context,
@@ -218,19 +217,18 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
                 success = false;
                 break;
             }
-            data_ptr = _avframe_converted->data;
-            data_linesize = _avframe_converted->linesize;
+
+            avframe_ptr = _avframe_converted;
         }
         else
         {
-            data_ptr = _avframe->data;
-            data_linesize = _avframe->linesize;
+            avframe_ptr = _avframe;
         }
 
         /* copy decoded frame to destination buffer:
          * this is required since rawvideo expects non aligned data */
         av_image_copy(_data_buffer, _data_buffer_linesizes,
-                      const_cast<const uint8_t **>(data_ptr), data_linesize,
+                      const_cast<const uint8_t **>(avframe_ptr->data), avframe_ptr->linesize,
                       _avpixel_format, _width, _height);
 
         passes++;
