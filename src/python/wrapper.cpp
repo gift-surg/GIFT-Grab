@@ -426,6 +426,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
 
     class_<VideoFrameNumPyWrapper>("VideoFrame", init<enum gg::ColourSpace, bool>())
         .def(init<enum gg::ColourSpace, const size_t, const size_t>())
+        .def("colour", &VideoFrameNumPyWrapper::colour)
         .def("rows", &VideoFrameNumPyWrapper::rows)
         .def("cols", &VideoFrameNumPyWrapper::cols)
         .def("data_length", &VideoFrameNumPyWrapper::data_length)
