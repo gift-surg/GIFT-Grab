@@ -176,7 +176,6 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
     int ret = 0, got_frame;
     bool success = true;
     AVPacket orig_pkt = _avpacket;
-    size_t passes = 0;
     do
     {
         ret = decode_packet(&got_frame, 0);
@@ -187,45 +186,36 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
         }
         _avpacket.data += ret;
         _avpacket.size -= ret;
-
-        // need to convert pixel format?
-        AVFrame * avframe_ptr = nullptr;
-        if (_sws_context != nullptr)
-        {
-            ret = sws_scale(_sws_context,
-                            _avframe->data, _avframe->linesize,
-                            0, _height,
-                            _avframe_converted->data, _avframe_converted->linesize
-                            );
-            if (ret <= 0)
-            {
-                success = false;
-                break;
-            }
-
-            avframe_ptr = _avframe_converted;
-        }
-        else
-        {
-            avframe_ptr = _avframe;
-        }
-
-        /* copy decoded frame to destination buffer:
-         * this is required since rawvideo expects non aligned data */
-        av_image_copy(_data_buffer, _data_buffer_linesizes,
-                      const_cast<const uint8_t **>(avframe_ptr->data), avframe_ptr->linesize,
-                      _avpixel_format, _width, _height);
-
-        passes++;
     }
     while (_avpacket.size > 0);
     av_packet_unref(&orig_pkt);
 
-    if (not success)
-        return false;
+    // need to convert pixel format?
+    AVFrame * avframe_ptr = nullptr;
+    if (_sws_context != nullptr)
+    {
+        ret = sws_scale(_sws_context,
+                        _avframe->data, _avframe->linesize,
+                        0, _height,
+                        _avframe_converted->data, _avframe_converted->linesize
+                        );
+        if (ret <= 0)
+            success = false;
 
-    // TODO - when are there multiple passes?
-    if (passes != 1)
+        avframe_ptr = _avframe_converted;
+    }
+    else
+    {
+        avframe_ptr = _avframe;
+    }
+
+    /* copy decoded frame to destination buffer:
+     * this is required since rawvideo expects non aligned data */
+    av_image_copy(_data_buffer, _data_buffer_linesizes,
+                  const_cast<const uint8_t **>(avframe_ptr->data), avframe_ptr->linesize,
+                  _avpixel_format, _width, _height);
+
+    if (not success)
         return false;
 
     frame.init_from_specs(_data_buffer[0], _data_buffer_length, _width, _height);
@@ -309,7 +299,7 @@ int VideoSourceFFmpeg::open_codec_context(
 int VideoSourceFFmpeg::decode_packet(int * got_frame, int cached)
 {
     int ret = 0;
-    int decoded = _avpacket.size;
+    int decoded = 0;
     *got_frame = 0;
     if (_avpacket.stream_index == _avstream_idx)
     {
@@ -323,6 +313,7 @@ int VideoSourceFFmpeg::decode_packet(int * got_frame, int cached)
             if (_avframe->width != _width or _avframe->height != _height or
                 _avframe->format != _avpixel_format)
                 return -1;
+            decoded = ret;
         }
     }
     /* If we use frame reference counting, we own the data and need
