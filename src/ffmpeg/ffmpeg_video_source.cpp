@@ -53,12 +53,6 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
         _width = _avcodec_context->width;
         _height = _avcodec_context->height;
         _avpixel_format = _avcodec_context->pix_fmt;
-        ret = av_image_alloc(_data_buffer, _data_buffer_linesizes,
-                             _width, _height, _avpixel_format, 1);
-        if (ret < 0)
-            throw VideoSourceError("Could not allocate"
-                                   " raw video buffer");
-        _data_buffer_length = ret;
     }
     else
         throw VideoSourceError(error_msg);
@@ -129,10 +123,17 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
         _sws_context = sws_getContext(
                     _width, _height, _avpixel_format,
                     _width, _height, target_avpixel_format,
-                    0, nullptr, nullptr, nullptr);
+                    SWS_BICUBIC, nullptr, nullptr, nullptr);
         if (_sws_context == nullptr)
             throw VideoSourceError("Could not allocate Sws context");
     }
+
+    ret = av_image_alloc(_data_buffer, _data_buffer_linesizes,
+                         _width, _height, target_avpixel_format, 1);
+    if (ret < 0)
+        throw VideoSourceError("Could not allocate"
+                               " raw video buffer");
+    _data_buffer_length = ret;
 
     _daemon = new gg::BroadcastDaemon(this);
     _daemon->start(get_frame_rate());
