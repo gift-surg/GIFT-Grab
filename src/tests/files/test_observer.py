@@ -20,6 +20,7 @@ def peri_test(codec, colour_space, filepath,
               frame_width, frame_height):
 	global factory
 	factory = VideoSourceFactory.get_instance()
+	global video_duration, quarter_video_duration
 	video_duration = frame_count / frame_rate
 	quarter_video_duration = video_duration / 4
 	yield
@@ -34,6 +35,7 @@ def test_valid_filepath_returns_raii_reader(
 ):
 	source = None
 	global factory
+	global video_duration, quarter_video_duration
 	source = factory.create_file_reader(
 		filepath, codec, colour_space
 	)
@@ -49,7 +51,7 @@ def test_valid_filepath_returns_raii_reader(
 		frame_width, frame_height)
 	assert file_checker.assert_data()
 	assert file_checker.assert_frame_data_lengths(
-		colour, frame_width, frame_height)
+		colour_space, frame_width, frame_height)
 
 
 @mark.observer_pattern
@@ -61,6 +63,7 @@ def test_reader_releases_file_on_destruction(
 ):
 	source = None
 	global factory
+	global video_duration, quarter_video_duration
 	source = factory.create_file_reader(
 		filepath, codec, colour_space
 	)
@@ -87,7 +90,7 @@ def test_reader_releases_file_on_destruction(
 		frame_width, frame_height)
 	assert file_checker_2.assert_data()
 	assert file_checker_2.assert_frame_data_lengths(
-		colour, frame_width, frame_height)
+		colour_space, frame_width, frame_height)
 
 
 @mark.observer_pattern
