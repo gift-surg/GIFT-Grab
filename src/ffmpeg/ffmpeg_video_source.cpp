@@ -70,6 +70,7 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     _avpacket.size = 0;
 
     AVPixelFormat target_avpixel_format;
+    int sws_flags = 0;
     switch(_colour)
     {
     case BGRA:
@@ -114,7 +115,7 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
         _sws_context = sws_getContext(
                     _width, _height, _avpixel_format,
                     _width, _height, target_avpixel_format,
-                    SWS_BICUBIC, nullptr, nullptr, nullptr);
+                    sws_flags, nullptr, nullptr, nullptr);
         if (_sws_context == nullptr)
             throw VideoSourceError("Could not allocate Sws context");
     }
