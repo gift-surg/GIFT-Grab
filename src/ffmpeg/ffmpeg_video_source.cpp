@@ -208,11 +208,16 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
         int * data_linesize = nullptr;
         if (_sws_context != nullptr)
         {
-            sws_scale(_sws_context,
-                      _avframe->data, _stride,
-                      0, _height,
-                      _avframe_converted->data, _avframe_converted->linesize
-                      );
+            ret = sws_scale(_sws_context,
+                            _avframe->data, _stride,
+                            0, _height,
+                            _avframe_converted->data, _avframe_converted->linesize
+                            );
+            if (ret <= 0)
+            {
+                success = false;
+                break;
+            }
             data_ptr = _avframe_converted->data;
             data_linesize = _avframe_converted->linesize;
         }
