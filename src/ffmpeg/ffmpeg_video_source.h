@@ -89,13 +89,6 @@ protected:
     SwsContext * _sws_context;
 
     //!
-    //! \brief Source data stride for colour space
-    //! (chroma) conversion
-    //! \sa _sws_context
-    //!
-    int _stride[1];
-
-    //!
     //! \brief FFmpeg frame to be used when
     //! decoding frames
     //!

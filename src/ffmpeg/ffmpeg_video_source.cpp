@@ -92,21 +92,6 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     }
     if (_avpixel_format != target_avpixel_format)
     {
-        switch(_avpixel_format)
-        {
-        case AV_PIX_FMT_BGRA:
-            _stride[0] = 4 * _width;
-            break;
-        case AV_PIX_FMT_UYVY422:
-            _stride[0] = 2 * _width;
-            break;
-        case AV_PIX_FMT_YUV420P:
-            // TODO: 1) is this correct? 2) odd width?
-            _stride[0] = 1.5 * _width;
-            break;
-        default:
-            throw VideoSourceError("Source colour space not supported");
-        }
         _avframe_converted = av_frame_alloc();
         if (_avframe_converted == nullptr)
             throw VideoSourceError("Could not allocate conversion frame");
@@ -208,7 +193,7 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
         if (_sws_context != nullptr)
         {
             ret = sws_scale(_sws_context,
-                            _avframe->data, _stride,
+                            _avframe->data, _avframe->linesize,
                             0, _height,
                             _avframe_converted->data, _avframe_converted->linesize
                             );
