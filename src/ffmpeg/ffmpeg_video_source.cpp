@@ -205,7 +205,7 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
      * this is required since rawvideo expects non aligned data */
     av_image_copy(_data_buffer, _data_buffer_linesizes,
                   const_cast<const uint8_t **>(avframe_ptr->data), avframe_ptr->linesize,
-                  _avpixel_format, _width, _height);
+                  static_cast<AVPixelFormat>(avframe_ptr->format), _width, _height);
 
     if (not success)
         return false;
