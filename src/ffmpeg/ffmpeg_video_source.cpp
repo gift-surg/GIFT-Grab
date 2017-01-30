@@ -100,15 +100,6 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
             break;
         case AV_PIX_FMT_YUV420P:
             pixel_depth = 12; // bits-per-pixel
-            /* TODO #54 - alignment by _pixel_depth causes problems
-             * due to buffer size mismatches between EpiphanSDK and
-             * FFmpeg, hence manually filling in linesizes (based on
-             * debugging measurements), in conj. with
-             * av_image_fill_pointers below
-             */
-            _avframe_converted->linesize[0] = _avframe_converted->width;
-            _avframe_converted->linesize[1] = _avframe_converted->width / 2;
-            _avframe_converted->linesize[2] = _avframe_converted->width / 2;
             break;
         case AV_PIX_FMT_UYVY422:
             pixel_depth = 16; // bits-per-pixel
