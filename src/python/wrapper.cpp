@@ -173,7 +173,8 @@ public:
     void update(gg::VideoFrame & frame)
     {
         gg::ScopedPythonGILLock gil_lock;
-        this->get_override("update")(boost::ref(frame));
+        // not using boost::ref(frame) because of issue #150
+        this->get_override("update")(frame);
     }
 };
 
@@ -183,6 +184,62 @@ public:
     void append(const gg::VideoFrame & frame)
     {
         this->get_override("append")(frame);
+    }
+};
+
+//!
+//! \brief This class is a workaround to the method resolution
+//! order problems encountered when implementing Python classes
+//! inheriting from both IObservable and IObserver, i.e. a node
+//! that receives, processes video data and finally passes this
+//! processed data down along the pipeline.
+//!
+class IObservableObserverWrapper : public gg::IObservable, public IObserverWrapper
+{
+public:
+    IObservableObserverWrapper()
+    {
+        // nop
+    }
+
+    ~IObservableObserverWrapper()
+    {
+        // nop
+    }
+
+public:
+    void attach(gg::IObserver & observer)
+    {
+        if (override f = this->get_override("attach"))
+            f(boost::ref(observer));
+        else
+            gg::IObservable::attach(boost::ref(observer));
+    }
+
+    void default_attach(gg::IObserver & observer)
+    {
+        gg::IObservable::attach(boost::ref(observer));
+    }
+
+    void detach(gg::IObserver & observer)
+    {
+        if (override f = this->get_override("detach"))
+            f(boost::ref(observer));
+        else
+            gg::IObservable::detach(boost::ref(observer));
+    }
+
+    void default_detach(gg::IObserver & observer)
+    {
+        gg::IObservable::detach(boost::ref(observer));
+    }
+
+    void default_notify(gg::VideoFrame & frame)
+    {
+        if (override f = this->get_override("notify"))
+            f(boost::ref(frame));
+        else
+            gg::IObservable::notify(frame);
     }
 };
 
@@ -354,6 +411,13 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .def("append", &gg::VideoTargetOpenCV::append)
     ;
 #endif // USE_OPENCV
+
+    class_<IObservableObserverWrapper, boost::noncopyable>("IObservableObserver")
+        .def("attach", &gg::IObservable::attach, &IObservableObserverWrapper::default_attach)
+        .def("detach", &gg::IObservable::detach, &IObservableObserverWrapper::default_detach)
+        .def("notify", &gg::IObservable::notify, &IObservableObserverWrapper::default_notify)
+        .def("update", pure_virtual(&gg::IObserver::update))
+    ;
 
     class_<gg::VideoSourceFactory, boost::noncopyable>("VideoSourceFactory", no_init)
         .def("get_device", &gg::VideoSourceFactory::get_device
