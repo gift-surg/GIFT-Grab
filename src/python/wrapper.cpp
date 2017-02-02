@@ -194,7 +194,9 @@ public:
 //! that receives, processes video data and finally passes this
 //! processed data down along the pipeline.
 //!
-class IObservableObserverWrapper : public gg::IObservable, public IObserverWrapper
+class IObservableObserverWrapper : public gg::IObservable
+                                 , public gg::IObserver
+                                 , public wrapper<gg::IObserver>
 {
 public:
     IObservableObserverWrapper()
@@ -232,6 +234,17 @@ public:
     void default_detach(gg::IObserver & observer)
     {
         gg::IObservable::detach(boost::ref(observer));
+    }
+
+    void update(gg::VideoFrame & frame)
+    {
+        override f = this->get_override("update");
+        {
+            gg::ScopedPythonGILLock gil_lock;
+            // not using boost::ref(frame) because of issue #150
+            f(frame);
+        }
+        notify(frame);
     }
 
     void default_notify(gg::VideoFrame & frame)
