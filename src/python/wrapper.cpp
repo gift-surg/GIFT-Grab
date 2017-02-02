@@ -246,14 +246,6 @@ public:
         }
         notify(frame);
     }
-
-    void default_notify(gg::VideoFrame & frame)
-    {
-        if (override f = this->get_override("notify"))
-            f(boost::ref(frame));
-        else
-            gg::IObservable::notify(frame);
-    }
 };
 
 void translate_VideoSourceError(gg::VideoSourceError const & e)
@@ -428,7 +420,6 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     class_<IObservableObserverWrapper, boost::noncopyable>("IObservableObserver")
         .def("attach", &gg::IObservable::attach, &IObservableObserverWrapper::default_attach)
         .def("detach", &gg::IObservable::detach, &IObservableObserverWrapper::default_detach)
-        .def("notify", &gg::IObservable::notify, &IObservableObserverWrapper::default_notify)
         .def("update", pure_virtual(&gg::IObserver::update))
     ;
 
