@@ -77,17 +77,17 @@ public:
     //! \brief Create a NumPy array referencing gg::VideoFrame::data()
     //! \return
     //!
-    boost::python::numpy::ndarray data_as_ndarray()
+    numpy::ndarray data_as_ndarray()
     {
-        return boost::python::numpy::from_data(
+        return numpy::from_data(
                     gg::VideoFrame::data(),
-                    boost::python::numpy::dtype::get_builtin<uint8_t>(),
+                    numpy::dtype::get_builtin<uint8_t>(),
                     // shape
-                    boost::python::make_tuple(data_length()),
+                    make_tuple(data_length()),
                     // stride, i.e. 1 byte to go to next entry in this case
-                    boost::python::make_tuple(sizeof(uint8_t)),
+                    make_tuple(sizeof(uint8_t)),
                     // owner (dangerous to pass None)
-                    boost::python::object()
+                    object()
                );
     }
 #endif
@@ -244,7 +244,7 @@ public:
             gg::ScopedPythonGILLock gil_lock;
             f(boost::ref(frame));
         }
-        catch (boost::python::error_already_set & e)
+        catch (error_already_set & e)
         {
             // nop, see issue #151
         }
