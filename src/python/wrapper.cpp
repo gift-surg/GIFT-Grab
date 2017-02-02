@@ -242,8 +242,7 @@ public:
         try
         {
             gg::ScopedPythonGILLock gil_lock;
-            // not using boost::ref(frame) because of issue #150
-            f(frame);
+            f(boost::ref(frame));
         }
         catch (boost::python::error_already_set & e)
         {
