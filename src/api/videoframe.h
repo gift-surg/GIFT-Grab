@@ -133,7 +133,7 @@ public:
     //! \brief Get length of data buffer
     //! \return
     //!
-    virtual const size_t data_length() const
+    const size_t data_length() const
     {
         return _data_length;
     }
@@ -142,7 +142,7 @@ public:
     //! \brief Get number of rows (y-axis, i.e. height)
     //! \return
     //!
-    virtual size_t rows() const
+    size_t rows() const
     {
         return _rows;
     }
@@ -151,7 +151,7 @@ public:
     //! \brief Get number of columns (x-axis, i.e. width)
     //! \return
     //!
-    virtual size_t cols() const
+    size_t cols() const
     {
         return _cols;
     }
@@ -161,7 +161,7 @@ public:
     //! or externally
     //! \return
     //!
-    virtual bool manages_own_data() const
+    bool manages_own_data() const
     {
         return _manage_data;
     }
@@ -182,7 +182,7 @@ public:
     //! \return
     //! \sa VideoFrame(const VideoFrame & rhs)
     //!
-    virtual unsigned char * const data() const
+    unsigned char * const data() const
     {
         return _data;
     }
@@ -191,7 +191,7 @@ public:
     //! \brief Get what colour space \c this frame uses
     //! \return
     //!
-    virtual const enum ColourSpace colour() const
+    const enum ColourSpace colour() const
     {
         return _colour;
     }
