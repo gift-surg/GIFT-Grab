@@ -47,9 +47,9 @@ public:
     //! \param rhs
     //!
     VideoFrameNumPyWrapper(const gg::VideoFrame & rhs)
-        : gg::VideoFrame(rhs)
+        : _frame(new gg::VideoFrame(rhs))
     {
-        // nop
+        _manage_data = true;
     }
 
     //!
@@ -62,9 +62,9 @@ public:
     //!
     VideoFrameNumPyWrapper(enum gg::ColourSpace colour,
                            size_t cols, size_t rows)
-        : gg::VideoFrame(colour, cols, rows)
+        : _frame(new gg::VideoFrame(colour, cols, rows))
     {
-        // nop
+        _manage_data = true;
     }
 
     //!
@@ -76,9 +76,9 @@ public:
     //!
     VideoFrameNumPyWrapper(enum gg::ColourSpace colour,
                            bool manage_data)
-        : gg::VideoFrame(colour, manage_data)
+        : _frame(new gg::VideoFrame(colour, manage_data))
     {
-        // nop
+        _manage_data = true;
     }
 
     ~VideoFrameNumPyWrapper()
@@ -87,18 +87,38 @@ public:
             delete _frame;
     }
 
+    size_t rows() const
+    {
+        return _frame->rows();
+    }
+
+    size_t cols() const
+    {
+        return _frame->cols();
+    }
+
+    const enum gg::ColourSpace colour() const
+    {
+        return _frame->colour();
+    }
+
+    size_t data_length() const
+    {
+        return _frame->data_length();
+    }
+
 #ifdef USE_NUMPY
     //!
     //! \brief Create a NumPy array referencing gg::VideoFrame::data()
     //! \return
     //!
-    numpy::ndarray data_as_ndarray()
+    numpy::ndarray data_as_ndarray() const
     {
         return numpy::from_data(
-                    gg::VideoFrame::data(),
+                    _frame->data(),
                     numpy::dtype::get_builtin<uint8_t>(),
                     // shape
-                    make_tuple(data_length()),
+                    make_tuple(_frame->data_length()),
                     // stride, i.e. 1 byte to go to next entry in this case
                     make_tuple(sizeof(uint8_t)),
                     // owner (dangerous to pass None)
@@ -189,7 +209,8 @@ public:
     void update(gg::VideoFrame & frame)
     {
         gg::ScopedPythonGILLock gil_lock;
-        this->get_override("update")(boost::ref(frame));
+        VideoFrameNumPyWrapper wrapped_frame(&frame);
+        this->get_override("update")(boost::ref(wrapped_frame));
     }
 };
 
@@ -257,7 +278,8 @@ public:
         try
         {
             gg::ScopedPythonGILLock gil_lock;
-            f(boost::ref(frame));
+            VideoFrameNumPyWrapper wrapped_frame(&frame);
+            f(boost::ref(wrapped_frame));
         }
         catch (error_already_set & e)
         {
