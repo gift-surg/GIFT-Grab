@@ -30,7 +30,16 @@ using namespace boost::python;
 
 class VideoFrameNumPyWrapper : public gg::VideoFrame, public wrapper<gg::VideoFrame>
 {
+protected:
+    gg::VideoFrame * _frame;
+
 public:
+    VideoFrameNumPyWrapper(gg::VideoFrame * frame)
+        : _frame(frame)
+    {
+        _manage_data = false;
+    }
+
     //!
     //! \brief Copy constructor needs to be defined
     //! here as well for compatibility with exposed
@@ -70,6 +79,12 @@ public:
         : gg::VideoFrame(colour, manage_data)
     {
         // nop
+    }
+
+    ~VideoFrameNumPyWrapper()
+    {
+        if (_manage_data)
+            delete _frame;
     }
 
 #ifdef USE_NUMPY
