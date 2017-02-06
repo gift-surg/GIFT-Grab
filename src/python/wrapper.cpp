@@ -40,6 +40,7 @@ public:
         , _manage_frame(false)
     {
         _manage_data = false;
+        sync_specs();
     }
 
     //!
@@ -53,6 +54,7 @@ public:
         , _manage_frame(true)
     {
         _manage_data = false;
+        sync_specs();
     }
 
     //!
@@ -69,6 +71,7 @@ public:
         , _manage_frame(true)
     {
         _manage_data = false;
+        sync_specs();
     }
 
     //!
@@ -84,6 +87,7 @@ public:
         , _manage_frame(true)
     {
         _manage_data = false;
+        sync_specs();
     }
 
     ~VideoFrameNumPyWrapper()
@@ -131,6 +135,16 @@ public:
                );
     }
 #endif
+
+protected:
+    void sync_specs()
+    {
+        _colour = _frame->colour();
+        _cols = _frame->cols();
+        _rows = _frame->rows();
+        _data = _frame->data();
+        _data_length = _frame->data_length();
+    }
 };
 
 class IObservableWrapper : public gg::IObservable, public wrapper<gg::IObservable>
