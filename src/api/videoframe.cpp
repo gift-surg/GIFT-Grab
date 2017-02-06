@@ -4,6 +4,11 @@
 namespace gg
 {
 
+VideoFrame::VideoFrame()
+{
+    // nop: never to be called externally
+}
+
 VideoFrame::VideoFrame(enum ColourSpace colour, bool manage_data)
   : _colour(colour),
     _manage_data(manage_data),

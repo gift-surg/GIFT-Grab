@@ -42,6 +42,13 @@ enum ColourSpace
 //!
 class VideoFrame
 {
+protected:
+    //!
+    //! \brief Default constructor that should never be called
+    //! externally
+    //!
+    VideoFrame();
+
 public:
     //!
     //! \brief Constructor that by default will use externally
