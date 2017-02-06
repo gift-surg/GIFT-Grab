@@ -107,14 +107,19 @@ public:
         return _frame->cols();
     }
 
-    const enum gg::ColourSpace colour() const
+    bool manages_own_data() const
     {
-        return _frame->colour();
+        return _frame->manages_own_data();
     }
 
     unsigned char * const data() const
     {
         return _frame->data();
+    }
+
+    const enum gg::ColourSpace colour() const
+    {
+        return _frame->colour();
     }
 
 #ifdef USE_NUMPY
