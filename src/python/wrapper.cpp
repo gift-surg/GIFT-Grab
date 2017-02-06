@@ -92,6 +92,11 @@ public:
             delete _frame;
     }
 
+    const size_t data_length() const
+    {
+        return _frame->data_length();
+    }
+
     size_t rows() const
     {
         return _frame->rows();
@@ -107,9 +112,9 @@ public:
         return _frame->colour();
     }
 
-    size_t data_length() const
+    unsigned char * const data() const
     {
-        return _frame->data_length();
+        return _frame->data();
     }
 
 #ifdef USE_NUMPY
