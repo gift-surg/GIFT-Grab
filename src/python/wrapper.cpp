@@ -32,10 +32,12 @@ class VideoFrameNumPyWrapper : public gg::VideoFrame, public wrapper<gg::VideoFr
 {
 protected:
     gg::VideoFrame * _frame;
+    bool _manage_frame;
 
 public:
     VideoFrameNumPyWrapper(gg::VideoFrame * frame)
         : _frame(frame)
+        , _manage_frame(false)
     {
         _manage_data = false;
     }
@@ -48,8 +50,9 @@ public:
     //!
     VideoFrameNumPyWrapper(const gg::VideoFrame & rhs)
         : _frame(new gg::VideoFrame(rhs))
+        , _manage_frame(true)
     {
-        _manage_data = true;
+        _manage_data = false;
     }
 
     //!
@@ -63,8 +66,9 @@ public:
     VideoFrameNumPyWrapper(enum gg::ColourSpace colour,
                            size_t cols, size_t rows)
         : _frame(new gg::VideoFrame(colour, cols, rows))
+        , _manage_frame(true)
     {
-        _manage_data = true;
+        _manage_data = false;
     }
 
     //!
@@ -77,13 +81,14 @@ public:
     VideoFrameNumPyWrapper(enum gg::ColourSpace colour,
                            bool manage_data)
         : _frame(new gg::VideoFrame(colour, manage_data))
+        , _manage_frame(true)
     {
-        _manage_data = true;
+        _manage_data = false;
     }
 
     ~VideoFrameNumPyWrapper()
     {
-        if (_manage_data)
+        if (_manage_frame)
             delete _frame;
     }
 
