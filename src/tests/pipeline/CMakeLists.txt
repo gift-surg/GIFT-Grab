@@ -7,7 +7,7 @@ if(USE_NUMPY AND USE_BGRA AND USE_OPENCV AND USE_XVID)
     )
 
     SET(FILEPATH ${CMAKE_SOURCE_DIR}/tests/pipeline/data/video_15frames_30fps.avi)
-    SET(NAME_TEST Test_VideoFrame_NumPy_ObserverPattern_OpenCV_BGRA)
+    SET(NAME_TEST Test_Pipeline_ObserverPattern_NumPy_OpenCV_BGRA)
     ADD_TEST(NAME ${NAME_TEST}
         COMMAND py.test --filepath=${FILEPATH} test_observer.py
     )
