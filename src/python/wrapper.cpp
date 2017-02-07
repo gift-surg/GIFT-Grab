@@ -114,18 +114,39 @@ public:
 
 #ifdef USE_NUMPY
     //!
-    //! \brief Create a NumPy array referencing gg::VideoFrame::data()
-    //! \return
+    //! \brief see:
+    //! http://www.boost.org/doc/libs/1_63_0/
+    //! libs/python/doc/html/tutorial/tutorial/
+    //! functions.html#tutorial.functions.default_arguments
+    //! \return a flat NumPy array
+    //! \sa data_as_ndarray()
     //!
-    numpy::ndarray data_as_ndarray() const
+    numpy::ndarray data_as_flat_ndarray() const
     {
+        return data_as_ndarray(false);
+    }
+
+    //!
+    //! \brief Create a NumPy array referencing gg::VideoFrame::data()
+    //! \param structured
+    //! \return a flat NumPy array if not \c structured; otherwise
+    //!
+    numpy::ndarray data_as_ndarray(bool structured) const
+    {
+        tuple shape, strides;
+        numpy::dtype data_type = numpy::dtype::get_builtin<uint8_t>();
+        if (structured)
+        {
+            // TODO
+        }
+        else
+        {
+            shape = make_tuple(_frame->data_length());
+            strides = make_tuple(sizeof(uint8_t));
+        }
+
         return numpy::from_data(
-                    _frame->data(),
-                    numpy::dtype::get_builtin<uint8_t>(),
-                    // shape
-                    make_tuple(_frame->data_length()),
-                    // stride, i.e. 1 byte to go to next entry in this case
-                    make_tuple(sizeof(uint8_t)),
+                    _frame->data(), data_type, shape, strides,
                     // owner (dangerous to pass None)
                     object()
                );
@@ -379,6 +400,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .def("cols", &VideoFrameNumPyWrapper::cols)
         .def("data_length", &VideoFrameNumPyWrapper::data_length)
 #ifdef USE_NUMPY
+        .def("data", &VideoFrameNumPyWrapper::data_as_flat_ndarray)
         .def("data", &VideoFrameNumPyWrapper::data_as_ndarray)
 #endif
     ;
