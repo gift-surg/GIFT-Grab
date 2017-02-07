@@ -51,7 +51,7 @@ def test_file_to_file_pipeline(filepath):
     assert not os.path.exists(out_filepath)
     file_writer = target_fac.create_file_writer(
         Codec.Xvid, out_filepath,
-        file_reader.get_frame_rate()
+        15  # was: file_reader.get_frame_rate() (changed due to issue #154)
     )
     swapper.attach(file_writer)
     file_reader.attach(swapper)
