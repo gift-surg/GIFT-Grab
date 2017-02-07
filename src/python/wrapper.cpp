@@ -30,10 +30,27 @@ using namespace boost::python;
 class VideoFrameNumPyWrapper : public gg::VideoFrame, public wrapper<gg::VideoFrame>
 {
 protected:
+    //!
+    //! \brief Wrapped \c VideoFrame object
+    //!
     gg::VideoFrame * _frame;
+
+    //!
+    //! \brief \c false indicates the wrapped
+    //! \c VideoFrame object is managed externally,
+    //! \c true indicates it was created and is
+    //! managed by this class
+    //! \sa _frame
+    //!
     bool _manage_frame;
 
 public:
+    //!
+    //! \brief Very thinly wrap passed \c frame
+    //! \param frame it is the caller's responsibility
+    //! to ensure the lifetime of the object pointed to
+    //! by this pointer
+    //!
     VideoFrameNumPyWrapper(gg::VideoFrame * frame)
         : _frame(frame)
         , _manage_frame(false)
