@@ -44,6 +44,9 @@ endif(USE_UYVY)
 # test VideoFrame
 SUBDIRS(videoframe)
 
+# test pipelined processing
+SUBDIRS(pipeline)
+
 # common configuration
 if(USE_HEVC OR USE_XVID OR USE_VP9)
     SUBDIRS(target)

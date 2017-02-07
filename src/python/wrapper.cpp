@@ -29,7 +29,36 @@ using namespace boost::python;
 
 class VideoFrameNumPyWrapper : public gg::VideoFrame, public wrapper<gg::VideoFrame>
 {
+protected:
+    //!
+    //! \brief Wrapped \c VideoFrame object
+    //!
+    gg::VideoFrame * _frame;
+
+    //!
+    //! \brief \c false indicates the wrapped
+    //! \c VideoFrame object is managed externally,
+    //! \c true indicates it was created and is
+    //! managed by this class
+    //! \sa _frame
+    //!
+    bool _manage_frame;
+
 public:
+    //!
+    //! \brief Very thinly wrap passed \c frame
+    //! \param frame it is the caller's responsibility
+    //! to ensure the lifetime of the object pointed to
+    //! by this pointer
+    //!
+    VideoFrameNumPyWrapper(gg::VideoFrame * frame)
+        : _frame(frame)
+        , _manage_frame(false)
+    {
+        _manage_data = false;
+        sync_specs();
+    }
+
     //!
     //! \brief Copy constructor needs to be defined
     //! here as well for compatibility with exposed
@@ -37,9 +66,11 @@ public:
     //! \param rhs
     //!
     VideoFrameNumPyWrapper(const gg::VideoFrame & rhs)
-        : gg::VideoFrame(rhs)
+        : _frame(new gg::VideoFrame(rhs))
+        , _manage_frame(true)
     {
-        // nop
+        _manage_data = false;
+        sync_specs();
     }
 
     //!
@@ -52,9 +83,11 @@ public:
     //!
     VideoFrameNumPyWrapper(enum gg::ColourSpace colour,
                            size_t cols, size_t rows)
-        : gg::VideoFrame(colour, cols, rows)
+        : _frame(new gg::VideoFrame(colour, cols, rows))
+        , _manage_frame(true)
     {
-        // nop
+        _manage_data = false;
+        sync_specs();
     }
 
     //!
@@ -66,9 +99,17 @@ public:
     //!
     VideoFrameNumPyWrapper(enum gg::ColourSpace colour,
                            bool manage_data)
-        : gg::VideoFrame(colour, manage_data)
+        : _frame(new gg::VideoFrame(colour, manage_data))
+        , _manage_frame(true)
     {
-        // nop
+        _manage_data = false;
+        sync_specs();
+    }
+
+    ~VideoFrameNumPyWrapper()
+    {
+        if (_manage_frame)
+            delete _frame;
     }
 
 #ifdef USE_NUMPY
@@ -76,20 +117,30 @@ public:
     //! \brief Create a NumPy array referencing gg::VideoFrame::data()
     //! \return
     //!
-    boost::python::numpy::ndarray data_as_ndarray()
+    numpy::ndarray data_as_ndarray() const
     {
-        return boost::python::numpy::from_data(
-                    gg::VideoFrame::data(),
-                    boost::python::numpy::dtype::get_builtin<uint8_t>(),
+        return numpy::from_data(
+                    _frame->data(),
+                    numpy::dtype::get_builtin<uint8_t>(),
                     // shape
-                    boost::python::make_tuple(data_length()),
+                    make_tuple(_frame->data_length()),
                     // stride, i.e. 1 byte to go to next entry in this case
-                    boost::python::make_tuple(sizeof(uint8_t)),
+                    make_tuple(sizeof(uint8_t)),
                     // owner (dangerous to pass None)
-                    boost::python::object()
+                    object()
                );
     }
 #endif
+
+protected:
+    void sync_specs()
+    {
+        _colour = _frame->colour();
+        _cols = _frame->cols();
+        _rows = _frame->rows();
+        _data = _frame->data();
+        _data_length = _frame->data_length();
+    }
 };
 
 class IObservableWrapper : public gg::IObservable, public wrapper<gg::IObservable>
@@ -173,8 +224,8 @@ public:
     void update(gg::VideoFrame & frame)
     {
         gg::ScopedPythonGILLock gil_lock;
-        // not using boost::ref(frame) because of issue #150
-        this->get_override("update")(frame);
+        VideoFrameNumPyWrapper wrapped_frame(&frame);
+        this->get_override("update")(boost::ref(wrapped_frame));
     }
 };
 
@@ -194,7 +245,9 @@ public:
 //! that receives, processes video data and finally passes this
 //! processed data down along the pipeline.
 //!
-class IObservableObserverWrapper : public gg::IObservable, public IObserverWrapper
+class IObservableObserverWrapper : public gg::IObservable
+                                 , public gg::IObserver
+                                 , public wrapper<gg::IObserver>
 {
 public:
     IObservableObserverWrapper()
@@ -234,12 +287,15 @@ public:
         gg::IObservable::detach(boost::ref(observer));
     }
 
-    void default_notify(gg::VideoFrame & frame)
+    void update(gg::VideoFrame & frame)
     {
-        if (override f = this->get_override("notify"))
-            f(boost::ref(frame));
-        else
-            gg::IObservable::notify(frame);
+        if (override f = this->get_override("update"))
+        {
+            VideoFrameNumPyWrapper wrapped_frame(&frame);
+            gg::ScopedPythonGILLock gil_lock;
+            f(boost::ref(wrapped_frame));
+        }
+        notify(frame);
     }
 };
 
@@ -415,7 +471,6 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     class_<IObservableObserverWrapper, boost::noncopyable>("IObservableObserver")
         .def("attach", &gg::IObservable::attach, &IObservableObserverWrapper::default_attach)
         .def("detach", &gg::IObservable::detach, &IObservableObserverWrapper::default_detach)
-        .def("notify", &gg::IObservable::notify, &IObservableObserverWrapper::default_notify)
         .def("update", pure_virtual(&gg::IObserver::update))
     ;
 

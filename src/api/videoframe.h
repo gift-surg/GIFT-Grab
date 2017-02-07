@@ -42,6 +42,13 @@ enum ColourSpace
 //!
 class VideoFrame
 {
+protected:
+    //!
+    //! \brief Default constructor that should never be called
+    //! externally
+    //!
+    VideoFrame();
+
 public:
     //!
     //! \brief Constructor that by default will use externally
@@ -160,10 +167,22 @@ public:
     }
 
     //!
-    //! \brief Get a constant pointer to frame data
-    //! \return
+    //! \brief Get a pointer to frame data.
     //!
-    const unsigned char * data() const
+    //! The pointer itself cannot be re-assigned, i.e.
+    //! the data storage location cannot be changed.
+    //! However the contents of the storage, i.e. the
+    //! raw video data can be modified. Although this
+    //! might be considered against the encapsulation
+    //! principle, this interface is provided considering
+    //! real-time image processing pipelines where
+    //! creating copies of the video data could degrade
+    //! performance.
+    //!
+    //! \return
+    //! \sa VideoFrame(const VideoFrame & rhs)
+    //!
+    unsigned char * const data() const
     {
         return _data;
     }
