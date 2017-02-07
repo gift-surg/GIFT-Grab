@@ -41,7 +41,7 @@ def test_data_length():
 
 
 @mark.numpy_compatibility
-def test_access(colour_space):
+def test_read_access(colour_space):
     global frame
     global cols, rows
     data_np = frame.data()
@@ -75,3 +75,44 @@ def test_access(colour_space):
 
         except IndexError as e:
             fail(e.message)
+
+
+@mark.numpy_compatibility
+def test_write_access():
+    global frame
+    global cols, rows
+    data_np = frame.data()
+    data_np_ = frame.data()  # shadow pointer
+    data_len = frame.data_length()
+    for i in [0, data_len // 4, data_len // 2, 3 * data_len // 4]:
+        rolled_value = roll_uint8(data_np[i])
+        assert rolled_value != data_np[i]
+        data_np[i] = rolled_value
+        assert data_np_[i] == rolled_value
+
+
+def roll_uint8(value):
+    """Roll given one-byte value, i.e. increment it such that
+    the range is preserved.
+    >>> roll_uint8(-10)
+    ValueError: Acceptable range: 0 - 255
+    >>> roll_uint8(-1)
+    ValueError: Acceptable range: 0 - 255
+    >>> roll_uint8(0)
+    1
+    >>> roll_uint8(10)
+    11
+    >>> roll_uint8(254)
+    255
+    >>> roll_uint8(255)
+    0
+    >>> roll_uint8(256)
+    ValueError: Acceptable range: 0 - 255
+    """
+    new_value = value + 1
+    if 0 < new_value < 256:
+        return new_value
+    elif new_value == 256:
+        return 0
+    else:
+        raise ValueError('Acceptable range: 0 - 255')
