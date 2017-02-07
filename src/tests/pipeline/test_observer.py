@@ -25,9 +25,6 @@ class ChannelSwapperBGRA(IObservableObserver):
         data_np = frame.data()
         if not self._displayed:
             self._displayed = True
-            print '{} x {} # {}'.format(frame.cols(), frame.rows(), frame.data_length())
-            print data_np.shape
-        print 'swapping'
         data_np[self._channel_1::4], data_np[self._channel_2::4] = \
             data_np[self._channel_2::4], data_np[self._channel_1::4]
 
