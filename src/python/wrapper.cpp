@@ -137,7 +137,21 @@ public:
         numpy::dtype data_type = numpy::dtype::get_builtin<uint8_t>();
         if (structured)
         {
-            // TODO
+            switch(colour())
+            {
+            case gg::BGRA:
+                shape = make_tuple(_frame->cols(), _frame->rows(), 4);
+                strides = make_tuple(sizeof(uint8_t),
+                                     sizeof(uint8_t),
+                                     sizeof(uint8_t));
+                break;
+            case gg::I420:
+                // TODO
+                break;
+            case gg::UYVY:
+                // TODO
+                break;
+            }
         }
         else
         {
