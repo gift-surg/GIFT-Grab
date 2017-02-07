@@ -7,6 +7,7 @@ import time
 import os
 import os.path
 from pytest import mark
+import scipy.ndimage as ndimage
 
 
 class ChannelSwapperBGRA(IObservableObserver):
@@ -26,10 +27,24 @@ class ChannelSwapperBGRA(IObservableObserver):
             data_np[self._channel_2::4], data_np[self._channel_1::4]
 
 
+class GaussianSmootherBGRA(IObservableObserver):
+
+    def __init__(self):
+        super(GaussianSmootherBGRA, self).__init__()
+
+    def update(self, frame):
+        data_np = frame.data(True)
+        # 3. sigma component 0 => we don't want to smooth
+        # across the BGRA channels
+        ndimage.gaussian_filter(input=data_np, sigma=(5, 5, 0),
+                                order=0, output=data_np)
+
+
 @mark.observer_pattern
-def test_file_to_file_pipeline(filepath):
-    """Read a file, process its frames, and save them to a new
-    file.
+def test_file_to_file_pipeline_simple(filepath):
+    """Read a file, process its frames very simply in NumPy,
+    i.e. not using any advanced image processing features, and
+    save them to a new file.
 
     Only checks new video file has positive size. That is, its
     content is not checked.
@@ -57,5 +72,36 @@ def test_file_to_file_pipeline(filepath):
 
     file_reader.detach(swapper)
     swapper.detach(file_writer)
+    assert os.path.exists(out_filepath)
+    assert os.path.getsize(out_filepath) > 0
+
+
+@mark.observer_pattern
+def test_file_to_file_pipeline_scipy(filepath):
+    """Read a file, process its frames using advanced image
+    processing features of SciPy, and save them to a new file.
+
+    Only checks new video file has positive size. That is, its
+    content is not checked.
+    """
+    smoother = GaussianSmootherBGRA()
+    file_reader = VideoSourceOpenCV(filepath)
+    target_fac = VideoTargetFactory.get_instance()
+    filename, extension = os.path.splitext(os.path.basename(filepath))
+    out_filepath = '{}-smoothed{}'.format(filename, extension)
+    if os.path.isfile(out_filepath):
+        os.remove(out_filepath)
+    assert not os.path.exists(out_filepath)
+    file_writer = target_fac.create_file_writer(
+        Codec.Xvid, out_filepath,
+        15  # was: file_reader.get_frame_rate() (changed due to issue #154)
+    )
+    smoother.attach(file_writer)
+    file_reader.attach(smoother)
+
+    time.sleep(2)
+
+    file_reader.detach(smoother)
+    smoother.detach(file_writer)
     assert os.path.exists(out_filepath)
     assert os.path.getsize(out_filepath) > 0
