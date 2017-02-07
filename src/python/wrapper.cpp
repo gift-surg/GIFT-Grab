@@ -95,26 +95,6 @@ public:
             delete _frame;
     }
 
-    size_t rows() const
-    {
-        return _frame->rows();
-    }
-
-    size_t cols() const
-    {
-        return _frame->cols();
-    }
-
-    const enum gg::ColourSpace colour() const
-    {
-        return _frame->colour();
-    }
-
-    size_t data_length() const
-    {
-        return _frame->data_length();
-    }
-
 #ifdef USE_NUMPY
     //!
     //! \brief Create a NumPy array referencing gg::VideoFrame::data()
