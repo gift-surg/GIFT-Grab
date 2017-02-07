@@ -13,7 +13,6 @@ class ChannelSwapperBGRA(IObservableObserver):
 
     def __init__(self, channel_1, channel_2):
         super(ChannelSwapperBGRA, self).__init__()
-        self._displayed = False
         if channel_1 > 4 or channel_2 > 4:
             raise ValueError('Channels: 0, 1, 2, 3 (B, G, R, A)')
         if channel_1 == channel_2:
@@ -23,8 +22,6 @@ class ChannelSwapperBGRA(IObservableObserver):
 
     def update(self, frame):
         data_np = frame.data()
-        if not self._displayed:
-            self._displayed = True
         data_np[self._channel_1::4], data_np[self._channel_2::4] = \
             data_np[self._channel_2::4], data_np[self._channel_1::4]
 
