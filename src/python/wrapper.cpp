@@ -20,7 +20,6 @@
 #include "ffmpeg_video_target.h"
 #endif
 #include <boost/python.hpp>
-#include <boost/python/errors.hpp>
 #include <boost/python/exception_translator.hpp>
 #ifdef USE_NUMPY
 #include <boost/python/numpy.hpp>
@@ -293,16 +292,11 @@ public:
 
     void update(gg::VideoFrame & frame)
     {
-        override f = this->get_override("update");
-        try
+        if (override f = this->get_override("update"))
         {
-            gg::ScopedPythonGILLock gil_lock;
             VideoFrameNumPyWrapper wrapped_frame(&frame);
+            gg::ScopedPythonGILLock gil_lock;
             f(boost::ref(wrapped_frame));
-        }
-        catch (error_already_set & e)
-        {
-            // nop, see issue #151
         }
         notify(frame);
     }
