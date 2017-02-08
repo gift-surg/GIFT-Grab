@@ -34,9 +34,9 @@ class GaussianSmootherBGRA(IObservableObserver):
 
     def update(self, frame):
         data_np = frame.data(True)
-        # 1. sigma component 0 => we don't want to smooth
+        # 3. sigma component 0 => we don't want to smooth
         # across the BGRA channels
-        ndimage.gaussian_filter(input=data_np, sigma=(0, 5, 5),
+        ndimage.gaussian_filter(input=data_np, sigma=(5, 5, 0),
                                 order=0, output=data_np)
 
 

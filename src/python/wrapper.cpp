@@ -140,10 +140,10 @@ public:
             switch(colour())
             {
             case gg::BGRA:
-                shape = make_tuple(4, _frame->cols(), _frame->rows());
-                strides = make_tuple(sizeof(uint8_t),
+                shape = make_tuple(_frame->rows(), _frame->cols(), 4);
+                strides = make_tuple(_frame->cols() * 4 * sizeof(uint8_t),
                                      4 * sizeof(uint8_t),
-                                     _frame->cols() * 4 * sizeof(uint8_t));
+                                     sizeof(uint8_t));
                 break;
             case gg::I420:
                 // TODO
