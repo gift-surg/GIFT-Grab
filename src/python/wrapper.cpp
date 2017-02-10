@@ -129,7 +129,10 @@ public:
     //!
     //! \brief Create a NumPy array referencing gg::VideoFrame::data()
     //! \param structured
-    //! \return a flat NumPy array if not \c structured; otherwise
+    //! \return a flat NumPy array if not \c structured; otherwise one
+    //! that conforms to the shape SciPy routines expect: (height,
+    //! width, channels), e.g. (9, 16, 4) for BGRA data of a 16 x 9
+    //! image
     //!
     numpy::ndarray data_as_ndarray(bool structured) const
     {
