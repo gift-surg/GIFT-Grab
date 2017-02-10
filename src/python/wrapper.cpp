@@ -341,6 +341,13 @@ public:
     }
 };
 
+void translate_BasicException(gg::BasicException const & e)
+{
+    std::string msg;
+    msg.append("BasicException: ").append(e.what());
+    PyErr_SetString(PyExc_RuntimeError, msg.c_str());
+}
+
 void translate_VideoSourceError(gg::VideoSourceError const & e)
 {
     std::string msg;
@@ -390,6 +397,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     boost::python::numpy::initialize();
 #endif
 
+    register_exception_translator<gg::BasicException>(&translate_BasicException);
     register_exception_translator<gg::VideoSourceError>(&translate_VideoSourceError);
     register_exception_translator<gg::DeviceAlreadyConnected>(&translate_DeviceAlreadyConnected);
     register_exception_translator<gg::DeviceNotFound>(&translate_DeviceNotFound);
