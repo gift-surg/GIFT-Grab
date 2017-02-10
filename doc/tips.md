@@ -108,8 +108,10 @@ libVLC (experimental)
 1. `../vlc-3.0.0-git/configure`
 1. `./compile` and `make install`
 
-Boost.Python with NumPy support
--------------------------------
+NumPy support and Boost.Python
+------------------------------
+
+**NB:** Video data can be exposed as a flat as well as structured [`ndarray`](https://docs.scipy.org/doc/numpy/reference/arrays.ndarray.html). The latter currently works **only for BGRA data** and the resulting `ndarray`'s shape is compatible with the axis ordering used in [SciPy routines](https://docs.scipy.org/doc/scipy/reference/). Support for this feature with the other colour spaces GIFT-Grab uses is under construction.
 
 The current Boost.Python version installable from the Ubuntu repositories does not provide the functionality GIFT-Grab needs for its NumPy support. However you can install the 1.63.0 beta version as follows:
 

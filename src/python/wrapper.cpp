@@ -114,18 +114,60 @@ public:
 
 #ifdef USE_NUMPY
     //!
-    //! \brief Create a NumPy array referencing gg::VideoFrame::data()
-    //! \return
+    //! \brief see:
+    //! http://www.boost.org/doc/libs/1_63_0/
+    //! libs/python/doc/html/tutorial/tutorial/
+    //! functions.html#tutorial.functions.default_arguments
+    //! \return a flat NumPy array
+    //! \sa data_as_ndarray()
     //!
-    numpy::ndarray data_as_ndarray() const
+    numpy::ndarray data_as_flat_ndarray() const
     {
+        return data_as_ndarray(false);
+    }
+
+    //!
+    //! \brief Create a NumPy array referencing gg::VideoFrame::data()
+    //! \param structured
+    //! \return a flat NumPy array if not \c structured; otherwise one
+    //! that conforms to the shape SciPy routines expect: (height,
+    //! width, channels), e.g. (9, 16, 4) for BGRA data of a 16 x 9
+    //! image
+    //! \throw gg::BasicException if wrapped gg::VideoFrame has colour
+    //! other than BGRA (currently only BGRA data supported for
+    //! structured ndarray exposure)
+    //!
+    numpy::ndarray data_as_ndarray(bool structured) const
+    {
+        tuple shape, strides;
+        numpy::dtype data_type = numpy::dtype::get_builtin<uint8_t>();
+        if (structured)
+        {
+            switch(colour())
+            {
+            case gg::BGRA:
+                shape = make_tuple(_frame->rows(), _frame->cols(), 4);
+                strides = make_tuple(_frame->cols() * 4 * sizeof(uint8_t),
+                                     4 * sizeof(uint8_t),
+                                     sizeof(uint8_t));
+                break;
+            // TODO: see issue #155
+            case gg::I420:
+            case gg::UYVY:
+            default:
+                throw gg::BasicException("Structured NumPy arrays"
+                                         " supported only for BGRA");
+                break;
+            }
+        }
+        else
+        {
+            shape = make_tuple(_frame->data_length());
+            strides = make_tuple(sizeof(uint8_t));
+        }
+
         return numpy::from_data(
-                    _frame->data(),
-                    numpy::dtype::get_builtin<uint8_t>(),
-                    // shape
-                    make_tuple(_frame->data_length()),
-                    // stride, i.e. 1 byte to go to next entry in this case
-                    make_tuple(sizeof(uint8_t)),
+                    _frame->data(), data_type, shape, strides,
                     // owner (dangerous to pass None)
                     object()
                );
@@ -299,6 +341,13 @@ public:
     }
 };
 
+void translate_BasicException(gg::BasicException const & e)
+{
+    std::string msg;
+    msg.append("BasicException: ").append(e.what());
+    PyErr_SetString(PyExc_RuntimeError, msg.c_str());
+}
+
 void translate_VideoSourceError(gg::VideoSourceError const & e)
 {
     std::string msg;
@@ -348,6 +397,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     boost::python::numpy::initialize();
 #endif
 
+    register_exception_translator<gg::BasicException>(&translate_BasicException);
     register_exception_translator<gg::VideoSourceError>(&translate_VideoSourceError);
     register_exception_translator<gg::DeviceAlreadyConnected>(&translate_DeviceAlreadyConnected);
     register_exception_translator<gg::DeviceNotFound>(&translate_DeviceNotFound);
@@ -379,6 +429,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .def("cols", &VideoFrameNumPyWrapper::cols)
         .def("data_length", &VideoFrameNumPyWrapper::data_length)
 #ifdef USE_NUMPY
+        .def("data", &VideoFrameNumPyWrapper::data_as_flat_ndarray)
         .def("data", &VideoFrameNumPyWrapper::data_as_ndarray)
 #endif
     ;
