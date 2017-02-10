@@ -133,6 +133,9 @@ public:
     //! that conforms to the shape SciPy routines expect: (height,
     //! width, channels), e.g. (9, 16, 4) for BGRA data of a 16 x 9
     //! image
+    //! \throw gg::BasicException if wrapped gg::VideoFrame has colour
+    //! other than BGRA (currently only BGRA data supported for
+    //! structured ndarray exposure)
     //!
     numpy::ndarray data_as_ndarray(bool structured) const
     {
@@ -148,11 +151,12 @@ public:
                                      4 * sizeof(uint8_t),
                                      sizeof(uint8_t));
                 break;
+            // TODO: see issue #155
             case gg::I420:
-                // TODO
-                break;
             case gg::UYVY:
-                // TODO
+            default:
+                throw gg::BasicException("Structured NumPy arrays"
+                                         " supported only for BGRA");
                 break;
             }
         }
