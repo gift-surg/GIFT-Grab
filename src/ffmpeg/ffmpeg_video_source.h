@@ -65,12 +65,6 @@ protected:
     AVCodecContext * _avcodec_context;
 
     //!
-    //! \brief The pixel format of the video
-    //! source being read
-    //!
-    enum AVPixelFormat _avpixel_format;
-
-    //!
     //! \brief This is for converting pixel format
     //! (e.g. from BGRA to YUV420p)
     //!

@@ -61,7 +61,6 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     _avstream = _avformat_context->streams[_avstream_idx];
     _avcodec_context = _avstream->codec;
     /* allocate image where the decoded image will be put */
-    _avpixel_format = _avcodec_context->pix_fmt;
 
     if (_avstream == nullptr)
         throw VideoSourceError("Could not find video stream in source");
@@ -91,7 +90,7 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     default:
         throw VideoSourceError("Target colour space not supported");
     }
-    if (_avpixel_format != target_avpixel_format)
+    if (_avcodec_context->pix_fmt != target_avpixel_format)
     {
         _avframe_converted = av_frame_alloc();
         if (_avframe_converted == nullptr)
@@ -123,7 +122,7 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
         }
 
         _sws_context = sws_getContext(
-                    _avcodec_context->width, _avcodec_context->height, _avpixel_format,
+                    _avcodec_context->width, _avcodec_context->height, _avcodec_context->pix_fmt,
                     _avcodec_context->width, _avcodec_context->height, target_avpixel_format,
                     sws_flags, nullptr, nullptr, nullptr);
         if (_sws_context == nullptr)
@@ -317,7 +316,7 @@ int VideoSourceFFmpeg::decode_packet(int * got_frame, int cached)
         if (*got_frame)
         {
             if (_avframe->width != _avcodec_context->width or _avframe->height != _avcodec_context->height or
-                _avframe->format != _avpixel_format)
+                _avframe->format != _avcodec_context->pix_fmt)
                 return -1;
             decoded = ret;
         }
