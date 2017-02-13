@@ -163,7 +163,7 @@ protected:
     //! otherwise
     //!
     int open_codec_context(int * stream_idx,
-                           AVFormatContext * _avformat_context,
+                           AVFormatContext * fmt_ctx,
                            enum AVMediaType type,
                            std::string & error_msg);
 
