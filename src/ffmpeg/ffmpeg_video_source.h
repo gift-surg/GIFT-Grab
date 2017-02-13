@@ -194,6 +194,15 @@ protected:
     //! a negative value otherwise
     //!
     int decode_packet(int * got_frame, int cached);
+
+    //!
+    //! \brief Create a standard error description
+    //! from \c ffmpeg_error_code, e.g. to be
+    //! appended to exception details
+    //! \param ffmpeg_error_code
+    //! \return
+    //!
+    std::string get_ffmpeg_error_desc(int ffmpeg_error_code);
 };
 
 }

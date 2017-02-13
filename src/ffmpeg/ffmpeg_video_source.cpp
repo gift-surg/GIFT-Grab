@@ -316,4 +316,21 @@ int VideoSourceFFmpeg::decode_packet(int * got_frame, int cached)
     return decoded;
 }
 
+std::string VideoSourceFFmpeg::get_ffmpeg_error_desc(int ffmpeg_error_code)
+{
+    const size_t FFMPEG_ERR_MSG_SIZE = 2048;
+    char ffmpeg_err_msg[FFMPEG_ERR_MSG_SIZE];
+    std::string ffmpeg_error_desc = "";
+    if (av_strerror(ffmpeg_error_code,
+                    ffmpeg_err_msg,
+                    FFMPEG_ERR_MSG_SIZE) == 0)
+        ffmpeg_error_desc.append(" (FFmpeg error description: ")
+                         .append(std::string(ffmpeg_err_msg))
+                         .append(")");
+    else
+        ffmpeg_error_desc.append(" (No specific error description"
+                                 " could be obtained from FFmpeg)");
+    return ffmpeg_error_desc;
+}
+
 }
