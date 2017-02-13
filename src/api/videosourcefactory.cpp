@@ -299,45 +299,11 @@ IVideoSource * VideoSourceFactory::create_file_reader(
         enum Codec codec,
         enum ColourSpace colour_space)
 {
-    std::string codec_str = "", colour_space_str = "";
-    switch(codec)
-    {
-    case Xvid:
-        codec_str = "Xvid";
-        break;
-    case HEVC:
-        codec_str = "HEVC";
-        break;
-    case VP9:
-        codec_str = "VP9";
-        break;
-    default:
-        throw VideoSourceError("Codec not supported");
-    }
-    switch(colour_space)
-    {
-    case BGRA:
-        colour_space_str = "BGRA";
-        break;
-    case I420:
-        colour_space_str = "I420";
-        break;
-    case UYVY:
-        colour_space_str = "UYVY";
-        break;
-    default:
-        throw VideoSourceError("Colour space not supported");
-    }
-
 #ifdef USE_FFMPEG
     return new VideoSourceFFmpeg(filepath, colour_space);
 #else
-    std::string error_msg = "";
-    error_msg.append("Reading ").append(codec_str)
-             .append(" files in ").append(colour_space_str)
-             .append(" colour space supported only")
-             .append(" with FFmpeg");
-    throw VideoSourceError(error_msg);
+    throw VideoSourceError("Reading video files supported only"
+                           " with FFmpeg");
 #endif
 }
 
