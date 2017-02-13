@@ -3,8 +3,6 @@ from pygiftgrab import Codec, ColourSpace
 
 
 def pytest_addoption(parser):
-    parser.addoption('--codec', action='store', type=str, required=True,
-                     help='Codec used for encoding file (Xvid, HEVC, or VP9)')
     parser.addoption('--colour-space', action='store', type=str, required=True,
                      help='Colour space specification (BGRA or I420)')
     parser.addoption('--filepath', action='store', type=str, required=True,
@@ -17,20 +15,6 @@ def pytest_addoption(parser):
                      help='Width of frames in video file')
     parser.addoption('--frame-height', action='store', type=int, required=True,
                      help='Height of frames in video file')
-
-
-@fixture(scope='session')
-def codec(request):
-    codec = request.config.getoption('--codec')
-    case_insensitive = codec.lower()
-    if case_insensitive == 'xvid':
-        return Codec.Xvid
-    elif case_insensitive == 'hevc':
-        return Codec.HEVC
-    elif case_insensitive == 'vp9':
-        return Codec.VP9
-    else:
-        raise RuntimeError('Could not recognise codec ' + codec)
 
 
 @fixture(scope='session')

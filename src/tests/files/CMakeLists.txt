@@ -41,7 +41,7 @@ foreach(CODEC ${CODECS})
     foreach(COLOUR_SPACE ${COLOUR_SPACES})
         SET(NAME_TEST Test_Files_ObserverPattern_${CODEC}_${COLOUR_SPACE})
         ADD_TEST(NAME ${NAME_TEST}
-            COMMAND py.test --codec=${CODEC} --colour-space=${COLOUR_SPACE}
+            COMMAND py.test --colour-space=${COLOUR_SPACE}
             --filepath=${FILEPATH}${EXTENSION}
             --frame-rate=${FRAME_RATE} --frame-count=${FRAME_COUNT}
             --frame-width=${FRAME_WIDTH} --frame-height=${FRAME_HEIGHT}
@@ -51,7 +51,7 @@ foreach(CODEC ${CODECS})
 
         SET(NAME_TEST Test_VideoSourceFactory_Files_${CODEC}_${COLOUR_SPACE})
         ADD_TEST(NAME ${NAME_TEST}
-            COMMAND ${VIDEO_SOURCE_FACTORY_TEST} ${CODEC} ${COLOUR_SPACE}
+            COMMAND ${VIDEO_SOURCE_FACTORY_TEST} ${COLOUR_SPACE}
             ${FILEPATH}${EXTENSION}
             ${FRAME_RATE} ${FRAME_COUNT}
             ${FRAME_WIDTH} ${FRAME_HEIGHT}

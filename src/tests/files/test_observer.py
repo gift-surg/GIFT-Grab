@@ -15,7 +15,7 @@ quarter_video_duration = 0  # inferred, in sec
 
 
 @yield_fixture(scope='session')
-def peri_test(codec, colour_space, filepath,
+def peri_test(colour_space, filepath,
               frame_rate, frame_count,
               frame_width, frame_height):
     global factory
@@ -29,15 +29,15 @@ def peri_test(codec, colour_space, filepath,
 @mark.observer_pattern
 @mark.usefixtures('peri_test')
 def test_valid_filepath_returns_raii_reader(
-	filepath, codec, colour_space,
-	frame_rate, frame_count,
-	frame_width, frame_height
+    filepath, colour_space,
+    frame_rate, frame_count,
+    frame_width, frame_height
 ):
     source = None
     global factory
     global video_duration, quarter_video_duration
     source = factory.create_file_reader(
-        filepath, codec, colour_space
+        filepath, colour_space
     )
     assert source is not None
 
@@ -57,7 +57,7 @@ def test_valid_filepath_returns_raii_reader(
 @mark.observer_pattern
 @mark.usefixtures('peri_test')
 def test_reader_releases_file_on_destruction(
-    filepath, codec, colour_space,
+    filepath, colour_space,
     frame_rate, frame_count,
     frame_width, frame_height
 ):
@@ -65,7 +65,7 @@ def test_reader_releases_file_on_destruction(
     global factory
     global video_duration, quarter_video_duration
     source = factory.create_file_reader(
-        filepath, codec, colour_space
+        filepath, colour_space
     )
     assert source is not None
     file_checker_1 = FileChecker(source)
@@ -78,7 +78,7 @@ def test_reader_releases_file_on_destruction(
 
     source = None
     source = factory.create_file_reader(
-        filepath, codec, colour_space
+        filepath, colour_space
     )
     file_checker_2 = FileChecker(source)
     file_checker_2.attach()
@@ -95,14 +95,12 @@ def test_reader_releases_file_on_destruction(
 
 @mark.observer_pattern
 @mark.usefixtures('peri_test')
-def test_invalid_filepath_throws_exception(
-    codec, colour_space
-):
+def test_invalid_filepath_throws_exception(colour_space):
     source = None
     global factory
     with raises(RuntimeError):
         source = factory.create_file_reader(
             '/this/path/should/never/exist.video',
-            codec, colour_space
+            colour_space
         )
     assert source is None

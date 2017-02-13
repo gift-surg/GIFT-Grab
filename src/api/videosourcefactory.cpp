@@ -296,7 +296,6 @@ IVideoSource * VideoSourceFactory::connect_network_source(
 
 IVideoSource * VideoSourceFactory::create_file_reader(
         const std::string filepath,
-        enum Codec codec,
         enum ColourSpace colour_space)
 {
 #ifdef USE_FFMPEG

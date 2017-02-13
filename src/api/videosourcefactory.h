@@ -137,13 +137,11 @@ public:
 
     //!
     //! \brief Create a reader to read \c colour_space
-    //! frames format from \c filepath encoded using \c
-    //! codec
+    //! frames format from \c filepath
     //! \param filepath Attempting to open an already
     //! open video file leads to undefined behaviour.
     //! However once the returned video source used for
     //! reading the file is destroyed, it can be re-opened.
-    //! \param codec
     //! \param colour_space
     //! \return a polymorphic video file reader. The
     //! ownership of this returned object passes to the
@@ -159,7 +157,6 @@ public:
     //! reason
     //!
     IVideoSource * create_file_reader(const std::string filepath,
-                                      enum Codec codec,
                                       enum ColourSpace colour_space);
 
 protected:
