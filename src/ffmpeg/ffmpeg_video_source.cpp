@@ -32,30 +32,38 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
 
     av_register_all();
 
-    if (avformat_open_input(&_avformat_context, _source_path.c_str(),
-                            nullptr, nullptr) < 0)
+    ret = avformat_open_input(&_avformat_context, _source_path.c_str(),
+                              nullptr, nullptr);
+    if (ret < 0)
     {
         error_msg.append("Could not open video source ")
-                 .append(_source_path);
+                 .append(_source_path)
+                 .append(get_ffmpeg_error_desc(ret));
         throw VideoSourceError(error_msg);
     }
 
-    if (avformat_find_stream_info(_avformat_context, nullptr) < 0)
-        throw VideoSourceError("Could not find stream information");
-
-    if (open_codec_context(&_avstream_idx, _avformat_context,
-                           AVMEDIA_TYPE_VIDEO, error_msg) >= 0)
+    ret = avformat_find_stream_info(_avformat_context, nullptr);
+    if (ret < 0)
     {
-        _avstream = _avformat_context->streams[_avstream_idx];
-        _avcodec_context = _avstream->codec;
-
-        /* allocate image where the decoded image will be put */
-        _width = _avcodec_context->width;
-        _height = _avcodec_context->height;
-        _avpixel_format = _avcodec_context->pix_fmt;
-    }
-    else
+        error_msg.append("Could not find stream information")
+                 .append(get_ffmpeg_error_desc(ret));
         throw VideoSourceError(error_msg);
+    }
+
+    ret = open_codec_context(&_avstream_idx, _avformat_context,
+                             AVMEDIA_TYPE_VIDEO, error_msg);
+    if (ret < 0)
+    {
+        error_msg.append(get_ffmpeg_error_desc(ret));
+        throw VideoSourceError(error_msg);
+    }
+
+    _avstream = _avformat_context->streams[_avstream_idx];
+    _avcodec_context = _avstream->codec;
+    /* allocate image where the decoded image will be put */
+    _width = _avcodec_context->width;
+    _height = _avcodec_context->height;
+    _avpixel_format = _avcodec_context->pix_fmt;
 
     if (_avstream == nullptr)
         throw VideoSourceError("Could not find video stream in source");
@@ -110,7 +118,11 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
         }
         ret = av_frame_get_buffer(_avframe_converted, pixel_depth);
         if (ret < 0)
-            throw VideoSourceError("Could not allocate conversion buffer");
+        {
+            error_msg.append("Could not allocate conversion buffer")
+                     .append(get_ffmpeg_error_desc(ret));
+            throw VideoSourceError(error_msg);
+        }
 
         _sws_context = sws_getContext(
                     _width, _height, _avpixel_format,
@@ -123,8 +135,11 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     ret = av_image_alloc(_data_buffer, _data_buffer_linesizes,
                          _width, _height, target_avpixel_format, 1);
     if (ret < 0)
-        throw VideoSourceError("Could not allocate"
-                               " raw video buffer");
+    {
+        error_msg.append("Could not allocate raw video buffer")
+                 .append(get_ffmpeg_error_desc(ret));
+        throw VideoSourceError(error_msg);
+    }
     _data_buffer_length = ret;
 
     _daemon = new gg::BroadcastDaemon(this);
