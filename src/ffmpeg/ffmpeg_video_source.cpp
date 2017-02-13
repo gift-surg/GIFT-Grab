@@ -57,12 +57,12 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
         throw VideoSourceError(error_msg);
     }
 
-    _avcodec_context = _avformat_context->streams[_avstream_idx]->codec;
-    /* allocate image where the decoded image will be put */
-
     if (_avformat_context->streams[_avstream_idx] == nullptr)
         throw VideoSourceError("Could not find video stream in source");
 
+    _avcodec_context = _avformat_context->streams[_avstream_idx]->codec;
+
+    /* allocate image where the decoded image will be put */
     _avframe = av_frame_alloc();
     if (_avframe == nullptr)
         throw VideoSourceError("Could not allocate frame");
