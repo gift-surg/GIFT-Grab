@@ -329,30 +329,16 @@ IVideoSource * VideoSourceFactory::create_file_reader(
         throw VideoSourceError("Colour space not supported");
     }
 
-    std::string error_msg = "", dependency = "";
-    if (codec == Xvid and colour_space == BGRA)
-    {
-#ifdef USE_OPENCV
-        return new VideoSourceOpenCV(filepath.c_str());
-#else
-        dependency = "OpenCV";
-#endif
-    }
-    else
-    {
 #ifdef USE_FFMPEG
-        return new VideoSourceFFmpeg(filepath, colour_space);
+    return new VideoSourceFFmpeg(filepath, colour_space);
 #else
-        dependency = "FFmpeg";
-#endif
-    }
-
-    // if not returned to this point, something wrong!
+    std::string error_msg = "";
     error_msg.append("Reading ").append(codec_str)
              .append(" files in ").append(colour_space_str)
              .append(" colour space supported only")
-             .append(" with ").append(dependency);
+             .append(" with FFmpeg");
     throw VideoSourceError(error_msg);
+#endif
 }
 
 }
