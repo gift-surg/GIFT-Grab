@@ -65,12 +65,6 @@ protected:
     AVCodecContext * _avcodec_context;
 
     //!
-    //! \brief Height of frames obtained from
-    //! video source being read
-    //!
-    int _height;
-
-    //!
     //! \brief The pixel format of the video
     //! source being read
     //!
