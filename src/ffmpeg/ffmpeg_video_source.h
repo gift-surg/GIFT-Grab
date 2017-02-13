@@ -1,9 +1,9 @@
 #include "ivideosource.h"
 #include "broadcastdaemon.h"
-extern "C" {
+extern "C"
+{
 #include <libavformat/avformat.h>
 #include <libswscale/swscale.h>
-
 }
 
 
