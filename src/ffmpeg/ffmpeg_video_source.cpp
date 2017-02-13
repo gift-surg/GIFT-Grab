@@ -1,7 +1,9 @@
 #include "ffmpeg_video_source.h"
-extern "C" {
+extern "C"
+{
 #include <libavutil/imgutils.h>
 }
+
 
 namespace gg
 {
@@ -117,15 +119,21 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
         }
 
         _sws_context = sws_getContext(
-                    _avformat_context->streams[_avstream_idx]->codec->width, _avformat_context->streams[_avstream_idx]->codec->height, _avformat_context->streams[_avstream_idx]->codec->pix_fmt,
-                    _avformat_context->streams[_avstream_idx]->codec->width, _avformat_context->streams[_avstream_idx]->codec->height, target_avpixel_format,
+                    _avformat_context->streams[_avstream_idx]->codec->width,
+                    _avformat_context->streams[_avstream_idx]->codec->height,
+                    _avformat_context->streams[_avstream_idx]->codec->pix_fmt,
+                    _avformat_context->streams[_avstream_idx]->codec->width,
+                    _avformat_context->streams[_avstream_idx]->codec->height,
+                    target_avpixel_format,
                     sws_flags, nullptr, nullptr, nullptr);
         if (_sws_context == nullptr)
             throw VideoSourceError("Could not allocate Sws context");
     }
 
     ret = av_image_alloc(_data_buffer, _data_buffer_linesizes,
-                         _avformat_context->streams[_avstream_idx]->codec->width, _avformat_context->streams[_avstream_idx]->codec->height, target_avpixel_format, 1);
+                         _avformat_context->streams[_avstream_idx]->codec->width,
+                         _avformat_context->streams[_avstream_idx]->codec->height,
+                         target_avpixel_format, 1);
     if (ret < 0)
     {
         error_msg.append("Could not allocate raw video buffer")
@@ -157,7 +165,8 @@ VideoSourceFFmpeg::~VideoSourceFFmpeg()
 
 bool VideoSourceFFmpeg::get_frame_dimensions(int & width, int & height)
 {
-    if (_avformat_context->streams[_avstream_idx]->codec->width > 0 and _avformat_context->streams[_avstream_idx]->codec->height > 0)
+    if (_avformat_context->streams[_avstream_idx]->codec->width > 0
+        and _avformat_context->streams[_avstream_idx]->codec->height > 0)
     {
         width = _avformat_context->streams[_avstream_idx]->codec->width;
         height = _avformat_context->streams[_avstream_idx]->codec->height;
@@ -212,13 +221,19 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
     /* copy decoded frame to destination buffer:
      * this is required since rawvideo expects non aligned data */
     av_image_copy(_data_buffer, _data_buffer_linesizes,
-                  const_cast<const uint8_t **>(avframe_ptr->data), avframe_ptr->linesize,
-                  static_cast<AVPixelFormat>(avframe_ptr->format), _avformat_context->streams[_avstream_idx]->codec->width, _avformat_context->streams[_avstream_idx]->codec->height);
+                  const_cast<const uint8_t **>(avframe_ptr->data),
+                  avframe_ptr->linesize,
+                  static_cast<AVPixelFormat>(avframe_ptr->format),
+                  _avformat_context->streams[_avstream_idx]->codec->width,
+                  _avformat_context->streams[_avstream_idx]->codec->height);
 
     if (not success)
         return false;
 
-    frame.init_from_specs(_data_buffer[0], _data_buffer_length, _avformat_context->streams[_avstream_idx]->codec->width, _avformat_context->streams[_avstream_idx]->codec->height);
+    frame.init_from_specs(
+            _data_buffer[0], _data_buffer_length,
+            _avformat_context->streams[_avstream_idx]->codec->width,
+            _avformat_context->streams[_avstream_idx]->codec->height);
     return true;
 }
 
@@ -304,14 +319,17 @@ int VideoSourceFFmpeg::decode_packet(int * got_frame, int cached)
     if (_avpacket.stream_index == _avstream_idx)
     {
         /* decode video frame */
-        ret = avcodec_decode_video2(_avformat_context->streams[_avstream_idx]->codec, _avframe, got_frame, &_avpacket);
+        ret = avcodec_decode_video2(
+                    _avformat_context->streams[_avstream_idx]->codec,
+                    _avframe, got_frame, &_avpacket);
         if (ret < 0)
             return ret;
 
         if (*got_frame)
         {
-            if (_avframe->width != _avformat_context->streams[_avstream_idx]->codec->width or _avframe->height != _avformat_context->streams[_avstream_idx]->codec->height or
-                _avframe->format != _avformat_context->streams[_avstream_idx]->codec->pix_fmt)
+            if (_avframe->width != _avformat_context->streams[_avstream_idx]->codec->width
+                or _avframe->height != _avformat_context->streams[_avstream_idx]->codec->height
+                or _avframe->format != _avformat_context->streams[_avstream_idx]->codec->pix_fmt)
                 return -1;
             decoded = ret;
         }
