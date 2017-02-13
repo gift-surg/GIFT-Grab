@@ -65,12 +65,6 @@ protected:
     AVCodecContext * _avcodec_context;
 
     //!
-    //! \brief Width of frames obtained from
-    //! video source being read
-    //!
-    int _width;
-
-    //!
     //! \brief Height of frames obtained from
     //! video source being read
     //!
