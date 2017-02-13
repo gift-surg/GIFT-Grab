@@ -52,13 +52,6 @@ protected:
     bool _use_refcount;
 
     //!
-    //! \brief FFmpeg codec context to be used
-    //! for decoding frames from video source
-    //! being read
-    //!
-    AVCodecContext * _avcodec_context;
-
-    //!
     //! \brief This is for converting pixel format
     //! (e.g. from BGRA to YUV420p)
     //!
