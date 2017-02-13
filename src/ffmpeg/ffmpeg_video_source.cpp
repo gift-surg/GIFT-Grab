@@ -20,7 +20,6 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     , _avformat_context(nullptr)
     , _avstream_idx(-1)
     , _use_refcount(use_refcount)
-    , _avstream(nullptr)
     , _avcodec_context(nullptr)
     , _avframe(nullptr)
     , _avframe_converted(nullptr)
@@ -58,11 +57,10 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
         throw VideoSourceError(error_msg);
     }
 
-    _avstream = _avformat_context->streams[_avstream_idx];
-    _avcodec_context = _avstream->codec;
+    _avcodec_context = _avformat_context->streams[_avstream_idx]->codec;
     /* allocate image where the decoded image will be put */
 
-    if (_avstream == nullptr)
+    if (_avformat_context->streams[_avstream_idx] == nullptr)
         throw VideoSourceError("Could not find video stream in source");
 
     _avframe = av_frame_alloc();
@@ -230,8 +228,8 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
 
 double VideoSourceFFmpeg::get_frame_rate()
 {
-    int num = _avstream->avg_frame_rate.num;
-    int den = _avstream->avg_frame_rate.den;
+    int num = _avformat_context->streams[_avstream_idx]->avg_frame_rate.num;
+    int den = _avformat_context->streams[_avstream_idx]->avg_frame_rate.den;
     if (num == 0)
         return 0.0;
     return static_cast<double>(num) / den;

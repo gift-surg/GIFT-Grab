@@ -52,12 +52,6 @@ protected:
     bool _use_refcount;
 
     //!
-    //! \brief FFmpeg video stream to be used
-    //! for reading frames from video source
-    //!
-    AVStream * _avstream;
-
-    //!
     //! \brief FFmpeg codec context to be used
     //! for decoding frames from video source
     //! being read
