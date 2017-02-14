@@ -35,28 +35,7 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     open_source();
     open_decoder();
     open_converter();
-
-    /* allocate image where the decoded image will be put */
-    _avframe = av_frame_alloc();
-    if (_avframe == nullptr)
-        throw VideoSourceError("Could not allocate frame");
-
-    /* initialize packet, set data to NULL, let the demuxer fill it */
-    av_init_packet(&_avpacket);
-    _avpacket.data = nullptr;
-    _avpacket.size = 0;
-
-    ret = av_image_alloc(_data_buffer, _data_buffer_linesizes,
-                         _avformat_context->streams[_avstream_idx]->codec->width,
-                         _avformat_context->streams[_avstream_idx]->codec->height,
-                         get_ffmpeg_pixel_format(_colour), 1);
-    if (ret < 0)
-    {
-        error_msg.append("Could not allocate raw video buffer")
-                 .append(get_ffmpeg_error_desc(ret));
-        throw VideoSourceError(error_msg);
-    }
-    _data_buffer_length = ret;
+    allocate_buffers();
 
     _daemon = new gg::BroadcastDaemon(this);
     _daemon->start(get_frame_rate());
@@ -245,17 +224,37 @@ void VideoSourceFFmpeg::open_decoder()
 
 void VideoSourceFFmpeg::open_converter()
 {
-    int ret = 0;
-    std::string error_msg = "";
     AVPixelFormat target_avpixel_format = get_ffmpeg_pixel_format(_colour);
     int sws_flags = 0;
 
     if (_avformat_context->streams[_avstream_idx]->codec->pix_fmt != target_avpixel_format)
     {
+        _sws_context = sws_getContext(
+                    _avformat_context->streams[_avstream_idx]->codec->width,
+                    _avformat_context->streams[_avstream_idx]->codec->height,
+                    _avformat_context->streams[_avstream_idx]->codec->pix_fmt,
+                    _avformat_context->streams[_avstream_idx]->codec->width,
+                    _avformat_context->streams[_avstream_idx]->codec->height,
+                    target_avpixel_format,
+                    sws_flags, nullptr, nullptr, nullptr);
+        if (_sws_context == nullptr)
+            throw VideoSourceError("Could not allocate Sws context");
+    }
+}
+
+
+void VideoSourceFFmpeg::allocate_buffers()
+{
+    int ret = 0;
+    std::string error_msg = "";
+
+    if (_sws_context != nullptr)
+    {
+        // allocate conversion frame
         _avframe_converted = av_frame_alloc();
         if (_avframe_converted == nullptr)
             throw VideoSourceError("Could not allocate conversion frame");
-        _avframe_converted->format = target_avpixel_format;
+        _avframe_converted->format = get_ffmpeg_pixel_format(_colour);
         _avframe_converted->width  = _avformat_context->streams[_avstream_idx]->codec->width;
         _avframe_converted->height = _avformat_context->streams[_avstream_idx]->codec->height;
         int pixel_depth = 0;
@@ -268,6 +267,7 @@ void VideoSourceFFmpeg::open_converter()
             throw VideoSourceError(e.what());
         }
 
+        // allocate actual conversion buffer
         ret = av_frame_get_buffer(_avframe_converted, pixel_depth);
         if (ret < 0)
         {
@@ -275,18 +275,30 @@ void VideoSourceFFmpeg::open_converter()
                      .append(get_ffmpeg_error_desc(ret));
             throw VideoSourceError(error_msg);
         }
-
-        _sws_context = sws_getContext(
-                    _avformat_context->streams[_avstream_idx]->codec->width,
-                    _avformat_context->streams[_avstream_idx]->codec->height,
-                    _avformat_context->streams[_avstream_idx]->codec->pix_fmt,
-                    _avformat_context->streams[_avstream_idx]->codec->width,
-                    _avformat_context->streams[_avstream_idx]->codec->height,
-                    target_avpixel_format,
-                    sws_flags, nullptr, nullptr, nullptr);
-        if (_sws_context == nullptr)
-            throw VideoSourceError("Could not allocate Sws context");
     }
+
+    // decoded image will be put here
+    _avframe = av_frame_alloc();
+    if (_avframe == nullptr)
+        throw VideoSourceError("Could not allocate frame");
+
+    // packet for decoding frames: demuxer will fill it
+    av_init_packet(&_avpacket);
+    _avpacket.data = nullptr;
+    _avpacket.size = 0;
+
+    // allocate actual data buffer
+    ret = av_image_alloc(_data_buffer, _data_buffer_linesizes,
+                         _avformat_context->streams[_avstream_idx]->codec->width,
+                         _avformat_context->streams[_avstream_idx]->codec->height,
+                         get_ffmpeg_pixel_format(_colour), 1);
+    if (ret < 0)
+    {
+        error_msg.append("Could not allocate raw video buffer")
+                 .append(get_ffmpeg_error_desc(ret));
+        throw VideoSourceError(error_msg);
+    }
+    _data_buffer_length = ret;
 }
 
 

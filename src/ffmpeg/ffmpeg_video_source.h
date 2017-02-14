@@ -171,6 +171,15 @@ protected:
     void open_converter();
 
     //!
+    //! \brief Allocate all buffers and memory
+    //! that will be needed for reading frames
+    //! from video source
+    //! \throw VideoSourceError with a detailed
+    //! message if this step fails for any reason
+    //!
+    void allocate_buffers();
+
+    //!
     //! \brief Decode current FFmpeg packet of
     //! current FFmpeg frame
     //! \param got_frame
