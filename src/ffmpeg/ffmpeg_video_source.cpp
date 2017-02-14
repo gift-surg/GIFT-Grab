@@ -34,6 +34,7 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
 
     open_source();
     open_decoder();
+    open_converter();
 
     /* allocate image where the decoded image will be put */
     _avframe = av_frame_alloc();
@@ -45,69 +46,10 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     _avpacket.data = nullptr;
     _avpacket.size = 0;
 
-    AVPixelFormat target_avpixel_format;
-    int sws_flags = 0;
-    switch(_colour)
-    {
-    case BGRA:
-        target_avpixel_format = AV_PIX_FMT_BGRA;
-        break;
-    case I420:
-        target_avpixel_format = AV_PIX_FMT_YUV420P;
-        break;
-    case UYVY:
-        target_avpixel_format = AV_PIX_FMT_UYVY422;
-        break;
-    default:
-        throw VideoSourceError("Target colour space not supported");
-    }
-    if (_avformat_context->streams[_avstream_idx]->codec->pix_fmt != target_avpixel_format)
-    {
-        _avframe_converted = av_frame_alloc();
-        if (_avframe_converted == nullptr)
-            throw VideoSourceError("Could not allocate conversion frame");
-        _avframe_converted->format = target_avpixel_format;
-        _avframe_converted->width  = _avformat_context->streams[_avstream_idx]->codec->width;
-        _avframe_converted->height = _avformat_context->streams[_avstream_idx]->codec->height;
-        int pixel_depth;
-        switch(target_avpixel_format)
-        {
-        case AV_PIX_FMT_BGRA:
-            pixel_depth = 32; // bits-per-pixel
-            break;
-        case AV_PIX_FMT_YUV420P:
-            pixel_depth = 12; // bits-per-pixel
-            break;
-        case AV_PIX_FMT_UYVY422:
-            pixel_depth = 16; // bits-per-pixel
-            break;
-        default:
-            throw VideoSourceError("Colour space not supported");
-        }
-        ret = av_frame_get_buffer(_avframe_converted, pixel_depth);
-        if (ret < 0)
-        {
-            error_msg.append("Could not allocate conversion buffer")
-                     .append(get_ffmpeg_error_desc(ret));
-            throw VideoSourceError(error_msg);
-        }
-
-        _sws_context = sws_getContext(
-                    _avformat_context->streams[_avstream_idx]->codec->width,
-                    _avformat_context->streams[_avstream_idx]->codec->height,
-                    _avformat_context->streams[_avstream_idx]->codec->pix_fmt,
-                    _avformat_context->streams[_avstream_idx]->codec->width,
-                    _avformat_context->streams[_avstream_idx]->codec->height,
-                    target_avpixel_format,
-                    sws_flags, nullptr, nullptr, nullptr);
-        if (_sws_context == nullptr)
-            throw VideoSourceError("Could not allocate Sws context");
-    }
-
     ret = av_image_alloc(_data_buffer, _data_buffer_linesizes,
                          _avformat_context->streams[_avstream_idx]->codec->width,
                          _avformat_context->streams[_avstream_idx]->codec->height,
-                         target_avpixel_format, 1);
+                         get_ffmpeg_pixel_format(_colour), 1);
     if (ret < 0)
     {
         error_msg.append("Could not allocate raw video buffer")
@@ -301,6 +243,58 @@ void VideoSourceFFmpeg::open_decoder()
 }
 
 
+void VideoSourceFFmpeg::open_converter()
+{
+    int ret = 0;
+    std::string error_msg = "";
+    AVPixelFormat target_avpixel_format = get_ffmpeg_pixel_format(_colour);
+    int sws_flags = 0;
+
+    if (_avformat_context->streams[_avstream_idx]->codec->pix_fmt != target_avpixel_format)
+    {
+        _avframe_converted = av_frame_alloc();
+        if (_avframe_converted == nullptr)
+            throw VideoSourceError("Could not allocate conversion frame");
+        _avframe_converted->format = target_avpixel_format;
+        _avframe_converted->width  = _avformat_context->streams[_avstream_idx]->codec->width;
+        _avframe_converted->height = _avformat_context->streams[_avstream_idx]->codec->height;
+        int pixel_depth;
+        switch(target_avpixel_format)
+        {
+        case AV_PIX_FMT_BGRA:
+            pixel_depth = 32; // bits-per-pixel
+            break;
+        case AV_PIX_FMT_YUV420P:
+            pixel_depth = 12; // bits-per-pixel
+            break;
+        case AV_PIX_FMT_UYVY422:
+            pixel_depth = 16; // bits-per-pixel
+            break;
+        default:
+            throw VideoSourceError("Colour space not supported");
+        }
+        ret = av_frame_get_buffer(_avframe_converted, pixel_depth);
+        if (ret < 0)
+        {
+            error_msg.append("Could not allocate conversion buffer")
+                     .append(get_ffmpeg_error_desc(ret));
+            throw VideoSourceError(error_msg);
+        }
+
+        _sws_context = sws_getContext(
+                    _avformat_context->streams[_avstream_idx]->codec->width,
+                    _avformat_context->streams[_avstream_idx]->codec->height,
+                    _avformat_context->streams[_avstream_idx]->codec->pix_fmt,
+                    _avformat_context->streams[_avstream_idx]->codec->width,
+                    _avformat_context->streams[_avstream_idx]->codec->height,
+                    target_avpixel_format,
+                    sws_flags, nullptr, nullptr, nullptr);
+        if (_sws_context == nullptr)
+            throw VideoSourceError("Could not allocate Sws context");
+    }
+}
+
+
 int VideoSourceFFmpeg::decode_packet(int * got_frame, int cached)
 {
     int ret = 0;
@@ -346,6 +340,24 @@ std::string VideoSourceFFmpeg::get_ffmpeg_error_desc(int ffmpeg_error_code)
         ffmpeg_error_desc.append(" (No specific error description"
                                  " could be obtained from FFmpeg)");
     return ffmpeg_error_desc;
+}
+
+
+AVPixelFormat VideoSourceFFmpeg::get_ffmpeg_pixel_format(
+    enum ColourSpace colour
+)
+{
+    switch(colour)
+    {
+    case BGRA:
+        return AV_PIX_FMT_BGRA;
+    case I420:
+        return AV_PIX_FMT_YUV420P;
+    case UYVY:
+        return AV_PIX_FMT_UYVY422;
+    default:
+        throw VideoSourceError("Colour space not supported");
+    }
 }
 
 }

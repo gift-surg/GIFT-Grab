@@ -158,6 +158,19 @@ protected:
     void open_decoder();
 
     //!
+    //! \brief Open a colour space (pixel format)
+    //! converter in case colour space of source
+    //! video is different from what the caller
+    //! wants, after successfully opening the
+    //! video decoder
+    //! \throw VideoSourceError with a detailed
+    //! message if this step fails for any reason
+    //! \sa open_decoder
+    //! \sa _colour
+    //!
+    void open_converter();
+
+    //!
     //! \brief Decode current FFmpeg packet of
     //! current FFmpeg frame
     //! \param got_frame
@@ -175,6 +188,16 @@ protected:
     //! \return
     //!
     std::string get_ffmpeg_error_desc(int ffmpeg_error_code);
+
+    //!
+    //! \brief Get equivalent of \c colour in FFmpeg
+    //! API
+    //! \param colour
+    //! \return
+    //! \throw VideoSourceError if \c colour is not
+    //! supported
+    //!
+    AVPixelFormat get_ffmpeg_pixel_format(enum ColourSpace colour);
 };
 
 }
