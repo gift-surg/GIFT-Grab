@@ -33,17 +33,7 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     av_register_all();
 
     open_source();
-
-    ret = open_codec_context(&_avstream_idx, _avformat_context,
-                             AVMEDIA_TYPE_VIDEO, error_msg);
-    if (ret < 0)
-    {
-        error_msg.append(get_ffmpeg_error_desc(ret));
-        throw VideoSourceError(error_msg);
-    }
-
-    if (_avformat_context->streams[_avstream_idx] == nullptr)
-        throw VideoSourceError("Could not find video stream in source");
+    open_decoder();
 
     /* allocate image where the decoded image will be put */
     _avframe = av_frame_alloc();
@@ -266,54 +256,48 @@ void VideoSourceFFmpeg::open_source()
                  .append(get_ffmpeg_error_desc(ret));
         throw VideoSourceError(error_msg);
     }
+
+    ret = av_find_best_stream(_avformat_context, AVMEDIA_TYPE_VIDEO,
+                              -1, -1, nullptr, 0);
+    if (ret < 0)
+    {
+        error_msg.append("Could not find video stream in source ")
+                 .append(_source_path)
+                 .append(get_ffmpeg_error_desc(ret));
+        throw VideoSourceError(error_msg);
+    }
+    if (_avformat_context->streams[ret] == nullptr)
+        throw VideoSourceError("Found stream index is empty");
+
+    _avstream_idx = ret;
 }
 
 
-int VideoSourceFFmpeg::open_codec_context(
-        int * stream_idx, AVFormatContext * fmt_ctx,
-        enum AVMediaType type, std::string & error_msg)
+void VideoSourceFFmpeg::open_decoder()
 {
-    int ret;
-
-    // find stream
-    ret = av_find_best_stream(fmt_ctx, type, -1, -1, nullptr, 0);
-    if (ret < 0)
-    {
-        error_msg.append("Could not find ")
-                 .append(av_get_media_type_string(type))
-                 .append(" stream in source ")
-                 .append(_source_path);
-        return ret;
-    }
-    int stream_index = ret;
+    int ret = 0;
+    std::string error_msg = "";
 
     // find codec
     AVCodec * avcodec = nullptr;
-    avcodec = avcodec_find_decoder(fmt_ctx->streams[stream_index]->codec->codec_id);
+    avcodec = avcodec_find_decoder(
+        _avformat_context->streams[_avstream_idx]->codec->codec_id
+    );
     if (avcodec == nullptr)
-    {
-        error_msg.append("Could not find ")
-                 .append(av_get_media_type_string(type))
-                 .append(" codec");
-        return AVERROR(EINVAL);
-    }
+        throw VideoSourceError("Could not find video decoder");
 
     // open codec
     AVDictionary * opts = nullptr;
     av_dict_set(&opts, "refcounted_frames", _use_refcount ? "1" : "0", 0);
-    ret = avcodec_open2(fmt_ctx->streams[stream_index]->codec, avcodec, &opts);
+    ret = avcodec_open2(
+        _avformat_context->streams[_avstream_idx]->codec, avcodec, &opts
+    );
     if (ret < 0)
     {
-        error_msg.append("Failed to open ")
-                 .append(av_get_media_type_string(type))
-                 .append(" codec");
-        return ret;
+        error_msg.append("Could not open video decoder")
+                 .append(get_ffmpeg_error_desc(ret));
+        throw VideoSourceError(error_msg);
     }
-
-    // set stream index to found one
-    *stream_idx = stream_index;
-
-    return ret;
 }
 
 

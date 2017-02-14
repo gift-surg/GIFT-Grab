@@ -149,19 +149,13 @@ protected:
     void open_source();
 
     //!
-    //! \brief Open the FFmpeg format context
-    //! \param stream_idx
-    //! \param fmt_ctx
-    //! \param type
-    //! \param error_msg
-    //! \return non-negative value on success,
-    //! negative value with a detailed \c error_msg
-    //! otherwise
+    //! \brief Try to find an appropriate decoder
+    //! after opening video source, and open it
+    //! \throw VideoSourceError with a detailed
+    //! message if this step fails for any reason
+    //! \sa open_source
     //!
-    int open_codec_context(int * stream_idx,
-                           AVFormatContext * fmt_ctx,
-                           enum AVMediaType type,
-                           std::string & error_msg);
+    void open_decoder();
 
     //!
     //! \brief Decode current FFmpeg packet of
