@@ -118,12 +118,9 @@ class FileChecker(pgg.IObserver):
 
     def assert_frame_data_lengths(self, colour,
                                   frame_width, frame_height):
-        if colour == pgg.ColourSpace.BGRA:
-            exp_data_length = frame_width * frame_height * 4
-        elif colour == pgg.ColourSpace.I420:
-            exp_data_length = frame_width * frame_height * 1.5
-        elif colour == pgg.ColourSpace.UYVY:
-            exp_data_length = frame_width * frame_height * 2
+        exp_data_length = pgg.VideoFrame.required_data_length(
+            colour, frame_width, frame_height
+            )
 
         for frame in self._frames:
             data_length = frame.data_length()
