@@ -247,6 +247,7 @@ void VideoSourceFFmpeg::get_full_frame()
 void VideoSourceFFmpeg::open_source()
 {
     int ret = 0;
+    std::string error_msg = "";
 
     ret = avformat_open_input(&_avformat_context, _source_path.c_str(),
                               nullptr, nullptr);
