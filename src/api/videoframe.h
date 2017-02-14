@@ -209,6 +209,16 @@ public:
     static size_t required_data_length(enum ColourSpace colour,
                                        size_t cols, size_t rows);
 
+    //!
+    //! \brief Get the pixel depth in number of
+    //! bits for \c colour
+    //! \param colour
+    //! \return
+    //! \throw BasicException if \c colour not
+    //! supported
+    //!
+    static size_t required_pixel_length(enum ColourSpace colour);
+
 protected:
     //!
     //! \brief Colour space, i.e. description

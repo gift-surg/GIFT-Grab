@@ -239,6 +239,22 @@ size_t VideoFrame::required_data_length(enum ColourSpace colour,
     }
 }
 
+size_t VideoFrame::required_pixel_length(enum ColourSpace colour)
+{
+    size_t unit_size = sizeof(unsigned char);
+    switch(colour)
+    {
+    case BGRA:
+        return 4 * unit_size;
+    case I420:
+        return 1.5 * unit_size;
+    case UYVY:
+        return 2 * unit_size;
+    default:
+        throw BasicException("Colour space not supported");
+    }
+}
+
 void VideoFrame::set_pixels_black()
 {
     memset(_data, 0, _data_length * sizeof(unsigned char));

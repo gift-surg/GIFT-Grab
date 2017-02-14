@@ -258,21 +258,16 @@ void VideoSourceFFmpeg::open_converter()
         _avframe_converted->format = target_avpixel_format;
         _avframe_converted->width  = _avformat_context->streams[_avstream_idx]->codec->width;
         _avframe_converted->height = _avformat_context->streams[_avstream_idx]->codec->height;
-        int pixel_depth;
-        switch(target_avpixel_format)
+        int pixel_depth = 0;
+        try
         {
-        case AV_PIX_FMT_BGRA:
-            pixel_depth = 32; // bits-per-pixel
-            break;
-        case AV_PIX_FMT_YUV420P:
-            pixel_depth = 12; // bits-per-pixel
-            break;
-        case AV_PIX_FMT_UYVY422:
-            pixel_depth = 16; // bits-per-pixel
-            break;
-        default:
-            throw VideoSourceError("Colour space not supported");
+            pixel_depth = VideoFrame::required_pixel_length(_colour);
         }
+        catch (BasicException & e)
+        {
+            throw VideoSourceError(e.what());
+        }
+
         ret = av_frame_get_buffer(_avframe_converted, pixel_depth);
         if (ret < 0)
         {
