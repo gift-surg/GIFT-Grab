@@ -32,23 +32,7 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
 
     av_register_all();
 
-    ret = avformat_open_input(&_avformat_context, _source_path.c_str(),
-                              nullptr, nullptr);
-    if (ret < 0)
-    {
-        error_msg.append("Could not open video source ")
-                 .append(_source_path)
-                 .append(get_ffmpeg_error_desc(ret));
-        throw VideoSourceError(error_msg);
-    }
-
-    ret = avformat_find_stream_info(_avformat_context, nullptr);
-    if (ret < 0)
-    {
-        error_msg.append("Could not find stream information")
-                 .append(get_ffmpeg_error_desc(ret));
-        throw VideoSourceError(error_msg);
-    }
+    open_source();
 
     ret = open_codec_context(&_avstream_idx, _avformat_context,
                              AVMEDIA_TYPE_VIDEO, error_msg);
@@ -257,6 +241,30 @@ void VideoSourceFFmpeg::set_sub_frame(int x, int y, int width, int height)
 void VideoSourceFFmpeg::get_full_frame()
 {
     // TODO
+}
+
+
+void VideoSourceFFmpeg::open_source()
+{
+    int ret = 0;
+
+    ret = avformat_open_input(&_avformat_context, _source_path.c_str(),
+                              nullptr, nullptr);
+    if (ret < 0)
+    {
+        error_msg.append("Could not open video source ")
+                 .append(_source_path)
+                 .append(get_ffmpeg_error_desc(ret));
+        throw VideoSourceError(error_msg);
+    }
+
+    ret = avformat_find_stream_info(_avformat_context, nullptr);
+    if (ret < 0)
+    {
+        error_msg.append("Could not find stream information")
+                 .append(get_ffmpeg_error_desc(ret));
+        throw VideoSourceError(error_msg);
+    }
 }
 
 

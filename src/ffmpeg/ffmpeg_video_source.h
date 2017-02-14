@@ -140,6 +140,15 @@ public:
 
 protected:
     //!
+    //! \brief Try to open requested video source
+    //! and perform sanity checks on it
+    //! \throw VideoSourceError with a detailed
+    //! message if this step fails for any reason
+    //! \sa _source_path
+    //!
+    void open_source();
+
+    //!
     //! \brief Open the FFmpeg format context
     //! \param stream_idx
     //! \param fmt_ctx
