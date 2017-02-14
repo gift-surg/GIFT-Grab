@@ -74,15 +74,19 @@ bool VideoSourceFFmpeg::get_frame_dimensions(int & width, int & height)
 
 bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
 {
-    if (av_read_frame(_avformat_context, &_avpacket) < 0)
+    int ret = 0;
+
+    // read frame
+    ret = av_read_frame(_avformat_context, &_avpacket);
+    if (ret < 0)
         return false;
 
-    int ret = 0, got_frame;
+    // decode frame
     bool success = true;
     AVPacket orig_pkt = _avpacket;
     do
     {
-        ret = decode_packet(&got_frame, 0);
+        ret = decode_packet();
         if (ret < 0)
         {
             success = false;
@@ -93,6 +97,8 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
     }
     while (_avpacket.size > 0);
     av_packet_unref(&orig_pkt);
+    if (not success)
+        return false;
 
     // need to convert pixel format?
     AVFrame * avframe_ptr = nullptr;
@@ -104,7 +110,7 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
                         _avframe_converted->data, _avframe_converted->linesize
                         );
         if (ret <= 0)
-            success = false;
+            return false;
 
         avframe_ptr = _avframe_converted;
     }
@@ -113,8 +119,7 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
         avframe_ptr = _avframe;
     }
 
-    /* copy decoded frame to destination buffer:
-     * this is required since rawvideo expects non aligned data */
+    // get non-aligned data from decoded frame
     av_image_copy(_data_buffer, _data_buffer_linesizes,
                   const_cast<const uint8_t **>(avframe_ptr->data),
                   avframe_ptr->linesize,
@@ -122,9 +127,7 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
                   _avformat_context->streams[_avstream_idx]->codec->width,
                   _avformat_context->streams[_avstream_idx]->codec->height);
 
-    if (not success)
-        return false;
-
+    // initialise GIFT-Grab frame from flat data
     frame.init_from_specs(
             _data_buffer[0], _data_buffer_length,
             _avformat_context->streams[_avstream_idx]->codec->width,
@@ -302,21 +305,20 @@ void VideoSourceFFmpeg::allocate_buffers()
 }
 
 
-int VideoSourceFFmpeg::decode_packet(int * got_frame, int cached)
+int VideoSourceFFmpeg::decode_packet()
 {
-    int ret = 0;
+    int ret = 0, got_frame = 0;
     int decoded = 0;
-    *got_frame = 0;
     if (_avpacket.stream_index == _avstream_idx)
     {
         /* decode video frame */
         ret = avcodec_decode_video2(
                     _avformat_context->streams[_avstream_idx]->codec,
-                    _avframe, got_frame, &_avpacket);
+                    _avframe, &got_frame, &_avpacket);
         if (ret < 0)
             return ret;
 
-        if (*got_frame)
+        if (got_frame)
         {
             if (_avframe->width != _avformat_context->streams[_avstream_idx]->codec->width
                 or _avframe->height != _avformat_context->streams[_avstream_idx]->codec->height
@@ -325,10 +327,12 @@ int VideoSourceFFmpeg::decode_packet(int * got_frame, int cached)
             decoded = ret;
         }
     }
+
     /* If we use frame reference counting, we own the data and need
      * to de-reference it when we don't use it anymore */
-    if (*got_frame and _use_refcount)
+    if (got_frame and _use_refcount)
         av_frame_unref(_avframe);
+
     return decoded;
 }
 

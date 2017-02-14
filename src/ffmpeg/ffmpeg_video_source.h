@@ -182,12 +182,10 @@ protected:
     //!
     //! \brief Decode current FFmpeg packet of
     //! current FFmpeg frame
-    //! \param got_frame
-    //! \param cached
     //! \return number of decoded bytes on success,
     //! a negative value otherwise
     //!
-    int decode_packet(int * got_frame, int cached);
+    int decode_packet();
 
     //!
     //! \brief Create a standard error description
