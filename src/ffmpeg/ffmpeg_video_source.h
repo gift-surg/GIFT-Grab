@@ -32,18 +32,6 @@ protected:
     int _y;
 
     //!
-    //! \brief Returned frame width, defining
-    //! the bounding box e.g. when cropping
-    //!
-    int _width;
-
-    //!
-    //! \brief Returned frame height, defining
-    //! the bounding box e.g. when cropping
-    //!
-    int _height;
-
-    //!
     //! \brief Broadcast daemon that will keep
     //! reading frames from the video source
     //! and updating all observers

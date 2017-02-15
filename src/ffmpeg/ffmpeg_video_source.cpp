@@ -20,8 +20,6 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     : IVideoSource(colour_space)
     , _x(0)
     , _y(0)
-    , _width(0)
-    , _height(0)
     , _source_path(source_path)
     , _avformat_context(nullptr)
     , _avstream_idx(-1)
@@ -69,8 +67,8 @@ bool VideoSourceFFmpeg::get_frame_dimensions(int & width, int & height)
     if (_avformat_context->streams[_avstream_idx]->codec->width > 0
         and _avformat_context->streams[_avstream_idx]->codec->height > 0)
     {
-        width = _width;
-        height = _height;
+        width = _avframe_processed->width;
+        height = _avframe_processed->height;
         return true;
     }
     else
@@ -235,8 +233,6 @@ void VideoSourceFFmpeg::ffmpeg_open_decoder()
 
     _x = 0;
     _y = 0;
-    _width = _avformat_context->streams[_avstream_idx]->codec->width;
-    _height = _avformat_context->streams[_avstream_idx]->codec->height;
 }
 
 
