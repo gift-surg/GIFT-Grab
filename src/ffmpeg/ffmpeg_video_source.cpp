@@ -18,6 +18,10 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
                                      enum ColourSpace colour_space,
                                      bool use_refcount)
     : IVideoSource(colour_space)
+    , _x(0)
+    , _y(0)
+    , _width(0)
+    , _height(0)
     , _source_path(source_path)
     , _avformat_context(nullptr)
     , _avstream_idx(-1)
@@ -60,11 +64,13 @@ VideoSourceFFmpeg::~VideoSourceFFmpeg()
 
 bool VideoSourceFFmpeg::get_frame_dimensions(int & width, int & height)
 {
+    std::lock_guard<std::mutex> buffer_lock_guard(_buffer_lock);
+
     if (_avformat_context->streams[_avstream_idx]->codec->width > 0
         and _avformat_context->streams[_avstream_idx]->codec->height > 0)
     {
-        width = _avformat_context->streams[_avstream_idx]->codec->width;
-        height = _avformat_context->streams[_avstream_idx]->codec->height;
+        width = _width;
+        height = _height;
         return true;
     }
     else
@@ -226,6 +232,11 @@ void VideoSourceFFmpeg::ffmpeg_open_decoder()
                  .append(get_ffmpeg_error_desc(ret));
         throw VideoSourceError(error_msg);
     }
+
+    _x = 0;
+    _y = 0;
+    _width = _avformat_context->streams[_avstream_idx]->codec->width;
+    _height = _avformat_context->streams[_avstream_idx]->codec->height;
 }
 
 

@@ -18,6 +18,32 @@ class VideoSourceFFmpeg : public IVideoSource
 {
 protected:
     //!
+    //! \brief Where returned frame width
+    //! starts, defining the bounding box
+    //! e.g. when cropping
+    //!
+    int _x;
+
+    //!
+    //! \brief Where returned frame height
+    //! starts, defining the bounding box
+    //! e.g. when cropping
+    //!
+    int _y;
+
+    //!
+    //! \brief Returned frame width, defining
+    //! the bounding box e.g. when cropping
+    //!
+    int _width;
+
+    //!
+    //! \brief Returned frame height, defining
+    //! the bounding box e.g. when cropping
+    //!
+    int _height;
+
+    //!
     //! \brief Broadcast daemon that will keep
     //! reading frames from the video source
     //! and updating all observers
@@ -156,10 +182,18 @@ protected:
 
     //!
     //! \brief Try to find an appropriate decoder
-    //! after opening video source, and open it
+    //! after opening video source, and open it.
+    //! This function sets the frame bounding box,
+    //! so it should be used after locking the
+    //! mutex guard
     //! \throw VideoSourceError with a detailed
     //! message if this step fails for any reason
     //! \sa ffmpeg_open_source
+    //! \sa _x
+    //! \sa _y
+    //! \sa _width
+    //! \sa _height
+    //! \sa _buffer_lock
     //!
     void ffmpeg_open_decoder();
 
