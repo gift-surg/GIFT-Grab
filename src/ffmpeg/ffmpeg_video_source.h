@@ -95,7 +95,7 @@ protected:
     //! (chroma) than the requested one
     //! \sa _colour
     //!
-    AVFrame * _avframe_converted;
+    AVFrame * _avframe_processed;
 
     //!
     //! \brief FFmpeg packet to be used when

@@ -27,7 +27,7 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     , _avstream_idx(-1)
     , _use_refcount(use_refcount)
     , _avframe_original(nullptr)
-    , _avframe_converted(nullptr)
+    , _avframe_processed(nullptr)
     , _sws_context(nullptr)
     , _daemon(nullptr)
 {
@@ -55,8 +55,8 @@ VideoSourceFFmpeg::~VideoSourceFFmpeg()
     avcodec_close(_avformat_context->streams[_avstream_idx]->codec);
     avformat_close_input(&_avformat_context);
     av_frame_free(&_avframe_original);
-    if (_avframe_converted != nullptr)
-        av_frame_free(&_avframe_converted);
+    if (_avframe_processed != nullptr)
+        av_frame_free(&_avframe_processed);
     av_free(_data_buffer[0]);
     _data_buffer_length = 0;
 }
@@ -115,12 +115,12 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
         ret = sws_scale(_sws_context,
                         _avframe_original->data, _avframe_original->linesize,
                         0, _avformat_context->streams[_avstream_idx]->codec->height,
-                        _avframe_converted->data, _avframe_converted->linesize
+                        _avframe_processed->data, _avframe_processed->linesize
                         );
         if (ret <= 0)
             return false;
 
-        avframe_ptr = _avframe_converted;
+        avframe_ptr = _avframe_processed;
     }
     else
     {
@@ -269,12 +269,12 @@ void VideoSourceFFmpeg::ffmpeg_allocate_buffers()
     if (_sws_context != nullptr)
     {
         // allocate conversion frame
-        _avframe_converted = av_frame_alloc();
-        if (_avframe_converted == nullptr)
+        _avframe_processed = av_frame_alloc();
+        if (_avframe_processed == nullptr)
             throw VideoSourceError("Could not allocate conversion frame");
-        _avframe_converted->format = get_ffmpeg_pixel_format(_colour);
-        _avframe_converted->width  = _avformat_context->streams[_avstream_idx]->codec->width;
-        _avframe_converted->height = _avformat_context->streams[_avstream_idx]->codec->height;
+        _avframe_processed->format = get_ffmpeg_pixel_format(_colour);
+        _avframe_processed->width  = _avformat_context->streams[_avstream_idx]->codec->width;
+        _avframe_processed->height = _avformat_context->streams[_avstream_idx]->codec->height;
         int pixel_depth = 0;
         try
         {
@@ -286,7 +286,7 @@ void VideoSourceFFmpeg::ffmpeg_allocate_buffers()
         }
 
         // allocate actual conversion buffer
-        ret = av_frame_get_buffer(_avframe_converted, pixel_depth);
+        ret = av_frame_get_buffer(_avframe_processed, pixel_depth);
         if (ret < 0)
         {
             error_msg.append("Could not allocate conversion buffer")
