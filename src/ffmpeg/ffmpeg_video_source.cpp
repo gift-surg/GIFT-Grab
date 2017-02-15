@@ -102,18 +102,15 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
     if (not success)
         return false;
 
-    // need to convert pixel format?
-    AVFrame * avframe_ptr = nullptr;
     // TODO _avframe_original => _avframe_processed PIPELINE
-    avframe_ptr = _avframe_processed; // TODO
 
     // get non-aligned data from decoded frame
     av_image_copy(_data_buffer, _data_buffer_linesizes,
-                  const_cast<const uint8_t **>(avframe_ptr->data),
-                  avframe_ptr->linesize,
-                  static_cast<AVPixelFormat>(avframe_ptr->format),
-                  _avformat_context->streams[_avstream_idx]->codec->width,
-                  _avformat_context->streams[_avstream_idx]->codec->height);
+                  const_cast<const uint8_t **>(_avframe_processed->data),
+                  _avframe_processed->linesize,
+                  static_cast<AVPixelFormat>(_avframe_processed->format),
+                  _avframe_processed->width,
+                  _avframe_processed->height);
 
     // initialise GIFT-Grab frame from flat data
     frame.init_from_specs(
