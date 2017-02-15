@@ -49,8 +49,7 @@ VideoSourceFFmpeg::~VideoSourceFFmpeg()
     avcodec_close(_avformat_context->streams[_avstream_idx]->codec);
     avformat_close_input(&_avformat_context);
     av_frame_free(&_avframe_original);
-    if (_avframe_processed != nullptr)
-        av_frame_free(&_avframe_processed);
+    av_frame_free(&_avframe_processed);
     av_free(_data_buffer[0]);
     _data_buffer_length = 0;
 }
