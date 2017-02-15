@@ -61,7 +61,7 @@ protected:
     //! \brief FFmpeg frame to be used when
     //! decoding frames
     //!
-    AVFrame * _avframe;
+    AVFrame * _avframe_original;
 
     //!
     //! \brief FFmpeg frame to be used when video
