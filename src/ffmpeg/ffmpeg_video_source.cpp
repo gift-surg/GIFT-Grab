@@ -248,32 +248,6 @@ void VideoSourceFFmpeg::ffmpeg_allocate_reading_buffers()
     int ret = 0;
     std::string error_msg = "";
 
-    // allocate conversion frame
-    _avframe_processed = av_frame_alloc();
-    if (_avframe_processed == nullptr)
-        throw VideoSourceError("Could not allocate conversion frame");
-    _avframe_processed->format = get_ffmpeg_pixel_format(_colour);
-    _avframe_processed->width  = _avformat_context->streams[_avstream_idx]->codec->width;
-    _avframe_processed->height = _avformat_context->streams[_avstream_idx]->codec->height;
-    int pixel_depth = 0;
-    try
-    {
-        pixel_depth = VideoFrame::required_pixel_length(_colour);
-    }
-    catch (BasicException & e)
-    {
-        throw VideoSourceError(e.what());
-    }
-
-    // allocate actual conversion buffer
-    ret = av_frame_get_buffer(_avframe_processed, pixel_depth);
-    if (ret < 0)
-    {
-        error_msg.append("Could not allocate conversion buffer")
-                 .append(get_ffmpeg_error_desc(ret));
-        throw VideoSourceError(error_msg);
-    }
-
     // decoded image will be put here
     _avframe_original = av_frame_alloc();
     if (_avframe_original == nullptr)
@@ -312,8 +286,41 @@ bool VideoSourceFFmpeg::ffmpeg_realloc_processing_buffers(
     int width, int height
 )
 {
-    // TODO
-    return false;
+    std::string error_msg = "";
+    if (width > 0 and height > 0 and
+        _avframe_processed->width != width and
+        _avframe_processed->height != height)
+    {
+        if (_avframe_processed != nullptr)
+            av_frame_free(&_avframe_processed);
+        _avframe_processed = av_frame_alloc();
+        if (_avframe_processed == nullptr)
+            throw VideoSourceError("Could not reading frame");
+        _avframe_processed->format = get_ffmpeg_pixel_format(_colour);
+        _avframe_processed->width  = width;
+        _avframe_processed->height = height;
+        int pixel_depth = 0;
+        try
+        {
+            pixel_depth = VideoFrame::required_pixel_length(_colour);
+        }
+        catch (BasicException & e)
+        {
+            throw VideoSourceError(e.what());
+        }
+
+        int ret = av_frame_get_buffer(_avframe_processed, pixel_depth);
+        if (ret < 0)
+        {
+            error_msg.append("Could not allocate conversion buffer")
+                     .append(get_ffmpeg_error_desc(ret));
+            throw VideoSourceError(error_msg);
+        }
+
+        return true;
+    }
+    else
+        return false;
 }
 
 
