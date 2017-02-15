@@ -60,8 +60,7 @@ bool VideoSourceFFmpeg::get_frame_dimensions(int & width, int & height)
 {
     std::lock_guard<std::mutex> buffer_lock_guard(_buffer_lock);
 
-    if (_avformat_context->streams[_avstream_idx]->codec->width > 0
-        and _avformat_context->streams[_avstream_idx]->codec->height > 0)
+    if (_avframe_processed->width > 0 and _avframe_processed->height > 0)
     {
         width = _avframe_processed->width;
         height = _avframe_processed->height;
