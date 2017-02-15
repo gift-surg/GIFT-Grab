@@ -32,10 +32,10 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
 
     av_register_all();
 
-    open_source();
-    open_decoder();
-    open_converter();
-    allocate_buffers();
+    ffmpeg_open_source();
+    ffmpeg_open_decoder();
+    ffmpeg_open_converter();
+    ffmpeg_allocate_buffers();
 
     _daemon = new gg::BroadcastDaemon(this);
     _daemon->start(get_frame_rate());
@@ -88,7 +88,7 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
     AVPacket orig_pkt = _avpacket;
     do
     {
-        ret = decode_packet();
+        ret = ffmpeg_decode_packet();
         if (ret < 0)
         {
             success = false;
@@ -162,7 +162,7 @@ void VideoSourceFFmpeg::get_full_frame()
 }
 
 
-void VideoSourceFFmpeg::open_source()
+void VideoSourceFFmpeg::ffmpeg_open_source()
 {
     int ret = 0;
     std::string error_msg = "";
@@ -201,7 +201,7 @@ void VideoSourceFFmpeg::open_source()
 }
 
 
-void VideoSourceFFmpeg::open_decoder()
+void VideoSourceFFmpeg::ffmpeg_open_decoder()
 {
     int ret = 0;
     std::string error_msg = "";
@@ -229,7 +229,7 @@ void VideoSourceFFmpeg::open_decoder()
 }
 
 
-void VideoSourceFFmpeg::open_converter()
+void VideoSourceFFmpeg::ffmpeg_open_converter()
 {
     AVPixelFormat target_avpixel_format = get_ffmpeg_pixel_format(_colour);
     int sws_flags = 0;
@@ -250,7 +250,7 @@ void VideoSourceFFmpeg::open_converter()
 }
 
 
-void VideoSourceFFmpeg::allocate_buffers()
+void VideoSourceFFmpeg::ffmpeg_allocate_buffers()
 {
     int ret = 0;
     std::string error_msg = "";
@@ -309,7 +309,7 @@ void VideoSourceFFmpeg::allocate_buffers()
 }
 
 
-int VideoSourceFFmpeg::decode_packet()
+int VideoSourceFFmpeg::ffmpeg_decode_packet()
 {
     int ret = 0, got_frame = 0;
     int decoded = 0;

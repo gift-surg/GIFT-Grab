@@ -152,16 +152,16 @@ protected:
     //! message if this step fails for any reason
     //! \sa _source_path
     //!
-    void open_source();
+    void ffmpeg_open_source();
 
     //!
     //! \brief Try to find an appropriate decoder
     //! after opening video source, and open it
     //! \throw VideoSourceError with a detailed
     //! message if this step fails for any reason
-    //! \sa open_source
+    //! \sa ffmpeg_open_source
     //!
-    void open_decoder();
+    void ffmpeg_open_decoder();
 
     //!
     //! \brief Open a colour space (pixel format)
@@ -171,10 +171,10 @@ protected:
     //! video decoder
     //! \throw VideoSourceError with a detailed
     //! message if this step fails for any reason
-    //! \sa open_decoder
+    //! \sa ffmpeg_open_decoder
     //! \sa _colour
     //!
-    void open_converter();
+    void ffmpeg_open_converter();
 
     //!
     //! \brief Allocate all buffers and memory
@@ -183,7 +183,7 @@ protected:
     //! \throw VideoSourceError with a detailed
     //! message if this step fails for any reason
     //!
-    void allocate_buffers();
+    void ffmpeg_allocate_buffers();
 
     //!
     //! \brief Decode current FFmpeg packet of
@@ -191,7 +191,7 @@ protected:
     //! \return number of decoded bytes on success,
     //! a negative value otherwise
     //!
-    int decode_packet();
+    int ffmpeg_decode_packet();
 
     //!
     //! \brief Create a standard error description
