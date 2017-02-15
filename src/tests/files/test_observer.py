@@ -104,3 +104,60 @@ def test_invalid_filepath_throws_exception(colour_space):
             colour_space
         )
     assert source is None
+
+
+@mark.observer_pattern
+@mark.usefixtures('peri_test')
+def test_get_sub_frame(
+    filepath, colour_space, frame_width, frame_height
+):
+    global factory
+    source = None
+    source = factory.create_file_reader(
+        filepath, colour_space
+    )
+    sub_x = frame_width // 4
+    sub_y = frame_height // 4
+    sub_width = frame_width // 2
+    sub_height = frame_height // 2
+    assert sub_x > 0 and sub_x + sub_width < frame_width
+    assert sub_y > 0 and sub_y + sub_height < frame_height
+    source.set_sub_frame(sub_x, sub_y,
+                         sub_width, sub_height)
+    file_checker = FileChecker(source)
+    file_checker.attach()
+    global video_duration
+    sleep(video_duration)
+    file_checker.detach()
+    assert file_checker.assert_frame_dimensions(
+        sub_width, sub_height)
+
+
+@mark.observer_pattern
+@mark.usefixtures('peri_test')
+def test_get_full_frame(
+    filepath, colour_space, frame_width, frame_height
+):
+    global factory
+    source = None
+    source = factory.create_file_reader(
+        filepath, colour_space
+    )
+    sub_x = frame_width // 4
+    sub_y = frame_height // 4
+    sub_width = frame_width // 2
+    sub_height = frame_height // 2
+    assert sub_x > 0 and sub_x + sub_width < frame_width
+    assert sub_y > 0 and sub_y + sub_height < frame_height
+    source.set_sub_frame(sub_x, sub_y,
+                         sub_width, sub_height)
+    global quarter_video_duration
+    sleep(quarter_video_duration)
+    source.get_full_frame()
+    file_checker = FileChecker(source)
+    file_checker.attach()
+    global video_duration
+    sleep(video_duration)
+    file_checker.detach()
+    assert file_checker.assert_frame_dimensions(
+        frame_width, frame_height)
