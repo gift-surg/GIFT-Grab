@@ -66,12 +66,6 @@ protected:
     bool _use_refcount;
 
     //!
-    //! \brief This is for converting pixel format
-    //! (e.g. from BGRA to YUV420p)
-    //!
-    SwsContext * _sws_context;
-
-    //!
     //! \brief FFmpeg frame to be used when
     //! decoding frames
     //!
@@ -184,19 +178,6 @@ protected:
     //! \sa _buffer_lock
     //!
     void ffmpeg_open_decoder();
-
-    //!
-    //! \brief Open a colour space (pixel format)
-    //! converter in case colour space of source
-    //! video is different from what the caller
-    //! wants, after successfully opening the
-    //! video decoder
-    //! \throw VideoSourceError with a detailed
-    //! message if this step fails for any reason
-    //! \sa ffmpeg_open_decoder
-    //! \sa _colour
-    //!
-    void ffmpeg_open_converter();
 
     //!
     //! \brief Allocate all buffers and memory

@@ -26,7 +26,6 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     , _use_refcount(use_refcount)
     , _avframe_original(nullptr)
     , _avframe_processed(nullptr)
-    , _sws_context(nullptr)
     , _daemon(nullptr)
 {
     int ret = 0;
@@ -36,7 +35,6 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
 
     ffmpeg_open_source();
     ffmpeg_open_decoder();
-    ffmpeg_open_converter();
     ffmpeg_allocate_buffers();
 
     _daemon = new gg::BroadcastDaemon(this);
@@ -48,8 +46,6 @@ VideoSourceFFmpeg::~VideoSourceFFmpeg()
 {
     delete _daemon;
 
-    if (_sws_context != nullptr)
-        sws_freeContext(_sws_context);
     avcodec_close(_avformat_context->streams[_avstream_idx]->codec);
     avformat_close_input(&_avformat_context);
     av_frame_free(&_avframe_original);
@@ -108,22 +104,8 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
 
     // need to convert pixel format?
     AVFrame * avframe_ptr = nullptr;
-    if (_sws_context != nullptr)
-    {
-        ret = sws_scale(_sws_context,
-                        _avframe_original->data, _avframe_original->linesize,
-                        0, _avformat_context->streams[_avstream_idx]->codec->height,
-                        _avframe_processed->data, _avframe_processed->linesize
-                        );
-        if (ret <= 0)
-            return false;
-
-        avframe_ptr = _avframe_processed;
-    }
-    else
-    {
-        avframe_ptr = _avframe_original;
-    }
+    // TODO _avframe_original => _avframe_processed PIPELINE
+    avframe_ptr = _avframe_processed; // TODO
 
     // get non-aligned data from decoded frame
     av_image_copy(_data_buffer, _data_buffer_linesizes,
@@ -236,59 +218,35 @@ void VideoSourceFFmpeg::ffmpeg_open_decoder()
 }
 
 
-void VideoSourceFFmpeg::ffmpeg_open_converter()
-{
-    AVPixelFormat target_avpixel_format = get_ffmpeg_pixel_format(_colour);
-    int sws_flags = 0;
-
-    if (_avformat_context->streams[_avstream_idx]->codec->pix_fmt != target_avpixel_format)
-    {
-        _sws_context = sws_getContext(
-                    _avformat_context->streams[_avstream_idx]->codec->width,
-                    _avformat_context->streams[_avstream_idx]->codec->height,
-                    _avformat_context->streams[_avstream_idx]->codec->pix_fmt,
-                    _avformat_context->streams[_avstream_idx]->codec->width,
-                    _avformat_context->streams[_avstream_idx]->codec->height,
-                    target_avpixel_format,
-                    sws_flags, nullptr, nullptr, nullptr);
-        if (_sws_context == nullptr)
-            throw VideoSourceError("Could not allocate Sws context");
-    }
-}
-
-
 void VideoSourceFFmpeg::ffmpeg_allocate_buffers()
 {
     int ret = 0;
     std::string error_msg = "";
 
-    if (_sws_context != nullptr)
+    // allocate conversion frame
+    _avframe_processed = av_frame_alloc();
+    if (_avframe_processed == nullptr)
+        throw VideoSourceError("Could not allocate conversion frame");
+    _avframe_processed->format = get_ffmpeg_pixel_format(_colour);
+    _avframe_processed->width  = _avformat_context->streams[_avstream_idx]->codec->width;
+    _avframe_processed->height = _avformat_context->streams[_avstream_idx]->codec->height;
+    int pixel_depth = 0;
+    try
     {
-        // allocate conversion frame
-        _avframe_processed = av_frame_alloc();
-        if (_avframe_processed == nullptr)
-            throw VideoSourceError("Could not allocate conversion frame");
-        _avframe_processed->format = get_ffmpeg_pixel_format(_colour);
-        _avframe_processed->width  = _avformat_context->streams[_avstream_idx]->codec->width;
-        _avframe_processed->height = _avformat_context->streams[_avstream_idx]->codec->height;
-        int pixel_depth = 0;
-        try
-        {
-            pixel_depth = VideoFrame::required_pixel_length(_colour);
-        }
-        catch (BasicException & e)
-        {
-            throw VideoSourceError(e.what());
-        }
+        pixel_depth = VideoFrame::required_pixel_length(_colour);
+    }
+    catch (BasicException & e)
+    {
+        throw VideoSourceError(e.what());
+    }
 
-        // allocate actual conversion buffer
-        ret = av_frame_get_buffer(_avframe_processed, pixel_depth);
-        if (ret < 0)
-        {
-            error_msg.append("Could not allocate conversion buffer")
-                     .append(get_ffmpeg_error_desc(ret));
-            throw VideoSourceError(error_msg);
-        }
+    // allocate actual conversion buffer
+    ret = av_frame_get_buffer(_avframe_processed, pixel_depth);
+    if (ret < 0)
+    {
+        error_msg.append("Could not allocate conversion buffer")
+                 .append(get_ffmpeg_error_desc(ret));
+        throw VideoSourceError(error_msg);
     }
 
     // decoded image will be put here
