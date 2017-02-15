@@ -189,6 +189,40 @@ protected:
     void ffmpeg_allocate_reading_buffers();
 
     //!
+    //! \brief Reset, if needed, the currently used
+    //! FFmpeg filtering pipeline
+    //! \param x
+    //! \param y
+    //! \param width
+    //! \param height
+    //! \return \c true if pipeline has been reset,
+    //! \c false if no reset necessary, i.e. all
+    //! parameters exactly the same as in currently
+    //! used pipeline
+    //! \throw VideoSourceError with a detailed
+    //! error message if due pipeline resetting fails
+    //! for any reason
+    //!
+    bool ffmpeg_reset_pipeline(int x, int y,
+                               int width, int height);
+
+    //!
+    //! \brief Reallocate, if necessary, FFmpeg
+    //! processing buffers
+    //! \param width
+    //! \param height
+    //! \return \c true if processing buffers have
+    //! been reallocated, \c false if no reallocation
+    //! necessary, i.e. all parameters exactly
+    //! matching currently used buffers
+    //! \throw VideoSourceError with a detailed
+    //! error message if due processing buffer
+    //! reallocation fails for any reason
+    //!
+    bool ffmpeg_realloc_processing_buffers(int width,
+                                           int height);
+
+    //!
     //! \brief Decode current FFmpeg packet of
     //! current FFmpeg frame
     //! \return number of decoded bytes on success,

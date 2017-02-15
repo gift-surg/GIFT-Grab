@@ -267,6 +267,24 @@ void VideoSourceFFmpeg::ffmpeg_allocate_reading_buffers()
 }
 
 
+bool VideoSourceFFmpeg::ffmpeg_reset_pipeline(
+    int x, int y, int width, int height
+)
+{
+    // TODO
+    return false;
+}
+
+
+bool VideoSourceFFmpeg::ffmpeg_realloc_processing_buffers(
+    int width, int height
+)
+{
+    // TODO
+    return false;
+}
+
+
 int VideoSourceFFmpeg::ffmpeg_decode_packet()
 {
     int ret = 0, got_frame = 0;
