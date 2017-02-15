@@ -96,6 +96,12 @@ protected:
     //!
     int _data_buffer_length;
 
+    //!
+    //! \brief Guards the data buffers when reading
+    //! frames or re-/setting cropping
+    //!
+    std::mutex _buffer_lock;
+
 protected:
     //!
     //! \brief Default constructor that should not

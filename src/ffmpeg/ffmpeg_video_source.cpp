@@ -74,6 +74,8 @@ bool VideoSourceFFmpeg::get_frame_dimensions(int & width, int & height)
 
 bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
 {
+    std::lock_guard<std::mutex> buffer_lock_guard(_buffer_lock);
+
     int ret = 0;
 
     // read frame
@@ -148,12 +150,14 @@ double VideoSourceFFmpeg::get_frame_rate()
 
 void VideoSourceFFmpeg::set_sub_frame(int x, int y, int width, int height)
 {
+    std::lock_guard<std::mutex> buffer_lock_guard(_buffer_lock);
     // TODO
 }
 
 
 void VideoSourceFFmpeg::get_full_frame()
 {
+    std::lock_guard<std::mutex> buffer_lock_guard(_buffer_lock);
     // TODO
 }
 
