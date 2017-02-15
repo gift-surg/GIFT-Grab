@@ -111,10 +111,8 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
                   _avframe_processed->height);
 
     // initialise GIFT-Grab frame from flat data
-    frame.init_from_specs(
-            _data_buffer[0], _data_buffer_length,
-            _avformat_context->streams[_avstream_idx]->codec->width,
-            _avformat_context->streams[_avstream_idx]->codec->height);
+    frame.init_from_specs(_data_buffer[0], _data_buffer_length,
+                          _avframe_processed->width, _avframe_processed->height);
     return true;
 }
 
