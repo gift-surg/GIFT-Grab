@@ -130,14 +130,46 @@ double VideoSourceFFmpeg::get_frame_rate()
 void VideoSourceFFmpeg::set_sub_frame(int x, int y, int width, int height)
 {
     std::lock_guard<std::mutex> buffer_lock_guard(_buffer_lock);
-    // TODO
+
+    try
+    {
+        if (ffmpeg_reset_pipeline(x, y, width, height))
+        {
+            if (ffmpeg_realloc_processing_buffers(width, height))
+            {
+                _x = x;
+                _y = y;
+            }
+        }
+    }
+    catch (VideoSourceError & e)
+    {
+        // nop
+    }
 }
 
 
 void VideoSourceFFmpeg::get_full_frame()
 {
     std::lock_guard<std::mutex> buffer_lock_guard(_buffer_lock);
-    // TODO
+
+    try
+    {
+        int width = _avformat_context->streams[_avstream_idx]->codec->width;
+        int height = _avformat_context->streams[_avstream_idx]->codec->height;
+        if (ffmpeg_realloc_processing_buffers(width, height))
+        {
+            if (ffmpeg_reset_pipeline(0, 0, width, height))
+            {
+                _x = 0;
+                _y = 0;
+            }
+        }
+    }
+    catch (VideoSourceError & e)
+    {
+        // nop
+    }
 }
 
 
