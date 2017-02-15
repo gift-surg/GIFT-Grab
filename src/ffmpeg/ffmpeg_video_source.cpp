@@ -35,7 +35,7 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
 
     ffmpeg_open_source();
     ffmpeg_open_decoder();
-    ffmpeg_allocate_buffers();
+    ffmpeg_allocate_reading_buffers();
 
     _daemon = new gg::BroadcastDaemon(this);
     _daemon->start(get_frame_rate());
@@ -213,7 +213,7 @@ void VideoSourceFFmpeg::ffmpeg_open_decoder()
 }
 
 
-void VideoSourceFFmpeg::ffmpeg_allocate_buffers()
+void VideoSourceFFmpeg::ffmpeg_allocate_reading_buffers()
 {
     int ret = 0;
     std::string error_msg = "";

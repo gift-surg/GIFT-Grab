@@ -186,7 +186,7 @@ protected:
     //! \throw VideoSourceError with a detailed
     //! message if this step fails for any reason
     //!
-    void ffmpeg_allocate_buffers();
+    void ffmpeg_allocate_reading_buffers();
 
     //!
     //! \brief Decode current FFmpeg packet of
