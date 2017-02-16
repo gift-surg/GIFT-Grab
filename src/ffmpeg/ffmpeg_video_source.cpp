@@ -35,7 +35,7 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     ffmpeg_alloc_read_buffers();
     int width = _avframe_original->width;
     int height = _avframe_original->height;
-    if (ffmpeg_realloc_processing_buffers(width, height))
+    if (ffmpeg_realloc_proc_buffers(width, height))
         ffmpeg_reset_pipeline(0, 0, width, height);
 
     _daemon = new gg::BroadcastDaemon(this);
@@ -136,7 +136,7 @@ void VideoSourceFFmpeg::set_sub_frame(int x, int y, int width, int height)
     {
         if (ffmpeg_reset_pipeline(x, y, width, height))
         {
-            if (ffmpeg_realloc_processing_buffers(width, height))
+            if (ffmpeg_realloc_proc_buffers(width, height))
             {
                 _x = x;
                 _y = y;
@@ -158,7 +158,7 @@ void VideoSourceFFmpeg::get_full_frame()
     {
         int width = _avformat_context->streams[_avstream_idx]->codec->width;
         int height = _avformat_context->streams[_avstream_idx]->codec->height;
-        if (ffmpeg_realloc_processing_buffers(width, height))
+        if (ffmpeg_realloc_proc_buffers(width, height))
         {
             if (ffmpeg_reset_pipeline(0, 0, width, height))
             {
@@ -283,7 +283,7 @@ bool VideoSourceFFmpeg::ffmpeg_reset_pipeline(
 }
 
 
-bool VideoSourceFFmpeg::ffmpeg_realloc_processing_buffers(
+bool VideoSourceFFmpeg::ffmpeg_realloc_proc_buffers(
     int width, int height
 )
 {

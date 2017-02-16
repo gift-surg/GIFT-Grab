@@ -220,8 +220,7 @@ protected:
     //! error message if due processing buffer
     //! reallocation fails for any reason
     //!
-    bool ffmpeg_realloc_processing_buffers(int width,
-                                           int height);
+    bool ffmpeg_realloc_proc_buffers(int width, int height);
 
     //!
     //! \brief Decode current FFmpeg packet of
