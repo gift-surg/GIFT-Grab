@@ -124,7 +124,7 @@ double VideoSourceFFmpeg::get_frame_rate()
 {
     int num = _avformat_context->streams[_avstream_idx]->avg_frame_rate.num;
     int den = _avformat_context->streams[_avstream_idx]->avg_frame_rate.den;
-    if (num == 0)
+    if (den == 0 or num == 0)
         return 0.0;
     return static_cast<double>(num) / den;
 }
