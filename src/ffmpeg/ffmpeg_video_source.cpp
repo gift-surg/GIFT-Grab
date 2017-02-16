@@ -2,6 +2,9 @@
 extern "C"
 {
 #include <libavutil/imgutils.h>
+#include <libavutil/opt.h>
+#include <libavfilter/buffersrc.h>
+#include <libavfilter/buffersink.h>
 }
 
 
@@ -29,12 +32,13 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     , _daemon(nullptr)
 {
     av_register_all();
+    avfilter_register_all();
 
     ffmpeg_open_source();
     ffmpeg_open_decoder();
     ffmpeg_alloc_read_buffers();
-    int width = _avframe_original->width;
-    int height = _avframe_original->height;
+    int width = _avformat_context->streams[_avstream_idx]->codec->width;
+    int height = _avformat_context->streams[_avstream_idx]->codec->height;
     if (ffmpeg_realloc_proc_buffers(width, height))
         ffmpeg_reset_pipeline(0, 0, width, height);
 
@@ -109,7 +113,28 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
     if (not success)
         return false;
 
-    // TODO _avframe_original => _avframe_processed PIPELINE
+    // push obtained frame down the pipeline
+    ret = av_buffersrc_add_frame(_pipeline_begin,
+                                 _avframe_original);
+    if (ret < 0)
+        return false;
+
+    // pull processed frames from the pipeline
+    while (true)
+    {
+        ret = av_buffersink_get_frame(_pipeline_end, _avframe_processed);
+        if (ret == AVERROR(EAGAIN) or ret == AVERROR_EOF)
+            break;
+        if (ret < 0)
+        {
+            success = false;
+            break;
+        }
+//        av_frame_unref(_avframe_processed); // TODO
+    }
+    av_frame_unref(_avframe_original); // TODO
+    if (not success)
+        return false;
 
     // get non-aligned data from decoded frame
     av_image_copy(_data_buffer, _data_buffer_linesizes,
@@ -273,8 +298,114 @@ bool VideoSourceFFmpeg::ffmpeg_reset_pipeline(
     int x, int y, int width, int height
 )
 {
-    // TODO
-    return false;
+    // TODO some part of pipeline to be initialised only once
+    if (_pipeline_begin != nullptr and
+        _pipeline_end != nullptr)
+    // i.e. modifying existing pipeline
+    {
+        if (x == _x and y == _y and
+            width == _avframe_processed->width and
+            height == _avframe_processed->height)
+            // no need to change anything
+            return false;
+    }
+
+    // sanity checks in case need to (re)set pipeline
+    if (x < 0 or y < 0 or width < 0 or height < 0 or
+        x + width > _avformat_context->streams[_avstream_idx]->codec->width or
+        y + height > _avformat_context->streams[_avstream_idx]->codec->height)
+        throw VideoSourceError("Improper cropping parameters");
+
+    char pipeline_desc[512];
+    int ret = 0;
+    std::string error_msg = "";
+
+    // allocate pipeline elements
+    AVFilterInOut * out = avfilter_inout_alloc();
+    AVFilterInOut * in  = avfilter_inout_alloc();
+    _pipeline = avfilter_graph_alloc();
+    if (out == nullptr or in == nullptr or _pipeline == nullptr)
+    {
+        error_msg.append("Could not allocate FFmpeg pipeline")
+                 .append(get_ffmpeg_error_desc(AVERROR(ENOMEM)));
+        throw VideoSourceError(error_msg);
+    }
+
+    enum AVPixelFormat pix_fmt = get_ffmpeg_pixel_format(_colour);
+    enum AVPixelFormat pix_fmts[] = { pix_fmt, AV_PIX_FMT_NONE }; // TODO
+
+    // initialise pipeline beginning
+    snprintf(pipeline_desc, sizeof(pipeline_desc),
+             "video_size=%dx%d:pix_fmt=%d:time_base=%d/%d:pixel_aspect=%d/%d",
+             _avformat_context->streams[_avstream_idx]->codec->width,
+             _avformat_context->streams[_avstream_idx]->codec->height,
+             _avformat_context->streams[_avstream_idx]->codec->pix_fmt,
+             _avformat_context->streams[_avstream_idx]->time_base.num,
+             _avformat_context->streams[_avstream_idx]->time_base.den,
+             _avformat_context->streams[_avstream_idx]->codec->sample_aspect_ratio.num,
+             _avformat_context->streams[_avstream_idx]->codec->sample_aspect_ratio.den);
+    AVFilter * begin_filter  = avfilter_get_by_name("buffer");
+    ret = avfilter_graph_create_filter(&_pipeline_begin, begin_filter, "in",
+                                       pipeline_desc, nullptr, _pipeline);
+    if (ret < 0)
+        throw VideoSourceError("Could not create buffer source");
+
+    // initialise pipeline end
+    AVFilter * end_filter = avfilter_get_by_name("buffersink");
+    ret = avfilter_graph_create_filter(&_pipeline_end, end_filter, "out",
+                                       nullptr, nullptr, _pipeline);
+    if (ret < 0)
+        throw VideoSourceError("Could not create buffer sink");
+
+    ret = av_opt_set_int_list(_pipeline_end, "pix_fmts", pix_fmts,
+                              AV_PIX_FMT_NONE, AV_OPT_SEARCH_CHILDREN);
+    if (ret < 0)
+        throw VideoSourceError("Could not set colour space");
+
+    // add cropping if necessary
+    if (x > 0 or y > 0 or
+        width < _avformat_context->streams[_avstream_idx]->codec->width or
+        height < _avformat_context->streams[_avstream_idx]->codec->height)
+    {
+        ret = snprintf(pipeline_desc, sizeof(pipeline_desc), "crop=%d:%d:%d:%d,",
+                                           width, height, x, y);
+        if (ret < 0)
+            throw VideoSourceError("Could not compose cropping"
+                                   " filter specs");
+    }
+    // set colour space argument of pipeline
+    ret = snprintf(&pipeline_desc[ret], sizeof(pipeline_desc) - ret,
+                   "format=%d", pix_fmt);
+    if (ret < 0)
+        throw VideoSourceError("Could not compose colour space"
+                               " filter specs");
+
+    // connect pipeline beginning and end
+    out->name = av_strdup("in");
+    out->filter_ctx = _pipeline_begin;
+    out->pad_idx = 0;
+    out->next = nullptr;
+
+    in->name = av_strdup("out");
+    in->filter_ctx = _pipeline_end;
+    in->pad_idx = 0;
+    in->next = nullptr;
+
+    // compose pipeline
+    ret = avfilter_graph_parse_ptr(_pipeline, pipeline_desc, &in, &out, nullptr);
+    if (ret < 0)
+        throw VideoSourceError("Could not parse filter graph");
+
+    // configure pipeline
+    ret = avfilter_graph_config(_pipeline, nullptr);
+    if (ret < 0)
+        throw VideoSourceError("Could not config filter graph");
+
+    // free allocated input and output
+    avfilter_inout_free(&in);
+    avfilter_inout_free(&out);
+
+    return true;
 }
 
 

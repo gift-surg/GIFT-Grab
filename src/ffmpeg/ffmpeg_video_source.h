@@ -3,6 +3,7 @@
 extern "C"
 {
 #include <libavformat/avformat.h>
+#include <libavfilter/avfilter.h>
 }
 
 
@@ -108,6 +109,24 @@ protected:
     //! frames or re-/setting cropping
     //!
     std::mutex _buffer_lock;
+
+    //!
+    //! \brief Beginning of FFmpeg processing
+    //! pipeline, original frames pushed here
+    //! for processing
+    //!
+    AVFilterContext * _pipeline_begin;
+
+    //!
+    //! \brief End of FFmpeg processing pipeline,
+    //! processed frames retrieved here
+    //!
+    AVFilterContext * _pipeline_end;
+
+    //!
+    //! \brief FFmpeg processing pipeline
+    //!
+    AVFilterGraph * _pipeline;
 
 protected:
     //!
