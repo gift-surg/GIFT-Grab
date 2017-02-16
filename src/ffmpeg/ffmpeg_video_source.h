@@ -190,7 +190,8 @@ protected:
 
     //!
     //! \brief Reset, if needed, the currently used
-    //! FFmpeg filtering pipeline
+    //! FFmpeg filtering pipeline. If no pipeline has
+    //! been initialised, initialise one.
     //! \param x
     //! \param y
     //! \param width

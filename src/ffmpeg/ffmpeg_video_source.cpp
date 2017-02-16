@@ -28,14 +28,15 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     , _avframe_processed(nullptr)
     , _daemon(nullptr)
 {
-    int ret = 0;
-    std::string error_msg = "";
-
     av_register_all();
 
     ffmpeg_open_source();
     ffmpeg_open_decoder();
     ffmpeg_allocate_reading_buffers();
+    int width = _avframe_original->width;
+    int height = _avframe_original->height;
+    if (ffmpeg_realloc_processing_buffers(width, height))
+        ffmpeg_reset_pipeline(0, 0, width, height);
 
     _daemon = new gg::BroadcastDaemon(this);
     _daemon->start(get_frame_rate());
