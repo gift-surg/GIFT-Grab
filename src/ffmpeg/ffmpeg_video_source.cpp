@@ -260,19 +260,6 @@ void VideoSourceFFmpeg::ffmpeg_alloc_read_buffers()
     av_init_packet(&_avpacket);
     _avpacket.data = nullptr;
     _avpacket.size = 0;
-
-    // allocate actual data buffer
-    ret = av_image_alloc(_data_buffer, _data_buffer_linesizes,
-                         _avformat_context->streams[_avstream_idx]->codec->width,
-                         _avformat_context->streams[_avstream_idx]->codec->height,
-                         get_ffmpeg_pixel_format(_colour), 1);
-    if (ret < 0)
-    {
-        error_msg.append("Could not allocate raw video buffer")
-                 .append(get_ffmpeg_error_desc(ret));
-        throw VideoSourceError(error_msg);
-    }
-    _data_buffer_length = ret;
 }
 
 
@@ -289,41 +276,66 @@ bool VideoSourceFFmpeg::ffmpeg_realloc_proc_buffers(
     int width, int height
 )
 {
+    int ret = 0;
     std::string error_msg = "";
-    if (width > 0 and height > 0 and
-        _avframe_processed->width != width and
-        _avframe_processed->height != height)
+
+    if (width <= 0 or height <= 0)
+        throw VideoSourceError("Frame width and height"
+                               " must be positive");
+
+    if (_avframe_processed != nullptr)
     {
-        if (_avframe_processed != nullptr)
-            av_frame_free(&_avframe_processed);
-        _avframe_processed = av_frame_alloc();
-        if (_avframe_processed == nullptr)
-            throw VideoSourceError("Could not reading frame");
-        _avframe_processed->format = get_ffmpeg_pixel_format(_colour);
-        _avframe_processed->width  = width;
-        _avframe_processed->height = height;
-        int pixel_depth = 0;
-        try
-        {
-            pixel_depth = VideoFrame::required_pixel_length(_colour);
-        }
-        catch (BasicException & e)
-        {
-            throw VideoSourceError(e.what());
-        }
-
-        int ret = av_frame_get_buffer(_avframe_processed, pixel_depth);
-        if (ret < 0)
-        {
-            error_msg.append("Could not allocate conversion buffer")
-                     .append(get_ffmpeg_error_desc(ret));
-            throw VideoSourceError(error_msg);
-        }
-
-        return true;
+        if (_avframe_processed->width == width and
+            _avframe_processed->height == height)
+            return false;
+        av_frame_free(&_avframe_processed);
     }
-    else
-        return false;
+
+    _avframe_processed = av_frame_alloc();
+    if (_avframe_processed == nullptr)
+        throw VideoSourceError("Could not allocate processing frame");
+    AVPixelFormat pix_fmt = get_ffmpeg_pixel_format(_colour);
+    _avframe_processed->format = pix_fmt;
+    _avframe_processed->width  = width;
+    _avframe_processed->height = height;
+    int pixel_depth = 0;
+    try
+    {
+        pixel_depth = VideoFrame::required_pixel_length(_colour);
+    }
+    catch (BasicException & e)
+    {
+        throw VideoSourceError(e.what());
+    }
+
+    ret = av_frame_get_buffer(_avframe_processed, pixel_depth);
+    if (ret < 0)
+    {
+        error_msg.append("Could not allocate processing buffer")
+                 .append(get_ffmpeg_error_desc(ret));
+        throw VideoSourceError(error_msg);
+    }
+
+    // allocate actual data buffer
+    if (_data_buffer[0] != nullptr)
+    {
+        avfree(_data_buffer[0]);
+        _data_buffer_length = 0;
+    }
+
+    ret = av_image_alloc(_data_buffer, _data_buffer_linesizes,
+                         _avframe_processed->width,
+                         _avframe_processed->height,
+                         pix_fmt, 1);
+    if (ret < 0)
+    {
+        error_msg.append("Could not allocate raw processing buffer")
+                 .append(get_ffmpeg_error_desc(ret));
+        throw VideoSourceError(error_msg);
+    }
+    _data_buffer_length = ret;
+
+    return true;
 }
 
 
