@@ -186,7 +186,7 @@ protected:
     //! \throw VideoSourceError with a detailed
     //! message if this step fails for any reason
     //!
-    void ffmpeg_allocate_reading_buffers();
+    void ffmpeg_alloc_read_buffers();
 
     //!
     //! \brief Reset, if needed, the currently used

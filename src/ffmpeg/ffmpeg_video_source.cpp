@@ -32,7 +32,7 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
 
     ffmpeg_open_source();
     ffmpeg_open_decoder();
-    ffmpeg_allocate_reading_buffers();
+    ffmpeg_alloc_read_buffers();
     int width = _avframe_original->width;
     int height = _avframe_original->height;
     if (ffmpeg_realloc_processing_buffers(width, height))
@@ -244,7 +244,7 @@ void VideoSourceFFmpeg::ffmpeg_open_decoder()
 }
 
 
-void VideoSourceFFmpeg::ffmpeg_allocate_reading_buffers()
+void VideoSourceFFmpeg::ffmpeg_alloc_read_buffers()
 {
     int ret = 0;
     std::string error_msg = "";
