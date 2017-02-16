@@ -319,7 +319,7 @@ bool VideoSourceFFmpeg::ffmpeg_realloc_proc_buffers(
     // allocate actual data buffer
     if (_data_buffer[0] != nullptr)
     {
-        avfree(_data_buffer[0]);
+        av_free(_data_buffer[0]);
         _data_buffer_length = 0;
     }
 
