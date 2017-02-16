@@ -87,7 +87,9 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
     AVPacket orig_pkt = _avpacket;
     do
     {
-        ret = ffmpeg_decode_packet();
+        ret = ffmpeg_decode_packet(_avpacket,
+                                   _avframe_original,
+                                   _use_refcount);
         if (ret < 0)
         {
             success = false;
@@ -325,24 +327,26 @@ bool VideoSourceFFmpeg::ffmpeg_realloc_proc_buffers(
 }
 
 
-int VideoSourceFFmpeg::ffmpeg_decode_packet()
+int VideoSourceFFmpeg::ffmpeg_decode_packet(AVPacket & avpacket,
+                                            AVFrame * avframe,
+                                            bool use_refcount)
 {
     int ret = 0, got_frame = 0;
     int decoded = 0;
-    if (_avpacket.stream_index == _avstream_idx)
+    if (avpacket.stream_index == _avstream_idx)
     {
         /* decode video frame */
         ret = avcodec_decode_video2(
                     _avformat_context->streams[_avstream_idx]->codec,
-                    _avframe_original, &got_frame, &_avpacket);
+                    avframe, &got_frame, &avpacket);
         if (ret < 0)
             return ret;
 
         if (got_frame)
         {
-            if (_avframe_original->width != _avformat_context->streams[_avstream_idx]->codec->width
-                or _avframe_original->height != _avformat_context->streams[_avstream_idx]->codec->height
-                or _avframe_original->format != _avformat_context->streams[_avstream_idx]->codec->pix_fmt)
+            if (avframe->width != _avformat_context->streams[_avstream_idx]->codec->width
+                or avframe->height != _avformat_context->streams[_avstream_idx]->codec->height
+                or avframe->format != _avformat_context->streams[_avstream_idx]->codec->pix_fmt)
                 return -1;
             decoded = ret;
         }
@@ -350,8 +354,8 @@ int VideoSourceFFmpeg::ffmpeg_decode_packet()
 
     /* If we use frame reference counting, we own the data and need
      * to de-reference it when we don't use it anymore */
-    if (got_frame and _use_refcount)
-        av_frame_unref(_avframe_original);
+    if (got_frame and use_refcount)
+        av_frame_unref(avframe);
 
     return decoded;
 }

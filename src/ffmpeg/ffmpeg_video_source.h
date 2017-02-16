@@ -223,12 +223,15 @@ protected:
     bool ffmpeg_realloc_proc_buffers(int width, int height);
 
     //!
-    //! \brief Decode current FFmpeg packet of
-    //! current FFmpeg frame
+    //! \brief Decode \c avpacket into \c avframe
+    //! \param avpacket
+    //! \param avframe
+    //! \param use_refcount
     //! \return number of decoded bytes on success,
     //! a negative value otherwise
     //!
-    int ffmpeg_decode_packet();
+    int ffmpeg_decode_packet(AVPacket & avpacket, AVFrame * avframe,
+                             bool use_refcount);
 
     //!
     //! \brief Create a standard error description
