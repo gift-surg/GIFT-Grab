@@ -316,6 +316,14 @@ bool VideoSourceFFmpeg::ffmpeg_reset_pipeline(
             return false;
     }
 
+    if (_pipeline != nullptr)
+    {
+        avfilter_graph_free(&_pipeline);
+        _pipeline = nullptr;
+        _pipeline_begin = nullptr; // TODO
+        _pipeline_end = nullptr; // TODO
+    }
+
     // sanity checks in case need to (re)set pipeline
     if (x < 0 or y < 0 or width < 0 or height < 0 or
         x + width > _avformat_context->streams[_avstream_idx]->codec->width or
