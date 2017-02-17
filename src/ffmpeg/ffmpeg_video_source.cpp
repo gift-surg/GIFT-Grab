@@ -159,6 +159,8 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
 
 double VideoSourceFFmpeg::get_frame_rate()
 {
+    std::lock_guard<std::mutex> buffer_lock_guard(_buffer_lock);
+
     int num = _avformat_context->streams[_avstream_idx]->avg_frame_rate.num;
     int den = _avformat_context->streams[_avstream_idx]->avg_frame_rate.den;
     if (den == 0 or num == 0)
