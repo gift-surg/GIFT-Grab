@@ -1,5 +1,5 @@
 # currently a very limited test suite, see issue #153
-if(USE_NUMPY AND USE_BGRA AND USE_OPENCV AND USE_XVID)
+if(USE_NUMPY AND USE_BGRA AND USE_XVID)
     FILE(COPY
         ${CMAKE_SOURCE_DIR}/tests/pipeline/test_observer.py
         ${CMAKE_SOURCE_DIR}/tests/pipeline/conftest.py
@@ -7,7 +7,7 @@ if(USE_NUMPY AND USE_BGRA AND USE_OPENCV AND USE_XVID)
     )
 
     SET(FILEPATH ${CMAKE_SOURCE_DIR}/tests/pipeline/data/video_15frames_30fps.avi)
-    SET(NAME_TEST Test_Pipeline_ObserverPattern_NumPy_OpenCV_BGRA)
+    SET(NAME_TEST Test_Pipeline_ObserverPattern_NumPy_BGRA)
     ADD_TEST(NAME ${NAME_TEST}
         COMMAND py.test --filepath=${FILEPATH} test_observer.py
     )
@@ -17,4 +17,4 @@ if(USE_NUMPY AND USE_BGRA AND USE_OPENCV AND USE_XVID)
     SET_TESTS_PROPERTIES(${TESTS_LIST}
         PROPERTIES ENVIRONMENT "PYTHONPATH=${PYTHONPATH}"
     )
-endif(USE_NUMPY AND USE_BGRA AND USE_OPENCV AND USE_XVID)
+endif(USE_NUMPY AND USE_BGRA AND USE_XVID)
