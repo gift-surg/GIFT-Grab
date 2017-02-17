@@ -29,6 +29,9 @@ VideoSourceFFmpeg::VideoSourceFFmpeg(std::string source_path,
     , _use_refcount(use_refcount)
     , _avframe_original(nullptr)
     , _avframe_processed(nullptr)
+    , _pipeline(nullptr)
+    , _pipeline_begin(nullptr)
+    , _pipeline_end(nullptr)
     , _daemon(nullptr)
 {
     av_register_all();
@@ -51,6 +54,9 @@ VideoSourceFFmpeg::~VideoSourceFFmpeg()
 {
     delete _daemon;
 
+    if (_pipeline != nullptr)
+        avfilter_graph_free(&_pipeline);
+    // TODO: what about _pipeline_begin and _pipeline_end ?
     if (_avformat_context != nullptr)
     {
         avcodec_close(_avformat_context->streams[_avstream_idx]->codec);
