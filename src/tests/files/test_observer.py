@@ -108,7 +108,7 @@ def test_invalid_filepath_throws_exception(colour_space):
 
 @mark.observer_pattern
 @mark.usefixtures('peri_test')
-def test_get_sub_frame(
+def test_set_sub_frame(
     filepath, colour_space, frame_width, frame_height
 ):
     global factory
