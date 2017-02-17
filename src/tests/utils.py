@@ -70,6 +70,18 @@ class FrameRateTimer(pgg.IObserver):
             return 0
 
 
+class VideoFrameDesc:
+    """Descriptor that memorises the specs of a
+    given video frame, without copying its data.
+    """
+
+    def __init__(self, frame):
+        self.cols = frame.cols()
+        self.rows = frame.rows()
+        self.colour = frame.colour()
+        self.data_length = frame.data_length()
+
+
 class FileChecker(pgg.IObserver):
     """Descendant of GIFT-Grab's `Observer`, which
     listens to an `Observable` reading video frames
@@ -80,7 +92,7 @@ class FileChecker(pgg.IObserver):
     def __init__(self, file_reader):
         super(FileChecker, self).__init__()
         self._file_reader = file_reader
-        self._frames = []
+        self._frame_descs = []
 
     def attach(self):
         if self._file_reader is not None:
@@ -91,14 +103,14 @@ class FileChecker(pgg.IObserver):
             self._file_reader.detach(self)
 
     def update(self, frame):
-        self._frames.append(frame)
+        self._frame_descs.append(VideoFrameDesc(frame))
 
     def assert_data(self):
-        return len(self._frames) > 0
+        return len(self._frame_descs) > 0
 
     def assert_colour(self, colour):
-        for frame in self._frames:
-            if frame.colour() != colour:
+        for frame_desc in self._frame_descs:
+            if frame_desc.colour != colour:
                 return False
         return True
 
@@ -110,9 +122,9 @@ class FileChecker(pgg.IObserver):
 
     def assert_frame_dimensions(self,
                                 frame_width, frame_height):
-        for frame in self._frames:
-            if frame.cols() != frame_width or\
-               frame.rows() != frame_height:
+        for frame_desc in self._frame_descs:
+            if frame_desc.cols != frame_width or\
+               frame_desc.rows != frame_height:
                 return False
         return True
 
@@ -122,8 +134,8 @@ class FileChecker(pgg.IObserver):
             colour, frame_width, frame_height
             )
 
-        for frame in self._frames:
-            data_length = frame.data_length()
+        for frame_desc in self._frame_descs:
+            data_length = frame_desc.data_length
             if data_length != exp_data_length:
                 return False
         return True
