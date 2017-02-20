@@ -125,21 +125,9 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
     if (ret < 0)
         return false;
 
-    // pull processed frames from the pipeline
-    while (true)
-    {
-        ret = av_buffersink_get_frame(_pipeline_end, _avframe_processed);
-        if (ret == AVERROR(EAGAIN) or ret == AVERROR_EOF)
-            break;
-        if (ret < 0)
-        {
-            success = false;
-            break;
-        }
-//        av_frame_unref(_avframe_processed); // TODO
-    }
-    av_frame_unref(_avframe_original); // TODO
-    if (not success)
+    // pull processed frame from the pipeline
+    ret = av_buffersink_get_frame(_pipeline_end, _avframe_processed);
+    if (ret == AVERROR(EAGAIN) or ret == AVERROR_EOF or ret < 0)
         return false;
 
     // get non-aligned data from decoded frame
@@ -383,8 +371,8 @@ bool VideoSourceFFmpeg::ffmpeg_reset_pipeline(
         width < _avformat_context->streams[_avstream_idx]->codec->width or
         height < _avformat_context->streams[_avstream_idx]->codec->height)
     {
-        ret = snprintf(pipeline_desc, sizeof(pipeline_desc), "crop=%d:%d:%d:%d,",
-                                           width, height, x, y);
+        ret = snprintf(pipeline_desc, sizeof(pipeline_desc),
+                       "crop=%d:%d:%d:%d,", width, height, x, y);
         if (ret < 0)
             throw VideoSourceError("Could not compose cropping"
                                    " filter specs");
