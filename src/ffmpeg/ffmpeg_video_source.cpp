@@ -321,9 +321,19 @@ bool VideoSourceFFmpeg::ffmpeg_reset_pipeline(
     // allocate pipeline elements
     AVFilterInOut * out = avfilter_inout_alloc();
     AVFilterInOut * in  = avfilter_inout_alloc();
-    pipeline = avfilter_graph_alloc();
-    if (out == nullptr or in == nullptr or pipeline == nullptr)
+    if (out == nullptr or in == nullptr)
     {
+        error_msg.append("Could not allocate FFmpeg pipeline IO points")
+                 .append(get_ffmpeg_error_desc(AVERROR(ENOMEM)));
+        throw VideoSourceError(error_msg);
+    }
+
+    pipeline = avfilter_graph_alloc();
+    if (pipeline == nullptr)
+    {
+        // free allocated input and output
+        avfilter_inout_free(&in);
+        avfilter_inout_free(&out);
         error_msg.append("Could not allocate FFmpeg pipeline")
                  .append(get_ffmpeg_error_desc(AVERROR(ENOMEM)));
         throw VideoSourceError(error_msg);
@@ -346,19 +356,37 @@ bool VideoSourceFFmpeg::ffmpeg_reset_pipeline(
     ret = avfilter_graph_create_filter(&pipeline_begin, begin_filter, "in",
                                        pipeline_desc, nullptr, pipeline);
     if (ret < 0)
+    {
+        // free allocated input and output
+        avfilter_inout_free(&in);
+        avfilter_inout_free(&out);
+        avfilter_graph_free(&pipeline);
         throw VideoSourceError("Could not create buffer source");
+    }
 
     // initialise pipeline end
     AVFilter * end_filter = avfilter_get_by_name("buffersink");
     ret = avfilter_graph_create_filter(&pipeline_end, end_filter, "out",
                                        nullptr, nullptr, pipeline);
     if (ret < 0)
+    {
+        // free allocated input and output
+        avfilter_inout_free(&in);
+        avfilter_inout_free(&out);
+        avfilter_graph_free(&pipeline);
         throw VideoSourceError("Could not create buffer sink");
+    }
 
     ret = av_opt_set_int_list(pipeline_end, "pix_fmts", pix_fmts,
                               AV_PIX_FMT_NONE, AV_OPT_SEARCH_CHILDREN);
     if (ret < 0)
+    {
+        // free allocated input and output
+        avfilter_inout_free(&in);
+        avfilter_inout_free(&out);
+        avfilter_graph_free(&pipeline);
         throw VideoSourceError("Could not set colour space");
+    }
 
     // add cropping if necessary
     if (x > 0 or y > 0 or
@@ -368,15 +396,27 @@ bool VideoSourceFFmpeg::ffmpeg_reset_pipeline(
         ret = snprintf(pipeline_desc, sizeof(pipeline_desc),
                        "crop=%d:%d:%d:%d,", width, height, x, y);
         if (ret < 0)
+        {
+            // free allocated input and output
+            avfilter_inout_free(&in);
+            avfilter_inout_free(&out);
+            avfilter_graph_free(&pipeline);
             throw VideoSourceError("Could not compose cropping"
                                    " filter specs");
+        }
     }
     // set colour space argument of pipeline
     ret = snprintf(&pipeline_desc[ret], sizeof(pipeline_desc) - ret,
                    "format=%d", pix_fmt);
     if (ret < 0)
+    {
+        // free allocated input and output
+        avfilter_inout_free(&in);
+        avfilter_inout_free(&out);
+        avfilter_graph_free(&pipeline);
         throw VideoSourceError("Could not compose colour space"
                                " filter specs");
+    }
 
     // connect pipeline beginning and end
     out->name = av_strdup("in");
@@ -392,12 +432,24 @@ bool VideoSourceFFmpeg::ffmpeg_reset_pipeline(
     // compose pipeline
     ret = avfilter_graph_parse_ptr(pipeline, pipeline_desc, &in, &out, nullptr);
     if (ret < 0)
+    {
+        // free allocated input and output
+        avfilter_inout_free(&in);
+        avfilter_inout_free(&out);
+        avfilter_graph_free(&pipeline);
         throw VideoSourceError("Could not parse filter graph");
+    }
 
     // configure pipeline
     ret = avfilter_graph_config(pipeline, nullptr);
     if (ret < 0)
+    {
+        // free allocated input and output
+        avfilter_inout_free(&in);
+        avfilter_inout_free(&out);
+        avfilter_graph_free(&pipeline);
         throw VideoSourceError("Could not config filter graph");
+    }
 
     // free allocated input and output
     avfilter_inout_free(&in);
