@@ -68,7 +68,7 @@ void BroadcastDaemon::run(float sleep_duration_ms)
     int cols = 1920, rows = 1080; // default value, in case
                                   // something goes wrong
     _source->get_frame_dimensions(cols, rows);
-    VideoFrame fill_frame(_source->get_colour(), cols, rows);
+    VideoFrame * fill_frame = new VideoFrame(_source->get_colour(), cols, rows);
     std::chrono::microseconds inter_frame_duration(
                 static_cast<int>(1000 * sleep_duration_ms));
     while (_running)
@@ -77,7 +77,15 @@ void BroadcastDaemon::run(float sleep_duration_ms)
         if (_source->get_frame(frame))
             _source->notify(frame);
         else
-            _source->notify(fill_frame);
+        {
+            _source->get_frame_dimensions(cols, rows);
+            if (cols != fill_frame->cols() or rows != fill_frame->rows())
+            {
+                delete fill_frame;
+                fill_frame = new VideoFrame(_source->get_colour(), cols, rows);
+            }
+            _source->notify(*fill_frame);
+        }
         auto end = std::chrono::high_resolution_clock::now();
         std::chrono::microseconds processing_duration =
                 std::chrono::duration_cast<std::chrono::microseconds>(
@@ -87,6 +95,7 @@ void BroadcastDaemon::run(float sleep_duration_ms)
         if (sleep_duration.count() > 0)
             std::this_thread::sleep_for(sleep_duration);
     }
+    delete fill_frame;
 }
 
 BroadcastDaemon::BroadcastDaemon()
