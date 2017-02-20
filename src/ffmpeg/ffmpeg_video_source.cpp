@@ -56,7 +56,6 @@ VideoSourceFFmpeg::~VideoSourceFFmpeg()
 
     if (_pipeline != nullptr)
         avfilter_graph_free(&_pipeline);
-    // TODO: what about _pipeline_begin and _pipeline_end ?
     if (_avformat_context != nullptr)
     {
         avcodec_close(_avformat_context->streams[_avstream_idx]->codec);
@@ -294,7 +293,6 @@ bool VideoSourceFFmpeg::ffmpeg_reset_pipeline(
     int x, int y, int width, int height
 )
 {
-    // TODO some part of pipeline to be initialised only once
     if (_pipeline_begin != nullptr and
         _pipeline_end != nullptr)
     // i.e. modifying existing pipeline
@@ -310,8 +308,8 @@ bool VideoSourceFFmpeg::ffmpeg_reset_pipeline(
     {
         avfilter_graph_free(&_pipeline);
         _pipeline = nullptr;
-        _pipeline_begin = nullptr; // TODO
-        _pipeline_end = nullptr; // TODO
+        _pipeline_begin = nullptr;
+        _pipeline_end = nullptr;
     }
 
     // sanity checks in case need to (re)set pipeline
@@ -336,7 +334,7 @@ bool VideoSourceFFmpeg::ffmpeg_reset_pipeline(
     }
 
     enum AVPixelFormat pix_fmt = get_ffmpeg_pixel_format(_colour);
-    enum AVPixelFormat pix_fmts[] = { pix_fmt, AV_PIX_FMT_NONE }; // TODO
+    enum AVPixelFormat pix_fmts[] = { pix_fmt, AV_PIX_FMT_NONE };
 
     // initialise pipeline beginning
     snprintf(pipeline_desc, sizeof(pipeline_desc),
