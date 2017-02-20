@@ -304,6 +304,12 @@ bool VideoSourceFFmpeg::ffmpeg_reset_pipeline(
             return false;
     }
 
+    // sanity checks in case need to (re)set pipeline
+    if (x < 0 or y < 0 or width < 0 or height < 0 or
+        x + width > _avformat_context->streams[_avstream_idx]->codec->width or
+        y + height > _avformat_context->streams[_avstream_idx]->codec->height)
+        throw VideoSourceError("Improper cropping parameters");
+
     if (_pipeline != nullptr)
     {
         avfilter_graph_free(&_pipeline);
@@ -311,12 +317,6 @@ bool VideoSourceFFmpeg::ffmpeg_reset_pipeline(
         _pipeline_begin = nullptr;
         _pipeline_end = nullptr;
     }
-
-    // sanity checks in case need to (re)set pipeline
-    if (x < 0 or y < 0 or width < 0 or height < 0 or
-        x + width > _avformat_context->streams[_avstream_idx]->codec->width or
-        y + height > _avformat_context->streams[_avstream_idx]->codec->height)
-        throw VideoSourceError("Improper cropping parameters");
 
     char pipeline_desc[512];
     int ret = 0;
