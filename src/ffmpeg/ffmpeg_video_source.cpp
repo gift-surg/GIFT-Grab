@@ -310,13 +310,9 @@ bool VideoSourceFFmpeg::ffmpeg_reset_pipeline(
         y + height > _avformat_context->streams[_avstream_idx]->codec->height)
         throw VideoSourceError("Improper cropping parameters");
 
-    if (_pipeline != nullptr)
-    {
-        avfilter_graph_free(&_pipeline);
-        _pipeline = nullptr;
-        _pipeline_begin = nullptr;
-        _pipeline_end = nullptr;
-    }
+    AVFilterContext * pipeline_begin = nullptr;
+    AVFilterContext * pipeline_end = nullptr;
+    AVFilterGraph * pipeline = nullptr;
 
     char pipeline_desc[512];
     int ret = 0;
@@ -325,8 +321,8 @@ bool VideoSourceFFmpeg::ffmpeg_reset_pipeline(
     // allocate pipeline elements
     AVFilterInOut * out = avfilter_inout_alloc();
     AVFilterInOut * in  = avfilter_inout_alloc();
-    _pipeline = avfilter_graph_alloc();
-    if (out == nullptr or in == nullptr or _pipeline == nullptr)
+    pipeline = avfilter_graph_alloc();
+    if (out == nullptr or in == nullptr or pipeline == nullptr)
     {
         error_msg.append("Could not allocate FFmpeg pipeline")
                  .append(get_ffmpeg_error_desc(AVERROR(ENOMEM)));
@@ -347,19 +343,19 @@ bool VideoSourceFFmpeg::ffmpeg_reset_pipeline(
              _avformat_context->streams[_avstream_idx]->codec->sample_aspect_ratio.num,
              _avformat_context->streams[_avstream_idx]->codec->sample_aspect_ratio.den);
     AVFilter * begin_filter  = avfilter_get_by_name("buffer");
-    ret = avfilter_graph_create_filter(&_pipeline_begin, begin_filter, "in",
-                                       pipeline_desc, nullptr, _pipeline);
+    ret = avfilter_graph_create_filter(&pipeline_begin, begin_filter, "in",
+                                       pipeline_desc, nullptr, pipeline);
     if (ret < 0)
         throw VideoSourceError("Could not create buffer source");
 
     // initialise pipeline end
     AVFilter * end_filter = avfilter_get_by_name("buffersink");
-    ret = avfilter_graph_create_filter(&_pipeline_end, end_filter, "out",
-                                       nullptr, nullptr, _pipeline);
+    ret = avfilter_graph_create_filter(&pipeline_end, end_filter, "out",
+                                       nullptr, nullptr, pipeline);
     if (ret < 0)
         throw VideoSourceError("Could not create buffer sink");
 
-    ret = av_opt_set_int_list(_pipeline_end, "pix_fmts", pix_fmts,
+    ret = av_opt_set_int_list(pipeline_end, "pix_fmts", pix_fmts,
                               AV_PIX_FMT_NONE, AV_OPT_SEARCH_CHILDREN);
     if (ret < 0)
         throw VideoSourceError("Could not set colour space");
@@ -384,22 +380,22 @@ bool VideoSourceFFmpeg::ffmpeg_reset_pipeline(
 
     // connect pipeline beginning and end
     out->name = av_strdup("in");
-    out->filter_ctx = _pipeline_begin;
+    out->filter_ctx = pipeline_begin;
     out->pad_idx = 0;
     out->next = nullptr;
 
     in->name = av_strdup("out");
-    in->filter_ctx = _pipeline_end;
+    in->filter_ctx = pipeline_end;
     in->pad_idx = 0;
     in->next = nullptr;
 
     // compose pipeline
-    ret = avfilter_graph_parse_ptr(_pipeline, pipeline_desc, &in, &out, nullptr);
+    ret = avfilter_graph_parse_ptr(pipeline, pipeline_desc, &in, &out, nullptr);
     if (ret < 0)
         throw VideoSourceError("Could not parse filter graph");
 
     // configure pipeline
-    ret = avfilter_graph_config(_pipeline, nullptr);
+    ret = avfilter_graph_config(pipeline, nullptr);
     if (ret < 0)
         throw VideoSourceError("Could not config filter graph");
 
@@ -407,6 +403,11 @@ bool VideoSourceFFmpeg::ffmpeg_reset_pipeline(
     avfilter_inout_free(&in);
     avfilter_inout_free(&out);
 
+    if (_pipeline != nullptr)
+        avfilter_graph_free(&_pipeline);
+    _pipeline = pipeline;
+    _pipeline_begin = pipeline_begin;
+    _pipeline_end = pipeline_end;
     return true;
 }
 
