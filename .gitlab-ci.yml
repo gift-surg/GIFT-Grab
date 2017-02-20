@@ -147,9 +147,15 @@ pypi:
     - test-giftgrab-numpy-i420; exit_on_fail
     # test support for video files
     - pip install -vvv --install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --install-option="--numpy" --install-option="--files" --upgrade "$PyPI_INSTALLER"
-    - test-giftgrab-file-hevc; exit_on_fail
-    - test-giftgrab-file-xvid; exit_on_fail
-    - test-giftgrab-file-vp9; exit_on_fail
+    - test-giftgrab-file-hevc-bgra; exit_on_fail
+    - test-giftgrab-file-hevc-i420; exit_on_fail
+    - test-giftgrab-file-hevc-uyvy; exit_on_fail
+    - test-giftgrab-file-xvid-bgra; exit_on_fail
+    - test-giftgrab-file-xvid-i420; exit_on_fail
+    - test-giftgrab-file-xvid-i420; exit_on_fail
+    - test-giftgrab-file-vp9-bgra; exit_on_fail
+    - test-giftgrab-file-vp9-i420; exit_on_fail
+    - test-giftgrab-file-vp9-uyvy; exit_on_fail
     # TODO: delete this line after issue #133
     - unset BOOST_ROOT
     - deactivate
