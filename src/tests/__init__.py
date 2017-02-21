@@ -72,7 +72,7 @@ def __run_file_tests(codec, colour_space):
     frame_width = 128
     frame_height = 64
     ret = main(['--colour-space={}'.format(colour_space),
-                '--filepath={}{}'.format(filepath, extension),
+                '--filepath={}{}'.format(filepath),
                 '--frame-rate={}'.format(frame_rate),
                 '--frame-count={}'.format(frame_count),
                 '--frame-width={}'.format(frame_width),
