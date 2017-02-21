@@ -186,9 +186,9 @@ void VideoSourceFFmpeg::get_full_frame()
     {
         int width = _avformat_context->streams[_avstream_idx]->codec->width;
         int height = _avformat_context->streams[_avstream_idx]->codec->height;
-        if (ffmpeg_realloc_proc_buffers(width, height))
+        if (ffmpeg_reset_pipeline(0, 0, width, height))
         {
-            if (ffmpeg_reset_pipeline(0, 0, width, height))
+            if (ffmpeg_realloc_proc_buffers(width, height))
             {
                 _x = 0;
                 _y = 0;
