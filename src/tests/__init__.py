@@ -56,7 +56,8 @@ def test_vp9_i420():
 
 def __run_file_tests(codec, colour_space):
     working_dir = abspath(resource_filename('giftgrab.tests', 'files'))
-    data_dir = abspath(resource_filename('giftgrab.tests', 'files', 'data'))
+    data_dir = abspath(resource_filename('giftgrab.tests',
+                       join('files', 'data')))
     if codec == 'HEVC':
         extension = '.mp4'
     elif codec == 'Xvid':
