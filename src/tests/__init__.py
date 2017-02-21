@@ -62,7 +62,7 @@ def __run_file_tests(codec, colour_space):
         extension = '.mp4'
     elif codec == 'Xvid':
         extension = '.avi'
-    elif coded == 'VP9':
+    elif codec == 'VP9':
         extension = '.webm'
     frame_count = 15
     frame_rate = 30
