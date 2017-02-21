@@ -510,6 +510,13 @@ for colour_space in ['bgra', 'i420']:
         target_script += '=giftgrab.tests:test_{}_{}'.format(
             codec, colour_space)
         console_scripts.append(target_script)
+
+        file_script = 'test-giftgrab-file-{}-{}'.format(
+            codec, colour_space)
+        file_script += '=giftgrab.tests:test_file_{}_{}'.format(
+            codec, colour_space)
+        console_scripts.append(file_script)
+
     numpy_script = 'test-giftgrab-numpy-{}'.format(colour_space)
     numpy_script += '=giftgrab.tests:test_numpy_{}'.format(colour_space)
     console_scripts.append(numpy_script)
