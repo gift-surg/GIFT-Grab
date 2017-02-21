@@ -7,6 +7,7 @@ variables:
 before_script:
   - export REVHASH=$(git rev-parse --short HEAD)
   - echo $REVHASH
+  - export SCRATCH_DIR="$SCRATCH_DIR/$REVHASH"
   - rm -rf $SCRATCH_DIR
   - mkdir $SCRATCH_DIR
   - export GiftGrab_SOURCE_DIR="$(pwd)/src"
@@ -22,6 +23,8 @@ stages:
 revhash:
   stage: get_revhash
   script:
+    - pwd
+    - cd $SCRATCH_DIR
     - pwd
     - exit -1
   tags:
