@@ -5,6 +5,8 @@ variables:
   EpiphanSDK_DIR: "/home/gitlab-runner/environments/giftgrab/opt/epiphan_sdk-3.30.3.0007"
 
 before_script:
+  - export REVHASH=$(git rev-parse --short HEAD)
+  - echo $REVHASH
   - rm -rf $SCRATCH_DIR
   - mkdir $SCRATCH_DIR
   - export GiftGrab_SOURCE_DIR="$(pwd)/src"
@@ -12,9 +14,18 @@ before_script:
   - export BOOST_163_ROOT_DIR="/home/gitlab-runner/environments/giftgrab/boost163"
 
 stages:
+  - get_revhash
   - install
   - test_cmake
   - test_pypi
+
+revhash:
+  stage: get_revhash
+  script:
+    - pwd
+    - exit -1
+  tags:
+    - gift-linux
 
 ################## Platform: CMake ##################
 ################## Target: All ######################
