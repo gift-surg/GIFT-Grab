@@ -15,20 +15,9 @@ before_script:
   - export BOOST_163_ROOT_DIR="/home/gitlab-runner/environments/giftgrab/boost163"
 
 stages:
-  - get_revhash
   - install
   - test_cmake
   - test_pypi
-
-revhash:
-  stage: get_revhash
-  script:
-    - pwd
-    - cd $SCRATCH_DIR
-    - pwd
-    - exit -1
-  tags:
-    - gift-linux
 
 ################## Platform: CMake ##################
 ################## Target: All ######################
