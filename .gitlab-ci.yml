@@ -6,7 +6,6 @@ variables:
 
 before_script:
   - export REVHASH=$(git rev-parse --short HEAD)
-  - echo $REVHASH
   - export SCRATCH_DIR="$SCRATCH_DIR/$REVHASH"
   - mkdir -p $SCRATCH_DIR
   - export GiftGrab_SOURCE_DIR="$(pwd)/src"
