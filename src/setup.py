@@ -587,6 +587,7 @@ setup(
     package_data={'giftgrab.tests': ['*.py',
                                      join('target', '*.py'),
                                      join('videoframe', '*.py'),
+                                     join('files', '*.py'),
                                      join('files', 'data', 'video_15frames_30fps.*'),
                                      join('epiphan', 'dvi2pcieduo', '*.py'),
                                      join('epiphan', 'dvi2pcieduo', 'data', '*.yml'),
