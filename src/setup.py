@@ -503,7 +503,7 @@ for port in ['sdi', 'dvi']:
              record_script += '=giftgrab.utils:record_epiphan_dvi2pcieduo_{}_{}_{}'.format(
                  port, colour_space, codec)
              console_scripts.append(record_script)
-for colour_space in ['bgra', 'i420']:
+for colour_space in ['bgra', 'i420', 'uyvy']:
     for codec in ['xvid', 'hevc', 'vp9']:
         target_script = 'test-giftgrab-{}-{}'.format(
             codec, colour_space)
