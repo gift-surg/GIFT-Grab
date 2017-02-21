@@ -8,8 +8,7 @@ before_script:
   - export REVHASH=$(git rev-parse --short HEAD)
   - echo $REVHASH
   - export SCRATCH_DIR="$SCRATCH_DIR/$REVHASH"
-  - rm -rf $SCRATCH_DIR
-  - mkdir $SCRATCH_DIR
+  - mkdir -p $SCRATCH_DIR
   - export GiftGrab_SOURCE_DIR="$(pwd)/src"
   - source "$CI_SCRIPTS_DIR/utils.sh"
   - export BOOST_163_ROOT_DIR="/home/gitlab-runner/environments/giftgrab/boost163"
