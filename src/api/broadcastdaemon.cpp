@@ -65,9 +65,13 @@ void BroadcastDaemon::run(float sleep_duration_ms)
      * broadcast, to help against potential synchronisation
      * problems
      */
-    int cols = 1920, rows = 1080; // default value, in case
-                                  // something goes wrong
-    _source->get_frame_dimensions(cols, rows);
+    int cols = 0, rows = 0;
+    if (not _source->get_frame_dimensions(cols, rows))
+    {
+        // default values, in case something goes wrong
+        cols = 256;
+        rows = 64;
+    }
     VideoFrame * fill_frame = new VideoFrame(_source->get_colour(), cols, rows);
     std::chrono::microseconds inter_frame_duration(
                 static_cast<int>(1000 * sleep_duration_ms));
@@ -78,7 +82,12 @@ void BroadcastDaemon::run(float sleep_duration_ms)
             _source->notify(frame);
         else
         {
-            _source->get_frame_dimensions(cols, rows);
+            int old_cols = cols, old_rows = rows;
+            if (not _source->get_frame_dimensions(cols, rows))
+            {
+                cols = old_cols;
+                rows = old_rows;
+            }
             if (cols != fill_frame->cols() or rows != fill_frame->rows())
             {
                 delete fill_frame;
