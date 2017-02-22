@@ -1,12 +1,13 @@
 from pygiftgrab import IObservableObserver
 from pygiftgrab import VideoTargetFactory
 from pygiftgrab import Codec
-from pygiftgrab import VideoSourceOpenCV
+from pygiftgrab import ColourSpace
+from pygiftgrab import VideoSourceFactory
 import numpy as np
 import time
 import os
 import os.path
-from pytest import mark
+from pytest import mark, yield_fixture
 import scipy.ndimage as ndimage
 
 
@@ -40,7 +41,18 @@ class GaussianSmootherBGRA(IObservableObserver):
                                 order=0, output=data_np)
 
 
+factory = None
+
+
+@yield_fixture(scope='session')
+def peri_test():
+    global factory
+    factory = VideoSourceFactory.get_instance()
+    yield
+
+
 @mark.observer_pattern
+@mark.usefixtures('peri_test')
 def test_file_to_file_pipeline_simple(filepath):
     """Read a file, process its frames very simply in NumPy,
     i.e. not using any advanced image processing features, and
@@ -52,7 +64,10 @@ def test_file_to_file_pipeline_simple(filepath):
     channel_1 = 0
     channel_2 = 1
     swapper = ChannelSwapperBGRA(channel_1, channel_2)
-    file_reader = VideoSourceOpenCV(filepath)
+    global factory
+    file_reader = factory.create_file_reader(
+        filepath, ColourSpace.BGRA
+    )
     target_fac = VideoTargetFactory.get_instance()
     filename, extension = os.path.splitext(os.path.basename(filepath))
     out_filepath = '{}-swapped-{}-{}{}'.format(
@@ -77,6 +92,7 @@ def test_file_to_file_pipeline_simple(filepath):
 
 
 @mark.observer_pattern
+@mark.usefixtures('peri_test')
 def test_file_to_file_pipeline_scipy(filepath):
     """Read a file, process its frames using advanced image
     processing features of SciPy, and save them to a new file.
@@ -85,7 +101,10 @@ def test_file_to_file_pipeline_scipy(filepath):
     content is not checked.
     """
     smoother = GaussianSmootherBGRA()
-    file_reader = VideoSourceOpenCV(filepath)
+    global factory
+    file_reader = factory.create_file_reader(
+        filepath, ColourSpace.BGRA
+    )
     target_fac = VideoTargetFactory.get_instance()
     filename, extension = os.path.splitext(os.path.basename(filepath))
     out_filepath = '{}-smoothed{}'.format(filename, extension)

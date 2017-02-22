@@ -11,6 +11,9 @@
 #ifdef USE_BLACKMAGICSDK
 #include "blackmagicsdk_video_source.h"
 #endif
+#ifdef USE_FFMPEG
+#include "ffmpeg_video_source.h"
+#endif
 
 namespace gg
 {
@@ -288,6 +291,19 @@ IVideoSource * VideoSourceFactory::connect_network_source(
     }
 
     return source;
+}
+
+
+IVideoSource * VideoSourceFactory::create_file_reader(
+        const std::string filepath,
+        enum ColourSpace colour_space)
+{
+#ifdef USE_FFMPEG
+    return new VideoSourceFFmpeg(filepath, colour_space);
+#else
+    throw VideoSourceError("Reading video files supported only"
+                           " with FFmpeg");
+#endif
 }
 
 }

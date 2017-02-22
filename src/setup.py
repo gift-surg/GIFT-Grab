@@ -92,6 +92,7 @@ class GiftGrabInstallCommand(install):
                    ('blackmagic-decklink-sdi-4k', None, None),
                    ('network-sources', None, None),
                    ('epiphansdk', None, None),
+                   ('files', None, None),
                    ('no-bgra', None, None),
                    ('no-i420', None, None),
                    ('xvid', None, None),
@@ -123,6 +124,8 @@ class GiftGrabInstallCommand(install):
             str_rep += ' Blackmagic DeckLink SDI 4K,'
         if self.network_sources:
             str_rep += ' Network sources,'
+        if self.files:
+            str_rep += ' Files,'
         if self.xvid:
             str_rep += ' Xvid,'
         if self.vp9:
@@ -145,6 +148,7 @@ class GiftGrabInstallCommand(install):
         self.blackmagic_decklink_sdi_4k = None
         self.network_sources = None
         self.epiphansdk = None
+        self.files = None
         self.no_bgra = None
         self.no_i420 = None
         self.xvid = None
@@ -286,7 +290,7 @@ class GiftGrabInstallCommand(install):
             self.__check_command(cmd, err_msg)
 
         # check FFmpeg
-        if self.hevc or self.vp9:
+        if self.hevc or self.vp9 or self.files:
             cmd = ['cmake', join(join(self.here, 'cmake'), 'ffmpeg')]
             err_msg = '%s\n%s' % (
                 'FFmpeg does not seem to be installed on your system.',
@@ -395,6 +399,8 @@ class GiftGrabInstallCommand(install):
             cmake_args.append('-DENABLE_NONFREE=ON')
         if self.network_sources:
             cmake_args.append('-DUSE_NETWORK_SOURCES=ON')
+        if self.files:
+            cmake_args.append('-DUSE_FILES=ON')
         if self.xvid:
             cmake_args.append('-DUSE_XVID=ON')
         if self.hevc:
@@ -497,13 +503,20 @@ for port in ['sdi', 'dvi']:
              record_script += '=giftgrab.utils:record_epiphan_dvi2pcieduo_{}_{}_{}'.format(
                  port, colour_space, codec)
              console_scripts.append(record_script)
-for colour_space in ['bgra', 'i420']:
+for colour_space in ['bgra', 'i420', 'uyvy']:
     for codec in ['xvid', 'hevc', 'vp9']:
         target_script = 'test-giftgrab-{}-{}'.format(
             codec, colour_space)
         target_script += '=giftgrab.tests:test_{}_{}'.format(
             codec, colour_space)
         console_scripts.append(target_script)
+
+        file_script = 'test-giftgrab-file-{}-{}'.format(
+            codec, colour_space)
+        file_script += '=giftgrab.tests:test_file_{}_{}'.format(
+            codec, colour_space)
+        console_scripts.append(file_script)
+
     numpy_script = 'test-giftgrab-numpy-{}'.format(colour_space)
     numpy_script += '=giftgrab.tests:test_numpy_{}'.format(colour_space)
     console_scripts.append(numpy_script)
@@ -574,6 +587,8 @@ setup(
     package_data={'giftgrab.tests': ['*.py',
                                      join('target', '*.py'),
                                      join('videoframe', '*.py'),
+                                     join('files', '*.py'),
+                                     join('files', 'data', 'video_15frames_30fps.*'),
                                      join('epiphan', 'dvi2pcieduo', '*.py'),
                                      join('epiphan', 'dvi2pcieduo', 'data', '*.yml'),
                                      join('blackmagic', 'decklinksdi4k', '*.py'),

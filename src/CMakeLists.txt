@@ -27,6 +27,8 @@ OPTION(USE_NETWORK_SOURCES
     "Capture video from network sources" OFF)
 OPTION(USE_BLACKMAGIC_DECKLINK_SDI_4K
     "Capture video with Blackmagic DeckLink SDI 4K" OFF)
+OPTION(USE_FILES
+    "Support for reading video files" OFF)
 OPTION(USE_HEVC
     "Video encoding with HEVC (requires FFmpeg, pkg-config and kvazaar [default] or x265 [turn USE_X265 on])" OFF)
 OPTION(USE_X265
@@ -145,7 +147,7 @@ if(USE_BLACKMAGIC_DECKLINK_SDI_4K)
 endif(USE_BLACKMAGIC_DECKLINK_SDI_4K)
 
 # Determine whether FFmpeg needed
-if(USE_HEVC OR USE_VP9)
+if(USE_HEVC OR USE_VP9 OR USE_FILES)
     SET(USE_FFMPEG ON CACHE BOOL "OFF ON" FORCE)
 endif()
 
@@ -212,6 +214,8 @@ if(USE_FFMPEG)
     endif(USE_NVENC)
 
     INCLUDE_DIRECTORIES(ffmpeg)
+    LIST(APPEND HEADERS ffmpeg/ffmpeg_video_source.h)
+    LIST(APPEND SOURCES ffmpeg/ffmpeg_video_source.cpp)
     LIST(APPEND HEADERS ffmpeg/ffmpeg_video_target.h)
     LIST(APPEND SOURCES ffmpeg/ffmpeg_video_target.cpp)
 endif(USE_FFMPEG)

@@ -3,7 +3,6 @@ _CMakeLists.txt
 src/extern
 .idea
 **/*/pygiftgrab.so
-*.mp4
 *.pyc
 *.latency.txt
 *.timing.txt
