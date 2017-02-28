@@ -560,13 +560,12 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Utilities'
     ],
-    keywords='frame-grabber, framegrabber, frame grabber,'
-             'multi-channel video capture, multi-channel video encoding,'
-             'hardware-accelerated video encoding,'
-             'GPU-accelerated video encoding,'
-             'real-time video encoding, codec, Xvid, H.265, HEVC, VP9,'
-             'Epiphan DVI2PCIe Duo, Blackmagic DeckLink SDI 4K, medical imaging,'
-             'FFmpeg, OpenCV, kvazaar, x265, NVENC'
+    keywords='multi-channel, video capture, real-time video encoding, '
+             'video processing, hardware-accelerated video encoding, GPU, '
+             'frame-grabber hardware, network video streaming, '
+             'Epiphan DVI2PCIe Duo, Blackmagic DeckLink SDI 4K, Epiphan Pearl, '
+             'Xvid, H.265, H265, VP9, HEVC, '
+             'C++, Python, NumPy, SciPy, '
              'GIFT-Surg',
 
     install_requires=['pytest', 'PyYAML'],
