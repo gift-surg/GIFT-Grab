@@ -10,6 +10,15 @@ GIFT-Grab was developed as part of the [GIFT-Surg][giftsurg] project at the [Tra
 [numpy]: http://www.numpy.org/
 
 
+# Installation
+
+GIFT-Grab can be installed by [building from source][build-from-source] or from the Python Package Index [using `pip`][pip].
+Please see the features section below for quick links to the relevant installation documentation.
+
+[build-from-source]: doc/build.md
+[pip]: doc/pypi.md
+
+
 # Features
 
 The table below summarises GIFT-Grab features.
@@ -69,16 +78,8 @@ Optional (depending on desired features, see "How to use" below):
 
 Please note that there are cross-dependencies between some of these external libraries. Check out [our tips and tricks](doc/tips.md) for details.
 
-How to use
-----------
 
-GIFT-Grab can be either built from source (for the C++ API) **or** installed via the Python Packaging Index (for the Python API). For either of these options, check out [our tips and tricks](doc/tips.md) for troubleshooting and how to obtain the external dependencies.
-
-Features can be customised as per the combinations listed below. Please note that these are the tested combinations. Other combinations might result in undefined behaviour.
-
-
-Funding
--------
+# Funding
 
 This work was supported through an Innovative Engineering for Health award by the [Wellcome Trust][wellcometrust] [WT101957], the [Engineering and Physical Sciences Research Council (EPSRC)][epsrc] [NS/A000027/1] and a [National Institute for Health Research][nihr] Biomedical Research Centre [UCLH][uclh]/UCL High Impact Initiative.
 
