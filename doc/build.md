@@ -7,8 +7,8 @@
 1. Run the build process: `make -j`
 1. Run the install process: `make install`
 
-Please note that due to differences in dependency licences, some options are mutually exclusive.
-If such options are activated, CMake will give an error and GIFT-Grab will not be built.
+Please note that **due to incompatibilities in dependency licences, options requiring proprietary libraries are mutually exclusive with options requiring GPL libraries.**
+If mutually exclusive options are activated, CMake will give an error and GIFT-Grab will not be built.
 
 
 # Reading video files
