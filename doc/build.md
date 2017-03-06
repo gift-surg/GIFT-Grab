@@ -57,6 +57,7 @@ This option **makes GIFT-Grab undistributable**.
 `-D USE_BLACKMAGIC_DECKLINK_SDI_4K=ON -D ENABLE_NONFREE=ON` (requires Blackmagic Desktop Video SDK)
 
 This currently works only with the [UYVY][uyvy] colour space (active by default).
+This option **makes GIFT-Grab undistributable**.
 
 [uyvy]: https://wiki.videolan.org/YUV#UYVY
 
