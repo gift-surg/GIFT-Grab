@@ -69,20 +69,6 @@ Optional (depending on desired features, see "How to use" below):
 
 Please note that there are cross-dependencies between some of these external libraries. Check out [our tips and tricks](doc/tips.md) for details.
 
-Supported video sources
------------------------
-
-* [Epiphan DVI2PCIe Duo](http://www.epiphan.com/products/dvi2pcie-duo/)
-* [Blackmagic DeckLink SDI 4K](https://www.blackmagicdesign.com/products/decklink/models)
-* Network streams
-
-Supported video formats
------------------------
-
-* [Xvid](https://www.xvid.com/) (saved as [AVI](https://msdn.microsoft.com/en-us/library/windows/desktop/dd318189(v=vs.85).aspx))
-* [HEVC (H.265)](http://www.itu.int/ITU-T/recommendations/rec.aspx?rec=11885) (saved as [MP4](http://www.iso.org/iso/catalogue_detail.htm?csnumber=38538))
-* [VP9](http://www.webmproject.org/vp9/) (saved as [WebM](https://www.webmproject.org/users/))
-
 How to use
 ----------
 
