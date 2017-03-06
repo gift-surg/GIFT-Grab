@@ -1,5 +1,4 @@
-GIFT-Grab
----------
+# GIFT-Grab
 
 An open-source C++ and Python API for acquiring, processing and encoding video streams in real time.
 GIFT-Grab supports several frame-grabber hardware, standard-compliant network streams and video files.
@@ -9,6 +8,34 @@ GIFT-Grab was developed as part of the [GIFT-Surg][giftsurg] project at the [Tra
 
 [scipy]: https://www.scipy.org/
 [numpy]: http://www.numpy.org/
+
+
+# Features
+
+The table below summarises GIFT-Grab features.
+It also provides shortcuts to installation HOWTOs.
+
+| **Feature** | **C++ API howto** | **Python API howto** |
+| --- | :---: | :---: |
+| **Frame-grabbers** | | |
+| [Epiphan DVI2PCIe Duo][e-dd] | **TODO** |  **TODO** |
+| [Blackmagic DeckLink SDI 4K][bm-dls4] | **TODO** |  **TODO** |
+| **Network streams** | **TODO** | **TODO** |
+| **Video files** | | |
+| [Xvid][xvid]-encoded [AVI][avi] | **TODO** | **TODO** |
+| [HEVC (H.265)][hevc]-encoded [MP4][mp4] | **TODO** | **TODO** |
+| [VP9][vp9]-encoded [WebM][webm] | **TODO** | **TODO** |
+| [NumPy][numpy] / [SciPy][scipy] compatibility |  | **TODO** |
+
+
+[e-dd]: http://www.epiphan.com/products/dvi2pcie-duo/
+[bm-dls4]: https://www.blackmagicdesign.com/products/decklink/models
+[xvid]: https://www.xvid.com/
+[avi]: https://msdn.microsoft.com/en-us/library/windows/desktop/dd318189(v=vs.85).aspx
+[hevc]: http://www.itu.int/ITU-T/recommendations/rec.aspx?rec=11885
+[mp4]: http://www.iso.org/iso/catalogue_detail.htm?csnumber=38538
+[vp9]:http://www.webmproject.org/vp9/
+[webm]: https://www.webmproject.org/users/
 
 
 System requirements
