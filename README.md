@@ -12,7 +12,7 @@ GIFT-Grab was developed as part of the [GIFT-Surg][giftsurg] project at the [Tra
 
 # Installation
 
-GIFT-Grab can be installed by [building from source][build-from-source] or from the Python Package Index [using `pip`][pip].
+GIFT-Grab can be installed by [building from source][build-from-source] (both C++ and Python APIs) or from the Python Package Index [using `pip`][pip] (only Python API).
 Please see the features section below for quick links to the relevant installation documentation.
 
 [build-from-source]: doc/build.md
