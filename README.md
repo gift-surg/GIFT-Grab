@@ -24,17 +24,18 @@ Please see the features section below for quick links to the relevant installati
 The table below summarises GIFT-Grab features.
 It also provides shortcuts to installation HOWTOs.
 
-| **Feature** | **C++ API howto** | **Python API howto** |
+| **Feature** | [**C++ API**](doc/build.md) | **Python API howto** |
 | --- | :---: | :---: |
 | **Frame-grabbers** | | |
-| [Epiphan DVI2PCIe Duo][e-dd] | **TODO** |  **TODO** |
-| [Blackmagic DeckLink SDI 4K][bm-dls4] | **TODO** |  **TODO** |
-| **Network streams** | **TODO** | **TODO** |
-| **Video files** | | |
-| [Xvid][xvid]-encoded [AVI][avi] | **TODO** | **TODO** |
-| [HEVC (H.265)][hevc]-encoded [MP4][mp4] | **TODO** | **TODO** |
-| [VP9][vp9]-encoded [WebM][webm] | **TODO** | **TODO** |
-| [NumPy][numpy] / [SciPy][scipy] compatibility |  | **TODO** |
+| [Epiphan DVI2PCIe Duo][e-dd] | [HOWTO](doc/build.md#epiphan-dvi2pcie-duo) |  **TODO** |
+| [Blackmagic DeckLink SDI 4K][bm-dls4] | [HOWTO](doc/build.md#blackmagic-decklink-sdi-4k) |  **TODO** |
+| **Network streams** | [HOWTO](doc/build.md#network-streams) | **TODO** |
+| **Reading video files** | [HOWTO](doc/build/md#reading-video-files) | **TODO** |
+| **Writing video files** | | |
+| [Xvid][xvid]-encoded [AVI][avi] |[HOWTO](doc/build.md#xvid) | **TODO** |
+| [HEVC (H.265)][hevc]-encoded [MP4][mp4] | [HOWTO](doc/build.md#hevc) | **TODO** |
+| [VP9][vp9]-encoded [WebM][webm] | [HOWTO](doc/build.md#vp9) | **TODO** |
+| [NumPy][numpy] / [SciPy][scipy] compatibility | [HOWTO](doc/build.md#python-api) | **TODO** |
 
 
 [e-dd]: http://www.epiphan.com/products/dvi2pcie-duo/
