@@ -37,6 +37,7 @@ Below are troubleshooting tips and tricks, as well as detailed installation inst
 
 # OpenCV
 
+Please see the [OpenCV website](http://opencv.org/) for possible installation routes.
 If using FFmpeg, make sure your OpenCV is properly linked against your FFmpeg installation.
 
 
