@@ -2,6 +2,7 @@
 
 Linux (tested on Ubuntu 14.04 LTS)
 
+
 # Required dependencies
 
 GIFT-Grab requires:
@@ -19,7 +20,7 @@ GIFT-Grab requires a subset of the following libraries **based on activated [fea
 | [OpenCV](http://www.opencv.org/) | 2.4.12 | |
 | [FFmpeg](https://ffmpeg.org/) | 3.0.1 | |
 | [NVENC (NVIDIA Video Codec SDK)](https://developer.nvidia.com/nvidia-video-codec-sdk) | 6.0.1 | NVENC has a proprietary licence, so "non-free" components need to be enabled when installing GIFT-Grab with NVENC support |
-| [A GPU supporting NVENC](https://developer.nvidia.com/nvidia-video-codec-sdk) | TITAN X | |
+| [A GPU supporting NVENC](https://developer.nvidia.com/nvidia-video-codec-sdk) | GeForce GTX TITAN X and GeForce GTX 980 Ti | |
 | [kvazaar](https://github.com/ultravideo/kvazaar) | 0.8.3 | |
 | [x265](http://x265.org/) | 1.9 | x265 is a GPL library, so GPL needs to be enabled when installing GIFT-Grab with x265 support |
 | [libvpx](https://www.webmproject.org/code/) | 1.3.0 | |
