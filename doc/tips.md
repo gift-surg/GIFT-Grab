@@ -1,8 +1,11 @@
-Below are troubleshooting tips and tricks, as well as detailed installation instructions for some GiftGrab dependencies.
-**These were tested only on an Ubuntu LTS 14.04.**
+# Summary
+
+This document contains tips for installing GIFT-Grab dependencies that require custom versions.
+It also includes some troubleshooting hints.
+For a full list of the required and optional dependencies, as well as links to the official website of each dependency, see the [requirements](doc/requirements.md) documentation.
 
 
-# GIFT-Grab Caveats
+# GIFT-Grab caveats
 
 * In case GiftGrab is built with a custom `CMAKE_INSTALL_PREFIX` that is **not** a standard system path, `${CMAKE_INSTALL_PREFIX}/lib/giftgrab` needs to be included in CMake's `CMAKE_MODULE_PATH` for `FIND_PACKAGE(GiftGrab)` to work.
 * If you encounter an `option not recognized` error while `pip install`ling GiftGrab, run `pip install pytest` and `pip install PyYAML` before running `pip install giftgrab`.
