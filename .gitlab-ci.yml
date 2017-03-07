@@ -86,6 +86,8 @@ linux:
     - make install
   tags:
     - gift-linux
+  except:
+    - 164-revise-readme
 
 ################## Platform: PyPI ##################
 ################## Target: All #####################
@@ -163,6 +165,8 @@ pypi:
   tags:
     - gift-linux
     - gift-pypi
+  except:
+    - 164-revise-readme
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 ################## Platform: PyPI ################################
