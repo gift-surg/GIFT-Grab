@@ -12,39 +12,39 @@ If mutually exclusive options are activated, installation will fail.
 
 # Reading video files
 
-`--install-option="--files"` (requires FFmpeg)
+`--install-option="--files"` (requires [FFmpeg](doc/tips.md#ffmpeg))
 
 
 # Writing video files
 
 ## Xvid
 
-`--install-option="--xvid"` (requires OpenCV)
+`--install-option="--xvid"` (requires [OpenCV](doc/tips.md#opencv))
 
 ## HEVC
 
-`--install-option="--hevc"` (requires FFmpeg, pkg-config and kvazaar)
+`--install-option="--hevc"` (requires [FFmpeg](doc/tips.md#ffmpeg), pkg-config and [kvazaar](doc/tips.md#kvazaar))
 
 In addition, also the following two **BSD-3-incompatible** options are available:
 
-1. `--install-option="--hevc" --install-option="--enable-gpl" --install-option="--x265"`: use x265 instead of kvazaar (requires FFmpeg, pkg-config and x265), **upgrades GIFT-Grab licence to GPL**
-2. `--install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc"`: hardware-accelerated HEVC (requires a supported GPU, FFmpeg, pkg-config and NVENC), **makes GIFT-Grab undistributable**
+1. `--install-option="--hevc" --install-option="--enable-gpl" --install-option="--x265"`: use x265 instead of kvazaar (requires [FFmpeg](doc/tips.md#ffmpeg), pkg-config and [x265](doc/tips.md#x265)), **upgrades GIFT-Grab licence to GPL**
+2. `--install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc"`: hardware-accelerated HEVC (requires a supported GPU, [FFmpeg](doc/tips.md#ffmpeg), pkg-config and [NVENC](doc/tips.md#nvenc)), **makes GIFT-Grab undistributable**
 
 ## VP9
 
-`--install-option="--vp9"` (requires FFmpeg, pkg-config and libvpx)
+`--install-option="--vp9"` (requires [FFmpeg](doc/tips.md#ffmpeg), pkg-config and [libvpx](doc/tips.md#libvpx))
 
 
 # Epiphan DVI2PCIe Duo
 
-`--install-option="--epiphan-dvi2pcie-duo"` (requires OpenCV and libVLC)
+`--install-option="--epiphan-dvi2pcie-duo"` (requires [OpenCV](doc/tips.md#opencv) and [libVLC](doc/tips.md#libvlc))
 
 OpenCV and libVLC are needed for capturing in the BGRA and [I420][i420] colour spaces respectively.
 Both options are active by default.
 Append `--install-option="--no-bgra"` or `--install-option="--no-i420"` to deactivate the respective option.
 
-Also Epiphan Video Grabbing SDK can be used instead of libVLC:
-`--install-option="--epiphan-dvi2pcie-duo" --install-option="--enable-nonfree" --install-option="--epiphansdk"` (requires zlib, pthreads and Epiphan video grabber SDK).
+Also Epiphan Video Grabber SDK can be used instead of libVLC:
+`--install-option="--epiphan-dvi2pcie-duo" --install-option="--enable-nonfree" --install-option="--epiphansdk"` (requires zlib, pthreads and [Epiphan Video Grabber SDK](doc/tips.md#epiphan-video-grabber-sdk)).
 This option **makes GIFT-Grab undistributable**.
 
 [i420]: https://wiki.videolan.org/YUV/#I420
@@ -52,7 +52,7 @@ This option **makes GIFT-Grab undistributable**.
 
 # Blackmagic DeckLink SDI 4K
 
-`--install-option="--blackmagic-decklink-sdi-4k" --install-option="--enable-nonfree"` (requires Blackmagic Desktop Video SDK)
+`--install-option="--blackmagic-decklink-sdi-4k" --install-option="--enable-nonfree"` (requires [Blackmagic Desktop Video SDK](doc/tips.md#blackmagic-drivers-and-blackmagic-desktop-video-sdk))
 
 This currently works only with the [UYVY][uyvy] colour space (active by default).
 This option **makes GIFT-Grab undistributable**.
@@ -62,7 +62,7 @@ This option **makes GIFT-Grab undistributable**.
 
 # Network streams
 
-`--install-option="--network-sources"` (requires OpenCV and libVLC)
+`--install-option="--network-sources"` (requires [OpenCV](doc/tips.md#opencv) and [libVLC](doc/tips.md#libvlc))
 
 OpenCV and libVLC are needed for capturing in the BGRA and [I420][i420] colour spaces respectively.
 Both options are active by default.
@@ -71,9 +71,7 @@ Append `--install-option="--no-bgra"` or `--install-option="--no-i420"` to deact
 
 # NumPy
 
-`--install-option="--numpy"` (requires Python and [Boost.Python 1.63][bp163] or newer)
-
-[bp163]: http://www.boost.org/doc/libs/1_63_0_b1/libs/python/doc/html/numpy/index.html
+`--install-option="--numpy"` (requires Python and [Boost.Python 1.63 or newer](doc/tips.md#numpy-support-and-boostpython))
 
 
 # Testing GIFT-Grab
