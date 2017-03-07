@@ -11,7 +11,7 @@ Please create an issue.
 
 # Bug fixes or new features
 
-Please make sure every commit and merge (pull) request [references a documented issue]().
+Please make sure every commit and merge (pull) request [references a documented issue](https://help.github.com/articles/autolinked-references-and-urls/#issues-and-pull-requests).
 
 
 ## For GitHub, please:
