@@ -14,6 +14,8 @@ GIFT-Grab requires:
 # Optional dependencies
 
 GIFT-Grab requires a subset of the following libraries **based on activated [features](README.md#features)**.
+Please note that there are cross-dependencies between some of the optional dependencies.
+Check out [the documentation](doc/tips.md) for details.
 
 | Library | GIFT-Grab tested with version | Remarks|
 | :--- | :---: | :--- |
@@ -34,7 +36,3 @@ GIFT-Grab requires a subset of the following libraries **based on activated [fea
 | [Catch](https://github.com/philsquared/Catch) | 1.5.8 | |
 | [zlib](http://www.zlib.net/) | | |
 | [POSIX threads (pthreads)](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/pthread.h.html) | | |
-
-Please note that there are cross-dependencies between some of these external libraries. Check out [our tips and tricks](doc/tips.md) for details.
-
-
