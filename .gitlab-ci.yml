@@ -88,6 +88,7 @@ linux:
     - gift-linux
   except:
     - 164-revise-readme
+    - 162-revise-contribution-guide-before-open-sourcing
 
 ################## Platform: PyPI ##################
 ################## Target: All #####################
@@ -167,6 +168,7 @@ pypi:
     - gift-pypi
   except:
     - 164-revise-readme
+    - 162-revise-contribution-guide-before-open-sourcing
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 ################## Platform: PyPI ################################
