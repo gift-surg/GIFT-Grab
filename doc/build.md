@@ -75,7 +75,7 @@ Append `-D USE_BGRA=OFF` or `-D USE_I420=OFF` to deactivate the respective optio
 
 Depending on whether [NumPy][numpy] support is required:
 
-* Without NumPy: `-D BUILD_PYTHON=ON` (requires Python and Boost.Python)
+* Without NumPy: `-D BUILD_PYTHON=ON` (requires Python and [Boost.Python][bp])
 * With NumPy: `-D BUILD_PYTHON=ON -D USE_NUMPY=ON` (requires Python and [Boost.Python 1.63 or newer](doc/tips.md#numpy-support-and-boostpython))
 
 [numpy]: http://www.numpy.org/
