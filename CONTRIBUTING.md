@@ -1,25 +1,27 @@
-# THANKS!
+# THANKS
 
 For contributing to GIFT-Grab!
 It's much appreciated!
 
-If working on GitHub, please follow the instructions in the GitHub section below.
-If working on CmicLab, please follow the instructions in the CmicLab section below.
+
+# Bug report or feature request
+
+Please create an issue.
 
 
-# GitHub
+# Bug fixes or new features
 
-1. Describe the problem / bug / new feature a new GitHub issue.
-2. Fork this repository.
-3. When your solution is ready, create a merge request from your forked repository to the `master` branch of this repository.
-**PLEASE REFERENCE THE RELEVANT ISSUE IN THE MERGE REQUEST!**
+Please make sure every commit and merge (pull) request [references a documented issue]().
 
 
-# CmicLab
+## For GitHub, please:
+1. fork this repository
+2. do your coding
+3. create a pull request from your fork to `master`
 
-1. Describe the problem / bug / new feature a new project issue.
-2. Create an issue branch.
-3. Work out your solution to the issue.
-4. **MAKE SURE THE ISSUE BRANCH PASSES THE CONTINUOUS INTEGRATION BUILDS.**
-5. When your solution is ready, create a merge request from the issue branch to the `master` branch of this repository.
-**PLEASE REFERENCE THE RELEVANT ISSUE IN THE MERGE REQUEST!**
+
+## For Cmiclab, please:
+1. create an issue branch, if not already existing
+2. do your coding
+3. **make sure CI builds pass**
+3. create a merge request for the issue branch to `master`
