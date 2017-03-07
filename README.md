@@ -37,6 +37,10 @@ It also provides shortcuts to installation HOWTOs.
 | [VP9][vp9]-encoded [WebM][webm] | [HOWTO](doc/build.md#vp9) | [HOWTO](doc/pypi.md#vp9) |
 | [NumPy][numpy] / [SciPy][scipy] compatibility | [HOWTO](doc/build.md#python-api) | [HOWTO](doc/pypi.md#numpy) |
 
+GIFT-Grab also provides a test suite for checking the built / installed features are operational.
+See the instructions for running the tests in the [building from source](doc/build.md#testing-gift-grab) and [installing with `pip`](doc/pypi.md#testing-gift-grab) sections.
+
+
 
 [e-dd]: http://www.epiphan.com/products/dvi2pcie-duo/
 [bm-dls4]: https://www.blackmagicdesign.com/products/decklink/models
