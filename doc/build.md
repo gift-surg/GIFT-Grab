@@ -45,7 +45,7 @@ OpenCV and libVLC are needed for capturing in the BGRA and [I420][i420] colour s
 Both options are active by default.
 Append `-D USE_BGRA=OFF` or `-D USE_I420=OFF` to deactivate the respective option.
 
-Also Epiphan Video Grabbing SDK can be used instead of libVLC:
+Also Epiphan Video Grabber SDK can be used instead of libVLC:
 `-D USE_EPIPHAN_DVI2PCIE_DUO=ON -D ENABLE_NONFREE=ON -D USE_EPIPHANSDK=ON` (requires zlib, pthreads and [Epiphan Video Grabber SDK](doc/tips.md#epiphan-video-grabber-sdk)).
 This option **makes GIFT-Grab undistributable**.
 
