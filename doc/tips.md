@@ -49,7 +49,7 @@ If using FFmpeg, make sure your OpenCV is properly linked against your FFmpeg in
 Installation instructions:
 
 1. `git clone https://github.com/FFmpeg/FFmpeg.git`
-1. `git checkout n3.0.1`
+1. `git checkout n3.1.2`
 1. `mkdir ffmpeg-build` and `cd ffmpeg-build`
 1. If using kvazaar: `../FFmpeg/configure --enable-shared --enable-avresample --enable-libkvazaar --enable-muxer=mp4`
 1. If using x265: `../FFmpeg/configure --enable-shared --enable-avresample --enable-libx265 --enable-gpl --enable-muxer=mp4`

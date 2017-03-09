@@ -89,6 +89,7 @@ linux:
   except:
     - 164-revise-readme
     - 162-revise-contribution-guide-before-open-sourcing
+    - 168-correct-ffmpeg-version-in-documentation
 
 ################## Platform: PyPI ##################
 ################## Target: All #####################
@@ -169,6 +170,7 @@ pypi:
   except:
     - 164-revise-readme
     - 162-revise-contribution-guide-before-open-sourcing
+    - 168-correct-ffmpeg-version-in-documentation
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 ################## Platform: PyPI ################################
