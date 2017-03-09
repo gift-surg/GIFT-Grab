@@ -64,7 +64,7 @@ This option **makes GIFT-Grab undistributable**.
 
 # Network streams
 
-`-D USE_NETWORK_SOURCES=ON` [OpenCV](doc/tips.md#opencv) and [libVLC](doc/tips.md#libvlc))
+`-D USE_NETWORK_SOURCES=ON` (requires [OpenCV](doc/tips.md#opencv) and [libVLC](doc/tips.md#libvlc))
 
 OpenCV and libVLC are needed for capturing in the BGRA and [I420][i420] colour spaces respectively.
 Both options are active by default.
