@@ -701,8 +701,7 @@ RECURSIVE              = YES
 
 EXCLUDE                = @PROJECT_BINARY_DIR@/extern \
                          @PROJECT_SOURCE_DIR@/tests \
-                         @PROJECT_BINARY_DIR@/tests \
-                         @PROJECT_SOURCE_DIR@/python
+                         @PROJECT_BINARY_DIR@/tests
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded
