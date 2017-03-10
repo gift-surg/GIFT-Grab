@@ -42,7 +42,9 @@ PROJECT_NUMBER         =
 # for a project that appears at the top of each page and should give viewer
 # a quick idea about the purpose of the project. Keep the description short.
 
-PROJECT_BRIEF          = "An umbrella library that provides an easy-to-use API to stream video using frame grabber hardware. Copyright (c) 2015, University College London (UCL)"
+PROJECT_BRIEF          = "Open-source C++ and Python API for acquiring, processing \
+                         and encoding video streams in real time. \
+                         Copyright (c) 2015 - 2017, University College London (UCL)"
 
 # With the PROJECT_LOGO tag one can specify an logo or icon that is
 # included in the documentation. The maximum height of the logo should not
