@@ -725,7 +725,8 @@ EXCLUDE_PATTERNS       = */tests/* \
 # AClass::ANamespace, ANamespace::*Test
 
 EXCLUDE_SYMBOLS        = MaskFrame \
-                         gg::FrameBox
+                         gg::FrameBox \
+                         gg::DeckLinkDisplayModeDetector
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or
 # directories that contain example code fragments that are included (see
