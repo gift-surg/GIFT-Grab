@@ -10,6 +10,12 @@ The Python API is compatible with [NumPy][numpy] and [SciPy][scipy].
 [numpy]: http://www.numpy.org/
 
 
+# API documentation
+
+* C++ API documentation is available on [CodeDocs](https://codedocs.xyz/gift-surg/GIFT-Grab/).
+* We are working to make the Python API documentation available as well. In the meantime please use [this guildeline](doc/py-api.md).
+
+
 # Installation
 
 * [Build from source][build-from-source] (C++ and Python)
