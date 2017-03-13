@@ -14,15 +14,12 @@ In particular the following classes are available and are of interest to Python 
 * Copy constructors are not available.
 * `VideoFrame::data()` is exposed only when installing GIFT-Grab with NumPy support. This function can be used to access video data as NumPy arrays.
 * C++ exceptions are mapped to Python built-in exceptions.
-  * The following GIFT-Grab exceptions map to Python [`RuntimeError`](rt):
+  * The following GIFT-Grab exceptions map to Python [`RuntimeError`](https://docs.python.org/2/library/exceptions.html#exceptions.RuntimeError):
      * `BasicException`
      * `VideoSourceError`
      * `VideoTargetError`
      * `ObserverError`
-  * The following GIFT-Grab exceptions map to Python [`IOError`](io):
+  * The following GIFT-Grab exceptions map to Python [`IOError`](https://docs.python.org/2/library/exceptions.html#exceptions.IOError):
      * `DeviceAlreadyConnected`
      * `DeviceNotFound`
      * `DeviceOffline`
-
-[rt]: https://docs.python.org/2/library/exceptions.html#exceptions.RuntimeError
-[io]: https://docs.python.org/2/library/exceptions.html#exceptions.IOError
