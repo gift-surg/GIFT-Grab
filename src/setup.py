@@ -475,17 +475,18 @@ class GiftGrabInstallLibCommand(install_lib):
     def get_outputs(self):
         return [cmake_install_prefix()] + install_lib.get_outputs(self)
 
-
-summary = 'GIFT-Grab provides a user-friendly Python and C++ API for the ' +\
-          'real-time acquisition and encoding of multi-channel video ' +\
-          'streams by means of frame-grabber hardware.'
+summary = 'An open-source C++ and Python API for acquiring, processing ' +\
+          'and encoding video streams in real time. GIFT-Grab supports ' +\
+          'several frame-grabber cards, standard-compliant network ' +\
+          'streams and video files. The Python API is compatible with ' +\
+          'NumPy and SciPy.'
 description = 'GIFT-Grab was developed as part of the GIFT-Surg project ' +\
               '(http://www.gift-surg.ac.uk) at the Translational Imaging ' +\
               'Group in the Centre for Medical Image Computing at ' +\
               'University College London (UCL). See the GIFT-Grab ' +\
               'home-page on GitHub for features and manual.' +\
               '\n\n' +\
-              'Copyright (c) 2016, University College London. This work ' +\
+              'Copyright (c) 2015-7, University College London. This work ' +\
               'was supported through an Innovative Engineering for Health ' +\
               'award by the Wellcome Trust [WT101957], the Engineering ' +\
               'and Physical Sciences Research Council (EPSRC) and a ' +\
@@ -529,8 +530,8 @@ console_scripts = console_scripts +\
                   ['test-giftgrab-network-sources-bgra=giftgrab.tests:test_network_sources_bgra',
                    'test-giftgrab-network-sources-i420=giftgrab.tests:test_network_sources_i420']
 setup(
-    name='gift-grab',
-    version='16.08.24rc1',
+    name='GIFT-Grab',
+    version='1703',
     description=summary,
     long_description=description,
     url='https://github.com/gift-surg/GIFT-Grab',

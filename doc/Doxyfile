@@ -33,7 +33,7 @@ PROJECT_NAME           = GIFT-Grab
 # This could be handy for archiving the generated documentation or
 # if some version control system is used.
 
-PROJECT_NUMBER         =
+PROJECT_NUMBER         = 1703
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer
@@ -42,7 +42,7 @@ PROJECT_NUMBER         =
 PROJECT_BRIEF          = "Open-source C++ and Python API (supports NumPy and \
                          SciPy) for acquiring, processing and encoding video \
                          streams in real time. \
-                         Copyright (c) 2015 - 2017, University College London (UCL)"
+                         Copyright (c) 2015-7, University College London (UCL)"
 
 # With the PROJECT_LOGO tag one can specify an logo or icon that is
 # included in the documentation. The maximum height of the logo should not
