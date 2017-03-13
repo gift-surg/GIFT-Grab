@@ -12,7 +12,7 @@ In particular the following classes are available and are of interest to Python 
 # What is NOT available or different in Python
 
 * Copy constructors are not available.
-* `VideoFrame::data()` is exposed only when installing GIFT-Grab with NumPy support.
+* `VideoFrame::data()` is exposed only when installing GIFT-Grab with NumPy support. This function can be used to access video data as NumPy arrays.
 * C++ exceptions are mapped to Python built-in exceptions
   * The following exceptions map to `RuntimeError`:
      * `BasicException`
