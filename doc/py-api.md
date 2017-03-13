@@ -15,11 +15,11 @@ In particular the following classes are available and are of interest to Python 
 * `VideoFrame::data()` is exposed only when installing GIFT-Grab with NumPy support.
 * C++ exceptions are mapped to Python built-in exceptions
   * The following exceptions map to `RuntimeError`:
-    * `BasicException`
-    * `VideoSourceError`
-    * `VideoTargetError`
-    * `ObserverError`
+     * `BasicException`
+     * `VideoSourceError`
+     * `VideoTargetError`
+     * `ObserverError`
   * The following exceptions map to `IOError`:
-    * `DeviceAlreadyConnected`
-    * `DeviceNotFound`
-    * `DeviceOffline`
+     * `DeviceAlreadyConnected`
+     * `DeviceNotFound`
+     * `DeviceOffline`
