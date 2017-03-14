@@ -14,6 +14,26 @@ namespace gg
 //! part of the observer design pattern (aka
 //! subscriber-publisher).
 //!
+//! \attention <b>In Python:</b> an intermediate node
+//! in a video processing pipeline should extend the
+//! \c IObservableObserver class (<b>not available in
+//! C++</b>) instead of IObservable and IObserver.
+//! Below is the source code for a sample processing
+//! node in Python.
+//!
+//! \code{.py}
+//! from pygiftgrab import IObservableObserver
+//!
+//! class MyProcNode(IObservableObserver):
+//!
+//!     def __init__(self):
+//!         super(MyProcNode, self).__init__()
+//!
+//!     def update(self, frame):
+//!         # Implement gg::IObserver::update(frame)
+//!         pass
+//! \endcode
+//!
 //! Note that no new buffer is created when broadcasting
 //! data, i.e. every IObserver is responsible for
 //! ensuring data is promptly copied to their own
