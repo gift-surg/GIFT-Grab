@@ -11,6 +11,7 @@ In particular the following classes are available and are of interest to Python 
 
 # What is NOT available or different in Python
 
+* In a video processing pipeline, an intermediate Python node should extend the `IObservableObserver` class rather than both `IObservable` and `IObserver`. Note that `IObservableObserver` is available only in Python.
 * Copy constructors are not available.
 * `VideoFrame::data()` is exposed only when installing GIFT-Grab with NumPy support. This function can be used to access video data as NumPy arrays.
 * C++ exceptions are mapped to Python built-in exceptions.
