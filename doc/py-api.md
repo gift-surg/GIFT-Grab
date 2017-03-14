@@ -24,3 +24,4 @@ In particular the following classes are available and are of interest to Python 
      * `DeviceAlreadyConnected`
      * `DeviceNotFound`
      * `DeviceOffline`
+     * `NetworkSourceUnavailable`

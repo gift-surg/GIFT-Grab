@@ -184,6 +184,9 @@ public:
 //! \brief Thrown in case of problems related
 //! to network video sources.
 //!
+//! \attention <b>In Python:</b> This exception
+//! maps to \c IOError
+//!
 class NetworkSourceUnavailable : public BasicException
 {
 public:

@@ -377,6 +377,13 @@ void translate_DeviceOffline(gg::DeviceOffline const & e)
     PyErr_SetString(PyExc_IOError, msg.c_str());
 }
 
+void translate_NetworkSourceUnavailable(gg::NetworkSourceUnavailable const & e)
+{
+    std::string msg;
+    msg.append("NetworkSourceUnavailable: ").append(e.what());
+    PyErr_SetString(PyExc_IOError, msg.c_str());
+}
+
 void translate_VideoTargetError(gg::VideoTargetError const & e)
 {
     std::string msg;
@@ -403,6 +410,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     register_exception_translator<gg::DeviceAlreadyConnected>(&translate_DeviceAlreadyConnected);
     register_exception_translator<gg::DeviceNotFound>(&translate_DeviceNotFound);
     register_exception_translator<gg::DeviceOffline>(&translate_DeviceOffline);
+    register_exception_translator<gg::NetworkSourceUnavailable>(&translate_NetworkSourceUnavailable);
     register_exception_translator<gg::VideoTargetError>(&translate_VideoTargetError);
     register_exception_translator<gg::ObserverError>(&translate_ObserverError);
 
