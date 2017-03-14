@@ -10,6 +10,9 @@ namespace gg {
 //! this class, which provides all basic exception
 //! functionality
 //!
+//! \attention <b>In Python:</b> This exception
+//! maps to \c RuntimeError
+//!
 class BasicException : public std::exception {
 protected:
     //!
@@ -41,6 +44,9 @@ public:
 //! attempted to a device that is already
 //! connected
 //!
+//! \attention <b>In Python:</b> This exception
+//! maps to \c IOError
+//!
 class DeviceAlreadyConnected : public BasicException
 {
 public:
@@ -62,6 +68,9 @@ public:
 //! \brief Thrown if connection attempts by
 //! gg::VideoSourceFactory to requested device fail
 //!
+//! \attention <b>In Python:</b> This exception
+//! maps to \c IOError
+//!
 class DeviceNotFound : public BasicException {
 public:
     //!
@@ -82,6 +91,9 @@ public:
 //! \brief Thrown if a connected device is offline,
 //! i.e. not returning any frames
 //!
+//! \attention <b>In Python:</b> This exception
+//! maps to \c IOError
+//!
 class DeviceOffline : public BasicException {
 public:
     //!
@@ -101,6 +113,9 @@ public:
 //!
 //! \brief Thrown in case of problems outputting
 //! video, e.g. to files
+//!
+//! \attention <b>In Python:</b> This exception
+//! maps to \c RuntimeError
 //!
 class VideoTargetError : public BasicException
 {
@@ -123,6 +138,9 @@ public:
 //! \brief Thrown in case of errors related to
 //! video sources
 //!
+//! \attention <b>In Python:</b> This exception
+//! maps to \c RuntimeError
+//!
 class VideoSourceError : public BasicException
 {
 public:
@@ -142,6 +160,9 @@ public:
 //!
 //! \brief Thrown in case of errors related to
 //! connecting video observers to video sources.
+//!
+//! \attention <b>In Python:</b> This exception
+//! maps to \c RuntimeError
 //!
 class ObserverError : public BasicException
 {
