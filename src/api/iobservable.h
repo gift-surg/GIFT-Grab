@@ -79,6 +79,10 @@ public:
 
     //!
     //! \brief Notify all attached observers of new data
+    //!
+    //! \attention <b>In Python:</b> This function is \b
+    //! not available yet.
+    //!
     //! \param frame
     //!
     virtual void notify(VideoFrame & frame) noexcept;
