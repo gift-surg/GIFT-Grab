@@ -179,6 +179,21 @@ public:
     //! creating copies of the video data could degrade
     //! performance.
     //!
+    //! \attention <b>In Python:</b> This function is
+    //! available only when NumPy support is enabled.
+    //! It can be used to access video data as NumPy
+    //! arrays. The signature is different as well:
+    //!
+    //! \code{.py}
+    //! flat_arr = frame.data(False) # False => flat NumPy array
+    //! # flat_arr.shape => (frame.data_length(),)
+    //!
+    //! # structured NumPy arrays currently available only from BGRA frames
+    //! if frame.colour() == ColourSpace.BGRA:
+    //!     struc_arr = frame.data(True) # True => structured NumPy array
+    //!     # struc_arr.shape => (frame.rows(), frame.cols(), 4)
+    //! \endcode
+    //!
     //! \return
     //! \sa VideoFrame(const VideoFrame & rhs)
     //!
