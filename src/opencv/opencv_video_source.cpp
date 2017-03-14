@@ -1,6 +1,7 @@
 #include "opencv_video_source.h"
 #include <string>
 #include <iostream>
+#include <cmath>
 
 VideoSourceOpenCV::VideoSourceOpenCV(const char * path)
     : IVideoSource(gg::BGRA)
@@ -49,8 +50,10 @@ double VideoSourceOpenCV::get_frame_rate()
     if (_frame_rate > 0) // already obtained or estimated
         return _frame_rate;
 
-    // will work for files, but <= 0 for most online devices
+    // will work for files, but sometimes <= 0 or nan with online devices
     _frame_rate = _cap.get(CV_CAP_PROP_FPS);
+    if (std::isnan(_frame_rate))
+        _frame_rate = 0;
 
     if (_frame_rate <= 0) // i.e. not a file, see:
     // http://www.learnopencv.com/how-to-find-frame-rate-or-frames-per-second-fps-in-opencv-python-cpp/
