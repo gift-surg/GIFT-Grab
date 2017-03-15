@@ -1,5 +1,9 @@
 #include "iobservable.h"
 #include <algorithm>
+#ifdef BUILD_PYTHON
+#include "gil.h"
+#endif
+
 
 namespace gg
 {
@@ -22,6 +26,9 @@ void IObservable::attach(IObserver & observer)
 
 void IObservable::detach(IObserver & observer)
 {
+#ifdef BUILD_PYTHON
+    ScopedPythonGILRelease gil_release;
+#endif
     std::lock_guard<std::mutex> lock_guard(_observers_lock);
     _observers.erase(
         std::find(
