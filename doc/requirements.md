@@ -13,7 +13,7 @@ GIFT-Grab requires:
 
 # Optional dependencies
 
-GIFT-Grab requires a subset of the following libraries **based on activated [features](README.md#features)**.
+GIFT-Grab requires a subset of the following libraries **based on activated [features](../README.md#features)**.
 Please note that there are cross-dependencies between some of the optional dependencies.
 Check out [the documentation](tips.md) for details.
 
