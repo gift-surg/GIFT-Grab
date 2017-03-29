@@ -15,7 +15,7 @@ GIFT-Grab requires:
 
 GIFT-Grab requires a subset of the following libraries **based on activated [features](README.md#features)**.
 Please note that there are cross-dependencies between some of the optional dependencies.
-Check out [the documentation](doc/tips.md) for details.
+Check out [the documentation](tips.md) for details.
 
 | **Dependency** | **GIFT-Grab tested with version / model** | **Remarks** |
 | :--- | :--- | :--- |
