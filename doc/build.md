@@ -84,7 +84,7 @@ Depending on whether [NumPy][numpy] support is required:
 
 # Testing GIFT-Grab
 
-`-D BUILD_TESTS=ON -D BUILD_PYTHON=ON` (requires Python, [Boost.Python](bp), [Catch](catch) and [pytest](pytest)).
+`-D BUILD_TESTS=ON -D BUILD_PYTHON=ON` (requires Python, [Boost.Python][bp], [Catch][catch] and [pytest][pytest]).
 Note that Catch will be automatically downloaded from the internet as part of the build process.
 
 If you would like to test network streams as well, you will also need to provide:
