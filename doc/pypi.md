@@ -44,7 +44,7 @@ Both options are active by default.
 Append `--install-option="--no-bgra"` or `--install-option="--no-i420"` to deactivate the respective option.
 
 Also Epiphan Video Grabber SDK can be used instead of libVLC:
-`--install-option="--epiphan-dvi2pcie-duo" --install-option="--enable-nonfree" --install-option="--epiphansdk"` (requires zlib, pthreads and [Epiphan Video Grabber SDK](tips.md#epiphan-video-grabber-sdk)).
+`--install-option="--epiphan-dvi2pcie-duo" --install-option="--enable-nonfree" --install-option="--epiphansdk"` (requires zlib, pthreads and [Epiphan Video Grabber SDK](tips.md#epiphan-video-grabbing-sdk)).
 This option **makes GIFT-Grab undistributable**.
 
 [i420]: https://wiki.videolan.org/YUV/#I420
