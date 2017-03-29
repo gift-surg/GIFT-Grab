@@ -46,7 +46,7 @@ Both options are active by default.
 Append `-D USE_BGRA=OFF` or `-D USE_I420=OFF` to deactivate the respective option.
 
 Also Epiphan Video Grabber SDK can be used instead of libVLC:
-`-D USE_EPIPHAN_DVI2PCIE_DUO=ON -D ENABLE_NONFREE=ON -D USE_EPIPHANSDK=ON` (requires zlib, pthreads and [Epiphan Video Grabber SDK](tips.md#epiphan-video-grabber-sdk)).
+`-D USE_EPIPHAN_DVI2PCIE_DUO=ON -D ENABLE_NONFREE=ON -D USE_EPIPHANSDK=ON` (requires zlib, pthreads and [Epiphan Video Grabber SDK](tips.md#epiphan-video-grabbing-sdk)).
 This option **makes GIFT-Grab undistributable**.
 
 [i420]: https://wiki.videolan.org/YUV/#I420
