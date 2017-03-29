@@ -13,40 +13,40 @@ If mutually exclusive options are activated, CMake will give an error and GIFT-G
 
 # Reading video files
 
-`-D USE_FILES=ON` (requires [FFmpeg](doc/tips.md#ffmpeg))
+`-D USE_FILES=ON` (requires [FFmpeg](tips.md#ffmpeg))
 
 
 # Writing video files
 
 ## Xvid
 
-`-D USE_XVID=ON` (requires [OpenCV](doc/tips.md#opencv))
+`-D USE_XVID=ON` (requires [OpenCV](tips.md#opencv))
 
 
 ## HEVC
 
-`-D USE_HEVC=ON` (requires [FFmpeg](doc/tips.md#ffmpeg), pkg-config and [kvazaar](doc/tips.md#kvazaar))
+`-D USE_HEVC=ON` (requires [FFmpeg](tips.md#ffmpeg), pkg-config and [kvazaar](tips.md#kvazaar))
 
 In addition, also the following two **BSD-3-incompatible** options are available:
 
-1. `-D USE_HEVC=ON -D ENABLE_GPL=ON -D USE_X265=ON`: use x265 instead of kvazaar (requires [FFmpeg](doc/tips.md#ffmpeg), pkg-config and [x265](doc/tips.md#x265)), **upgrades GIFT-Grab licence to GPL**
-2. `-D USE_HEVC=ON -D ENABLE_NONFREE=ON -D USE_NVENC=ON`: hardware-accelerated HEVC (requires [a supported GPU](https://developer.nvidia.com/nvidia-video-codec-sdk), [FFmpeg](doc/tips.md#ffmpeg), pkg-config and [NVENC](doc/tips.md#nvenc)), **makes GIFT-Grab undistributable**
+1. `-D USE_HEVC=ON -D ENABLE_GPL=ON -D USE_X265=ON`: use x265 instead of kvazaar (requires [FFmpeg](tips.md#ffmpeg), pkg-config and [x265](tips.md#x265)), **upgrades GIFT-Grab licence to GPL**
+2. `-D USE_HEVC=ON -D ENABLE_NONFREE=ON -D USE_NVENC=ON`: hardware-accelerated HEVC (requires [a supported GPU](https://developer.nvidia.com/nvidia-video-codec-sdk), [FFmpeg](tips.md#ffmpeg), pkg-config and [NVENC](tips.md#nvenc)), **makes GIFT-Grab undistributable**
 
 ## VP9
 
-`-D USE_VP9=ON` (requires [FFmpeg](doc/tips.md#ffmpeg), pkg-config and [libvpx](doc/tips.md#libvpx))
+`-D USE_VP9=ON` (requires [FFmpeg](tips.md#ffmpeg), pkg-config and [libvpx](tips.md#libvpx))
 
 
 # Epiphan DVI2PCIe Duo
 
-`-D USE_EPIPHAN_DVI2PCIE_DUO=ON` (requires [OpenCV](doc/tips.md#opencv) and [libVLC](doc/tips.md#libvlc))
+`-D USE_EPIPHAN_DVI2PCIE_DUO=ON` (requires [OpenCV](tips.md#opencv) and [libVLC](tips.md#libvlc))
 
 OpenCV and libVLC are needed for capturing in the BGRA and [I420][i420] colour spaces respectively.
 Both options are active by default.
 Append `-D USE_BGRA=OFF` or `-D USE_I420=OFF` to deactivate the respective option.
 
 Also Epiphan Video Grabber SDK can be used instead of libVLC:
-`-D USE_EPIPHAN_DVI2PCIE_DUO=ON -D ENABLE_NONFREE=ON -D USE_EPIPHANSDK=ON` (requires zlib, pthreads and [Epiphan Video Grabber SDK](doc/tips.md#epiphan-video-grabber-sdk)).
+`-D USE_EPIPHAN_DVI2PCIE_DUO=ON -D ENABLE_NONFREE=ON -D USE_EPIPHANSDK=ON` (requires zlib, pthreads and [Epiphan Video Grabber SDK](tips.md#epiphan-video-grabbing-sdk)).
 This option **makes GIFT-Grab undistributable**.
 
 [i420]: https://wiki.videolan.org/YUV/#I420
@@ -54,7 +54,7 @@ This option **makes GIFT-Grab undistributable**.
 
 # Blackmagic DeckLink SDI 4K
 
-`-D USE_BLACKMAGIC_DECKLINK_SDI_4K=ON -D ENABLE_NONFREE=ON` (requires [Blackmagic Desktop Video SDK](doc/tips.md#blackmagic-drivers-and-blackmagic-desktop-video-sdk))
+`-D USE_BLACKMAGIC_DECKLINK_SDI_4K=ON -D ENABLE_NONFREE=ON` (requires [Blackmagic Desktop Video SDK](tips.md#blackmagic-drivers-and-blackmagic-desktop-video-sdk))
 
 This currently works only with the [UYVY][uyvy] colour space (active by default).
 This option **makes GIFT-Grab undistributable**.
@@ -64,7 +64,7 @@ This option **makes GIFT-Grab undistributable**.
 
 # Network streams
 
-`-D USE_NETWORK_SOURCES=ON` (requires [OpenCV](doc/tips.md#opencv) and [libVLC](doc/tips.md#libvlc))
+`-D USE_NETWORK_SOURCES=ON` (requires [OpenCV](tips.md#opencv) and [libVLC](tips.md#libvlc))
 
 OpenCV and libVLC are needed for capturing in the BGRA and [I420][i420] colour spaces respectively.
 Both options are active by default.
@@ -76,7 +76,7 @@ Append `-D USE_BGRA=OFF` or `-D USE_I420=OFF` to deactivate the respective optio
 Depending on whether [NumPy][numpy] support is required:
 
 * Without NumPy: `-D BUILD_PYTHON=ON` (requires Python and [Boost.Python][bp])
-* With NumPy: `-D BUILD_PYTHON=ON -D USE_NUMPY=ON` (requires Python and [Boost.Python 1.63 or newer](doc/tips.md#numpy-support-and-boostpython))
+* With NumPy: `-D BUILD_PYTHON=ON -D USE_NUMPY=ON` (requires Python and [Boost.Python 1.63 or newer](tips.md#numpy-support-and-boostpython))
 
 [numpy]: http://www.numpy.org/
 [bp]: http://www.boost.org/doc/libs/release/libs/python/doc/
