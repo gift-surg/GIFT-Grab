@@ -91,6 +91,7 @@ linux:
     - 162-revise-contribution-guide-before-open-sourcing
     - 168-correct-ffmpeg-version-in-documentation
     - 177-howto-links-for-dependencies-broken-on-github-mirror
+    - 179-pypi-installer-name-broken
 
 ################## Platform: PyPI ##################
 ################## Target: All #####################
@@ -173,6 +174,7 @@ pypi:
     - 162-revise-contribution-guide-before-open-sourcing
     - 168-correct-ffmpeg-version-in-documentation
     - 177-howto-links-for-dependencies-broken-on-github-mirror
+    - 179-pypi-installer-name-broken
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 ################## Platform: PyPI ################################
