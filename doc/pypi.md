@@ -1,5 +1,7 @@
 # Install GIFT-Grab from the Python Packaging Index
 
+**Hint:** In case of any errors (such as `option not recognized`) during installation, please see the [these tips](tips.md#gift-grab-caveats).
+
 Simply run `pip install gift-grab` by appending the options for the desired options from the list below.
 All GIFT-Grab features are inactive by default.
 
