@@ -7,15 +7,15 @@ For a full list of the required and optional dependencies, as well as links to t
 
 # GIFT-Grab caveats
 
-* In case GiftGrab is built with a custom `CMAKE_INSTALL_PREFIX` that is **not** a standard system path, `${CMAKE_INSTALL_PREFIX}/lib/giftgrab` needs to be included in CMake's `CMAKE_MODULE_PATH` for `FIND_PACKAGE(GiftGrab)` to work.
-* If you encounter an `option not recognized` error while `pip install`ling GiftGrab, run `pip install pytest` and `pip install PyYAML` before running `pip install giftgrab`.
+* In case GIFT-Grab is built with a custom `CMAKE_INSTALL_PREFIX` that is **not** a standard system path, `${CMAKE_INSTALL_PREFIX}/lib/giftgrab` needs to be included in CMake's `CMAKE_MODULE_PATH` for `FIND_PACKAGE(GiftGrab)` to work.
+* If you encounter an `option not recognized` error while `pip install`ling GIFT-Grab, run `pip install pytest` and `pip install PyYAML` before running `pip install gift-grab`.
 
 
 # Epiphan DVI2PCIe Duo
 
 * When using this frame-grabber card, `/dev/video0` and `/dev/video1` will be probed for connecting to its DVI and SDI ports respectively.
 * The Linux user account used for capturing video must be in the group these two devices belong to. For instance if these belong to the `video` group: `sudo usermod -a -G video myuser`.
-* Due to the use of the generic [OpenCV VideoCapture](http://docs.opencv.org/2.4/modules/highgui/doc/reading_and_writing_images_and_video.html#VideoCapture::VideoCapture%28int%20device%29) API, GiftGrab can currently not distinguish Epiphan frame-grabbers from others (i.e. in the case where multiple frame-grabber cards are installed on a system).
+* Due to the use of the generic [OpenCV VideoCapture](http://docs.opencv.org/2.4/modules/highgui/doc/reading_and_writing_images_and_video.html#VideoCapture::VideoCapture%28int%20device%29) API, GIFT-Grab can currently not distinguish Epiphan frame-grabbers from others (i.e. in the case where multiple frame-grabber cards are installed on a system).
 * Due to hardware-specific limitations, capturing video at 60 fps is possible only if the [I420 colour space](https://wiki.videolan.org/YUV#I420) is used instead of BGRA.
 
 
@@ -57,7 +57,7 @@ Installation instructions:
 1. If using libvpx: `../FFmpeg/configure --enable-shared --enable-avresample --enable-libvpx --enable-muxer=webm`
 1. `make -j` and `make install`
 
-**Note:** In case you install FFmpeg in a non-standard location, you will need to appropriately augment your `PKG_CONFIG_PATH` for GiftGrab to be able to locate FFmpeg.
+**Note:** In case you install FFmpeg in a non-standard location, you will need to appropriately augment your `PKG_CONFIG_PATH` for GIFT-Grab to be able to locate FFmpeg.
 
 
 # NVENC

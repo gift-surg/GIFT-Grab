@@ -1,6 +1,8 @@
 # Install GIFT-Grab from the Python Packaging Index
 
-Simply run `pip install giftgrab` by appending the options for the desired options from the list below.
+**Hint:** In case of any errors (such as `option not recognized`) during installation, please see the [these tips](tips.md#gift-grab-caveats).
+
+Simply run `pip install gift-grab` by appending the options for the desired options from the list below.
 All GIFT-Grab features are inactive by default.
 
 As this installation option installs the GIFT-Grab Python API, it requires Python and Boost.Python.
