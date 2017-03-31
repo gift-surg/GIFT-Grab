@@ -8,7 +8,7 @@ For a full list of the required and optional dependencies, as well as links to t
 # GIFT-Grab caveats
 
 * In case GiftGrab is built with a custom `CMAKE_INSTALL_PREFIX` that is **not** a standard system path, `${CMAKE_INSTALL_PREFIX}/lib/giftgrab` needs to be included in CMake's `CMAKE_MODULE_PATH` for `FIND_PACKAGE(GiftGrab)` to work.
-* If you encounter an `option not recognized` error while `pip install`ling GiftGrab, run `pip install pytest` and `pip install PyYAML` before running `pip install giftgrab`.
+* If you encounter an `option not recognized` error while `pip install`ling GiftGrab, run `pip install pytest` and `pip install PyYAML` before running `pip install gift-grab`.
 
 
 # Epiphan DVI2PCIe Duo
