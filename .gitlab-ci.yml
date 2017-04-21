@@ -92,6 +92,7 @@ linux:
     - 168-correct-ffmpeg-version-in-documentation
     - 177-howto-links-for-dependencies-broken-on-github-mirror
     - 179-pypi-installer-name-broken
+    - 41-configure-python-documentation-properly
 
 ################## Platform: PyPI ##################
 ################## Target: All #####################
@@ -175,6 +176,7 @@ pypi:
     - 168-correct-ffmpeg-version-in-documentation
     - 177-howto-links-for-dependencies-broken-on-github-mirror
     - 179-pypi-installer-name-broken
+    - 41-configure-python-documentation-properly
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 ################## Platform: PyPI ################################
