@@ -43,7 +43,14 @@ It then applies Gaussian filtering `in-place` on this NumPy array using the `cor
 .. _`corresponding method of SciPy`: https://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.gaussian_filter.html#scipy.ndimage.gaussian_filter
 
 As a concrete example, consider attaching a ``GaussianSmootherBGRA`` object to a video source.
-Take for instance the ``file_reader`` in the :ref:`Files` section: ::
+We could for instance use the ``file_reader`` in the :ref:`Files` section.
+There is a subtlety, though: we need to initialise this ``file_reader`` using the BGRA colour space instead of I420 as in the :ref:`Files` section: ::
+
+    file_reader = fac.create_file_reader( '/tmp/myvideo.mp4', ColourSpace.BGRA )
+
+Note that we use ``ColourSpace.BGRA`` instead of ``ColourSpace.I420``, which is the only difference to the corresponding line in the :ref:`Files` section.
+This is because our ``GaussianSmootherBGRA`` class expects the video frames to be encoded in the BGRA colour space.
+Then we can create our ``gauss`` object and attach it to the ``file_reader``: ::
 
     gauss = GaussianSmootherBGRA()
     file_reader.attach( gauss )
