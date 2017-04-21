@@ -12,6 +12,14 @@ For further details, please also see `GIFT-Grab on GitHub`_.
 Python examples
 ^^^^^^^^^^^^^^^
 
+Please note that all GIFT-Grab features are disabled by default.
+All desired features need to be enabled **during installation**.
+This is done by appending the corresponding install options **when calling** ``pip``, e.g.: ::
+
+   pip install gift-grab --install-option="--desired-feature"
+
+The relevant install options for each of the examples are outlined in the links provided.
+
 .. toctree::
    :maxdepth: 2
    
