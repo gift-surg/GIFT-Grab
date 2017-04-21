@@ -1,3 +1,5 @@
+.. _Files:
+
 Reading video files
 ===================
 

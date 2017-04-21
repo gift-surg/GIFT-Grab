@@ -13,7 +13,7 @@ The ``GaussianSmootherBGRA`` class achieves this by being an observer_ and obser
 In other words, an instance of this class can be attached to an observable_ video source object.
 This causes that video source object to pass each new `video frame`_ to the ``GaussianSmootherBGRA`` instance.
 The ``GaussianSmootherBGRA`` instance in return processes that `video frame`_ and passes it to any observer_ object attached to itself.
-To achieve this, it extends the ``IObservableObserver`` class exposed by GIFT-Grab. ::
+To this end, it extends the ``IObservableObserver`` class exposed by GIFT-Grab. ::
 
     from pygiftgrab import IObservableObserver
     import scipy.ndimage as ndimage
@@ -41,3 +41,23 @@ It then applies Gaussian filtering `in-place` on this NumPy array using the `cor
 .. _`NumPy array`: https://docs.scipy.org/doc/numpy/user/quickstart.html
 .. _`data method`: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_video_frame.html#a458e15b00b5b2d39855db76215c44055
 .. _`corresponding method of SciPy`: https://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.gaussian_filter.html#scipy.ndimage.gaussian_filter
+
+As a concrete example, consider attaching a ``GaussianSmootherBGRA`` object to a video source.
+Take for instance the ``file_reader`` in the :ref:`Files` section: ::
+
+    gauss = GaussianSmootherBGRA()
+    file_reader.attach( gauss )
+
+Now the ``file_reader`` has started feeding video frames to ``gauss``.
+We can attach the ``file_writer`` in the :ref:`Encoding` section to ``gauss`` as well: ::
+
+    gauss.attach( file_writer )
+
+Now ``gauss`` has started feeding the Gaussian-smoothed video frames to the ``file_writer``.
+In other words, each video frame read from our video file is Gaussian-smoothed and subsequently encoded to a new video file.
+This pipeline keeps operating until we detach_ the observers from the observables: ::
+
+    file_reader.detach( gauss )
+    gauss.detach( file_writer )
+
+.. _detach: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_i_observable.html#ada3f3062b7cd3fd5845dbef9d604ff5b
