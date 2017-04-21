@@ -29,10 +29,7 @@ The relevant install options for each of the examples are outlined in the links 
    scipy
    encoding
 
+Useful links
+^^^^^^^^^^^^
 
-
-Indices and tables
-^^^^^^^^^^^^^^^^^^
-
-* :ref:`genindex`
 * :ref:`search`
