@@ -21,12 +21,14 @@ First we obtain the `GIFT-Grab video source factory`_ singleton: ::
 
 Then we `request the device`_ using the obtained factory: ::
 
+    from pygiftgrab import Device, ColourSpace
     epiphan = sfac.get_device(
         Device.DVI2PCIeDuo_DVI, ColourSpace.I420 )
 
 .. _`request the device`: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_video_source_factory.html#af46e23354df7483fab9860ce8c954d16
 
 The first argument above specifies the `device type`_.
+In this particular case ``Device.DVI2PCIeDuo_DVI`` indicates the DVI port of an Epiphan DVI2PCIe Duo.
 The second argument specifies that we would like to get the video frames in the I420_ `colour space`_.
 
 .. _`device type`: https://codedocs.xyz/gift-surg/GIFT-Grab/namespacegg.html#a934637dd9e1d14db07268beeaa9b1fcb
