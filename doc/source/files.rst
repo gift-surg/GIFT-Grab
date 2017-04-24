@@ -28,7 +28,7 @@ To process the frames, we need to `attach`_ an `observer`_ to our ``file_reader`
 You can see how to do this in one of the following examples:
 
 * :ref:`Encoding` shows how to save video frames to a file.
-* :ref:`SciPy` shows how to engineer custom video frame processing capabilities.
+* :ref:`SciPy` shows how to implement a custom video frame processing capability in your application.
 
 .. _I420: https://wiki.videolan.org/YUV/#YUV_4:2:0_.28I420.2FJ420.2FYV12.29
 .. _`colour space`: https://codedocs.xyz/gift-surg/GIFT-Grab/namespacegg.html#a4f52bacf224413c522da5fb3c89dde6b
