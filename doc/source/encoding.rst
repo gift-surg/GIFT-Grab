@@ -11,7 +11,7 @@ This section shows how GIFT-Grab can be used for encoding video frames and savin
 To this end, we first obtain the `GIFT-Grab video target factory`_ singleton: ::
 
     from pygiftgrab import VideoTargetFactory
-    fac = VideoTargetFactory.get_instance()
+    tfac = VideoTargetFactory.get_instance()
 
 .. _`GIFT-Grab video target factory`: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_video_target_factory.html#details
 
@@ -19,7 +19,7 @@ Then we `create a file writer`_ using the factory: ::
 
     from pygiftgrab import Codec
     frame_rate = 30.0
-    file_writer = fac.create_file_writer(
+    file_writer = tfac.create_file_writer(
         Codec.HEVC, '/tmp/myoutput.mp4', frame_rate )
 
 .. _`create a file writer`: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_video_target_factory.html#adacfc7db06b4a0fa924b269a9a22af08

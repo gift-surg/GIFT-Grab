@@ -10,7 +10,7 @@ Capturing a network video stream
 To start capturing a network video stream, we first obtain the `GIFT-Grab video source factory`_ singleton: ::
 
     from pygiftgrab import VideoSourceFactory
-    fac = VideoSourceFactory.get_instance()
+    sfac = VideoSourceFactory.get_instance()
 
 .. _`GIFT-Grab video source factory`: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_video_source_factory.html
 
@@ -18,7 +18,7 @@ Then we `request a connection`_ to our network source using the obtained factory
 
     from pygiftgrab import ColourSpace
     source_mrl = 'rtsp://192.168.127.191:555/stream.sdp'
-    network_stream = fac.connect_network_source(
+    network_stream = sfac.connect_network_source(
         source_mrl, ColourSpace.I420 )
 
 .. _`request a connection`: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_video_source_factory.html#a0d39bea6386593ac962e268b7325ce92

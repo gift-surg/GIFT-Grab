@@ -10,14 +10,14 @@ Reading video files
 To read a video file, we first obtain the `GIFT-Grab video source factory`_ singleton: ::
 
     from pygiftgrab import VideoSourceFactory
-    fac = VideoSourceFactory.get_instance()
+    sfac = VideoSourceFactory.get_instance()
 
 .. _`GIFT-Grab video source factory`: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_video_source_factory.html#details
 
 Then we `create a file reader`_ using the obtained factory: ::
 
     from pygiftgrab import ColourSpace
-    file_reader = fac.create_file_reader( '/tmp/myinput.mp4', ColourSpace.I420 )
+    file_reader = sfac.create_file_reader( '/tmp/myinput.mp4', ColourSpace.I420 )
 
 .. _`create a file reader`: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_video_source_factory.html#a7de4df06b2b210085cfe3f3027e36dd7
 

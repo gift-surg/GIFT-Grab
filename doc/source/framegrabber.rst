@@ -15,13 +15,13 @@ In this example we will see how we can capture the video stream from an external
 First we obtain the `GIFT-Grab video source factory`_ singleton: ::
 
     from pygiftgrab import VideoSourceFactory
-    fac = VideoSourceFactory.get_instance()
+    sfac = VideoSourceFactory.get_instance()
 
 .. _`GIFT-Grab video source factory`: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_video_source_factory.html
 
 Then we `request the device`_ using the obtained factory: ::
 
-    epiphan = fac.get_device(
+    epiphan = sfac.get_device(
         Device.DVI2PCIeDuo_DVI, ColourSpace.I420 )
 
 .. _`request the device`: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_video_source_factory.html#af46e23354df7483fab9860ce8c954d16
