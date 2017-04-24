@@ -37,8 +37,8 @@ The second argument specifies that we would like to get the video frames in the 
 .. _I420: https://wiki.videolan.org/YUV/#YUV_4:2:0_.28I420.2FJ420.2FYV12.29
 .. _`colour space`: https://codedocs.xyz/gift-surg/GIFT-Grab/namespacegg.html#a4f52bacf224413c522da5fb3c89dde6b
 
-For processing video frames obtained from the ``network_stream`` object, please see the discussion at the end of the :ref:`Files` section, which talks about attaching an observer object to the video source there, i.e. the ``file_reader``.
-Within all the code pertaining to that discussion, you can simply replace all occurences of ``file_reader`` with the ``network_stream`` object we've created above.
+For processing video frames obtained from the ``network_stream`` object, please see the :ref:`ProcessingFrames` section.
+Within all the source code pertaining to that discussion, you can simply replace all occurences of ``file_reader`` with the ``network_stream`` object we've created above.
 The polymorphism achieved by returning a `GIFT-Grab video source`_ from the `GIFT-Grab video source factory`_ methods ``connect_network_source()`` and ``create_file_reader()`` allows video consumers to be agnostic of the actual type of the `GIFT-Grab video source`_ object.
 
 .. _`GIFT-Grab video source`: https://codedocs.xyz/gift-surg/GIFT-Grab/class_i_video_source.html
