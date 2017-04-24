@@ -3,7 +3,7 @@
 Video acquisition using frame-grabber hardware
 ==============================================
 
-For the relevant install option(s) and dependencies, please see the corresponding link from the list below to activate support for the corresponding frame-grabber hardware:
+**Important:** Please see the links below for the **pre-requisites** and ``pip`` **install options** needed to enable support for the corresponding frame-grabber hardware:
 
 * `Epiphan DVI2PCIe Duo`_
 * `Blackmagic DeckLink SDI 4K`_
@@ -11,15 +11,15 @@ For the relevant install option(s) and dependencies, please see the correspondin
 .. _`Epiphan DVI2PCIe Duo`: https://github.com/gift-surg/GIFT-Grab/blob/master/doc/pypi.md#epiphan-dvi2pcie-duo
 .. _`Blackmagic DeckLink SDI 4K`: https://github.com/gift-surg/GIFT-Grab/blob/master/doc/pypi.md#blackmagic-decklink-sdi-4k
 
-In this example we are going to use an Epiphan DVI2PCIe Duo.
-First we get the `GIFT-Grab video source factory`_ singleton: ::
+In this example we will see how we can capture the video stream from an external device using an Epiphan DVI2PCIe Duo.
+First we obtain the `GIFT-Grab video source factory`_ singleton: ::
 
     from pygiftgrab import VideoSourceFactory
     fac = VideoSourceFactory.get_instance()
 
 .. _`GIFT-Grab video source factory`: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_video_source_factory.html
 
-Then we `request the device`_ using the factory: ::
+Then we `request the device`_ using the obtained factory: ::
 
     epiphan = fac.get_device(
         Device.DVI2PCIeDuo_DVI, ColourSpace.I420 )
@@ -33,4 +33,8 @@ The second argument specifies that we would like to get the video frames in the 
 .. _I420: https://wiki.videolan.org/YUV/#YUV_4:2:0_.28I420.2FJ420.2FYV12.29
 .. _`colour space`: https://codedocs.xyz/gift-surg/GIFT-Grab/namespacegg.html#a4f52bacf224413c522da5fb3c89dde6b
 
-For processing video frames obtained from the ``epiphan`` object, see the discussion at the end of the :ref:`Files` section.
+For processing video frames obtained from the ``epiphan`` object, please see the discussion at the end of the :ref:`Files` section, which talks about attaching an observer object to the video source there, i.e. the ``file_reader``.
+Within all the code pertaining to that discussion, you can simply replace all occurences of ``file_reader`` with the ``epiphan`` object we've created above.
+The polymorphism achieved by returning a `GIFT-Grab video source`_ from the `GIFT-Grab video source factory`_ methods ``get_device()`` and ``create_file_reader()`` which allows video consumers to be agnostic of the actual type of the `GIFT-Grab video source`_ object.
+
+.. _`GIFT-Grab video source`: https://codedocs.xyz/gift-surg/GIFT-Grab/class_i_video_source.html
