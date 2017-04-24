@@ -47,25 +47,30 @@ We then apply Gaussian filtering `in-place` on this NumPy array using the `corre
 .. _`data method`: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_video_frame.html#a458e15b00b5b2d39855db76215c44055
 .. _`corresponding method of SciPy`: https://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.gaussian_filter.html#scipy.ndimage.gaussian_filter
 
-As a concrete example, consider attaching a ``GaussianSmootherBGRA`` object to a video source.
-We could for instance use the ``file_reader`` in the :ref:`Files` section.
-There is a subtlety, though: we need to initialise this ``file_reader`` using the BGRA colour space instead of I420 as in the :ref:`Files` section: ::
+A ``GaussianSmootherBGRA`` instance can be attached to an observable_ video source.
+This causes that video source object to pass each new `video frame`_ to the ``GaussianSmootherBGRA`` instance.
+The ``GaussianSmootherBGRA`` instance in return processes that `video frame`_ according to the ``update()`` method above.
+It then passes it to any observer_ object attached to itself.
 
-    file_reader = fac.create_file_reader( '/tmp/myvideo.mp4', ColourSpace.BGRA )
+As a concrete example, consider attaching a ``GaussianSmootherBGRA`` object to the ``file_reader`` created in the :ref:`Files` section.
+There is a subtlety, though: we need to initialise this ``file_reader`` using the BGRA colour space instead of I420 as in the :ref:`Files` example: ::
+
+    file_reader = fac.create_file_reader( '/tmp/myinput.mp4', ColourSpace.BGRA )
 
 Note that we use ``ColourSpace.BGRA`` instead of ``ColourSpace.I420``, which is the only difference to the corresponding line in the :ref:`Files` section.
 This is because our ``GaussianSmootherBGRA`` class expects the video frames to be encoded in the BGRA colour space.
-Then we can create our ``gauss`` object and attach it to the ``file_reader``: ::
+
+Let's create an instance of our class and attach it to the ``file_reader``: ::
 
     gauss = GaussianSmootherBGRA()
     file_reader.attach( gauss )
 
 Now the ``file_reader`` has started feeding video frames to ``gauss``.
-We can attach the ``file_writer`` in the :ref:`Encoding` section to ``gauss`` as well: ::
+To save the Gaussian-smoothed frames to a file, we can attach the ``file_writer`` defined in the :ref:`Encoding` section to ``gauss``: ::
 
     gauss.attach( file_writer )
 
-Now ``gauss`` has started feeding the Gaussian-smoothed video frames to the ``file_writer``.
+At this point ``gauss`` has started feeding the Gaussian-smoothed video frames to the ``file_writer``.
 In other words, each video frame read from our video file is Gaussian-smoothed and subsequently encoded to a new video file.
 This pipeline keeps operating until we detach_ the observers from the observables: ::
 
