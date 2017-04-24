@@ -3,9 +3,15 @@
 Processing video frames with SciPy / NumPy
 ==========================================
 
-**Important:** Please see `this page`_ for the **pre-requisites** and ``pip`` **install options** needed to enable this feature.
+How to enable this feature
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Please see `this page`_ for the **pre-requisites** and ``pip`` **install options** needed to enable this feature.
 
 .. _`this page`: https://github.com/gift-surg/GIFT-Grab/blob/master/doc/pypi.md#numpy
+
+Exemplary source code with explanation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In this section we define a ``GaussianSmootherBGRA`` Python class that implements a custom image processing capability.
 Namely, ``GaussianSmootherBGRA``:

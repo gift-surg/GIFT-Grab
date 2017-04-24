@@ -3,9 +3,15 @@
 Encoding video streams in real time
 ===================================
 
-**Important:** Please see `this page`_ for the **pre-requisites** and ``pip`` **install options** needed to enable this feature.
+How to enable this feature
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Please see `this page`_ for the **pre-requisites** and ``pip`` **install options** needed to enable this feature.
 
 .. _`this page`: https://github.com/gift-surg/GIFT-Grab/blob/master/doc/pypi.md#writing-video-files
+
+Exemplary source code with explanation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This section shows how GIFT-Grab can be used for encoding video frames and saving them to a file.
 To this end, we first obtain the `GIFT-Grab video target factory`_ singleton: ::

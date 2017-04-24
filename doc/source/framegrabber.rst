@@ -3,13 +3,19 @@
 Video acquisition using frame-grabber hardware
 ==============================================
 
-**Important:** Please see the links below for the **pre-requisites** and ``pip`` **install options** needed to enable support for the corresponding frame-grabber hardware:
+How to enable this feature
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Please see the links below for the **pre-requisites** and ``pip`` **install options** needed to enable support for the corresponding frame-grabber hardware:
 
 * `Epiphan DVI2PCIe Duo`_
 * `Blackmagic DeckLink SDI 4K`_
 
 .. _`Epiphan DVI2PCIe Duo`: https://github.com/gift-surg/GIFT-Grab/blob/master/doc/pypi.md#epiphan-dvi2pcie-duo
 .. _`Blackmagic DeckLink SDI 4K`: https://github.com/gift-surg/GIFT-Grab/blob/master/doc/pypi.md#blackmagic-decklink-sdi-4k
+
+Exemplary source code with explanation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In this example we will see how we can capture the video stream from an external device using an Epiphan DVI2PCIe Duo.
 First we obtain the `GIFT-Grab video source factory`_ singleton: ::
