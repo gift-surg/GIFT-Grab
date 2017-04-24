@@ -56,3 +56,33 @@ This pipeline keeps operating until we `detach`_ our ``file_writer`` from our ``
 .. _detach: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_i_observable.html#ada3f3062b7cd3fd5845dbef9d604ff5b
 
 The :ref:`SciPy` section shows a more complex pipeline that implements a custom image processing capability.
+
+Full source code
+^^^^^^^^^^^^^^^^
+
+::
+
+    #!/usr/bin/env python2
+
+    from pygiftgrab import VideoTargetFactory
+    from pygiftgrab import Codec
+    from time import sleep
+    from pygiftgrab import VideoSourceFactory
+    from pygiftgrab import ColourSpace
+
+
+    if __name__ == '__main__':
+        sfac = VideoSourceFactory.get_instance()
+        file_reader = sfac.create_file_reader(
+            '/tmp/myinput.mp4', ColourSpace.I420 )
+
+        tfac = VideoTargetFactory.get_instance()
+        frame_rate = file_reader.get_frame_rate()
+        file_writer = tfac.create_file_writer(
+            Codec.HEVC, '/tmp/myoutput.mp4', frame_rate )
+
+        file_reader.attach( file_writer )
+
+        sleep( 20 )
+
+        file_reader.detach( file_writer )
