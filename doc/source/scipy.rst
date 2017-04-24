@@ -84,3 +84,51 @@ This pipeline keeps operating until we detach_ the observers from the observable
     gauss.detach( file_writer )
 
 .. _detach: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_i_observable.html#ada3f3062b7cd3fd5845dbef9d604ff5b
+
+Full source code
+^^^^^^^^^^^^^^^^
+
+::
+
+    #!/usr/bin/env python2
+
+    from pygiftgrab import IObservableObserver
+    import scipy.ndimage as ndimage
+    from pygiftgrab import VideoSourceFactory
+    from pygiftgrab import ColourSpace
+    from time import sleep
+    from pygiftgrab import VideoTargetFactory
+    from pygiftgrab import Codec
+
+
+    class GaussianSmootherBGRA(IObservableObserver):
+
+        def __init__(self):
+            super(GaussianSmootherBGRA, self).__init__()
+
+        def update(self, frame):
+            data_np = frame.data(True)
+            ndimage.gaussian_filter(input=data_np,
+                                    sigma=(5, 15, 0),
+                                    order=0, output=data_np)
+
+
+    if __name__ == '__main__':
+        sfac = VideoSourceFactory.get_instance()
+        file_reader = sfac.create_file_reader(
+            '/tmp/myinput.mp4', ColourSpace.BGRA )
+
+        gauss = GaussianSmootherBGRA()
+
+        tfac = VideoTargetFactory.get_instance()
+        frame_rate = file_reader.get_frame_rate()
+        file_writer = tfac.create_file_writer(
+            Codec.HEVC, '/tmp/myoutput.mp4', frame_rate )
+
+        file_reader.attach( gauss )
+        gauss.attach( file_writer )
+
+        sleep( 20 )
+
+        file_reader.detach( gauss )
+        gauss.detach( file_writer )
