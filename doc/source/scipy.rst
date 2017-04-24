@@ -3,17 +3,21 @@
 Processing video frames with SciPy / NumPy
 ==========================================
 
-For the relevant install option(s) and dependencies, please see `this page`_ to activate this feature.
+**Important:** Please see `this page`_ for the **pre-requisites** and ``pip`` **install options** needed to enable this feature.
 
 .. _`this page`: https://github.com/gift-surg/GIFT-Grab/blob/master/doc/pypi.md#numpy
 
-In this section we define a ``GaussianSmootherBGRA`` class whose instances act as video processing nodes.
+In this section we define a ``GaussianSmootherBGRA`` Python class that implements a custom image processing capability.
+Namely, ``GaussianSmootherBGRA``:
 
-The ``GaussianSmootherBGRA`` class achieves this by being an observer_ and observable_ simultaneously.
-In other words, an instance of this class can be attached to an observable_ video source object.
-This causes that video source object to pass each new `video frame`_ to the ``GaussianSmootherBGRA`` instance.
-The ``GaussianSmootherBGRA`` instance in return processes that `video frame`_ and passes it to any observer_ object attached to itself.
-To this end, it extends the ``IObservableObserver`` class exposed by GIFT-Grab. ::
+* gets a `video frame`_ whose data is formatted in the BGRA `colour space`_,
+* smoothes this `video frame`_ with a Gaussian kernel,
+* and finally passes it further down the video processing pipeline.
+
+.. _`colour space`: https://codedocs.xyz/gift-surg/GIFT-Grab/namespacegg.html#a4f52bacf224413c522da5fb3c89dde6b
+
+The ``GaussianSmootherBGRA`` class achieves this by implementing the observer_ and observable_ interfaces simultaneously.
+To this end, it extends the ``IObservableObserver`` class exposed by GIFT-Grab: ::
 
     from pygiftgrab import IObservableObserver
     import scipy.ndimage as ndimage
@@ -32,9 +36,10 @@ To this end, it extends the ``IObservableObserver`` class exposed by GIFT-Grab. 
 .. _observer: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_i_observer.html#details
 .. _observable: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_i_observable.html#details
 
-The ``update()`` method above overrides the `corresponding method of GIFT-Grab's observer`_.
-It simply obtains a reference to the actual data of the `video frame`_ in the form of a `NumPy array`_ by calling the `data method`_.
-It then applies Gaussian filtering `in-place` on this NumPy array using the `corresponding method of SciPy`_.
+The ``update()`` method above implements the `corresponding method of GIFT-Grab's observer`_.
+This is a crucial component needed for creating custom image processing capabilities using GIFT-Grab.
+In this particular case, in the ``update()`` method implementation we obtain a reference to the actual data of the `video frame`_ in the form of a `NumPy array`_ by calling the `data method`_.
+We then apply Gaussian filtering `in-place` on this NumPy array using the `corresponding method of SciPy`_.
 
 .. _`corresponding method of GIFT-Grab's observer`: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_i_observer.html#a3402ba495e36d0d40db549b2057c6335
 .. _`video frame`: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_video_frame.html
