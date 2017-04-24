@@ -30,6 +30,11 @@ Then we `create a file reader`_ using the obtained factory: ::
 The second argument above specifies that we would like to get the video frames in the I420_ `colour space`_.
 The ``file_reader`` object automatically starts reading the frames in ``'/tmp/myinput.mp4'`` one by one, at the file's frame rate.
 
+.. _ProcessingFrames:
+
+Processing obtained video frames
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 To process the frames, we need to `attach`_ an `observer`_ to our ``file_reader``, which is already an `observable`_ object.
 You can see how to do this in one of the following examples:
 
