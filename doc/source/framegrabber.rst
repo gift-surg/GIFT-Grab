@@ -14,8 +14,8 @@ Please see the links below for the **pre-requisites** and ``pip`` **install opti
 .. _`Epiphan DVI2PCIe Duo`: https://github.com/gift-surg/GIFT-Grab/blob/master/doc/pypi.md#epiphan-dvi2pcie-duo
 .. _`Blackmagic DeckLink SDI 4K`: https://github.com/gift-surg/GIFT-Grab/blob/master/doc/pypi.md#blackmagic-decklink-sdi-4k
 
-Exemplary source code with explanation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Example with explanation
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 In this example we will see how we can capture the video stream from an external device using an Epiphan DVI2PCIe Duo.
 First we obtain the `GIFT-Grab video source factory`_ singleton: ::

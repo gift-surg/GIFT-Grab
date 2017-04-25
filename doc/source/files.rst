@@ -10,8 +10,8 @@ Please see `this page`_ for the **pre-requisites** and ``pip`` **install options
 
 .. _`this page`: https://github.com/gift-surg/GIFT-Grab/blob/master/doc/pypi.md#reading-video-files
 
-Exemplary source code with explanation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Example with explanation
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 To read a video file, we first obtain the `GIFT-Grab video source factory`_ singleton: ::
 

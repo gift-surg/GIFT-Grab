@@ -10,8 +10,8 @@ Please see `this page`_ for the **pre-requisites** and ``pip`` **install options
 
 .. _`this page`: https://github.com/gift-surg/GIFT-Grab/blob/master/doc/pypi.md#writing-video-files
 
-Exemplary source code with explanation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Example with explanation
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 This section shows how GIFT-Grab can be used for encoding video frames and saving them to a file.
 To this end, we first obtain the `GIFT-Grab video target factory`_ singleton: ::
@@ -60,7 +60,7 @@ The :ref:`SciPy` section shows a more complex pipeline that implements a custom 
 Full source code
 ^^^^^^^^^^^^^^^^
 
-::
+Below is the full source code of the example explained above. ::
 
     #!/usr/bin/env python2
 

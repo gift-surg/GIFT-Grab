@@ -10,8 +10,8 @@ Please see `this page`_ for the **pre-requisites** and ``pip`` **install options
 
 .. _`this page`: https://github.com/gift-surg/GIFT-Grab/blob/master/doc/pypi.md#network-streams
 
-Exemplary source code with explanation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Example with explanation
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 To start capturing a network video stream, we first obtain the `GIFT-Grab video source factory`_ singleton: ::
 

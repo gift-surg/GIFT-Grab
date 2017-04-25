@@ -10,8 +10,8 @@ Please see `this page`_ for the **pre-requisites** and ``pip`` **install options
 
 .. _`this page`: https://github.com/gift-surg/GIFT-Grab/blob/master/doc/pypi.md#numpy
 
-Exemplary source code with explanation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Example with explanation
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 In this section we define a ``GaussianSmootherBGRA`` Python class that implements a custom image processing capability.
 Namely, ``GaussianSmootherBGRA``:
@@ -88,7 +88,7 @@ This pipeline keeps operating until we detach_ the observers from the observable
 Full source code
 ^^^^^^^^^^^^^^^^
 
-::
+Below is the full source code of the example explained above. ::
 
     #!/usr/bin/env python2
 
