@@ -89,7 +89,9 @@ This pipeline keeps operating until we detach_ the observers from the observable
 Full source code
 ^^^^^^^^^^^^^^^^
 
-Below is the full source code of the example explained above. ::
+Below is the full source code of the example explained above.
+Please note that depending on the resolution of the video file used **and** the computational power of your platform, this application might end up processing less frames than are available during its runtime.
+In other words, the resulting ``/tmp/myoutput.mp4`` file might be shorter than 20 sec. ::
 
     #!/usr/bin/env python2
 
