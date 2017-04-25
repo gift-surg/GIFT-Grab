@@ -30,7 +30,7 @@ Then we `request a connection`_ to our network source using the obtained factory
 .. _`request a connection`: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_video_source_factory.html#a0d39bea6386593ac962e268b7325ce92
 
 The first argument above specifies the Media Resource Locator (MRL_) of our network source (the provided link explains the format of this string).
-To find out what your device's MRL_ is, you will need to look it up in the user's manual and/or on the admin interface of your device.
+If you're using a device capable of streaming to the network such as an Epiphan Pearl, you can find out its MRL_ by looking it up in the user's manual and/or on the admin interface of your device.
 The second argument specifies that we would like to get the video frames in the I420_ `colour space`_.
 
 .. _MRL: https://wiki.videolan.org/Media_resource_locator/
