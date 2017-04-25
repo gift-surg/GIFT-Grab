@@ -45,5 +45,5 @@ You can see how to do this in one of the following examples:
 .. _I420: https://wiki.videolan.org/YUV/#YUV_4:2:0_.28I420.2FJ420.2FYV12.29
 .. _`colour space`: https://codedocs.xyz/gift-surg/GIFT-Grab/namespacegg.html#a4f52bacf224413c522da5fb3c89dde6b
 .. _`observer`: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_i_observer.html
-.. _`observable`: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_i_observer.html
+.. _`observable`: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_i_observable.html
 .. _`attach`: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_i_observable.html#a38b52081b221dc476aa9c2ba32774a2d
