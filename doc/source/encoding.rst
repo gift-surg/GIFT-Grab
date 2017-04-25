@@ -6,7 +6,7 @@ Encoding video streams in real time
 How to enable this feature
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Please see `this page`_ for the **pre-requisites** and ``pip`` **install options** needed to enable this feature.
+Please see `this page`_ (in particular the hardware-accelerated HEVC_ section) for the **pre-requisites** and ``pip`` **install options** needed to enable this feature.
 
 .. _`this page`: https://github.com/gift-surg/GIFT-Grab/blob/master/doc/pypi.md#writing-video-files
 
