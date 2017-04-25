@@ -25,16 +25,15 @@ Then we `request a connection`_ to our network source using the obtained factory
     from pygiftgrab import ColourSpace
     source_mrl = 'rtsp://192.168.127.191:555/stream.sdp'
     network_stream = sfac.connect_network_source(
-        source_mrl, ColourSpace.I420 )
+        source_mrl, ColourSpace.BGRA )
 
 .. _`request a connection`: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_video_source_factory.html#a0d39bea6386593ac962e268b7325ce92
 
 The first argument above specifies the Media Resource Locator (MRL_) of our network source (the provided link explains the format of this string).
 If you're using a device capable of streaming to the network such as an Epiphan Pearl, you can find out its MRL_ by looking it up in the user's manual and/or on the admin interface of your device.
-The second argument specifies that we would like to get the video frames in the I420_ `colour space`_.
+The second argument specifies that we would like to get the video frames in the BGRA `colour space`_.
 
 .. _MRL: https://wiki.videolan.org/Media_resource_locator/
-.. _I420: https://wiki.videolan.org/YUV/#YUV_4:2:0_.28I420.2FJ420.2FYV12.29
 .. _`colour space`: https://codedocs.xyz/gift-surg/GIFT-Grab/namespacegg.html#a4f52bacf224413c522da5fb3c89dde6b
 
 For processing video frames obtained from the ``network_stream`` object, please see the :ref:`ProcessingFrames` section.
