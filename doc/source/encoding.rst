@@ -83,6 +83,6 @@ Below is the full source code of the example explained above. ::
 
         file_reader.attach( file_writer )
 
-        sleep( 20 )
+        sleep( 20 )  # operate pipeline for 20 sec
 
         file_reader.detach( file_writer )

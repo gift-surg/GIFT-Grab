@@ -61,7 +61,8 @@ It then passes it to any observer_ object attached to itself.
 As a concrete example, consider attaching a ``GaussianSmootherBGRA`` object to the ``file_reader`` created in the :ref:`Files` section.
 There is a subtlety, though: we need to initialise this ``file_reader`` using the BGRA colour space instead of I420 as in the :ref:`Files` example: ::
 
-    file_reader = sfac.create_file_reader( '/tmp/myinput.mp4', ColourSpace.BGRA )
+    file_reader = sfac.create_file_reader(
+        '/tmp/myinput.mp4', ColourSpace.BGRA )
 
 Note that we use ``ColourSpace.BGRA`` instead of ``ColourSpace.I420``, which is the only difference to the corresponding line in the :ref:`Files` section.
 This is because our ``GaussianSmootherBGRA`` class expects the video frames to be encoded in the BGRA colour space.
@@ -128,7 +129,7 @@ Below is the full source code of the example explained above. ::
         file_reader.attach( gauss )
         gauss.attach( file_writer )
 
-        sleep( 20 )
+        sleep( 20 )  # operate pipeline for 20 sec
 
         file_reader.detach( gauss )
         gauss.detach( file_writer )

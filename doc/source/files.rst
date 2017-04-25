@@ -23,12 +23,13 @@ To read a video file, we first obtain the `GIFT-Grab video source factory`_ sing
 Then we `create a file reader`_ using the obtained factory: ::
 
     from pygiftgrab import ColourSpace
-    file_reader = sfac.create_file_reader( '/tmp/myinput.mp4', ColourSpace.I420 )
+    file_reader = sfac.create_file_reader(
+        '/tmp/myinput.mp4', ColourSpace.I420 )
 
 .. _`create a file reader`: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_video_source_factory.html#a7de4df06b2b210085cfe3f3027e36dd7
 
 The second argument above specifies that we would like to get the video frames in the I420_ `colour space`_.
-The ``file_reader`` object automatically starts reading the frames in ``'/tmp/myinput.mp4'`` one by one, at the file's frame rate.
+The ``file_reader`` object automatically starts reading the frames in ``/tmp/myinput.mp4`` one by one, at the file's frame rate.
 
 .. _ProcessingFrames:
 
