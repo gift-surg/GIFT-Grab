@@ -80,6 +80,10 @@ public:
     //!
     //! \brief Create a video frame by copying the data and
     //! all properties of \c rhs
+    //!
+    //! \attention <b>In Python:</b> This constructor is \b
+    //! not available yet.
+    //!
     //! \param rhs
     //!
     VideoFrame(const VideoFrame & rhs);
