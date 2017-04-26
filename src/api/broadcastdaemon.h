@@ -21,6 +21,9 @@ namespace gg
 //! an IVideoSource object for augmenting that
 //! object's functionality.
 //!
+//! \attention <b>In Python:</b> This class is \b not
+//! available yet.
+//!
 class BroadcastDaemon
 {
 protected:

@@ -80,6 +80,10 @@ public:
     //!
     //! \brief Create a video frame by copying the data and
     //! all properties of \c rhs
+    //!
+    //! \attention <b>In Python:</b> This constructor is \b
+    //! not available yet.
+    //!
     //! \param rhs
     //!
     VideoFrame(const VideoFrame & rhs);
@@ -106,6 +110,10 @@ public:
 
     //!
     //! \brief Clone \c rhs, copying its data
+    //!
+    //! \attention <b>In Python:</b> This function is \b not
+    //! available yet.
+    //!
     //! \param rhs
     //!
     void operator=(const VideoFrame & rhs);
@@ -118,6 +126,9 @@ public:
     //! rows are in line with the frame's colour space requirements.
     //! Other than that, this function proceeds BLINDLY. So use with
     //! care.
+    //!
+    //! \attention <b>In Python:</b> This function is \b not
+    //! available yet.
     //!
     //! \param data
     //! \param data_length
@@ -159,6 +170,10 @@ public:
     //!
     //! \brief Get whether data is managed by this object
     //! or externally
+    //!
+    //! \attention <b>In Python:</b> This function is \b
+    //! not available yet.
+    //!
     //! \return
     //!
     bool manages_own_data() const

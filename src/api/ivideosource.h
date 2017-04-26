@@ -36,6 +36,10 @@ public:
 
     //!
     //! \brief Get frame dimensions
+    //!
+    //! \attention <b>In Python:</b> This function is \b
+    //! not available yet.
+    //!
     //! \param width
     //! \param height
     //! \return whether querying frame dimensions has

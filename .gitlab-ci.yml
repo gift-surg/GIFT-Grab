@@ -68,8 +68,7 @@ linux:
     - ctest; exit_on_fail
     - make install
     # NumPy support
-    # TODO: remove BOOST_ROOT parameter after issue #133
-    - cmake -D BOOST_ROOT="$BOOST_163_ROOT_DIR" -D USE_NUMPY=ON .
+    - cmake -D USE_NUMPY=ON .
     - make -j; exit_on_fail
     - ctest; exit_on_fail
     - make install
@@ -140,8 +139,6 @@ pypi:
     - test-giftgrab-vp9-bgra; exit_on_fail
     - test-giftgrab-vp9-i420; exit_on_fail
     # NumPy support
-    # TODO: delete this line after issue #133
-    - export BOOST_ROOT="$BOOST_163_ROOT_DIR"
     - pip install -vvv --install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --install-option="--numpy" --upgrade "$PyPI_INSTALLER"
     # TODO: delete these five lines after issue #133
     - test-giftgrab-hevc-bgra; exit_on_fail
@@ -164,8 +161,6 @@ pypi:
     - test-giftgrab-file-vp9-bgra; exit_on_fail
     - test-giftgrab-file-vp9-i420; exit_on_fail
     - test-giftgrab-file-vp9-uyvy; exit_on_fail
-    # TODO: delete this line after issue #133
-    - unset BOOST_ROOT
     - deactivate
   tags:
     - gift-linux
