@@ -110,6 +110,10 @@ public:
 
     //!
     //! \brief Clone \c rhs, copying its data
+    //!
+    //! \attention <b>In Python:</b> This function is \b not
+    //! available yet.
+    //!
     //! \param rhs
     //!
     void operator=(const VideoFrame & rhs);
