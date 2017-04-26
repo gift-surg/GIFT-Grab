@@ -136,16 +136,12 @@ pypi:
     - test-giftgrab-xvid-bgra; exit_on_fail
     # VP9 support
     - pip install -vvv --install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --upgrade "$PyPI_INSTALLER"
-    - test-giftgrab-vp9-bgra; exit_on_fail
-    - test-giftgrab-vp9-i420; exit_on_fail
     # NumPy support
     - pip install -vvv --install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --install-option="--numpy" --upgrade "$PyPI_INSTALLER"
     # TODO: delete these five lines after issue #133
     - test-giftgrab-hevc-bgra; exit_on_fail
     - test-giftgrab-hevc-i420; exit_on_fail
     - test-giftgrab-xvid-bgra; exit_on_fail
-    - test-giftgrab-vp9-bgra; exit_on_fail
-    - test-giftgrab-vp9-i420; exit_on_fail
     # Run the actual NumPy tests
     - pip install numpy
     - test-giftgrab-numpy-bgra; exit_on_fail
@@ -158,9 +154,6 @@ pypi:
     - test-giftgrab-file-xvid-bgra; exit_on_fail
     - test-giftgrab-file-xvid-i420; exit_on_fail
     - test-giftgrab-file-xvid-i420; exit_on_fail
-    - test-giftgrab-file-vp9-bgra; exit_on_fail
-    - test-giftgrab-file-vp9-i420; exit_on_fail
-    - test-giftgrab-file-vp9-uyvy; exit_on_fail
     - deactivate
   tags:
     - gift-linux
