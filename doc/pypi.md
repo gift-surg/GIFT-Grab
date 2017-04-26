@@ -2,12 +2,14 @@
 
 **Hint:** In case of any errors (such as `option not recognized`) during installation, please see the [these tips](tips.md#gift-grab-caveats).
 
-**Please note that desired GIFT-Grab features must be enabled WHEN CALLING `pip install gift-grab`.**
+The subsequent sections of this page outline the GIFT-Grab features.
 All features are disabled by default.
-Enabling a feature requires appending one or more [`pip --install-option`s][pip-install-ops] to `pip install gift-grab`, e.g.:
+**Desired GIFT-Grab features must be enabled WHEN CALLING `pip install gift-grab`.**
+Enabling a feature requires appending one or more [`pip --install-option`s][pip-install-ops] to `pip install gift-grab`.
+For instance to install GIFT-Grab with support for reading video files and video encoding with HEVC:
 
 ```
-pip install gift-grab --install-option="--feature-1" --install-option="--feature-2"
+pip install gift-grab --install-option="--files" --install-option="--hevc"
 ```
 
 [pip-install-ops]: https://pip.pypa.io/en/stable/reference/pip_install/#cmdoption-install-option
@@ -15,7 +17,7 @@ pip install gift-grab --install-option="--feature-1" --install-option="--feature
 As this route installs the GIFT-Grab Python API, it requires Python and Boost.Python, **in addition to the dependencies of the desired GIFT-Grab features**.
 The dependencies for each feature are listed alongside the required `pip` install option(s) below.
 
-Please also note that **due to incompatibilities in dependency licences, options requiring proprietary libraries are mutually exclusive with options requiring GPL libraries.**
+Please also note that **due to incompatibilities in the relevant dependencies' licences, options requiring proprietary libraries are mutually exclusive with options requiring GPL libraries.**
 These are marked with **"makes GIFT-Grab undistributable"** and **"upgrades GIFT-Grab licence to GPL"** respectively below.
 If mutually exclusive options are activated, installation will fail.
 
