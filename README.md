@@ -70,6 +70,15 @@ Please read the installation instructions carefully, in particular **make sure y
 [webm]: https://www.webmproject.org/users/
 
 
+# Licence
+
+Copyright (c) 2015-7, [University College London][ucl].
+
+GIFT-Grab is available as free open-source software under a BSD-3-Clause licence.
+Other licences may apply for the GIFT-Grab dependencies.
+Please see the installation instructions for the dependencies and implications of using them with regards to licensing.
+
+
 # Funding
 
 GIFT-Grab was developed as part of the [GIFT-Surg][giftsurg] project at the [Translational Imaging Group][tig] in the [Centre for Medical Image Computing][cmic] at [University College London (UCL)][ucl].
