@@ -19,6 +19,8 @@ If mutually exclusive options are activated, installation will fail.
 
 # Writing video files
 
+You can enable one or more of the codecs listed below for encoding video files.
+
 ## Xvid
 
 `--install-option="--xvid"` (requires [OpenCV](tips.md#opencv))
