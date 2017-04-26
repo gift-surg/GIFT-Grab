@@ -65,17 +65,17 @@ linux:
     # VP9 support
     - cmake -D USE_VP9=ON .
     - make -j; exit_on_fail
-    - ctest; exit_on_fail
+    - ctest -E Test_VP9; exit_on_fail
     - make install
     # NumPy support
     - cmake -D USE_NUMPY=ON .
     - make -j; exit_on_fail
-    - ctest; exit_on_fail
+    - ctest -E Test_VP9; exit_on_fail
     - make install
     # test support for video files
     - cmake -D USE_FILES=ON .
     - make -j; exit_on_fail
-    - ctest; exit_on_fail
+    - ctest -E Test_VP9; exit_on_fail
     - make install
     # build docs
     - cmake -D BUILD_DOC=ON .
