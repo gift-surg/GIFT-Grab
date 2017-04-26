@@ -46,8 +46,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'GIFT-Grab'
-copyright = u'2017, Dzhoshkun Ismail Shakir'
-author = u'Dzhoshkun Ismail Shakir'
+copyright = u'2015-7, University College London'
+author = u'Dzhoshkun Ismail Shakir et al.'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
