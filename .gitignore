@@ -11,4 +11,4 @@ src/extern
 *.egg-info
 dist
 *venv
-build
+doc/build
