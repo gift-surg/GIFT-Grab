@@ -7,7 +7,8 @@
 1. Run the build process: `make -j`
 1. Run the install process: `make install`
 
-Please note that **due to incompatibilities in dependency licences, options requiring proprietary libraries are mutually exclusive with options requiring GPL libraries.**
+Please also note that **due to incompatibilities in the relevant dependencies' licences, options requiring proprietary libraries are mutually exclusive with options requiring GPL libraries.**
+These are marked with **"makes GIFT-Grab undistributable"** and **"upgrades GIFT-Grab licence to GPL"** respectively below.
 If mutually exclusive options are activated, CMake will give an error and GIFT-Grab will not be built.
 
 
