@@ -37,7 +37,7 @@ Examples
 
 .. toctree::
    :maxdepth: 2
-   
+
    files
    framegrabber
    network
