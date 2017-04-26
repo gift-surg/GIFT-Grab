@@ -123,6 +123,9 @@ public:
     //! Other than that, this function proceeds BLINDLY. So use with
     //! care.
     //!
+    //! \attention <b>In Python:</b> This function is \b not
+    //! available yet.
+    //!
     //! \param data
     //! \param data_length
     //! \param cols
