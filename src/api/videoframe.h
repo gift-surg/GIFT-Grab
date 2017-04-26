@@ -163,6 +163,10 @@ public:
     //!
     //! \brief Get whether data is managed by this object
     //! or externally
+    //!
+    //! \attention <b>In Python:</b> This function is \b
+    //! not available yet.
+    //!
     //! \return
     //!
     bool manages_own_data() const
