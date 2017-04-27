@@ -30,8 +30,8 @@ The Python API is compatible with [NumPy][numpy] and [SciPy][scipy].
 
 # Installation
 
-* [Build from source][build-from-source] (C++ and Python)
-* [Install using `pip`][pip] (only Python)
+* [Build GIFT-Grab from source][build-from-source] (C++ and Python)
+* [Install GIFT-Grab using `pip`][pip] (only Python)
 
 [build-from-source]: doc/build.md
 [pip]: doc/pypi.md
