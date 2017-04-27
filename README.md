@@ -39,7 +39,7 @@ The Python API is compatible with [NumPy][numpy] and [SciPy][scipy].
 
 # Features
 
-**Hint:** the "HOWTO"s in the table are quick links to the relevant installation documentation. **IF USING `pip install gift-grab`**, please make sure you use the appropriate [`pip --install-option`s][pip-install-ops] for enabling the desired features (details in the links below).
+**Hint:** the "HOWTO"s in the table are quick links to the relevant installation documentation. **IF DOING `pip install gift-grab`**, please make sure you use the appropriate [`pip --install-option`s][pip-install-ops] for enabling the desired features (details [here](doc/pypi.md)).
 
 | **Feature** | | [**C++ API**](doc/build.md) | [**Python API**](doc/pypi.md) |
 | :--- | :--- | :---: | :---: |
