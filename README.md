@@ -10,6 +10,15 @@ The Python API is compatible with [NumPy][numpy] and [SciPy][scipy].
 [numpy]: http://www.numpy.org/
 
 
+# Examples
+
+Python examples outlining how some of the GIFT-Grab features can be used are available on [Read the Docs][rtd].
+Please read the installation instructions carefully, in particular **make sure you use the [`pip --install-option`s][pip-install-ops] required for enabling the desired GIFT-Grab features WHEN CALLING `pip install gift-grab`**.
+
+[rtd]: http://gift-grab.rtfd.io
+[pip-install-ops]: https://pip.pypa.io/en/stable/reference/pip_install/#cmdoption-install-option
+
+
 # API documentation
 
 The **C++** API documentation is available on [CodeDocs](https://codedocs.xyz/gift-surg/GIFT-Grab/).
@@ -19,13 +28,6 @@ The elements that are different or unavailable in the Python API are marked in t
 Also [this guideline](doc/py-api.md) gives a very brief summary of the differences.
 For details please always consult the documentation of the classes/functions you'd like to use.
 
-# Examples
-
-Python examples outlining how some of the GIFT-Grab features can be used are available on [Read the Docs][rtd].
-Please read the installation instructions carefully, in particular **make sure you use the [`pip --install-option`s][pip-install-ops] required for enabling the desired GIFT-Grab features WHEN CALLING `pip install gift-grab`**.
-
-[rtd]: http://gift-grab.rtfd.io
-[pip-install-ops]: https://pip.pypa.io/en/stable/reference/pip_install/#cmdoption-install-option
 
 # Installation
 
