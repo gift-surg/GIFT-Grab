@@ -10,27 +10,28 @@ The Python API is compatible with [NumPy][numpy] and [SciPy][scipy].
 [numpy]: http://www.numpy.org/
 
 
-# API documentation
-
-The **C++** API documentation is available on [CodeDocs](https://codedocs.xyz/gift-surg/GIFT-Grab/).
-
-For **Python**, please use the C++ API documentation, as most Python API elements are equivalent to their C++ counterparts.
-The elements that are different or unavailable in the Python API are marked in their respective docstrings in the C++ API documentation.
-Also [this guideline](doc/py-api.md) gives a very brief summary of the differences.
-For details please always consult the documentation of the classes/functions you'd like to use.
-
 # Examples
 
-Python examples outlining how some of the GIFT-Grab features can be used are available on [Read the Docs][rtd].
-Please read the installation instructions carefully, in particular **make sure you use the [`pip --install-option`s][pip-install-ops] required for enabling the desired GIFT-Grab features WHEN CALLING `pip install gift-grab`**.
+[Python examples with explanation][rtd]
 
 [rtd]: http://gift-grab.rtfd.io
 [pip-install-ops]: https://pip.pypa.io/en/stable/reference/pip_install/#cmdoption-install-option
 
+
+# API documentation
+
+* [C++ API documentation](https://codedocs.xyz/gift-surg/GIFT-Grab/)
+* Python API documentation: please use the C++ API documentation
+  * Most Python API elements are equivalent to their C++ counterparts.
+  * Differences are noted in the C++ docstrings (e.g. [`data()` method of `VideoFrame`][vf-data]).
+
+[vf-data]: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_video_frame.html#a458e15b00b5b2d39855db76215c44055
+
+
 # Installation
 
-* [Build from source][build-from-source] (C++ and Python)
-* [Install using `pip`][pip] (only Python)
+* [Build GIFT-Grab from source][build-from-source] (C++ and Python)
+* [Install GIFT-Grab using `pip`][pip] (only Python)
 
 [build-from-source]: doc/build.md
 [pip]: doc/pypi.md
@@ -38,7 +39,7 @@ Please read the installation instructions carefully, in particular **make sure y
 
 # Features
 
-**Hint:** the "HOWTO"s in the table are quick links to the relevant installation documentation.
+**Hint:** the "HOWTO"s in the table are quick links to the relevant installation documentation. **IF DOING `pip install gift-grab`**, please make sure you use the appropriate [`pip --install-option`s][pip-install-ops] for enabling the desired features (details [here](doc/pypi.md)).
 
 | **Feature** | | [**C++ API**](doc/build.md) | [**Python API**](doc/pypi.md) |
 | :--- | :--- | :---: | :---: |
