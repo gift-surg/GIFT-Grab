@@ -70,6 +70,12 @@ Please read the installation instructions carefully, in particular **make sure y
 [webm]: https://www.webmproject.org/users/
 
 
+# Support
+
+Please see the [contribution guide][cg].
+
+[cg]: CONTRIBUTING.md
+
 # Licence
 
 Copyright (c) 2015-7, [University College London][ucl].
