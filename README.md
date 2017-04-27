@@ -70,9 +70,9 @@ Please read the installation instructions carefully, in particular **make sure y
 [webm]: https://www.webmproject.org/users/
 
 
-# Support
+# Support and contact
 
-Please see the [contribution guide][cg].
+Please see the [contribution guide][cg] for bug reports, feature requests, contact information, etc.
 
 [cg]: CONTRIBUTING.md
 
