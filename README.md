@@ -20,12 +20,10 @@ The Python API is compatible with [NumPy][numpy] and [SciPy][scipy].
 
 # API documentation
 
-The **C++** API documentation is available on [CodeDocs](https://codedocs.xyz/gift-surg/GIFT-Grab/).
+* [C++ API documentation](https://codedocs.xyz/gift-surg/GIFT-Grab/)
+* Python API: most Python API elements are equivalent to their C++ counterparts. Differences are noted in the C++ docstrings (see for instance the [`data()` method of `VideoFrame`][vf-data]).
 
-For **Python**, please use the C++ API documentation, as most Python API elements are equivalent to their C++ counterparts.
-The elements that are different or unavailable in the Python API are marked in their respective docstrings in the C++ API documentation.
-Also [this guideline](doc/py-api.md) gives a very brief summary of the differences.
-For details please always consult the documentation of the classes/functions you'd like to use.
+[vf-data]: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_video_frame.html#a458e15b00b5b2d39855db76215c44055
 
 
 # Installation
