@@ -15,7 +15,7 @@ target = None
 frame = None
 frame_with_colour_mismatch = None
 file_name = None
-frame_rate = 60
+frame_rate = 59.94
 
 
 def __file_ext(codec):
