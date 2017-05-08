@@ -81,7 +81,7 @@ void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
         throw VideoTargetError("Negative fps does not make sense");
     if (framerate - (int) framerate > 0)
         throw VideoTargetError("Only integer framerates are supported");
-    _framerate = (int) framerate;
+    _framerate = framerate;
 
     if (_codec_name == _CODEC_NAME_HEVC_X265 or
         _codec_name == _CODEC_NAME_HEVC_NVENC)
