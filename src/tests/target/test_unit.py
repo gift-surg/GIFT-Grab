@@ -4,6 +4,7 @@ from os import devnull, remove, listdir
 from string import ascii_uppercase
 from random import choice
 from time import strftime
+from math import ceil
 from pygiftgrab import Codec, VideoTargetFactory, VideoFrame, ColourSpace
 from giftgrab.utils import inspection
 
@@ -119,11 +120,12 @@ def test_resolution(colour_space):
 
 def test_num_frames():
     global target, file_name, frame, frame_rate
-    num_frames = 3 * frame_rate
+    _frame_rate = int( ceil( frame_rate ) )
+    num_frames = 3 * _frame_rate
     for i in range(num_frames):
         target.append(frame)
     del target
-    assert inspection.duration(file_name) * frame_rate == num_frames
+    assert inspection.duration(file_name) * _frame_rate == num_frames
 
 
 def test_filetype_checked(codec):
