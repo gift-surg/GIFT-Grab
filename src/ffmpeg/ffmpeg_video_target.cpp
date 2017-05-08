@@ -182,8 +182,8 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
         _stream->codec->width = width;
         _stream->codec->height = height;
         AVRational time_per_frame = av_d2q(_framerate, INT_MAX);
-        _stream->time_base = (AVRational){ time_per_frame.num,
-                                           time_per_frame.den };
+        _stream->time_base = (AVRational){ time_per_frame.den,
+                                           time_per_frame.num };
         _stream->codec->time_base = _stream->time_base;
         _stream->codec->gop_size = 12;
         /* TODO emit one intra frame every twelve frames at most */
