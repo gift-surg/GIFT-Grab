@@ -183,7 +183,7 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
 //        _stream->codec->bit_rate = 400000;
         _stream->codec->width = width;
         _stream->codec->height = height;
-        _stream->time_base = (AVRational){ 1, _framerate };
+        _stream->time_base = av_d2q(_framerate, INT_MAX);
         _stream->codec->time_base = _stream->time_base;
         _stream->codec->gop_size = 12;
         /* TODO emit one intra frame every twelve frames at most */
