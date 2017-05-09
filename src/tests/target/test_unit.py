@@ -104,7 +104,12 @@ def test_frame_rate():
     for i in range(10):
         target.append(frame)
     del target
-    assert inspection.frame_rate(file_name) == frame_rate
+    _frame_rate = inspection.frame_rate(file_name)
+    # TODO: remove after issue #193
+    if file_name[ -4: ] == '.avi':
+        assert abs(_frame_rate - frame_rate) < 0.001
+    else:
+        assert _frame_rate == frame_rate
 
 
 def test_resolution(colour_space):
