@@ -120,14 +120,14 @@ def test_resolution(colour_space):
 
 def test_num_frames():
     global target, file_name, frame, frame_rate
-    _frame_rate = int( ceil( frame_rate ) )
-    duration = 3  # sec
-    num_frames = duration * _frame_rate
+    exp_duration = 3  # sec
+    num_frames = exp_duration * int( ceil(frame_rate) )
     for i in range(num_frames):
         target.append(frame)
     del target
-    assert inspection.duration(file_name) >= duration
-    assert inspection.duration(file_name) < (num_frames + 1) / frame_rate
+    real_duration = inspection.duration( file_name )
+    assert real_duration >= exp_duration
+    assert real_duration < (num_frames + 1) / float(frame_rate)
 
 
 def test_filetype_checked(codec):
