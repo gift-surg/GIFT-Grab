@@ -28,6 +28,25 @@ def frame_rate(file_path):
     return fr
 
 
+def num_frames(file_path):
+    """Use ``ffprobe`` to inspect no. of frames in video file
+
+    @param file_path
+    @return
+    @throw OSError if `file_path` does not exist, or if
+    ``ffprobe`` cannot be run (e.g. not installed)
+    @throw ValueError if frame count cannot be inferred from
+    ``ffprobe`` output
+    """
+    ffprobe_output = check_output(['ffprobe',
+                                   '-v', 'error',
+                                   '-count_frames',
+                                   '-of', 'default=nokey=1:noprint_wrappers=1',
+                                   '-show_entries', 'stream=nb_read_frames',
+                                   file_path])
+    return int(ffprobe_output)
+
+
 def duration(file_path):
     """Use ``ffprobe`` to inspect duration of video file
 

@@ -130,9 +130,7 @@ def test_num_frames():
     for i in range(num_frames):
         target.append(frame)
     del target
-    real_duration = inspection.duration( file_name )
-    assert real_duration >= exp_duration
-    assert real_duration < (num_frames + 1) / float(frame_rate)
+    assert inspection.num_frames( file_name ) == num_frames
 
 
 def test_filetype_checked(codec):
