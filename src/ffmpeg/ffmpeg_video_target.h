@@ -96,7 +96,7 @@ protected:
     //!
     //! \brief
     //!
-    int _framerate;
+    float _framerate;
 
     //!
     //! \brief Packet for use when encoding and

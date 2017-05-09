@@ -79,9 +79,7 @@ void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
 {
     if (framerate <= 0)
         throw VideoTargetError("Negative fps does not make sense");
-    if (framerate - (int) framerate > 0)
-        throw VideoTargetError("Only integer framerates are supported");
-    _framerate = (int) framerate;
+    _framerate = framerate;
 
     if (_codec_name == _CODEC_NAME_HEVC_X265 or
         _codec_name == _CODEC_NAME_HEVC_NVENC)
@@ -183,7 +181,7 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
 //        _stream->codec->bit_rate = 400000;
         _stream->codec->width = width;
         _stream->codec->height = height;
-        _stream->time_base = (AVRational){ 1, _framerate };
+        _stream->time_base = (AVRational){ 1000, static_cast<int>(1000 * _framerate) };
         _stream->codec->time_base = _stream->time_base;
         _stream->codec->gop_size = 12;
         /* TODO emit one intra frame every twelve frames at most */

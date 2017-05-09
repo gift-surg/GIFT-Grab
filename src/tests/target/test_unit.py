@@ -4,6 +4,7 @@ from os import devnull, remove, listdir
 from string import ascii_uppercase
 from random import choice
 from time import strftime
+from math import ceil
 from pygiftgrab import Codec, VideoTargetFactory, VideoFrame, ColourSpace
 from giftgrab.utils import inspection
 
@@ -15,7 +16,7 @@ target = None
 frame = None
 frame_with_colour_mismatch = None
 file_name = None
-frame_rate = 60
+frame_rate = 59.94
 
 
 def __file_ext(codec):
@@ -103,7 +104,12 @@ def test_frame_rate():
     for i in range(10):
         target.append(frame)
     del target
-    assert inspection.frame_rate(file_name) == frame_rate
+    _frame_rate = inspection.frame_rate(file_name)
+    # TODO: remove after issue #193
+    if file_name[ -4: ] == '.avi':
+        assert abs(_frame_rate - frame_rate) < 0.001
+    else:
+        assert _frame_rate == frame_rate
 
 
 def test_resolution(colour_space):
@@ -119,11 +125,12 @@ def test_resolution(colour_space):
 
 def test_num_frames():
     global target, file_name, frame, frame_rate
-    num_frames = 3 * frame_rate
+    exp_duration = 3  # sec
+    num_frames = exp_duration * int( ceil(frame_rate) )
     for i in range(num_frames):
         target.append(frame)
     del target
-    assert inspection.duration(file_name) * frame_rate == num_frames
+    assert inspection.num_frames( file_name ) == num_frames
 
 
 def test_filetype_checked(codec):
