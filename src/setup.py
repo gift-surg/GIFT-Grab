@@ -209,6 +209,21 @@ class GiftGrabInstallCommand(install):
 
 
     def run(self):
+        # Sanity check: at least one feature should be enabled
+        if not self.epiphan_dvi2pcie_duo and\
+           not self.blackmagic_decklink_sdi_4k and\
+           not self.network_sources and\
+           not self.files and\
+           not self.xvid and\
+           not self.hevc and\
+           not self.vp9:
+            self.__print_err_msg( 'At least one feature must be'
+                                  ' enabled when installing GIFT-Grab'
+                                  ', please see the installation'
+                                  ' instructions' )
+            # 1: exit status when expected parameter not supplied
+            raise SystemExit(1)
+
         self.build_dir_prefix = '_giftgrab-build'
         self.build_dir_index = 0
         self.here = abspath(dirname(__file__))
