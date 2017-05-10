@@ -120,9 +120,8 @@ pypi:
     - if [ -z "$PyPI_INSTALLER" ]; then exit 1; fi
     # Ensure installer without options fails
     - set +e
-    - pwd; exit_on_success
+    - pip install -vvv --upgrade "$PyPI_INSTALLER"; exit_on_success
     - set -e
-    - ls -l; exit_on_success
     # HEVC support
     - pip install -vvv --install-option="--hevc" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-hevc-bgra; exit_on_fail
