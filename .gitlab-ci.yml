@@ -119,7 +119,9 @@ pypi:
     - PyPI_INSTALLER="../$GiftGrab_PyPI_DIST_DIR/$(ls ../$GiftGrab_PyPI_DIST_DIR | grep tar.gz)"
     - if [ -z "$PyPI_INSTALLER" ]; then exit 1; fi
     # Ensure installer without options fails
+    - set +e
     - pip install -vvv --upgrade "$PyPI_INSTALLER"; exit_on_success
+    - set -e
     # HEVC support
     - pip install -vvv --install-option="--hevc" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-hevc-bgra; exit_on_fail
