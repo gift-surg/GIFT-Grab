@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+# so that CI script will fail when e.g. previous command succeeds:
+function exit_on_success
+{
+    exit_status=$?
+    if [[ "$exit_status" -eq "0" ]]; then
+        echo "Build failed due to last exit status being $exit_status"
+        exit 1
+    fi
+}
+
 # so that CI script will fail when e.g. make -j fails:
 function exit_on_fail
 {
