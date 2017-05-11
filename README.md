@@ -55,6 +55,12 @@ The Python API is compatible with [NumPy][numpy] and [SciPy][scipy].
 | **[NumPy][numpy] / [SciPy][scipy] compatibility** | | [HOWTO](doc/build.md#python-api) | [HOWTO](doc/pypi.md#numpy) |
 
 
+# Known issues
+
+* Please see the note in the [libVLC installation instructions](doc/tips.md#libvlc) about capturing network streams in the I420 colour space.
+* The frame rate of VP9-encoded WebM files is set incorrectly on Ubuntu 16.04 LTS.
+
+
 # Testing
 
 * [Testing GIFT-Grab built from source](doc/build.md#testing-gift-grab) 
