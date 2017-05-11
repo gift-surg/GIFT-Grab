@@ -265,7 +265,6 @@ pypi-epiphan-dvi2pcie-duo:
 epiphan-dvi2pcie-duo:
   stage: test_cmake
   script:
-    - $EpiphanSDK_DIR/epiphan/samples/v2u/build/release/v2u -s
     # prepare environment
     - export GiftGrab_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab-epiphan-dvi2pcie-duo"
     - export INSTALL_DIR="$SCRATCH_DIR/install-epiphan-dvi2pcie-duo"
