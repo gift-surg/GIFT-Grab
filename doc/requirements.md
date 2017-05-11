@@ -2,7 +2,7 @@
 
 GIFT-Grab has so far been tested only on Linux:
 * Ubuntu 14.04 LTS, kernel: 3.19.0-59-generic
-* Ubuntu 16.04 LTS, kernel: 4.4.0-72-generic (**experimental:** please see the [known issues](README.md#known-issues))
+* Ubuntu 16.04 LTS, kernel: 4.4.0-72-generic (**experimental:** please see the [known issues](../README.md#known-issues))
 
 
 # Required dependencies
