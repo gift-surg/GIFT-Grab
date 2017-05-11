@@ -64,16 +64,19 @@ linux:
     # VP9 support
     - cmake -D USE_VP9=ON .
     - make -j; exit_on_fail
+    # not executing VP9 tests due to issue #189
     - ctest -E Test_VP9; exit_on_fail
     - make install
     # NumPy support
     - cmake -D USE_NUMPY=ON .
     - make -j; exit_on_fail
+    # not executing VP9 tests due to issue #189
     - ctest -E Test_VP9; exit_on_fail
     - make install
     # test support for video files
     - cmake -D USE_FILES=ON .
     - make -j; exit_on_fail
+    # not executing VP9 tests due to issue #189
     - ctest -E Test_VP9; exit_on_fail
     - make install
     # build docs
@@ -139,6 +142,9 @@ pypi:
     - test-giftgrab-xvid-bgra; exit_on_fail
     # VP9 support
     - pip install -vvv --install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --upgrade "$PyPI_INSTALLER"
+    # not executing VP9 tests due to issue #189
+    # - test-giftgrab-vp9-bgra; exit_on_fail
+    # - test-giftgrab-vp9-i420; exit_on_fail
     # NumPy support
     - pip install -vvv --install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --install-option="--numpy" --upgrade "$PyPI_INSTALLER"
     # TODO: delete these five lines after issue #133
@@ -157,6 +163,10 @@ pypi:
     - test-giftgrab-file-xvid-bgra; exit_on_fail
     - test-giftgrab-file-xvid-i420; exit_on_fail
     - test-giftgrab-file-xvid-i420; exit_on_fail
+    # not executing VP9 tests due to issue #189
+    # - test-giftgrab-file-vp9-bgra; exit_on_fail
+    # - test-giftgrab-file-vp9-i420; exit_on_fail
+    # - test-giftgrab-file-vp9-uyvy; exit_on_fail
     - deactivate
   tags:
     - gift-linux
