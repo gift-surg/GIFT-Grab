@@ -1,6 +1,8 @@
 # Operating system
 
-GIFT-Grab has so far been tested only on Linux (Ubuntu 14.04 LTS, kernel: 3.19.0-59-generic).
+GIFT-Grab has so far been tested only on Linux:
+* Ubuntu 14.04 LTS, kernel: 3.19.0-59-generic
+* Ubuntu 16.04 LTS, kernel: 4.4.0-72-generic (**experimental**)
 
 
 # Required dependencies
