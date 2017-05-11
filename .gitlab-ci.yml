@@ -2,7 +2,6 @@ variables:
   CI_SCRIPTS_DIR: "./ci"
   SCRATCH_DIR: "/home/gitlab-runner/giftgrab-scratch"
   CTEST_OUTPUT_ON_FAILURE: "1"
-  EpiphanSDK_DIR: "/home/gitlab-runner/environments/giftgrab/opt/epiphan_sdk-3.30.3.0007"
 
 before_script:
   - export REVHASH=$(git rev-parse --short HEAD)
@@ -65,17 +64,20 @@ linux:
     # VP9 support
     - cmake -D USE_VP9=ON .
     - make -j; exit_on_fail
-    - ctest; exit_on_fail
+    # not executing VP9 tests due to issue #189
+    - ctest -E Test_VP9; exit_on_fail
     - make install
     # NumPy support
     - cmake -D USE_NUMPY=ON .
     - make -j; exit_on_fail
-    - ctest; exit_on_fail
+    # not executing VP9 tests due to issue #189
+    - ctest -E Test_VP9; exit_on_fail
     - make install
     # test support for video files
     - cmake -D USE_FILES=ON .
     - make -j; exit_on_fail
-    - ctest; exit_on_fail
+    # not executing VP9 tests due to issue #189
+    - ctest -E Test_VP9; exit_on_fail
     - make install
     # build docs
     - cmake -D BUILD_DOC=ON .
@@ -85,6 +87,7 @@ linux:
     - make install
   tags:
     - gift-linux
+    - gift-adelie
   except:
     - 164-revise-readme
     - 162-revise-contribution-guide-before-open-sourcing
@@ -118,8 +121,10 @@ pypi:
     - ls -alh ./*
     - PyPI_INSTALLER="../$GiftGrab_PyPI_DIST_DIR/$(ls ../$GiftGrab_PyPI_DIST_DIR | grep tar.gz)"
     - if [ -z "$PyPI_INSTALLER" ]; then exit 1; fi
-    # Python and tests (currently all python)
-    - pip install -vvv --upgrade "$PyPI_INSTALLER"
+    # Ensure installer without options fails
+    - set +e
+    - pip install -vvv --upgrade "$PyPI_INSTALLER"; exit_on_success
+    - set -e
     # HEVC support
     - pip install -vvv --install-option="--hevc" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-hevc-bgra; exit_on_fail
@@ -136,16 +141,18 @@ pypi:
     - test-giftgrab-xvid-bgra; exit_on_fail
     # VP9 support
     - pip install -vvv --install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --upgrade "$PyPI_INSTALLER"
-    - test-giftgrab-vp9-bgra; exit_on_fail
-    - test-giftgrab-vp9-i420; exit_on_fail
+    # not executing VP9 tests due to issue #189
+    # - test-giftgrab-vp9-bgra; exit_on_fail
+    # - test-giftgrab-vp9-i420; exit_on_fail
     # NumPy support
     - pip install -vvv --install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc" --install-option="--xvid" --install-option="--vp9" --install-option="--numpy" --upgrade "$PyPI_INSTALLER"
     # TODO: delete these five lines after issue #133
     - test-giftgrab-hevc-bgra; exit_on_fail
     - test-giftgrab-hevc-i420; exit_on_fail
     - test-giftgrab-xvid-bgra; exit_on_fail
-    - test-giftgrab-vp9-bgra; exit_on_fail
-    - test-giftgrab-vp9-i420; exit_on_fail
+    # not executing VP9 tests due to issue #189
+    # - test-giftgrab-vp9-bgra; exit_on_fail
+    # - test-giftgrab-vp9-i420; exit_on_fail
     # Run the actual NumPy tests
     - pip install numpy
     - test-giftgrab-numpy-bgra; exit_on_fail
@@ -158,13 +165,15 @@ pypi:
     - test-giftgrab-file-xvid-bgra; exit_on_fail
     - test-giftgrab-file-xvid-i420; exit_on_fail
     - test-giftgrab-file-xvid-i420; exit_on_fail
-    - test-giftgrab-file-vp9-bgra; exit_on_fail
-    - test-giftgrab-file-vp9-i420; exit_on_fail
-    - test-giftgrab-file-vp9-uyvy; exit_on_fail
+    # not executing VP9 tests due to issue #189
+    # - test-giftgrab-file-vp9-bgra; exit_on_fail
+    # - test-giftgrab-file-vp9-i420; exit_on_fail
+    # - test-giftgrab-file-vp9-uyvy; exit_on_fail
     - deactivate
   tags:
     - gift-linux
     - gift-pypi
+    - gift-adelie
   except:
     - 164-revise-readme
     - 162-revise-contribution-guide-before-open-sourcing
@@ -243,8 +252,6 @@ pypi-epiphan-dvi2pcie-duo:
     - ls -alh ./*.webm
     - rm -f ./*.mp4 ./*.avi ./*.webm
     # NumPy support
-    # TODO: delete this line after issue #133
-    - export BOOST_ROOT="$BOOST_163_ROOT_DIR"
     - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--enable-nonfree" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--epiphansdk" --install-option="--numpy" --upgrade "$PyPI_INSTALLER"
     - test-giftgrab-epiphan-dvi2pcieduo-i420; exit_on_fail
     - edd-dvi-i420-hevc; exit_on_fail
@@ -257,8 +264,6 @@ pypi-epiphan-dvi2pcie-duo:
     # Run the actual NumPy tests
     - pip install numpy
     - test-giftgrab-numpy-i420; exit_on_fail
-    # TODO: delete this line after issue #133
-    - unset BOOST_ROOT
     - unset USE_EPIPHANSDK  # remove dummy var
     - deactivate
   tags:
@@ -307,8 +312,7 @@ epiphan-dvi2pcie-duo:
     - check_epiphan_alive
     - ctest; exit_on_fail
     # NumPy support
-    # TODO: remove BOOST_ROOT parameter after issue #133
-    - cmake -D BOOST_ROOT="$BOOST_163_ROOT_DIR" -D USE_NUMPY=ON .
+    - cmake -D USE_NUMPY=ON .
     - make -j; exit_on_fail
     - ctest; exit_on_fail
     - unset USE_EPIPHANSDK  # remove dummy var
