@@ -95,7 +95,6 @@ linux:
     - 177-howto-links-for-dependencies-broken-on-github-mirror
     - 179-pypi-installer-name-broken
     - 41-configure-python-documentation-properly
-    - 33-ubuntu-16-04-lts
 
 ################## Platform: PyPI ##################
 ################## Target: All #####################
@@ -179,7 +178,6 @@ pypi:
     - 177-howto-links-for-dependencies-broken-on-github-mirror
     - 179-pypi-installer-name-broken
     - 41-configure-python-documentation-properly
-    - 33-ubuntu-16-04-lts
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 ################## Platform: PyPI ################################
