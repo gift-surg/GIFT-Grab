@@ -84,6 +84,7 @@ linux:
     - make install
   tags:
     - gift-linux
+    - gift-adelie
   except:
     - 164-revise-readme
     - 162-revise-contribution-guide-before-open-sourcing
@@ -159,6 +160,7 @@ pypi:
   tags:
     - gift-linux
     - gift-pypi
+    - gift-adelie
   except:
     - 164-revise-readme
     - 162-revise-contribution-guide-before-open-sourcing
