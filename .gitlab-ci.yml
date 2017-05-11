@@ -259,7 +259,6 @@ pypi-epiphan-dvi2pcie-duo:
     - gift-epiphan-dvi2pcie-duo
   only:
     - this-branch-should-never-exist
-    - 33-ubuntu-16-04-lts
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 epiphan-dvi2pcie-duo:
@@ -309,7 +308,6 @@ epiphan-dvi2pcie-duo:
     - gift-epiphan-dvi2pcie-duo
   only:
     - this-branch-should-never-exist
-    - 33-ubuntu-16-04-lts
 
 ################## Device: Epiphan Pearl #########################
 ################## Platform: PyPI ################################
