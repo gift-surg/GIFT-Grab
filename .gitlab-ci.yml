@@ -314,6 +314,10 @@ epiphan-dvi2pcie-duo:
 pypi-network-sources:
   stage: test_pypi
   script:
+    # For custom libVLC:
+    - export GIFTGRAB_ENV_ROOT=/home/gitlab-runner/environments/giftgrab/usr/local
+    - export LIBVLC_INCLUDE_PATH="$GIFTGRAB_ENV_ROOT/include"
+    - export LIBVLC_LIBRARY_PATH="$GIFTGRAB_ENV_ROOT/lib"
     - GiftGrab_PyPI_BUILD_DIR="$SCRATCH_DIR/pypi-network-sources"
     - GiftGrab_PyPI_INSTALL_DIR="$GiftGrab_PyPI_BUILD_DIR/install"
     - GiftGrab_venv=venv
@@ -351,6 +355,10 @@ pypi-network-sources:
     - test-giftgrab-network-sources-bgra; exit_on_fail
     # deactivate virtual env
     - deactivate
+    # Unset custom libVLC stuff:
+    - unset GIFTGRAB_ENV_ROOT
+    - unset LIBVLC_INCLUDE_PATH
+    - unset LIBVLC_LIBRARY_PATH
   tags:
     - gift-linux
     - gift-pypi
@@ -365,6 +373,10 @@ network-sources:
   stage: test_cmake
   script:
     # prepare environment
+    # For custom libVLC:
+    - export GIFTGRAB_ENV_ROOT=/home/gitlab-runner/environments/giftgrab/usr/local
+    - export LIBVLC_INCLUDE_PATH="$GIFTGRAB_ENV_ROOT/include"
+    - export LIBVLC_LIBRARY_PATH="$GIFTGRAB_ENV_ROOT/lib"
     - export GiftGrab_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab-network-sources"
     - export INSTALL_DIR="$SCRATCH_DIR/install-network-sources"
     - rm -rf "$GiftGrab_BUILD_DIR"
@@ -380,6 +392,10 @@ network-sources:
     - cmake -D USE_BGRA=ON -D USE_I420=OFF .
     - make -j; exit_on_fail
     - ctest; exit_on_fail
+    # Unset custom libVLC stuff:
+    - unset GIFTGRAB_ENV_ROOT
+    - unset LIBVLC_INCLUDE_PATH
+    - unset LIBVLC_LIBRARY_PATH
   tags:
     - gift-linux
     - gift-epiphan-pearl
