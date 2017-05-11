@@ -108,7 +108,7 @@ Install by `apt-get install libvpx-dev`.
 
 **Note:** Capturing network video streams in the I420 colour space works only with the stable libVLC releases that can be installed via `apt-get install libvlc-dev` (**only on Ubuntu 14.04 LTS**).
 We are working to get this feature operational on Ubuntu 16.04 LTS as well.
-The instructions below are for other features using libVLC such as acquiring video using Epiphan cards.
+The instructions below are for other features that require libVLC such as acquiring video using Epiphan cards.
 
 1. Download a [nighly build](http://nightlies.videolan.org/build/source/?C=M;O=D), e.g. `wget http://nightlies.videolan.org/build/source/vlc-3.0.0-20160913-0237-git.tar.xz`
 1. `tar xf vlc-3.0.0-20160913-0237-git.tar.xz`
