@@ -358,7 +358,6 @@ pypi-network-sources:
   only:
     - 5-add-support-for-blackmagic
     - 174-networksourceunavailable-not-exposed-to-python
-    - 33-ubuntu-16-04-lts
 
 ################## Device: Epiphan Pearl ##################
 network-sources:
@@ -386,7 +385,6 @@ network-sources:
   only:
     - 5-add-support-for-blackmagic
     - 174-networksourceunavailable-not-exposed-to-python
-    - 33-ubuntu-16-04-lts
 
 ################## Device: Blackmagic DeckLink SDI 4K ##################
 pypi-blackmagic-decklink-sdi-4k:
