@@ -1,3 +1,22 @@
+# May 2017
+
+Use `git checkout v1705`.
+
+* GIFT-Grab now works:
+    * on Ubuntu 16.04 LTS (experimental)
+    * with OpenCV 3.2.0
+
+Please check the documentation for known issues and compatibility.
+
+* Fixed:
+    * an issue that prevented non-integer frame rates from being used for encoded video files
+    * an issue that caused confusion when no features were enabled in pip install
+
+* GIFT-Grab documentation improved:
+    * Python examples with explanation added.
+    * The C++ API documentation now includes detailed notes about the differences between the C++ and Python API.
+    * More explicit instructions added for PyPI (pip) installs.
+
 # March 2017
 
 Use `git checkout v1703`.
