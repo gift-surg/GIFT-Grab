@@ -41,6 +41,11 @@ SET(FFmpeg_LIBS
 INCLUDE(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(
     FFmpeg DEFAULT_MSG
-    FFmpeg_LIBS FFmpeg_INCLUDE_DIRS
-    FFmpeg_LIBRARY_DIRS
+    FFmpeg_LIBS
 )
+
+# excluded FFmpeg_INCLUDE_DIRS and FFmpeg_LIBRARY_DIRS
+# from the above check, because pkg-config does not
+# report them if FFmpeg libraries are installed in
+# standard system-wide locations already known to the
+# system compiler
