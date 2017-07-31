@@ -41,3 +41,25 @@ this probably means that your Boost was compiled and linked against Python 3.
 Please make sure:
 * you are using Python 2
 * your Boost is built and linked against Python 2 libs
+
+## `boost_numpy` library not found by CMake
+
+If (although you've successfully installed Boost), you encounter an error similar to
+
+```
+Could not find the following Boost libraries:
+
+          boost_numpy
+
+  Some (but not all) of the required Boost libraries were found.  You may
+  need to install these additional Boost libraries.  Alternatively, set
+  BOOST_LIBRARYDIR to the directory containing Boost libraries or BOOST_ROOT
+  to the location of Boost.
+```
+
+this means that your Boost was built with Python support, but does not include NumPy support.
+Boost seems not to build the `boost_numpy` library if NumPy is not installed on the system **when building Boost**.
+
+This issue can be resolved by:
+1. installing NumPy
+1. building and installing Boost from scratch
