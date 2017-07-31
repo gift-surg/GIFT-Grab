@@ -5,6 +5,7 @@ An open-source C++ and Python API for acquiring, processing and encoding video s
 GIFT-Grab supports several frame-grabber cards, standard-compliant network streams and video files.
 
 The Python API is compatible with [NumPy][numpy] and [SciPy][scipy].
+Please note that currently **only Python 2** is supported.
 
 [scipy]: https://www.scipy.org/
 [numpy]: http://www.numpy.org/
