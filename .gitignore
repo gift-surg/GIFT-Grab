@@ -12,3 +12,4 @@ src/extern
 dist
 *venv
 doc/build
+**/*/*.swp
