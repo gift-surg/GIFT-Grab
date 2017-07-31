@@ -18,3 +18,8 @@ The frame rate of VP9-encoded WebM files is set incorrectly on Ubuntu 16.04 LTS.
 On Ubuntu 16.04 LTS, the first few (~1-3) attempts to connect to the DVI port of an Epiphan DVI2PCIe Duo, after connecting and turning on a video source, fail.
 Subsequent attempts work as expected.
 
+## `pyconfig.h` not found
+
+* Encountered on Debian 9 when compiling Boost.
+* `CPLUS_INCLUDE_PATH` might need to be set to include the directory where `pyconfig.h` is located.
+
