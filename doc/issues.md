@@ -1,5 +1,10 @@
 # Known issues
 
+Not all of the following are GIFT-Grab issues.
+Some of them are related to the external dependencies.
+However here we document all as they may be useful when getting started with GIFT-Grab.
+
+
 ## Capturing network streams in I420
 
 Please see the note in the [libVLC installation instructions](doc/tips.md#libvlc) about capturing network streams in the I420 colour space.
