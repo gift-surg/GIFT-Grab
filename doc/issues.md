@@ -1,4 +1,4 @@
-# Known issues
+# Known issues and limitations
 
 Not all of the following are GIFT-Grab issues.
 Some of them are related to the external dependencies.
