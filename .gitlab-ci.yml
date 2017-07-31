@@ -96,6 +96,7 @@ linux:
     - 179-pypi-installer-name-broken
     - 41-configure-python-documentation-properly
     - 195-fix-github-link-to-known-issues-from-requirements-md
+    - 201-incorporate-debian-installation-caveats-into-documentation
 
 ################## Platform: PyPI ##################
 ################## Target: All #####################
@@ -183,6 +184,7 @@ pypi:
     - 179-pypi-installer-name-broken
     - 41-configure-python-documentation-properly
     - 195-fix-github-link-to-known-issues-from-requirements-md
+    - 201-incorporate-debian-installation-caveats-into-documentation
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 ################## Platform: PyPI ################################
