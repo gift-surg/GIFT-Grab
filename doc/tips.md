@@ -131,4 +131,5 @@ However you can install the 1.63.0 beta version as follows:
 1. `tar xvfj boost_1_63_0_b1.tar.bz2`
 1. `cd boost_1_63_0`
 1. `./bootstrap.sh --with-libraries=python` (`--with-libraries=python` deactivates all other Boost components, ensuring minimum compilation time)
-1. `./b2 install`
+1. `./b2`
+1. `./b2 install` (running this without the `./b2` step above might result in the Boost components being installed even if the build fails)
