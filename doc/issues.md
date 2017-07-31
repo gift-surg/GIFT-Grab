@@ -27,3 +27,17 @@ Subsequent attempts work as expected.
 
 * On Debian 9 CMake was reported not to pick an `export`'ed `BOOST_ROOT`.
 * Specifying `BOOST_ROOT` to CMake as `-D BOOST_ROOT=/path/to/your/boost` solves this problem.
+
+## `ImportError` with a Boost Python `undefined symbol`
+
+If after successfully building / installing GIFT-Grab, you encounter an error similar to
+
+```
+ImportError: /home/stefan/src/GIFT-Grab/pygiftgrab.so: undefined symbol: _ZN5boost6python6detail11init_moduleEPKcPFvv
+```
+
+this probably means that your Boost was compiled and linked against Python 3.
+
+Please make sure:
+* you are using Python 2
+* your Boost is built and linked against Python 2 libs
