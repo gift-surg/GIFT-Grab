@@ -39,7 +39,9 @@ If using FFmpeg, make sure your OpenCV is properly linked against your FFmpeg in
 
 # FFmpeg
 
-Installation instructions:
+## Ubuntu
+
+On Ubuntu, FFmpeg needs to be compiled from source code and installed:
 
 1. `git clone https://github.com/FFmpeg/FFmpeg.git`
 1. `git checkout n3.1.2`
@@ -51,6 +53,19 @@ Installation instructions:
 1. `make -j` and `make install`
 
 **Note:** In case you install FFmpeg in a non-standard location, you will need to appropriately augment your `PKG_CONFIG_PATH` for GIFT-Grab to be able to locate FFmpeg.
+
+## Debian 9
+
+On Debian 9, the APT versions of the FFmpeg libraries can be used.
+Simply install them using:
+
+```
+apt install libavfilter-dev
+apt install libavutil-dev
+apt install libswscale-dev
+apt install libavcodec-dev
+apt install libavformat-dev
+```
 
 
 # NVENC
