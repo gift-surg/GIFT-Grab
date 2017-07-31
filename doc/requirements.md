@@ -12,8 +12,8 @@ GIFT-Grab has so far been tested only on Linux:
 
 GIFT-Grab requires:
 
-* A C++ compiler supporting C++11 (tested with GCC 4.9.3)
-* [CMake](https://cmake.org/) (tested with 3.2)
+* A C++ compiler supporting C++11 (tested with GCC 4.9.3 on Ubuntu, 6.3.0 on Debian)
+* [CMake](https://cmake.org/) (tested with 3.2 on Ubuntu, 3.7.2 on Debian)
 
 
 # Optional dependencies
