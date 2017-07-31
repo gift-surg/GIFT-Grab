@@ -23,3 +23,7 @@ Subsequent attempts work as expected.
 * Encountered on Debian 9 when compiling Boost.
 * `CPLUS_INCLUDE_PATH` might need to be set to include the directory where `pyconfig.h` is located.
 
+## `BOOST_ROOT` not picked by CMake
+
+* On Debian 9 CMake was reported not to pick an `export`'ed `BOOST_ROOT`.
+* Specifying `BOOST_ROOT` to CMake as `-D BOOST_ROOT=/path/to/your/boost` solves this problem.
