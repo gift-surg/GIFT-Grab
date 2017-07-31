@@ -44,7 +44,7 @@ Please make sure:
 
 ## `boost_numpy` library not found by CMake
 
-If (although you've successfully installed Boost), you encounter an error similar to
+If (although you've successfully installed Boost) you encounter an error similar to
 
 ```
 Could not find the following Boost libraries:
