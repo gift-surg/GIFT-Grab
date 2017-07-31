@@ -5,10 +5,16 @@ Some of them are related to the external dependencies.
 However here we document all as they may be useful when getting started with GIFT-Grab.
 
 
-## GIFT-Grab caveats
+## Installing GIFT-Grab locally
 
-* In case GIFT-Grab is built with a custom `CMAKE_INSTALL_PREFIX` that is **not** a standard system path, `${CMAKE_INSTALL_PREFIX}/lib/giftgrab` needs to be included in CMake's `CMAKE_MODULE_PATH` for `FIND_PACKAGE(GiftGrab)` to work.
-* If you encounter an `option not recognized` error while `pip install`ling GIFT-Grab, run `pip install pytest` and `pip install PyYAML` before running `pip install gift-grab`.
+In case GIFT-Grab is built with a custom `CMAKE_INSTALL_PREFIX` that is **not** a standard system path, `${CMAKE_INSTALL_PREFIX}/lib/giftgrab` needs to be included in CMake's `CMAKE_MODULE_PATH` for `FIND_PACKAGE(GiftGrab)` to work.
+
+## `option not recognized` when `pip install`ling GIFT-Grab
+
+If you encounter an `option not recognized` error while `pip install`ling GIFT-Grab, run:
+* `pip install pytest` and
+* `pip install PyYAML`
+before running `pip install gift-grab [...]`.
 
 ## Capturing network streams in I420
 
