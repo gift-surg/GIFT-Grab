@@ -21,10 +21,11 @@ GIFT-Grab requires:
 GIFT-Grab requires a subset of the following libraries **based on activated [features](../README.md#features)**.
 Please note that there are cross-dependencies between some of the optional dependencies.
 Check out [the documentation](tips.md) for details.
+Parantheses in the version column mean that the listed version has been tested only on the platform within the respective parantheses.
 
 | **Dependency** | **GIFT-Grab tested with version / model** | **Remarks** |
 | :--- | :--- | :--- |
-| [OpenCV](http://www.opencv.org/) | 2.4.12 (Ubuntu 14.04 LTS), 3.2.0 (Ubuntu 16.04 LTS) | Each listed version has been tested only on the platform within the respective parantheses. |
+| [OpenCV](http://www.opencv.org/) | 2.4.12 (Ubuntu 14.04 LTS), 3.2.0 (Ubuntu 16.04 LTS) | |
 | [FFmpeg](https://ffmpeg.org/) | 3.1.2 (Ubuntu), 3.2.4 (Debian 9 testing) | |
 | [NVENC (NVIDIA Video Codec SDK)](https://developer.nvidia.com/nvidia-video-codec-sdk) | 6.0.1 | NVENC has a proprietary licence: enabling NVENC support makes GIFT-Grab undistributable. |
 | [A GPU supporting NVENC](https://developer.nvidia.com/nvidia-video-codec-sdk) | GeForce GTX TITAN X and GeForce GTX 980 Ti | |
