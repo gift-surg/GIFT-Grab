@@ -22,29 +22,22 @@ Please note that currently **only Python 2** is supported.
 * Processing video data using Python packages that support NumPy arrays
 
 
-# Examples
+## Getting started
 
-[Python examples with explanation][rtd]
+* Installation
+   - [Building GIFT-Grab from source][build-from-source] (C++ and Python)
+   - [Installing GIFT-Grab using `pip`][pip] (only Python)
+* [Python examples with explanation][rtd]
+* API documentation
+   - [C++ API documentation](https://codedocs.xyz/gift-surg/GIFT-Grab/)
+   - Python API documentation: please use the C++ API documentation
+      * Most Python API elements are equivalent to their C++ counterparts.
+      * Differences are noted in the C++ docstrings (e.g. [`data()` method of `VideoFrame`][vf-data]).
+
 
 [rtd]: http://gift-grab.rtfd.io
 [pip-install-ops]: https://pip.pypa.io/en/stable/reference/pip_install/#cmdoption-install-option
-
-
-# API documentation
-
-* [C++ API documentation](https://codedocs.xyz/gift-surg/GIFT-Grab/)
-* Python API documentation: please use the C++ API documentation
-  * Most Python API elements are equivalent to their C++ counterparts.
-  * Differences are noted in the C++ docstrings (e.g. [`data()` method of `VideoFrame`][vf-data]).
-
 [vf-data]: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_video_frame.html#a458e15b00b5b2d39855db76215c44055
-
-
-# Installation
-
-* [Build GIFT-Grab from source][build-from-source] (C++ and Python)
-* [Install GIFT-Grab using `pip`][pip] (only Python)
-
 [build-from-source]: doc/build.md
 [pip]: doc/pypi.md
 
