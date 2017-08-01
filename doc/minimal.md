@@ -1,8 +1,8 @@
 # Minimal GIFT-Grab version
 
-This file documents the instructions needed to build a minimal version of GIFT-Grab such that the [SciPy example][scipy-ex] can be executed.
-Here we focus on Debian 9.
-The steps are mostly identical to Ubuntu; however wherever applicable we explain any differences.
+Below we document the steps to building a minimal GIFT-Grab such that the [SciPy example][scipy-ex] can be executed.
+The steps are for Debian 9, but are mostly identical to Ubuntu.
+Wherever applicable we highlight the differences.
 
 [scipy-ex]: http://gift-grab.readthedocs.io/en/latest/scipy.html#full-source-code
 
@@ -13,7 +13,7 @@ The steps are mostly identical to Ubuntu; however wherever applicable we explain
 1. Python libraries: `apt install python-dev`
 1. Git: `apt install git`
 1. CMake: `apt install cmake`
-1. FFmpeg (for Ubuntu, please see [these instructions][ffmpeg-ubuntu]):
+1. FFmpeg (for Ubuntu, please see [these instructions][ffmpeg-ubuntu] instead):
    - `apt install libavfilter-dev`
    - `apt install libavutil-dev`
    - `apt install libswscale-dev`
@@ -35,7 +35,12 @@ The steps are mostly identical to Ubuntu; however wherever applicable we explain
 1. Clone the GIFT-Grab repository: `git clone https://github.com/gift-surg/GIFT-Grab.git`
 1. Create a build folder and change into it: `mkdir gift-grab-build; cd gift-grab-build`
 1. Configure GIFT-Grab using CMake: `cmake -D BUILD_PYTHON=ON -D USE_FILES=ON -D USE_HEVC=ON -D USE_NUMPY=ON -D ENABLE_GPL=ON -D USE_X265=ON ../GIFT-Grab/src`
+   - This configuration uses [x265][x265] as x265 is supported by FFmpeg on Debian 9 by default.
+   - However [GIFT-Grab supports other libraries for HEVC as well][gg-hevc].
 1. Compile GIFT-Grab: `make -j` (This will create a `pygiftgrab.so` in the build folder).
+
+[x265]: http://x265.org/
+[gg-hevc]: doc/build.md#hevc
 
 
 # Running the SciPy example
