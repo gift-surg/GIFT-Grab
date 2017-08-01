@@ -57,13 +57,13 @@ Please note that currently **only Python 2** is supported.
 [webm]: https://www.webmproject.org/users/
 
 
-# Support and contributing
+## Support and contributing
 
 Please see the [contribution guide][cg] for bug reports, feature requests, and if you would like to contribute to GIFT-Grab.
 
 [cg]: CONTRIBUTING.md
 
-# Licensing and copyright
+## Licensing and copyright
 
 Copyright (c) 2015-7, [University College London][ucl].
 
@@ -76,7 +76,7 @@ Please see the [dependency installation guidelines][gg-tips] for the implication
 [gg-tips]: doc/tips.md
 
 
-# Acknowledgements
+## Acknowledgements
 
 GIFT-Grab was developed as part of the [GIFT-Surg][giftsurg] project at the [Translational Imaging Group][tig] in the [Centre for Medical Image Computing][cmic] at [University College London (UCL)][ucl].
 
