@@ -98,6 +98,7 @@ linux:
     - 195-fix-github-link-to-known-issues-from-requirements-md
     - 201-incorporate-debian-installation-caveats-into-documentation
     - 202-add-installation-instructions-for-a-minimal-version
+    - 206-revise-readme-for-information-content-and-cosmetics
 
 ################## Platform: PyPI ##################
 ################## Target: All #####################
@@ -187,6 +188,7 @@ pypi:
     - 195-fix-github-link-to-known-issues-from-requirements-md
     - 201-incorporate-debian-installation-caveats-into-documentation
     - 202-add-installation-instructions-for-a-minimal-version
+    - 206-revise-readme-for-information-content-and-cosmetics
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 ################## Platform: PyPI ################################
