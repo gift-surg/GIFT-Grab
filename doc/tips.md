@@ -1,7 +1,7 @@
-# Summary
+# Dependency installation guidelines
 
-This document contains tips for installing GIFT-Grab dependencies that require custom versions.
-For a full list of the required and optional dependencies, as well as links to the official website of each dependency, see the [requirements](requirements.md) documentation.
+In this document we aim to provide guidelines for installing the GIFT-Grab dependencies.
+A full list of the required and optional dependencies is available in the [required tools and libraries](doc/requirements.md) section.
 
 
 # Epiphan DVI2PCIe Duo
