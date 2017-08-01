@@ -57,7 +57,7 @@ In case you experience problems, please check the [known issues and limitations]
    - It should contain a Gaussian-smoothed version of the downloaded HEVC video.
    - Note that this output file should always contain the first few frames from the downloaded file; however it may not contain all frames to the end.
    - This is because encoding is a computationally intensive task and to be able to encode all frames you might need GPU-accelerated encoding.
-   - [GIFT-Grab can be used with NVENC][gg-nvenc] for that.
+   - [GIFT-Grab can be configured][gg-hevc] to use [NVENC][gg-nvenc] for GPU-accelerated encoding.
 
 [ffmpeg-ubuntu]: doc/tips.md#ubuntu
 [hevc-website]: https://x265.com/hevc-video-files/
