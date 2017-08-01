@@ -1,8 +1,10 @@
 # Known issues and limitations
 
 Not all of the following are GIFT-Grab issues.
-Some of them are related to the external dependencies.
+Some of them are related to the [external dependencies of GIFT-Grab][gg-tips].
 However here we document all as they may be useful when getting started with GIFT-Grab.
+
+[gg-tips]: doc/tips.md
 
 
 ## Installing GIFT-Grab locally
