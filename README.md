@@ -57,9 +57,9 @@ Please note that currently **only Python 2** is supported.
 [webm]: https://www.webmproject.org/users/
 
 
-# Support and contact
+# Support and contributing
 
-Please see the [contribution guide][cg] for bug reports, feature requests, contact information, etc.
+Please see the [contribution guide][cg] for bug reports, feature requests, and if you would like to contribute to GIFT-Grab.
 
 [cg]: CONTRIBUTING.md
 
