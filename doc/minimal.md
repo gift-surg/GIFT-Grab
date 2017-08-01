@@ -3,7 +3,10 @@
 Below we document the steps to building a minimal GIFT-Grab such that the [SciPy example][scipy-ex] can be executed.
 The steps are for Debian 9, but are mostly identical to Ubuntu.
 Wherever applicable we highlight the differences.
+In case you experience problems, please check the [known issues and limitations][gg-issues] as well as the [dependency installation guidelines][gg-tips].
 
+[gg-issues]: doc/issues.md
+[gg-tips]: doc/tips.md
 [scipy-ex]: http://gift-grab.readthedocs.io/en/latest/scipy.html#full-source-code
 
 
