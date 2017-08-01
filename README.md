@@ -31,6 +31,7 @@ Please note that currently **only Python 2** is supported.
    - [Building GIFT-Grab from source][build-from-source] (C++ and Python)
    - [Installing GIFT-Grab using `pip`][pip] (only Python)
 * [Python examples with explanation][rtd]
+* [Building a minimal GIFT-Grab with NumPy compatibility][gg-min]
 * API documentation
    - [C++ API documentation](https://codedocs.xyz/gift-surg/GIFT-Grab/)
    - Python API documentation: please use the C++ API documentation
@@ -38,6 +39,7 @@ Please note that currently **only Python 2** is supported.
       * Differences are noted in the C++ docstrings (e.g. [`data()` method of `VideoFrame`][vf-data]).
 
 
+[gg-min]: doc/minimal.md
 [rtd]: http://gift-grab.rtfd.io
 [pip-install-ops]: https://pip.pypa.io/en/stable/reference/pip_install/#cmdoption-install-option
 [vf-data]: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_video_frame.html#a458e15b00b5b2d39855db76215c44055
