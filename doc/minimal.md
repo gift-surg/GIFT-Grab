@@ -34,11 +34,12 @@ Wherever applicable we highlight the differences.
 
 1. Clone the GIFT-Grab repository: `git clone https://github.com/gift-surg/GIFT-Grab.git`
 1. Create a build folder and change into it: `mkdir gift-grab-build; cd gift-grab-build`
-1. Configure GIFT-Grab using CMake: `cmake -D BUILD_PYTHON=ON -D USE_FILES=ON -D USE_HEVC=ON -D USE_NUMPY=ON -D ENABLE_GPL=ON -D USE_X265=ON ../GIFT-Grab/src`
+1. Configure GIFT-Grab for [reading video files][gg-read] and [encoding HEVC files][gg-hevc]: `cmake -D BUILD_PYTHON=ON -D USE_FILES=ON -D USE_HEVC=ON -D USE_NUMPY=ON -D ENABLE_GPL=ON -D USE_X265=ON ../GIFT-Grab/src`
    - This configuration uses [x265][x265] as x265 is supported by FFmpeg on Debian 9 by default.
    - However [GIFT-Grab supports other libraries for HEVC as well][gg-hevc].
 1. Compile GIFT-Grab: `make -j` (This will create a `pygiftgrab.so` in the build folder).
 
+[gg-read]: doc/build.md#reading-video-files
 [x265]: http://x265.org/
 [gg-hevc]: doc/build.md#hevc
 
