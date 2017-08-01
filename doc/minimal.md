@@ -51,8 +51,9 @@ Wherever applicable we highlight the differences.
 1. Execute the SciPy example within the build folder: `python2 ggscipyex.py`
 1. See the produced output file `/tmp/myoutput.mp4`.
    - It should contain a Gaussian-smoothed version of the downloaded HEVC video.
-   - Note that this output file should always contain the first frames from the downloaded file; however it may not contain all frames to the end.
-   - This is because encoding is a computationally intensive task and to be able to encode all frames you will need GPU-accelerated encoding. [NVENC][gg-nvenc] can be used for that.
+   - Note that this output file should always contain the first few frames from the downloaded file; however it may not contain all frames to the end.
+   - This is because encoding is a computationally intensive task and to be able to encode all frames you might need GPU-accelerated encoding.
+   - [GIFT-Grab can be used with NVENC][gg-nvenc] for that.
 
 [ffmpeg-ubuntu]: doc/tips.md#ubuntu
 [hevc-website]: https://x265.com/hevc-video-files/
