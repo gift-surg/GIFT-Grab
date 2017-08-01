@@ -11,6 +11,17 @@ Please note that currently **only Python 2** is supported.
 [numpy]: http://www.numpy.org/
 
 
+## Features
+
+* Capturing video streams using frame-grabber hardware, the following cards are supported:
+   - [Epiphan DVI2PCIe Duo][e-dd]
+   - [Blackmagic DeckLink SDI 4K][bm-dls4]
+* Capturing standard-compliant network video streams
+* Reading (decoding) video files
+* Writing (encoding) video files (including real-time encoding)
+* Processing video data using Python packages that support NumPy arrays
+
+
 # Examples
 
 [Python examples with explanation][rtd]
