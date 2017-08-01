@@ -18,7 +18,10 @@ Please note that currently **only Python 2** is supported.
    - [Blackmagic DeckLink SDI 4K][bm-dls4]
 * Capturing standard-compliant network video streams
 * Reading (decoding) video files
-* Writing (encoding) video files (including real-time encoding)
+* Writing (encoding) video files (including real-time encoding), the following formats are supported:
+   - [Xvid][xvid]-encoded [AVI][avi]
+   - [HEVC (H.265)][hevc]-encoded [MP4][mp4]
+   - [VP9][vp9]-encoded [WebM][webm]
 * Processing video data using Python packages that support NumPy arrays
 
 
