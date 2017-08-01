@@ -1,11 +1,18 @@
+# Required tools and libraries
+
+This document lists the tools and libraries needed for building and installing GIFT-Grab.
+Please note that only a small subset of all listed items is a required dependency.
+The majority of the listed items are needed only when a [specific GIFT-Grab feature][gg-features] is activated.
+
+
 # Operating system
 
 GIFT-Grab has so far been tested only on Linux:
 * Ubuntu 14.04 LTS, kernel: 3.19.0-59-generic
 * Ubuntu 16.04 LTS, kernel: 4.4.0-72-generic (**experimental:** please see the [known issues](../README.md#known-issues))
-* Debian 9 (testing), kernel: 4.9.0-2-amd64 (**only** [the reading, writing of video files, and NumPy / SciPy compatibility][deb-test] tested)
+* Debian 9 (testing), kernel: 4.9.0-2-amd64 (**only** [the reading, writing of video files, and NumPy / SciPy compatibility][gg-features] tested)
 
-[deb-test]: ../README.md#features
+[gg-features]: ../README.md#features
 
 
 # Required dependencies
