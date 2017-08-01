@@ -59,13 +59,6 @@ Please note that currently **only Python 2** is supported.
 | | Writing [VP9][vp9]-encoded [WebM][webm] files | [HOWTO](doc/build.md#vp9) | [HOWTO](doc/pypi.md#vp9) |
 | **[NumPy][numpy] / [SciPy][scipy] compatibility** | | [HOWTO](doc/build.md#python-api) | [HOWTO](doc/pypi.md#numpy) |
 
-
-# Testing
-
-* [Testing GIFT-Grab built from source](doc/build.md#testing-gift-grab) 
-* [Testing GIFT-Grab installed with `pip`](doc/pypi.md#testing-gift-grab)
-
-
 [e-dd]: http://www.epiphan.com/products/dvi2pcie-duo/
 [bm-dls4]: https://www.blackmagicdesign.com/products/decklink/models
 [xvid]: https://www.xvid.com/
