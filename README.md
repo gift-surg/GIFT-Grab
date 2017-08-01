@@ -22,7 +22,7 @@ Please note that currently **only Python 2** is supported.
    - [Xvid][xvid]-encoded [AVI][avi]
    - [HEVC (H.265)][hevc]-encoded [MP4][mp4]
    - [VP9][vp9]-encoded [WebM][webm]
-* Processing video data using Python packages that support NumPy arrays
+* Exposing video data as NumPy arrays for processing with NumPy-compatible Python libraries
 
 
 ## Getting started
