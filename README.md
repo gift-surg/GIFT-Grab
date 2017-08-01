@@ -91,7 +91,7 @@ Please see the [dependency installation guidelines][gg-tips] for the implication
 [gg-tips]: doc/tips.md
 
 
-# Funding
+# Acknowledgements
 
 GIFT-Grab was developed as part of the [GIFT-Surg][giftsurg] project at the [Translational Imaging Group][tig] in the [Centre for Medical Image Computing][cmic] at [University College London (UCL)][ucl].
 
