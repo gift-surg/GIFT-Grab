@@ -12,6 +12,7 @@ In case you experience problems, please check the [known issues and limitations]
 
 # Installing needed tools and libraries
 
+1. pkg-config: `apt install pkg-config`
 1. GCC: `apt install build-essential`
 1. Python libraries: `apt install python-dev`
 1. Git: `apt install git`
