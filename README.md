@@ -37,8 +37,10 @@ Please note that currently **only Python 2** is supported.
    - Python API documentation: please use the C++ API documentation
       * Most Python API elements are equivalent to their C++ counterparts.
       * Differences are noted in the C++ docstrings (e.g. [`data()` method of `VideoFrame`][vf-data]).
+* [Known issues and limitations][gg-issues]
 
 
+[gg-issues]: doc/issues.md
 [gg-min]: doc/minimal.md
 [rtd]: http://gift-grab.rtfd.io
 [pip-install-ops]: https://pip.pypa.io/en/stable/reference/pip_install/#cmdoption-install-option
