@@ -26,7 +26,15 @@ Building GIFT-Grab from source / installing GIFT-Grab via `pip` requires:
 
 ## Optional requirements
 
-GIFT-Grab requires a subset of the following libraries **based on activated [features][gg-features]**.
+**GIFT-Grab requires a subset of the following libraries based on activated [features][gg-features]**.
+Please see the relevant link below for how to activate GIFT-Grab features:
+
+* [Building GIFT-Grab from source][build-from-source] (C++ and Python)
+* [Installing GIFT-Grab using `pip`][pip] (only Python)
+
+[build-from-source]: doc/build.md
+[pip]: doc/pypi.md
+
 Please note that there are cross-dependencies between some of the optional dependencies.
 Check out the [dependency installation guidelines][gg-tips] for details.
 
