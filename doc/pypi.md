@@ -1,6 +1,6 @@
 # Install GIFT-Grab from the Python Packaging Index
 
-**Hint:** In case of any errors (such as `option not recognized`) during installation, please see the [these tips](tips.md#gift-grab-caveats).
+**Hint:** In case of any errors (such as `option not recognized`) during installation, please see [these tips][gg-caveats] and the [known issues and limitations][gg-issues].
 
 The subsequent sections of this page outline the GIFT-Grab features.
 All features are disabled by default.
@@ -12,6 +12,8 @@ For instance to install GIFT-Grab with support for reading video files and video
 pip install gift-grab --install-option="--files" --install-option="--hevc"
 ```
 
+[gg-caveats]: doc/tips.md#gift-grab-caveats
+[gg-issues]: doc/issues.md
 [pip-install-ops]: https://pip.pypa.io/en/stable/reference/pip_install/#cmdoption-install-option
 
 As this route installs the GIFT-Grab Python API, it requires Python and Boost.Python, **in addition to the dependencies of the desired GIFT-Grab features**.
