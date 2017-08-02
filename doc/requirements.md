@@ -5,9 +5,10 @@ Please note that only a small subset of all listed items is a required dependenc
 The majority of the listed items are needed only when a [specific GIFT-Grab feature][gg-features] is activated.
 
 
-# Operating system
+## Operating system
 
 GIFT-Grab has so far been tested only on Linux:
+
 * Ubuntu 14.04 LTS, kernel: 3.19.0-59-generic
 * Ubuntu 16.04 LTS, kernel: 4.4.0-72-generic (**experimental:** please see the [known issues](../README.md#known-issues))
 * Debian 9 (testing), kernel: 4.9.0-2-amd64 (**only** [the reading, writing of video files, and NumPy / SciPy compatibility][gg-features] tested)
@@ -15,20 +16,21 @@ GIFT-Grab has so far been tested only on Linux:
 [gg-features]: ../README.md#features
 
 
-# Required dependencies
+## Build requirements
 
-GIFT-Grab requires:
+Building GIFT-Grab from source / installing GIFT-Grab via `pip` requires:
 
 * A C++ compiler supporting C++11 (tested with GCC 4.9.3 on Ubuntu, 6.3.0 on Debian)
 * [CMake](https://cmake.org/) (tested with 3.2 on Ubuntu, 3.7.2 on Debian)
 
 
-# Optional dependencies
+## Optional requirements
 
-GIFT-Grab requires a subset of the following libraries **based on activated [features](../README.md#features)**.
+GIFT-Grab requires a subset of the following libraries **based on activated [features][gg-features]**.
 Please note that there are cross-dependencies between some of the optional dependencies.
-Check out [the documentation](tips.md) for details.
-Parantheses in the version column mean that the listed version has been tested only on the platform within the respective parantheses.
+Check out the [dependency installation guidelines][gg-tips] for details.
+
+The parantheses in the version column mean that the listed version has been tested only on the platform within the respective parantheses.
 
 | **Dependency** | **GIFT-Grab tested with version / model** | **Remarks** |
 | :--- | :--- | :--- |
@@ -49,3 +51,5 @@ Parantheses in the version column mean that the listed version has been tested o
 | [Catch](https://github.com/philsquared/Catch) | 1.5.8 | |
 | [zlib](http://www.zlib.net/) | | |
 | [POSIX threads (pthreads)](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/pthread.h.html) | | |
+
+[gg-tips]: doc/tips.md
