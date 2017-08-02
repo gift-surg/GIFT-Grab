@@ -8,4 +8,5 @@ recursive-include opencv *
 recursive-include python *
 recursive-include tests *
 recursive-include utils *
+recursive-include pip *
 include CMakeLists.txt
