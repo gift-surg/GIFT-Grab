@@ -490,6 +490,8 @@ class GiftGrabInstallLibCommand(install_lib):
     def get_outputs(self):
         return [cmake_install_prefix()] + install_lib.get_outputs(self)
 
+header = 'A C++ and NumPy-compatible Python API for acquiring, processing ' +\
+         'and encoding video streams in real time'
 summary = 'An open-source C++ and Python API for acquiring, processing ' +\
           'and encoding video streams in real time. GIFT-Grab supports ' +\
           'several frame-grabber cards, standard-compliant network ' +\
@@ -547,7 +549,7 @@ console_scripts = console_scripts +\
 setup(
     name='GIFT-Grab',
     version='1708rc1',
-    description=summary,
+    description=header,
     long_description=description,
     url='https://github.com/gift-surg/GIFT-Grab',
     author='Dzhoshkun Ismail Shakir',
