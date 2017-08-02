@@ -69,7 +69,7 @@ Please see the [contribution guide][cg] for bug reports, feature requests, and i
 
 ## Licensing and copyright
 
-Copyright (c) 2015-7, [University College London][ucl].
+Copyright (c) 2015-7, [University College London][ucl]
 
 GIFT-Grab is available as free open-source software under the BSD-3-Clause licence.
 Please see the LICENSE file for details.
