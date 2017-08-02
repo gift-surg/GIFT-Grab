@@ -552,10 +552,12 @@ class GiftGrabInstallLibCommand(install_lib):
     def get_outputs(self):
         return [cmake_install_prefix()] + install_lib.get_outputs(self)
 
+
 header = 'A C++ and NumPy-compatible Python API for acquiring, processing ' +\
          'and encoding video streams in real time'
 with open('pip/long_description.rst') as f:
     description = f.read()
+version, _ = describe_version('v')
 console_scripts = []
 for port in ['sdi', 'dvi']:
     for colour_space in ['i420']:
@@ -594,7 +596,7 @@ console_scripts = console_scripts +\
                    'test-giftgrab-network-sources-i420=giftgrab.tests:test_network_sources_i420']
 setup(
     name='GIFT-Grab',
-    version='1708rc1',
+    version=version,
     description=header,
     long_description=description,
     url='https://github.com/gift-surg/GIFT-Grab',
