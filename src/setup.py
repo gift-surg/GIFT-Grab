@@ -657,5 +657,8 @@ setup(
                                      join('epiphan', 'dvi2pcieduo', '*.py'),
                                      join('epiphan', 'dvi2pcieduo', 'data', '*.yml'),
                                      join('blackmagic', 'decklinksdi4k', '*.py'),
-                                     join('network', '*.py')]}
+                                     join('network', '*.py')]},
+    setup_requires=[
+        'packaging',
+    ],
 )
