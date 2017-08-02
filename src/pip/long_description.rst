@@ -44,7 +44,7 @@ Getting started
    - `Building GIFT-Grab from source`_ (C++ and Python)
    - |InstallUsingPip| (only Python)
 * `Python examples with explanation`_
-* [Building a minimal GIFT-Grab with NumPy compatibility][gg-min]
+* `Building a minimal GIFT-Grab with NumPy compatibility`_
 * API documentation
    - `C++ API documentation`_
    - Python API documentation: please use the C++ API documentation
