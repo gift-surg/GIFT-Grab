@@ -16,7 +16,7 @@ Features
 --------
 
 * Capturing video streams using frame-grabber hardware, the following cards are supported:
-   - kk `Epiphan DVI2PCIe Duo`_
+   - `Epiphan DVI2PCIe Duo`_
    - `Blackmagic DeckLink SDI 4K`_
 * Capturing standard-compliant network video streams
 * Reading (decoding) video files
