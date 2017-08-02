@@ -22,6 +22,10 @@ Please also note that **due to incompatibilities in the relevant dependencies' l
 These are marked with **"makes GIFT-Grab undistributable"** and **"upgrades GIFT-Grab licence to GPL"** respectively below.
 If mutually exclusive options are activated, installation will fail.
 
+Please also note that [GIFT-Grab has been tested only against specific versions of its dependencies][gg-reqs].
+
+[gg-reqs]: doc/requirements.md
+
 
 # Reading video files
 
