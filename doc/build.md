@@ -1,6 +1,6 @@
 # Building GIFT-Grab from source
 
-**Hint:** In case of any errors while building GIFT-Grab, please see [these tips] and the [known issues and limitations][gg-issues].
+**Hint:** In case of any errors while building GIFT-Grab, please see [these tips][gg-caveats] and the [known issues and limitations][gg-issues].
 
 1. Configure using CMake and the `src` sub-directory of the cloned repository as the CMake source directory: `cmake <GIFT-Grab-clone>/src`
     * All GIFT-Grab features are inactive by default.
