@@ -13,7 +13,7 @@ Please note that currently **only Python 2** is supported.
 
 
 Features
-========
+--------
 
 * Capturing video streams using frame-grabber hardware, the following cards are supported:
    - `Epiphan DVI2PCIe Duo`_
@@ -37,7 +37,7 @@ Features
 
 
 Getting started
-===============
+---------------
 
 * Installation
    - `Required tools and libraries`_
@@ -65,7 +65,7 @@ Getting started
 
 
 Support and contributing
-========================
+------------------------
 
 Please see the `contribution guide`_ for bug reports, feature requests, and if you would like to contribute to GIFT-Grab.
 
@@ -73,7 +73,7 @@ Please see the `contribution guide`_ for bug reports, feature requests, and if y
 
 
 Licensing and copyright
-=======================
+-----------------------
 
 Copyright (c) 2015-7, `University College London`_
 
@@ -89,7 +89,7 @@ Please see the `dependency installation guidelines`_ for the implications of usi
 
 
 Acknowledgements
-================
+----------------
 
 GIFT-Grab was developed as part of the `GIFT-Surg`_ project at the `Translational Imaging Group`_ in the `Centre for Medical Image Computing`_ at `University College London`_ (UCL).
 
