@@ -28,6 +28,7 @@ Please note that currently **only Python 2** is supported.
 ## Getting started
 
 * Installation
+   - [Required tools and libraries][gg-reqs]
    - [Building GIFT-Grab from source][build-from-source] (C++ and Python)
    - [Installing GIFT-Grab using `pip`][pip] (only Python)
 * [Python examples with explanation][rtd]
@@ -40,6 +41,7 @@ Please note that currently **only Python 2** is supported.
 * [Known issues and limitations][gg-issues]
 
 
+[gg-reqs]: doc/requirements.md
 [gg-issues]: doc/issues.md
 [gg-min]: doc/minimal.md
 [rtd]: http://gift-grab.rtfd.io
