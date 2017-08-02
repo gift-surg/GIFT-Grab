@@ -15,6 +15,8 @@ Please note that currently **only Python 2** is supported.
 Features
 --------
 
+Features:
+
 * Capturing video streams using frame-grabber hardware, the following cards are supported:
    - `Epiphan DVI2PCIe Duo`_
    - `Blackmagic DeckLink SDI 4K`_
@@ -38,6 +40,8 @@ Features
 
 Getting started
 ---------------
+
+Getting started:
 
 * Installation
    - `Required tools and libraries`_
