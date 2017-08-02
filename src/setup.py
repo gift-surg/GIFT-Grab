@@ -8,68 +8,6 @@ from os import mkdir, chdir, listdir, getcwd, link, rename
 from os.path import join, abspath, dirname
 from subprocess import check_output
 from sys import stderr
-import re
-from packaging import version
-
-
-def describe_version(prefix=None):
-    """Describe version based on last annotated Git tag.
-
-    Args:
-        prefix: if specified, only tags with this prefix are considered
-
-    Returns:
-        A version string such as ``1704`` if the current commit is tagged,
-        otherwise ``1704.devN`` with ``N`` specifying the distance to last
-        tag in terms of the commits since that tag
-
-        The output of the executed Git command ``git describe [...]``
-
-    Raises:
-        ValueError: with a detailed message in case the version cannot be
-        described for some reason.
-        CalledProcessError: if the Git command cannot be executed for
-        some reason
-    """
-    # Describe the version relative to last tag
-    command_git = ['git', 'describe']
-    if prefix:
-        command_git += ['--match', '{}*'.format(prefix)]
-    version_buf = check_output(command_git).rstrip()
-
-    # Exclude the 'v' for PEP440 conformity, see
-    # https://www.python.org/dev/peps/pep-0440/#public-version-identifiers
-    version_buf = version_buf[1:]
-
-    # Regex for checking PEP 440 conformity
-    # https://www.python.org/dev/peps/pep-0440/#id79
-    pep440_regex = re.compile(
-        r"^\s*" + version.VERSION_PATTERN + r"\s*$",
-        re.VERBOSE | re.IGNORECASE,
-    )
-
-    # Split the git describe output, as it may not be a tagged commit
-    tokens = version_buf.split('-')
-    if len(tokens) > 1:  # not a tagged commit
-        # Format a developmental release identifier according to PEP440, see:
-        # https://www.python.org/dev/peps/pep-0440/#developmental-releases
-        version_git = '{}.dev{}'.format(tokens[0], tokens[1])
-    elif len(tokens) == 1:  # tagged commit
-        # Format a public version identifier according to PEP440, see:
-        # https://www.python.org/dev/peps/pep-0440/#public-version-identifiers
-        version_git = tokens[0]
-    else:
-        raise ValueError('Unexpected "git describe" output:'
-                         '{}'.format(version_buf))
-
-    # Check PEP 440 conformity
-    if pep440_regex.match(version_git) is None:
-        raise ValueError('The version tag {} constructed from {} output'
-                         ' (generated using the "{}" command) does not'
-                         ' conform to PEP 440'.format(
-                             version_git, version_buf, ' '.join(command_git)))
-
-    return version_git, version_buf
 
 
 def pip_root():
