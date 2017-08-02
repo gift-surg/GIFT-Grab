@@ -1,3 +1,12 @@
+IMPORTANT INSTALLATION NOTE
+===========================
+
+``pip install gift-grab`` currently works only with ``--install-option``'s.
+Please see `this guideline on the GIFT-Grab repository`_.
+
+.. _`this guideline on the GIFT-Grab repository`: https://github.com/gift-surg/GIFT-Grab/blob/master/doc/pypi.md
+
+
 GIFT-Grab
 =========
 
