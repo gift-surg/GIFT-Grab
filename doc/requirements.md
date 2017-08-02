@@ -10,9 +10,10 @@ The majority of the listed items are needed only when a [specific GIFT-Grab feat
 GIFT-Grab has so far been tested only on Linux:
 
 * Ubuntu 14.04 LTS, kernel: 3.19.0-59-generic
-* Ubuntu 16.04 LTS, kernel: 4.4.0-72-generic (**experimental:** please see the [known issues](../README.md#known-issues))
+* Ubuntu 16.04 LTS, kernel: 4.4.0-72-generic (**experimental:** please see the [known issues and limitations][gg-issues]
 * Debian 9 (testing), kernel: 4.9.0-2-amd64 (**only** [the reading, writing of video files, and NumPy / SciPy compatibility][gg-features] tested)
 
+[gg-issues]: doc/issues.md
 [gg-features]: ../README.md#features
 
 
