@@ -13,6 +13,9 @@ Please also note that **due to incompatibilities in the relevant dependencies' l
 These are marked with **"makes GIFT-Grab undistributable"** and **"upgrades GIFT-Grab licence to GPL"** respectively below.
 If mutually exclusive options are activated, CMake will give an error and GIFT-Grab will not be built.
 
+Please also note that [GIFT-Grab has been tested only against specific versions of its dependencies][gg-reqs].
+
+[gg-reqs]: doc/requirements.md
 [gg-issues]: doc/issues.md
 
 
