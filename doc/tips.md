@@ -7,7 +7,7 @@ If you encounter problems installing any dependency, please have a look at the [
 [gg-issues]: doc/issues.md
 
 
-# Epiphan DVI2PCIe Duo
+## Epiphan DVI2PCIe Duo
 
 * When using this frame-grabber card, `/dev/video0` and `/dev/video1` will be probed for connecting to its DVI and SDI ports respectively.
 * The Linux user account used for capturing video must be in the group these two devices belong to. For instance if these belong to the `video` group: `sudo usermod -a -G video myuser`.
@@ -15,7 +15,7 @@ If you encounter problems installing any dependency, please have a look at the [
 * Due to hardware-specific limitations, capturing video at 60 fps is possible only if the [I420 colour space](https://wiki.videolan.org/YUV#I420) is used instead of BGRA.
 
 
-# Epiphan Video Grabbing SDK
+## Epiphan Video Grabbing SDK
 
 1. Download Epiphan video grabbing SDK from [Epiphan support](https://www.epiphan.com/support/) and unpack it, e.g. `wget https://www.epiphan.com/downloads/products/epiphan_sdk-3.30.3.0007.zip; unzip epiphan_sdk-3.30.3.0007.zip`.
 1. Change into the sub-folder `epiphan/samples/v2u` and run `make`. This should create a `build` folder here.
@@ -23,7 +23,7 @@ If you encounter problems installing any dependency, please have a look at the [
 1. Specify this folder's **absolute** path as the `EpiphanSDK_DIR` environment variable, e.g. `export EpiphanSDK_DIR="/opt/epiphan_sdk-3.30.3.0007"`.
 
 
-# Blackmagic Drivers and Blackmagic Desktop Video SDK
+## Blackmagic Drivers and Blackmagic Desktop Video SDK
 
 1. Download and unpack [Blackmagic Desktop Video SDK](https://www.blackmagicdesign.com/support).
 1. If the resulting folder name has spaces e.g. `Blackmagic DeckLink SDK 10.4`, replace spaces with an underscore, e.g. `Blackmagic_DeckLink_SDK_10.4`.
@@ -34,15 +34,15 @@ If you encounter problems installing any dependency, please have a look at the [
 1. Check your Blackmagic card's firmware status, and update it if necessary.
 
 
-# OpenCV
+## OpenCV
 
 Please see the [OpenCV website](http://opencv.org/) for possible installation routes.
 If using FFmpeg, make sure your OpenCV is properly linked against your FFmpeg installation.
 
 
-# FFmpeg
+## FFmpeg
 
-## Ubuntu
+### Ubuntu 14.04 and 16.04
 
 On Ubuntu, FFmpeg needs to be compiled from source code and installed:
 
@@ -57,7 +57,7 @@ On Ubuntu, FFmpeg needs to be compiled from source code and installed:
 
 **Note:** In case you install FFmpeg in a non-standard location, you will need to appropriately augment your `PKG_CONFIG_PATH` for GIFT-Grab to be able to locate FFmpeg.
 
-## Debian 9
+### Debian 9
 
 On Debian 9, the APT versions of the FFmpeg libraries can be used.
 Simply install them using:
@@ -71,7 +71,7 @@ apt install libavformat-dev
 ```
 
 
-# NVENC
+## NVENC
 
 Installation instructions:
 
@@ -79,7 +79,7 @@ Installation instructions:
 1. Extract its contents and copy `nvidia_video_sdk_6.0.1/Samples/common/inc/nvEncodeAPI.h` to a standard system include folder (e.g. `/usr/local/include`)
 
 
-# kvazaar
+## kvazaar
 
 Installation instructions:
 
@@ -98,7 +98,7 @@ Caveats:
    1. Run `ldconfig`
 
 
-# x265
+## x265
 
 Installation instructions:
 
@@ -110,12 +110,12 @@ Installation instructions:
 1. `make -j` and `make install`
 
 
-# libvpx
+## libvpx
 
 Install by `apt-get install libvpx-dev`.
 
 
-# libVLC
+## libVLC
 
 **Note:** Capturing network video streams in the I420 colour space works only with the stable libVLC releases that can be installed via `apt-get install libvlc-dev` (**only on Ubuntu 14.04 LTS**).
 We are working to get this feature operational on Ubuntu 16.04 LTS as well.
@@ -129,7 +129,7 @@ The instructions below are for other features that require libVLC such as acquir
 1. `./compile` and `make install`
 
 
-# NumPy support and Boost.Python
+## NumPy support and Boost.Python
 
 **NB:** Video data can be exposed as a flat as well as structured [`ndarray`](https://docs.scipy.org/doc/numpy/reference/arrays.ndarray.html).
 The latter currently works **only for BGRA data** and the resulting `ndarray`'s shape is compatible with the axis ordering used in [SciPy routines](https://docs.scipy.org/doc/scipy/reference/).
