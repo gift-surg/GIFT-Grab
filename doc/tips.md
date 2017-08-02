@@ -62,13 +62,11 @@ On Ubuntu, FFmpeg needs to be compiled from source code and installed:
 On Debian 9, the APT versions of the FFmpeg libraries can be used.
 Simply install them using:
 
-```
-apt install libavfilter-dev
-apt install libavutil-dev
-apt install libswscale-dev
-apt install libavcodec-dev
-apt install libavformat-dev
-```
+1. `apt install libavfilter-dev`
+1. `apt install libavutil-dev`
+1. `apt install libswscale-dev`
+1. `apt install libavcodec-dev`
+1. `apt install libavformat-dev`
 
 
 ## NVENC
