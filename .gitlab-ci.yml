@@ -99,6 +99,7 @@ linux:
     - 201-incorporate-debian-installation-caveats-into-documentation
     - 202-add-installation-instructions-for-a-minimal-version
     - 206-revise-readme-for-information-content-and-cosmetics
+    - 203-make-dependency-versions-more-visible-in-documentation
 
 ################## Platform: PyPI ##################
 ################## Target: All #####################
@@ -189,6 +190,7 @@ pypi:
     - 201-incorporate-debian-installation-caveats-into-documentation
     - 202-add-installation-instructions-for-a-minimal-version
     - 206-revise-readme-for-information-content-and-cosmetics
+    - 203-make-dependency-versions-more-visible-in-documentation
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 ################## Platform: PyPI ################################
