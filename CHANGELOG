@@ -1,3 +1,16 @@
+# August 2017
+
+* Partial support for using GIFT-Grab on Debian 9 (see the documentation for details)
+* Fixed an FFmpeg CMake discovery script issue that caused the GIFT-Grab installation to fail on Debian 9.
+* Major revision and restructuring of documentation:
+    * Restructured the main README file to reduce content and to make it easier for the user to find relevant information.
+    * Added instructions for building a minimal GIFT-Grab version for testing NumPy compatibility.
+    * Made the requirements and the dependency installation guidelines sections more visible and easier to find.
+    * Emphasised the need for pip install options for installing GIFT-Grab from PyPI.
+    * Revised the GIFT-Grab PyPI description to make the GIFT-Grab PyPI page a bit more appealing and more useful to the user.
+    * Known issues and limitations are now kept in a separate MD file.
+    * More internal cross-links to make it easier for the user to browse and navigate the documentation.
+
 # May 2017
 
 Use `git checkout v1705`.
