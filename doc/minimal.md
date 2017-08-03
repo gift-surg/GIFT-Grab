@@ -5,8 +5,8 @@ The steps are for Debian 9, but are mostly identical to Ubuntu.
 Wherever applicable we highlight the differences.
 In case you experience problems, please check the [known issues and limitations][gg-issues] as well as the [dependency installation guidelines][gg-tips].
 
-[gg-issues]: doc/issues.md
-[gg-tips]: doc/tips.md
+[gg-issues]: issues.md
+[gg-tips]: tips.md
 [scipy-ex]: http://gift-grab.readthedocs.io/en/latest/scipy.html#full-source-code
 
 
@@ -43,9 +43,9 @@ In case you experience problems, please check the [known issues and limitations]
    - However [GIFT-Grab supports other libraries for HEVC as well][gg-hevc].
 1. Compile GIFT-Grab: `make -j` (This will create a `pygiftgrab.so` in the build folder).
 
-[gg-read]: doc/build.md#reading-video-files
+[gg-read]: build.md#reading-video-files
 [x265]: http://x265.org/
-[gg-hevc]: doc/build.md#hevc
+[gg-hevc]: build.md#hevc
 
 
 # Running the SciPy example
@@ -59,6 +59,6 @@ In case you experience problems, please check the [known issues and limitations]
    - This is because encoding is a computationally intensive task and to be able to encode all frames you might need GPU-accelerated encoding.
    - [GIFT-Grab can be configured][gg-hevc] to use [NVENC][gg-nvenc] for GPU-accelerated encoding.
 
-[ffmpeg-ubuntu]: doc/tips.md#ubuntu
+[ffmpeg-ubuntu]: tips.md#ubuntu
 [hevc-website]: https://x265.com/hevc-video-files/
-[gg-nvenc]: doc/tips.md#nvenc
+[gg-nvenc]: tips.md#nvenc
