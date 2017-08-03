@@ -59,6 +59,6 @@ In case you experience problems, please check the [known issues and limitations]
    - This is because encoding is a computationally intensive task and to be able to encode all frames you might need GPU-accelerated encoding.
    - [GIFT-Grab can be configured][gg-hevc] to use [NVENC][gg-nvenc] for GPU-accelerated encoding.
 
-[ffmpeg-ubuntu]: tips.md#ubuntu
+[ffmpeg-ubuntu]: tips.md#ubuntu-1404-and-1604
 [hevc-website]: https://x265.com/hevc-video-files/
 [gg-nvenc]: tips.md#nvenc
