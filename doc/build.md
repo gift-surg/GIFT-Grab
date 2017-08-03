@@ -15,8 +15,8 @@ If mutually exclusive options are activated, CMake will give an error and GIFT-G
 
 Please also note that [GIFT-Grab has been tested only against specific versions of its dependencies][gg-reqs].
 
-[gg-reqs]: doc/requirements.md
-[gg-issues]: doc/issues.md
+[gg-reqs]: requirements.md
+[gg-issues]: issues.md
 
 
 # Reading video files
