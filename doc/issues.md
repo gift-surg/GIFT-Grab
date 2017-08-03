@@ -76,3 +76,8 @@ Boost seems not to build the `boost_numpy` library if NumPy is not installed on 
 This issue can be resolved by:
 1. installing NumPy
 1. building and installing Boost from scratch
+
+## `fatal error: no input files` when doing a `pip install`
+
+* This issue seems to be related to custom `CXXFLAGS`.
+* A possible workaround is to `unset CXXFLAGS` before installing GIFT-Grab with `pip`.
