@@ -101,6 +101,7 @@ linux:
     - 206-revise-readme-for-information-content-and-cosmetics
     - 203-make-dependency-versions-more-visible-in-documentation
     - 207-check-all-changed-cross-references-in-docs-before-release
+    - 212-revise-minimal-example-header-hierarchy
 
 ################## Platform: PyPI ##################
 ################## Target: All #####################
@@ -193,6 +194,7 @@ pypi:
     - 206-revise-readme-for-information-content-and-cosmetics
     - 203-make-dependency-versions-more-visible-in-documentation
     - 207-check-all-changed-cross-references-in-docs-before-release
+    - 212-revise-minimal-example-header-hierarchy
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 ################## Platform: PyPI ################################
