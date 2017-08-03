@@ -91,7 +91,7 @@ This work was supported through an Innovative Engineering for Health award by th
 [giftsurg]: http://www.gift-surg.ac.uk
 [cmic]: http://cmic.cs.ucl.ac.uk
 [ucl]: http://www.ucl.ac.uk
-[nihr]: http://www.nihr.ac.uk/research
+[nihr]: http://www.nihr.ac.uk/
 [uclh]: http://www.uclh.nhs.uk
 [epsrc]: http://www.epsrc.ac.uk
 [wellcometrust]: http://www.wellcome.ac.uk

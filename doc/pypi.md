@@ -12,7 +12,7 @@ For instance to install GIFT-Grab with support for reading video files and video
 pip install gift-grab --install-option="--files" --install-option="--hevc"
 ```
 
-[gg-issues]: doc/issues.md
+[gg-issues]: issues.md
 [pip-install-ops]: https://pip.pypa.io/en/stable/reference/pip_install/#cmdoption-install-option
 
 As this route installs the GIFT-Grab Python API, it requires Python and Boost.Python, **in addition to the dependencies of the desired GIFT-Grab features**.
@@ -24,7 +24,7 @@ If mutually exclusive options are activated, installation will fail.
 
 Please also note that [GIFT-Grab has been tested only against specific versions of its dependencies][gg-reqs].
 
-[gg-reqs]: doc/requirements.md
+[gg-reqs]: requirements.md
 
 
 # Reading video files

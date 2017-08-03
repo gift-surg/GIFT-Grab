@@ -4,7 +4,7 @@ Not all of the following are GIFT-Grab issues.
 Some of them are related to the [external dependencies of GIFT-Grab][gg-tips].
 However here we document all as they may be useful when getting started with GIFT-Grab.
 
-[gg-tips]: doc/tips.md
+[gg-tips]: tips.md
 
 
 ## Installing GIFT-Grab locally
@@ -20,7 +20,7 @@ before running `pip install gift-grab [...]`.
 
 ## Capturing network streams in I420
 
-Please see the note in the [libVLC installation instructions](doc/tips.md#libvlc) about capturing network streams in the I420 colour space.
+Please see the note in the [libVLC installation instructions](tips.md#libvlc) about capturing network streams in the I420 colour space.
 
 ## Encoding VP9 on Ubuntu 16.04 LTS
 
