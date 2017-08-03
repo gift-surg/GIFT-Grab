@@ -1,10 +1,10 @@
 # Dependency installation guidelines
 
 In this document we aim to provide guidelines for installing the GIFT-Grab dependencies.
-A full list of the required and optional dependencies is available in the [required tools and libraries](doc/requirements.md) section.
+A full list of the required and optional dependencies is available in the [required tools and libraries](requirements.md) section.
 If you encounter problems installing any dependency, please have a look at the [known issues and limitations][gg-issues].
 
-[gg-issues]: doc/issues.md
+[gg-issues]: issues.md
 
 
 ## Epiphan DVI2PCIe Duo
