@@ -13,7 +13,7 @@ GIFT-Grab has so far been tested only on Linux:
 * Ubuntu 16.04 LTS, kernel: 4.4.0-72-generic (**experimental:** please see the [known issues and limitations][gg-issues])
 * Debian 9 (testing), kernel: 4.9.0-2-amd64 (**only** [the reading, writing of video files, and NumPy / SciPy compatibility][gg-features] tested)
 
-[gg-issues]: doc/issues.md
+[gg-issues]: issues.md
 [gg-features]: ../README.md#features
 
 
@@ -33,8 +33,8 @@ Please see the relevant link below for how to activate GIFT-Grab features:
 * [Building GIFT-Grab from source][build-from-source] (C++ and Python)
 * [Installing GIFT-Grab using `pip`][pip] (only Python)
 
-[build-from-source]: doc/build.md
-[pip]: doc/pypi.md
+[build-from-source]: build.md
+[pip]: pypi.md
 
 Please note that there are cross-dependencies between some of the optional dependencies.
 Check out the [dependency installation guidelines][gg-tips] for details.
@@ -61,4 +61,4 @@ The parantheses in the version column mean that the listed version has been test
 | [zlib](http://www.zlib.net/) | | |
 | [POSIX threads (pthreads)](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/pthread.h.html) | | |
 
-[gg-tips]: doc/tips.md
+[gg-tips]: tips.md
