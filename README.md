@@ -28,7 +28,7 @@ Please note that currently **only Python 2** is supported.
 ## Getting started
 
 * Installation
-   - [Required tools and libraries][gg-reqs]
+   - [Required tools and libraries][gg-reqs] and [guidelines for installing them][gg-tips]
    - [Building GIFT-Grab from source][build-from-source] (C++ and Python)
    - [Installing GIFT-Grab using `pip`][pip] (only Python)
 * [Python examples with explanation][rtd]
