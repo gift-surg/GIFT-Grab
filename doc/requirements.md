@@ -1,28 +1,50 @@
-# Operating system
+# Required tools and libraries
+
+This document lists the tools and libraries needed for building and installing GIFT-Grab.
+Please note that only a small subset of all listed items is a required dependency.
+The majority of the listed items are needed only when a [specific GIFT-Grab feature][gg-features] is activated.
+
+
+## Operating system
 
 GIFT-Grab has so far been tested only on Linux:
+
 * Ubuntu 14.04 LTS, kernel: 3.19.0-59-generic
-* Ubuntu 16.04 LTS, kernel: 4.4.0-72-generic (**experimental:** please see the [known issues](../README.md#known-issues))
+* Ubuntu 16.04 LTS, kernel: 4.4.0-72-generic (**experimental:** please see the [known issues and limitations][gg-issues])
+* Debian 9 (testing), kernel: 4.9.0-2-amd64 (**only** [the reading, writing of video files, and NumPy / SciPy compatibility][gg-features] tested)
+
+[gg-issues]: doc/issues.md
+[gg-features]: ../README.md#features
 
 
-# Required dependencies
+## Build requirements
 
-GIFT-Grab requires:
+Building GIFT-Grab from source / installing GIFT-Grab via `pip` requires:
 
-* A C++ compiler supporting C++11 (tested with GCC 4.9.3)
-* [CMake](https://cmake.org/) (tested with 3.2)
+* A C++ compiler supporting C++11 (tested with GCC 4.9.3 on Ubuntu, 6.3.0 on Debian)
+* [CMake](https://cmake.org/) (tested with 3.2 on Ubuntu, 3.7.2 on Debian)
 
 
-# Optional dependencies
+## Optional requirements
 
-GIFT-Grab requires a subset of the following libraries **based on activated [features](../README.md#features)**.
+**GIFT-Grab requires a subset of the following libraries based on activated [features][gg-features]**.
+Please see the relevant link below for how to activate GIFT-Grab features:
+
+* [Building GIFT-Grab from source][build-from-source] (C++ and Python)
+* [Installing GIFT-Grab using `pip`][pip] (only Python)
+
+[build-from-source]: doc/build.md
+[pip]: doc/pypi.md
+
 Please note that there are cross-dependencies between some of the optional dependencies.
-Check out [the documentation](tips.md) for details.
+Check out the [dependency installation guidelines][gg-tips] for details.
+
+The parantheses in the version column mean that the listed version has been tested only on the platform within the respective parantheses.
 
 | **Dependency** | **GIFT-Grab tested with version / model** | **Remarks** |
 | :--- | :--- | :--- |
-| [OpenCV](http://www.opencv.org/) | 2.4.12 (Ubuntu 14.04 LTS), 3.2.0 (Ubuntu 16.04 LTS) | Each listed version has been tested only on the platform within the respective parantheses. |
-| [FFmpeg](https://ffmpeg.org/) | 3.1.2 | |
+| [OpenCV](http://www.opencv.org/) | 2.4.12 (Ubuntu 14.04 LTS), 3.2.0 (Ubuntu 16.04 LTS) | |
+| [FFmpeg](https://ffmpeg.org/) | 3.1.2 (Ubuntu), 3.2.4 (Debian 9 testing) | |
 | [NVENC (NVIDIA Video Codec SDK)](https://developer.nvidia.com/nvidia-video-codec-sdk) | 6.0.1 | NVENC has a proprietary licence: enabling NVENC support makes GIFT-Grab undistributable. |
 | [A GPU supporting NVENC](https://developer.nvidia.com/nvidia-video-codec-sdk) | GeForce GTX TITAN X and GeForce GTX 980 Ti | |
 | [kvazaar](https://github.com/ultravideo/kvazaar) | 0.8.3 | |
@@ -38,3 +60,5 @@ Check out [the documentation](tips.md) for details.
 | [Catch](https://github.com/philsquared/Catch) | 1.5.8 | |
 | [zlib](http://www.zlib.net/) | | |
 | [POSIX threads (pthreads)](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/pthread.h.html) | | |
+
+[gg-tips]: doc/tips.md

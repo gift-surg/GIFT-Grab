@@ -1,71 +1,54 @@
 # GIFT-Grab
 
-An open-source C++ and Python API for acquiring, processing and encoding video streams in real time.
+GIFT-Grab is an open-source C++ and Python API for acquiring, processing and encoding video streams in real time.
 
 GIFT-Grab supports several frame-grabber cards, standard-compliant network streams and video files.
 
 The Python API is compatible with [NumPy][numpy] and [SciPy][scipy].
+Please note that currently **only Python 2** is supported.
 
 [scipy]: https://www.scipy.org/
 [numpy]: http://www.numpy.org/
 
 
-# Examples
+## Features
 
-[Python examples with explanation][rtd]
+* Capturing video streams using frame-grabber hardware, the following cards are supported:
+   - [Epiphan DVI2PCIe Duo][e-dd]
+   - [Blackmagic DeckLink SDI 4K][bm-dls4]
+* Capturing standard-compliant network video streams
+* Reading (decoding) video files
+* Writing (encoding) video files (including real-time encoding), the following formats are supported:
+   - [Xvid][xvid]-encoded [AVI][avi]
+   - [HEVC (H.265)][hevc]-encoded [MP4][mp4]
+   - [VP9][vp9]-encoded [WebM][webm]
+* Exposing video data as NumPy arrays for processing with NumPy-compatible Python libraries
 
+
+## Getting started
+
+* Installation
+   - [Required tools and libraries][gg-reqs]
+   - [Building GIFT-Grab from source][build-from-source] (C++ and Python)
+   - [Installing GIFT-Grab using `pip`][pip] (only Python)
+* [Python examples with explanation][rtd]
+* [Building a minimal GIFT-Grab with NumPy compatibility][gg-min]
+* API documentation
+   - [C++ API documentation](https://codedocs.xyz/gift-surg/GIFT-Grab/)
+   - Python API documentation: please use the C++ API documentation
+      * Most Python API elements are equivalent to their C++ counterparts.
+      * Differences are noted in the C++ docstrings (e.g. [`data()` method of `VideoFrame`][vf-data]).
+* [Known issues and limitations][gg-issues]
+
+
+[gg-reqs]: doc/requirements.md
+[gg-issues]: doc/issues.md
+[gg-min]: doc/minimal.md
 [rtd]: http://gift-grab.rtfd.io
 [pip-install-ops]: https://pip.pypa.io/en/stable/reference/pip_install/#cmdoption-install-option
-
-
-# API documentation
-
-* [C++ API documentation](https://codedocs.xyz/gift-surg/GIFT-Grab/)
-* Python API documentation: please use the C++ API documentation
-  * Most Python API elements are equivalent to their C++ counterparts.
-  * Differences are noted in the C++ docstrings (e.g. [`data()` method of `VideoFrame`][vf-data]).
-
 [vf-data]: https://codedocs.xyz/gift-surg/GIFT-Grab/classgg_1_1_video_frame.html#a458e15b00b5b2d39855db76215c44055
-
-
-# Installation
-
-* [Build GIFT-Grab from source][build-from-source] (C++ and Python)
-* [Install GIFT-Grab using `pip`][pip] (only Python)
-
 [build-from-source]: doc/build.md
 [pip]: doc/pypi.md
-
-
-# Features
-
-**Hint:** the "HOWTO"s in the table are quick links to the relevant installation documentation. **IF DOING `pip install gift-grab`**, please make sure you use the appropriate [`pip --install-option`s][pip-install-ops] for enabling the desired features (details [here](doc/pypi.md)).
-
-| **Feature** | | [**C++ API**](doc/build.md) | [**Python API**](doc/pypi.md) |
-| :--- | :--- | :---: | :---: |
-| **Frame-grabbers** | | | |
-| | [Epiphan DVI2PCIe Duo][e-dd] | [HOWTO](doc/build.md#epiphan-dvi2pcie-duo) | [HOWTO](doc/pypi.md#epiphan-dvi2pcie-duo) |
-| | [Blackmagic DeckLink SDI 4K][bm-dls4] | [HOWTO](doc/build.md#blackmagic-decklink-sdi-4k) |  [HOWTO](doc/pypi.md#blackmagic-decklink-sdi-4k) |
-| **Network streams** | | [HOWTO](doc/build.md#network-streams) | [HOWTO](doc/pypi.md#network-streams) |
-| **Video files** | | | |
-| | Reading | [HOWTO](doc/build.md#reading-video-files) | [HOWTO](doc/pypi.md#reading-video-files) |
-| | Writing [Xvid][xvid]-encoded [AVI][avi] files | [HOWTO](doc/build.md#xvid) | [HOWTO](doc/pypi.md#xvid) |
-| | Writing [HEVC (H.265)][hevc]-encoded [MP4][mp4] files | [HOWTO](doc/build.md#hevc) | [HOWTO](doc/pypi.md#hevc) |
-| | Writing [VP9][vp9]-encoded [WebM][webm] files | [HOWTO](doc/build.md#vp9) | [HOWTO](doc/pypi.md#vp9) |
-| **[NumPy][numpy] / [SciPy][scipy] compatibility** | | [HOWTO](doc/build.md#python-api) | [HOWTO](doc/pypi.md#numpy) |
-
-
-# Known issues
-
-* Please see the note in the [libVLC installation instructions](doc/tips.md#libvlc) about capturing network streams in the I420 colour space.
-* The frame rate of VP9-encoded WebM files is set incorrectly on Ubuntu 16.04 LTS.
-* On Ubuntu 16.04 LTS, the first few (~1-3) attempts to connect to the DVI port of an Epiphan DVI2PCIe Duo, after connecting and turning on a video source, fail. Subsequent attempts work as expected.
-
-
-# Testing
-
-* [Testing GIFT-Grab built from source](doc/build.md#testing-gift-grab) 
-* [Testing GIFT-Grab installed with `pip`](doc/pypi.md#testing-gift-grab)
 
 
 [e-dd]: http://www.epiphan.com/products/dvi2pcie-duo/
@@ -78,26 +61,30 @@ The Python API is compatible with [NumPy][numpy] and [SciPy][scipy].
 [webm]: https://www.webmproject.org/users/
 
 
-# Support and contact
+## Support and contributing
 
-Please see the [contribution guide][cg] for bug reports, feature requests, contact information, etc.
+Please see the [contribution guide][cg] for bug reports, feature requests, and if you would like to contribute to GIFT-Grab.
 
 [cg]: CONTRIBUTING.md
 
-# Licence
+## Licensing and copyright
 
-Copyright (c) 2015-7, [University College London][ucl].
+Copyright (c) 2015-7, [University College London][ucl]
 
-GIFT-Grab is available as free open-source software under a BSD-3-Clause licence.
+GIFT-Grab is available as free open-source software under the BSD-3-Clause licence.
+Please see the LICENSE file for details.
+
 Other licences may apply for the GIFT-Grab dependencies.
-Please see the installation instructions for the dependencies and implications of using them with regards to licensing.
+Please see the [dependency installation guidelines][gg-tips] for the implications of using them with regards to licensing.
+
+[gg-tips]: doc/tips.md
 
 
-# Funding
+## Acknowledgements
 
-GIFT-Grab was developed as part of the [GIFT-Surg][giftsurg] project at the [Translational Imaging Group][tig] in the [Centre for Medical Image Computing][cmic] at [University College London (UCL)][ucl].
+GIFT-Grab was developed as part of the [GIFT-Surg][giftsurg] project at the [Translational Imaging Group][tig] in the [Centre for Medical Image Computing][cmic] at [University College London][ucl] (UCL).
 
-This work was supported through an Innovative Engineering for Health award by the [Wellcome Trust][wellcometrust] [WT101957], the [Engineering and Physical Sciences Research Council (EPSRC)][epsrc] [NS/A000027/1] and a [National Institute for Health Research][nihr] Biomedical Research Centre [UCLH][uclh]/UCL High Impact Initiative.
+This work was supported through an Innovative Engineering for Health award by the [Wellcome Trust][wellcometrust] [WT101957], the [Engineering and Physical Sciences Research Council][epsrc] [NS/A000027/1] and a [National Institute for Health Research][nihr] Biomedical Research Centre [UCLH][uclh] / UCL High Impact Initiative.
 
 
 [tig]: http://cmictig.cs.ucl.ac.uk

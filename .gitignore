@@ -12,3 +12,7 @@ src/extern
 dist
 *venv
 doc/build
+src/build
+src/dist
+src/*.egg-info
+*.swp
