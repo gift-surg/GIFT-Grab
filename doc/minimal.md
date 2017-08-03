@@ -10,7 +10,7 @@ In case you experience problems, please check the [known issues and limitations]
 [scipy-ex]: http://gift-grab.readthedocs.io/en/latest/scipy.html#full-source-code
 
 
-# Installing needed tools and libraries
+## Installing needed tools and libraries
 
 1. pkg-config: `apt install pkg-config`
 1. GCC: `apt install build-essential`
@@ -34,7 +34,7 @@ In case you experience problems, please check the [known issues and limitations]
    - `./b2 install`
 
 
-# Obtaining and building GIFT-Grab
+## Obtaining and building GIFT-Grab
 
 1. Clone the GIFT-Grab repository: `git clone https://github.com/gift-surg/GIFT-Grab.git`
 1. Create a build folder and change into it: `mkdir gift-grab-build; cd gift-grab-build`
@@ -48,7 +48,7 @@ In case you experience problems, please check the [known issues and limitations]
 [gg-hevc]: build.md#hevc
 
 
-# Running the SciPy example
+## Running the SciPy example
 
 1. Download a sample HEVC video file (for instance from [this website][hevc-website]) and save it as `/tmp/myinput.mp4`.
 1. Save the [SciPy example][scipy-ex] as `ggscipyex.py` within the build folder.
