@@ -108,6 +108,6 @@ This work was supported through an Innovative Engineering for Health award by th
 .. _`Translational Imaging Group`: http://cmictig.cs.ucl.ac.uk
 .. _`GIFT-Surg`: http://www.gift-surg.ac.uk
 .. _`Centre for Medical Image Computing`: http://cmic.cs.ucl.ac.uk
-.. _`National Institute for Health Research`: http://www.nihr.ac.uk/research
+.. _`National Institute for Health Research`: http://www.nihr.ac.uk/
 .. _`UCLH`: http://www.uclh.nhs.uk
 .. _`Engineering and Physical Sciences Research Council`: http://www.epsrc.ac.uk
