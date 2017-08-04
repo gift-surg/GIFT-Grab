@@ -19,19 +19,19 @@ Please also note that [GIFT-Grab has been tested only against specific versions 
 [gg-issues]: issues.md
 
 
-# Reading video files
+##  Reading video files
 
 `-D USE_FILES=ON` (requires [FFmpeg](tips.md#ffmpeg))
 
 
-# Writing video files
+##  Writing video files
 
-## Xvid
+### Xvid
 
 `-D USE_XVID=ON` (requires [OpenCV](tips.md#opencv))
 
 
-## HEVC
+### HEVC
 
 `-D USE_HEVC=ON` (requires [FFmpeg](tips.md#ffmpeg), pkg-config and [kvazaar](tips.md#kvazaar))
 
@@ -40,12 +40,12 @@ In addition, also the following two **BSD-3-incompatible** options are available
 1. `-D USE_HEVC=ON -D ENABLE_GPL=ON -D USE_X265=ON`: use x265 instead of kvazaar (requires [FFmpeg](tips.md#ffmpeg), pkg-config and [x265](tips.md#x265)), **upgrades GIFT-Grab licence to GPL**
 2. `-D USE_HEVC=ON -D ENABLE_NONFREE=ON -D USE_NVENC=ON`: hardware-accelerated HEVC (requires [a supported GPU](https://developer.nvidia.com/nvidia-video-codec-sdk), [FFmpeg](tips.md#ffmpeg), pkg-config and [NVENC](tips.md#nvenc)), **makes GIFT-Grab undistributable**
 
-## VP9
+### VP9
 
 `-D USE_VP9=ON` (requires [FFmpeg](tips.md#ffmpeg), pkg-config and [libvpx](tips.md#libvpx))
 
 
-# Epiphan DVI2PCIe Duo
+## Epiphan DVI2PCIe Duo
 
 `-D USE_EPIPHAN_DVI2PCIE_DUO=ON` (requires [OpenCV](tips.md#opencv) and [libVLC](tips.md#libvlc))
 
@@ -60,7 +60,7 @@ This option **makes GIFT-Grab undistributable**.
 [i420]: https://wiki.videolan.org/YUV/#I420
 
 
-# Blackmagic DeckLink SDI 4K
+## Blackmagic DeckLink SDI 4K
 
 `-D USE_BLACKMAGIC_DECKLINK_SDI_4K=ON -D ENABLE_NONFREE=ON` (requires [Blackmagic Desktop Video SDK](tips.md#blackmagic-drivers-and-blackmagic-desktop-video-sdk))
 
@@ -70,7 +70,7 @@ This option **makes GIFT-Grab undistributable**.
 [uyvy]: https://wiki.videolan.org/YUV#UYVY
 
 
-# Network streams
+## Network streams
 
 `-D USE_NETWORK_SOURCES=ON` (requires [OpenCV](tips.md#opencv) and [libVLC](tips.md#libvlc))
 
@@ -79,7 +79,7 @@ Both options are active by default.
 Append `-D USE_BGRA=OFF` or `-D USE_I420=OFF` to deactivate the respective option.
 
 
-# Python API
+## Python API
 
 Depending on whether [NumPy][numpy] support is required:
 
@@ -90,7 +90,7 @@ Depending on whether [NumPy][numpy] support is required:
 [bp]: http://www.boost.org/doc/libs/release/libs/python/doc/
 
 
-# Testing GIFT-Grab
+## Testing GIFT-Grab
 
 `-D BUILD_TESTS=ON -D BUILD_PYTHON=ON` (requires Python, [Boost.Python][bp], [Catch][catch] and [pytest][pytest]).
 Note that Catch will be automatically downloaded from the internet as part of the build process.
@@ -105,7 +105,7 @@ To execute the tests run `ctest` or `make test` in the build directory.
 [catch]: https://github.com/philsquared/Catch
 [pytest]: http://doc.pytest.org/
 
-# GIFT-Grab discovery
+## GIFT-Grab discovery
 
 Including `FIND_PACKAGE(GiftGrab)` in your project's CMake file will automatically discover the `GiftGrab_INCLUDE_DIRS` and `GiftGrab_LIBS` CMake variables.
 These are respectively for GIFT-Grab header directories to include and GIFT-Grab libraries to link against.
