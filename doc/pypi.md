@@ -27,20 +27,20 @@ Please also note that [GIFT-Grab has been tested only against specific versions 
 [gg-reqs]: requirements.md
 
 
-# Reading video files
+## Reading video files
 
 `--install-option="--files"` (requires [FFmpeg](tips.md#ffmpeg))
 
 
-# Writing video files
+## Writing video files
 
 You can enable one or more of the codecs listed below for encoding video files.
 
-## Xvid
+### Xvid
 
 `--install-option="--xvid"` (requires [OpenCV](tips.md#opencv))
 
-## HEVC
+### HEVC
 
 `--install-option="--hevc"` (requires [FFmpeg](tips.md#ffmpeg), pkg-config and [kvazaar](tips.md#kvazaar))
 
@@ -49,12 +49,12 @@ In addition, also the following two **BSD-3-incompatible** options are available
 1. `--install-option="--hevc" --install-option="--enable-gpl" --install-option="--x265"`: use x265 instead of kvazaar (requires [FFmpeg](tips.md#ffmpeg), pkg-config and [x265](tips.md#x265)), **upgrades GIFT-Grab licence to GPL**
 2. `--install-option="--hevc" --install-option="--enable-nonfree" --install-option="--nvenc"`: hardware-accelerated HEVC (requires a supported GPU, [FFmpeg](tips.md#ffmpeg), pkg-config and [NVENC](tips.md#nvenc)), **makes GIFT-Grab undistributable**
 
-## VP9
+### VP9
 
 `--install-option="--vp9"` (requires [FFmpeg](tips.md#ffmpeg), pkg-config and [libvpx](tips.md#libvpx))
 
 
-# Epiphan DVI2PCIe Duo
+## Epiphan DVI2PCIe Duo
 
 `--install-option="--epiphan-dvi2pcie-duo"` (requires [OpenCV](tips.md#opencv) and [libVLC](tips.md#libvlc))
 
@@ -69,7 +69,7 @@ This option **makes GIFT-Grab undistributable**.
 [i420]: https://wiki.videolan.org/YUV/#I420
 
 
-# Blackmagic DeckLink SDI 4K
+## Blackmagic DeckLink SDI 4K
 
 `--install-option="--blackmagic-decklink-sdi-4k" --install-option="--enable-nonfree"` (requires [Blackmagic Desktop Video SDK](tips.md#blackmagic-drivers-and-blackmagic-desktop-video-sdk))
 
@@ -79,7 +79,7 @@ This option **makes GIFT-Grab undistributable**.
 [uyvy]: https://wiki.videolan.org/YUV#UYVY
 
 
-# Network streams
+## Network streams
 
 `--install-option="--network-sources"` (requires [OpenCV](tips.md#opencv) and [libVLC](tips.md#libvlc))
 
@@ -88,6 +88,6 @@ Both options are active by default.
 Append `--install-option="--no-bgra"` or `--install-option="--no-i420"` to deactivate the respective option.
 
 
-# NumPy
+## NumPy
 
 `--install-option="--numpy"` (requires Python and [Boost.Python 1.63 or newer](tips.md#numpy-support-and-boostpython))
