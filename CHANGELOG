@@ -10,6 +10,7 @@
     * Revised the GIFT-Grab PyPI description to make the GIFT-Grab PyPI page a bit more appealing and more useful to the user.
     * Known issues and limitations are now kept in a separate MD file.
     * More internal cross-links to make it easier for the user to browse and navigate the documentation.
+* Removed the pip installer dependency on PyYAML and pytest. This was causing problems when `pip install`ing GIFT-Grab
 
 # May 2017
 

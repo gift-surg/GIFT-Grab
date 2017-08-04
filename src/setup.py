@@ -322,17 +322,6 @@ class GiftGrabInstallCommand(install):
             output_buffer = self.__check_command(cmd, err_msg)
 
             if self.hevc:
-                opt = '--enable-muxer=mp4'
-                if opt not in output_buffer:
-                    err_summary = 'Your FFmpeg does not seem to support MP4.'
-                    err_msg = '%s\n%s%s' % (
-                        err_summary,
-                        'Please install FFmpeg with MP4 support ',
-                        '(%s).' % (opt)
-                    )
-                    self.__print_err_msg(err_msg)
-                    raise LibError(err_summary)
-
                 if self.nvenc:
                     if not self.enable_nonfree:
                         err_msg = 'You must enable non-free components for NVENC support'
@@ -378,17 +367,6 @@ class GiftGrabInstallCommand(install):
                         raise LibError(err_summary)
 
             if self.vp9:
-                opt = '--enable-muxer=webm'
-                if opt not in output_buffer:
-                    err_summary = 'Your FFmpeg does not seem to support WebM.'
-                    err_msg = '%s\n%s%s' % (
-                        err_summary,
-                        'Please install FFmpeg with WebM support ',
-                        '(%s).' % (opt)
-                    )
-                    self.__print_err_msg(err_msg)
-                    raise LibError(err_summary)
-
                 opt = '--enable-libvpx'
                 if opt not in output_buffer:
                     err_summary = 'Your FFmpeg does not seem to support libvpx.'
@@ -532,7 +510,7 @@ console_scripts = console_scripts +\
                    'test-giftgrab-network-sources-i420=giftgrab.tests:test_network_sources_i420']
 setup(
     name='GIFT-Grab',
-    version='1708rc3',
+    version='1708rc4',
     description=header,
     long_description=description,
     url='https://github.com/gift-surg/GIFT-Grab',
@@ -570,7 +548,6 @@ setup(
              'C++, Python, NumPy, SciPy, '
              'GIFT-Surg',
 
-    install_requires=['pytest', 'PyYAML'],
     packages=['giftgrab', 'giftgrab.tests', 'giftgrab.utils'],
     package_dir={'giftgrab': join('python', 'modules', 'giftgrab'),
                  'giftgrab.tests': 'tests',
