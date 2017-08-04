@@ -367,17 +367,6 @@ class GiftGrabInstallCommand(install):
                         raise LibError(err_summary)
 
             if self.vp9:
-                opt = '--enable-muxer=webm'
-                if opt not in output_buffer:
-                    err_summary = 'Your FFmpeg does not seem to support WebM.'
-                    err_msg = '%s\n%s%s' % (
-                        err_summary,
-                        'Please install FFmpeg with WebM support ',
-                        '(%s).' % (opt)
-                    )
-                    self.__print_err_msg(err_msg)
-                    raise LibError(err_summary)
-
                 opt = '--enable-libvpx'
                 if opt not in output_buffer:
                     err_summary = 'Your FFmpeg does not seem to support libvpx.'
