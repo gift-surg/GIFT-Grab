@@ -570,7 +570,6 @@ setup(
              'C++, Python, NumPy, SciPy, '
              'GIFT-Surg',
 
-    install_requires=['pytest', 'PyYAML'],
     packages=['giftgrab', 'giftgrab.tests', 'giftgrab.utils'],
     package_dir={'giftgrab': join('python', 'modules', 'giftgrab'),
                  'giftgrab.tests': 'tests',

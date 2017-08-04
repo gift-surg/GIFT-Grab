@@ -125,6 +125,8 @@ pypi:
     - virtualenv $GiftGrab_venv
     - cd $GiftGrab_venv
     - source bin/activate
+    - pip install pytest
+    - pip install pyyaml
     - ls -alh ./*
     - PyPI_INSTALLER="../$GiftGrab_PyPI_DIST_DIR/$(ls ../$GiftGrab_PyPI_DIST_DIR | grep tar.gz)"
     - if [ -z "$PyPI_INSTALLER" ]; then exit 1; fi
