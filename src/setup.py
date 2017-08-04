@@ -322,17 +322,6 @@ class GiftGrabInstallCommand(install):
             output_buffer = self.__check_command(cmd, err_msg)
 
             if self.hevc:
-                opt = '--enable-muxer=mp4'
-                if opt not in output_buffer:
-                    err_summary = 'Your FFmpeg does not seem to support MP4.'
-                    err_msg = '%s\n%s%s' % (
-                        err_summary,
-                        'Please install FFmpeg with MP4 support ',
-                        '(%s).' % (opt)
-                    )
-                    self.__print_err_msg(err_msg)
-                    raise LibError(err_summary)
-
                 if self.nvenc:
                     if not self.enable_nonfree:
                         err_msg = 'You must enable non-free components for NVENC support'
@@ -378,17 +367,6 @@ class GiftGrabInstallCommand(install):
                         raise LibError(err_summary)
 
             if self.vp9:
-                opt = '--enable-muxer=webm'
-                if opt not in output_buffer:
-                    err_summary = 'Your FFmpeg does not seem to support WebM.'
-                    err_msg = '%s\n%s%s' % (
-                        err_summary,
-                        'Please install FFmpeg with WebM support ',
-                        '(%s).' % (opt)
-                    )
-                    self.__print_err_msg(err_msg)
-                    raise LibError(err_summary)
-
                 opt = '--enable-libvpx'
                 if opt not in output_buffer:
                     err_summary = 'Your FFmpeg does not seem to support libvpx.'
