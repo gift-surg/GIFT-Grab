@@ -102,6 +102,7 @@ linux:
     - 203-make-dependency-versions-more-visible-in-documentation
     - 207-check-all-changed-cross-references-in-docs-before-release
     - 212-revise-minimal-example-header-hierarchy
+    - 220-add-non-standard-boost-installation-path-to-minimal-example
 
 ################## Platform: PyPI ##################
 ################## Target: All #####################
@@ -197,6 +198,7 @@ pypi:
     - 203-make-dependency-versions-more-visible-in-documentation
     - 207-check-all-changed-cross-references-in-docs-before-release
     - 212-revise-minimal-example-header-hierarchy
+    - 220-add-non-standard-boost-installation-path-to-minimal-example
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 ################## Platform: PyPI ################################
