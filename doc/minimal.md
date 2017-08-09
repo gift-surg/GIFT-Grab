@@ -14,7 +14,7 @@ In case you experience problems, please check the [known issues and limitations]
 
 1. pkg-config: `apt install pkg-config`
 1. GCC: `apt install build-essential`
-1. Python libraries: `apt install python-dev`
+1. Python libraries: `apt install python-dev` (Please note that GIFT-Grab currently supports **only Python 2**)
 1. Git: `apt install git`
 1. CMake: `apt install cmake`
 1. FFmpeg (for Ubuntu, please see [these instructions][ffmpeg-ubuntu] instead):
