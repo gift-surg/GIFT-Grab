@@ -510,7 +510,7 @@ console_scripts = console_scripts +\
                    'test-giftgrab-network-sources-i420=giftgrab.tests:test_network_sources_i420']
 setup(
     name='GIFT-Grab',
-    version='1708rc4',
+    version='1708',
     description=header,
     long_description=description,
     url='https://github.com/gift-surg/GIFT-Grab',
