@@ -31,7 +31,7 @@ In case you experience problems, please check the [known issues and limitations]
    - `cd boost_1_63_0`
    - `./bootstrap.sh --with-libraries=python`. To install Boost in a non-standard path (for instance if you don't want to break your existing Boost installation):
       1. Append `--prefix=/your/custom/boost/install/path` to the `./bootstrap.sh` command above,
-      1. Set `BOOST_ROOT` accordingly. For the hypothetical path above this can be achieved via `export BOOST_ROOT=/your/custom/boost/install/path/include`.
+      1. Set `BOOST_ROOT` accordingly. For the hypothetical path above this can be achieved via `export BOOST_ROOT=/your/custom/boost/install/path/include` (note the `include` at the end of the path).
    - `./b2`
    - `./b2 install`
 
