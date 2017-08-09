@@ -1,5 +1,7 @@
 # August 2017
 
+Use `git checkout v1708`.
+
 * Partial support for using GIFT-Grab on Debian 9 (see the documentation for details)
 * Fixed an FFmpeg CMake discovery script issue that caused the GIFT-Grab installation to fail on Debian 9.
 * Major revision and restructuring of documentation:
