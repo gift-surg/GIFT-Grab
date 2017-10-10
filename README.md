@@ -78,7 +78,6 @@ BibTeX entry:
   number = 1,
   pages = {27},
   month = 10,
-  note = {},
   volume = 5,
   doi = {10.5334/jors.169},
 }
