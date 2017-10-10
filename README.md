@@ -73,7 +73,7 @@ BibTeX entry:
 @article{giftgrab17,
   author = {Dzhoshkun Ismail Shakir and Luis Carlos Garc\'{i}a-Peraza-Herrera and Pankaj Daga and Tom Doel and Matthew J. Clarkson and S\'{e}bastien Ourselin and Tom Vercauteren},
   title = {{GIFT-Grab: Real-time C++ and Python multi-channel video capture, processing and encoding API}},
-  journal = {Journal of Open Research Software},
+  journal = {{Journal of Open Research Software}},
   year = 2017,
   number = 1,
   pages = {27},
