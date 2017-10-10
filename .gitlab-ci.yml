@@ -105,6 +105,7 @@ linux:
     - 220-add-non-standard-boost-installation-path-to-minimal-example
     - 222-add-how-to-cite-block-in-main-readme
     - 224-add-a-citing-gift-grab-section-to-pypi-page
+    - 225-add-citing-gift-grab-section-to-rtd-index
 
 ################## Platform: PyPI ##################
 ################## Target: All #####################
@@ -202,6 +203,7 @@ pypi:
     - 212-revise-minimal-example-header-hierarchy
     - 220-add-non-standard-boost-installation-path-to-minimal-example
     - 222-add-how-to-cite-block-in-main-readme
+    - 225-add-citing-gift-grab-section-to-rtd-index
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 ################## Platform: PyPI ################################
