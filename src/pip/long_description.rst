@@ -73,6 +73,38 @@ Getting started
 .. _`Known issues and limitations`: https://github.com/gift-surg/GIFT-Grab/blob/master/doc/issues.md
 
 
+Citing GIFT-Grab
+----------------
+
+If you use GIFT-Grab in your work, please cite `Shakir et al. (2017)`_:
+
+  Shakir DI, García-Peraza-Herrera LC, Daga P, Doel T, Clarkson MJ, Ourselin S, and Vercauteren T.
+  `GIFT-Grab: Real-time C++ and Python multi-channel video capture, processing and encoding API.`_
+  Journal of Open Research Software. 2017;5(1):27. DOI: `http://doi.org/10.5334/jors.169`_
+
+BibTeX entry:
+
+.. code-block:: bibtex
+
+  @article{giftgrab17,
+    author = {Dzhoshkun Ismail Shakir and Luis Carlos Garc\'{i}a-Peraza-Herrera and Pankaj Daga and Tom Doel and Matthew J. Clarkson and S\'{e}bastien Ourselin and Tom Vercauteren},
+    title = {{GIFT-Grab: Real-time C++ and Python multi-channel video capture, processing and encoding API}},
+    journal = {{Journal of Open Research Software}},
+    year = {2017},
+    number = {1},
+    pages = {27},
+    month = {10},
+    day = {9},
+    volume = {5},
+    url = {http://doi.org/10.5334/jors.169},
+    doi = {http://doi.org/10.5334/jors.169},
+  }
+
+.. _`Shakir et al. (2017)`: http://doi.org/10.5334/jors.169
+.. _`GIFT-Grab: Real-time C++ and Python multi-channel video capture, processing and encoding API.`: http://doi.org/10.5334/jors.169
+.. _`http://doi.org/10.5334/jors.169`: http://doi.org/10.5334/jors.169
+
+
 Support and contributing
 ------------------------
 

@@ -103,6 +103,10 @@ linux:
     - 207-check-all-changed-cross-references-in-docs-before-release
     - 212-revise-minimal-example-header-hierarchy
     - 220-add-non-standard-boost-installation-path-to-minimal-example
+    - 222-add-how-to-cite-block-in-main-readme
+    - 224-add-a-citing-gift-grab-section-to-pypi-page
+    - 225-add-citing-gift-grab-section-to-rtd-index
+    - 223-add-some-information-on-the-main-doxygen-home-page
 
 ################## Platform: PyPI ##################
 ################## Target: All #####################
@@ -199,6 +203,9 @@ pypi:
     - 207-check-all-changed-cross-references-in-docs-before-release
     - 212-revise-minimal-example-header-hierarchy
     - 220-add-non-standard-boost-installation-path-to-minimal-example
+    - 222-add-how-to-cite-block-in-main-readme
+    - 225-add-citing-gift-grab-section-to-rtd-index
+    - 223-add-some-information-on-the-main-doxygen-home-page
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 ################## Platform: PyPI ################################
