@@ -103,6 +103,7 @@ linux:
     - 207-check-all-changed-cross-references-in-docs-before-release
     - 212-revise-minimal-example-header-hierarchy
     - 220-add-non-standard-boost-installation-path-to-minimal-example
+    - 222-add-how-to-cite-block-in-main-readme
 
 ################## Platform: PyPI ##################
 ################## Target: All #####################
@@ -199,6 +200,7 @@ pypi:
     - 207-check-all-changed-cross-references-in-docs-before-release
     - 212-revise-minimal-example-header-hierarchy
     - 220-add-non-standard-boost-installation-path-to-minimal-example
+    - 222-add-how-to-cite-block-in-main-readme
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 ################## Platform: PyPI ################################
