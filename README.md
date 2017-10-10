@@ -80,7 +80,7 @@ BibTeX entry:
   month = 10,
   volume = 5,
   url = {http://doi.org/10.5334/jors.169},
-  doi = {10.5334/jors.169},
+  doi = {http://doi.org/10.5334/jors.169},
 }
 ```
 
