@@ -65,7 +65,7 @@ Please note that currently **only Python 2** is supported.
 
 If you use GIFT-Grab in your work, please cite [Shakir, D.I. et al., (2017)][jors-paper]:
 
-* Shakir DI, García-Peraza-Herrera LC, Daga P, Doel T, Clarkson MJ, Ourselin S, et al.. [GIFT-Grab: Real-time C++ and Python multi-channel video capture, processing and encoding API.][jors-paper] Journal of Open Research Software. 2017;5(1):27. DOI: http://doi.org/10.5334/jors.169
+* Shakir DI, García-Peraza-Herrera LC, Daga P, Doel T, Clarkson MJ, Ourselin S, Vercauteren T. [GIFT-Grab: Real-time C++ and Python multi-channel video capture, processing and encoding API.][jors-paper] Journal of Open Research Software. 2017;5(1):27. DOI: http://doi.org/10.5334/jors.169
 
 BibTeX entry:
 
