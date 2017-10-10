@@ -78,6 +78,7 @@ BibTeX entry:
   number = {1},
   pages = {27},
   month = {10},
+  day = {9},
   volume = {5},
   url = {http://doi.org/10.5334/jors.169},
   doi = {http://doi.org/10.5334/jors.169},
