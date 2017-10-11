@@ -1,4 +1,4 @@
-# GIFT-Grab                                           {#mainpage}
+# GIFT-Grab
 
 GIFT-Grab is an open-source C++ and Python API for acquiring, processing and encoding video streams in real time.
 
