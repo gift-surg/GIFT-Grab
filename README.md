@@ -7,11 +7,6 @@ GIFT-Grab supports several frame-grabber cards, standard-compliant network strea
 The Python API is compatible with [NumPy][numpy] and [SciPy][scipy].
 Please note that currently **only Python 2** is supported.
 
-GIFT-Grab is available on CMICLab and mirrored on GitHub:
-
-* https://cmiclab.cs.ucl.ac.uk/GIFT-Surg/GIFT-Grab
-* https://github.com/gift-surg/GIFT-Grab
-
 [scipy]: https://www.scipy.org/
 [numpy]: http://www.numpy.org/
 
@@ -110,6 +105,14 @@ Other licences may apply for the GIFT-Grab dependencies.
 Please see the [dependency installation guidelines][gg-tips] for the implications of using them with regards to licensing.
 
 [gg-tips]: doc/tips.md
+
+
+## Useful links
+
+GIFT-Grab is available on CMICLab and mirrored on GitHub:
+
+* https://cmiclab.cs.ucl.ac.uk/GIFT-Surg/GIFT-Grab
+* https://github.com/gift-surg/GIFT-Grab
 
 
 ## Acknowledgements
