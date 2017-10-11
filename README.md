@@ -107,23 +107,6 @@ Please see the [dependency installation guidelines][gg-tips] for the implication
 [gg-tips]: doc/tips.md
 
 
-## Useful links
-
-GIFT-Grab is available on CMICLab and mirrored on GitHub:
-
-* https://cmiclab.cs.ucl.ac.uk/GIFT-Surg/GIFT-Grab
-* https://github.com/gift-surg/GIFT-Grab
-
-The GIFT-Grab API documentation and examples are available on CodeDocs and ReadTheDocs:
-
-* https://codedocs.xyz/gift-surg/GIFT-Grab/
-* http://gift-grab.rtfd.io
-
-GIFT-Grab is also available for as a `pip` installer on PyPI:
-
-* https://pypi.org/project/GIFT-Grab
-
-
 ## Acknowledgements
 
 GIFT-Grab was developed as part of the [GIFT-Surg][giftsurg] project at the [Translational Imaging Group][tig] in the [Centre for Medical Image Computing][cmic] at [University College London][ucl] (UCL).
