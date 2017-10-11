@@ -86,4 +86,9 @@ BibTeX entry:
 Useful links
 ^^^^^^^^^^^^
 
+* https://cmiclab.cs.ucl.ac.uk/GIFT-Surg/GIFT-Grab
+* https://github.com/gift-surg/GIFT-Grab
+* https://codedocs.xyz/gift-surg/GIFT-Grab/
+* http://gift-grab.rtfd.io
+* https://pypi.org/project/GIFT-Grab
 * :ref:`search`
