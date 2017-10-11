@@ -114,6 +114,15 @@ GIFT-Grab is available on CMICLab and mirrored on GitHub:
 * https://cmiclab.cs.ucl.ac.uk/GIFT-Surg/GIFT-Grab
 * https://github.com/gift-surg/GIFT-Grab
 
+The GIFT-Grab API documentation and examples are available on CodeDocs and ReadTheDocs:
+
+* https://codedocs.xyz/gift-surg/GIFT-Grab/
+* http://gift-grab.rtfd.io
+
+GIFT-Grab is also available for as a `pip` installer on PyPI:
+
+* https://pypi.org/project/GIFT-Grab
+
 
 ## Acknowledgements
 
