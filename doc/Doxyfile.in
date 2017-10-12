@@ -42,10 +42,7 @@ PROJECT_NUMBER         = 1708
 # for a project that appears at the top of each page and should give viewer
 # a quick idea about the purpose of the project. Keep the description short.
 
-PROJECT_BRIEF          = "Open-source C++ and Python API (supports NumPy and \
-                         SciPy) for acquiring, processing and encoding video \
-                         streams in real time. \
-                         Copyright (c) 2015-7, University College London (UCL)"
+PROJECT_BRIEF          = "Copyright (c) 2015-7, University College London (UCL)"
 
 # With the PROJECT_LOGO tag one can specify an logo or icon that is
 # included in the documentation. The maximum height of the logo should not
@@ -671,7 +668,7 @@ WARN_LOGFILE           =
 
 INPUT                  = @doxy_main_page@ \
                          @PROJECT_SOURCE_DIR@/api \
-                         @PROJECT_SOURCE_DIR@/../README.md
+                         doxygen-index.md
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is

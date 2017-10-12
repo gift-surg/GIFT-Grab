@@ -1,6 +1,14 @@
 GIFT-Grab
 =========
 
+GIFT-Grab is an open-source C++ and Python API for acquiring, processing and encoding video streams in real time.
+GIFT-Grab supports several frame-grabber cards, standard-compliant network streams and video files.
+The Python API is compatible with NumPy_ and SciPy_.
+Please note that currently **only Python 2** is supported.
+
+.. _SciPy: https://www.scipy.org/
+.. _NumPy: http://www.numpy.org/
+
 This site only contains Python examples for getting started with GIFT-Grab.
 The full API documentation is available on CodeDocs_.
 For further details including known issues, please also see `GIFT-Grab on GitHub`_.
@@ -78,4 +86,9 @@ BibTeX entry:
 Useful links
 ^^^^^^^^^^^^
 
+* GIFT-Grab codebase on CMICLab: https://cmiclab.cs.ucl.ac.uk/GIFT-Surg/GIFT-Grab
+* GIFT-Grab codebase mirror on GitHub: https://github.com/gift-surg/GIFT-Grab
+* API documentation: https://codedocs.xyz/gift-surg/GIFT-Grab/
+* Python examples: http://gift-grab.rtfd.io
+* GIFT-Grab on Python Package Index: https://pypi.org/project/GIFT-Grab
 * :ref:`search`
