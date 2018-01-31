@@ -428,8 +428,16 @@ network-sources:
 network-targets:
   stage: test_cmake
   script:
-    - echo "Hello planet Earth!"
-    - this-command-should-not-exist
+    # prepare environment
+    - export GiftGrab_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab-network-targets"
+    - export INSTALL_DIR="$SCRATCH_DIR/install-network-targets"
+    - rm -rf "$GiftGrab_BUILD_DIR"
+    - mkdir -p "$GiftGrab_BUILD_DIR"
+    - cd "$GiftGrab_BUILD_DIR"
+    # build and test
+    - cmake -D USE_NETWORK_TARGETS=ON -D BUILD_PYTHON=ON -D BUILD_TESTS=ON "$GiftGrab_SOURCE_DIR"
+    - make -j; exit_on_fail
+    - ctest; exit_on_fail
   tags:
     - gift-linux
     - gift-network-video-streamer
