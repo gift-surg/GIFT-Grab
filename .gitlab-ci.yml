@@ -425,7 +425,7 @@ network-sources:
     - 174-networksourceunavailable-not-exposed-to-python
 
 ################## Network streaming ##################
-network-streaming:
+network-targets:
   stage: test_cmake
   script:
     - echo "Hello planet Earth!"
