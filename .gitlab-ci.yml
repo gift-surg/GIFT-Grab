@@ -424,6 +424,18 @@ network-sources:
     - 5-add-support-for-blackmagic
     - 174-networksourceunavailable-not-exposed-to-python
 
+################## Network streaming ##################
+network-streaming:
+  stage: test_cmake
+  script:
+    - echo "Hello planet Earth!"
+    - this-command-should-not-exist
+  tags:
+    - gift-linux
+    - gift-network-video-streamer
+  only:
+    - 234-add-streaming-capabilities-to-create-a-rtsp-stream-from-within-gift-grab
+
 ################## Device: Blackmagic DeckLink SDI 4K ##################
 pypi-blackmagic-decklink-sdi-4k:
   stage: test_pypi
