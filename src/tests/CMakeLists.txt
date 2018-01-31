@@ -62,6 +62,11 @@ if(USE_NETWORK_SOURCES)
     SUBDIRS(network)
 endif(USE_NETWORK_SOURCES)
 
+# Network targets tests
+if(USE_NETWORK_TARGETS)
+    SUBDIRS(network-targets)
+endif(USE_NETWORK_TARGETS)
+
 # Blackmagic DeckLink SDI 4K tests
 if(USE_BLACKMAGIC_DECKLINK_SDI_4K)
     SUBDIRS(blackmagic/decklinksdi4k)
