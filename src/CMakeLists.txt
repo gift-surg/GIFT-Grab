@@ -25,6 +25,8 @@ OPTION(USE_EPIPHAN_DVI2PCIE_DUO
     "Capture video with Epiphan DVI2PCIe Duo" OFF)
 OPTION(USE_NETWORK_SOURCES
     "Capture video from network sources" OFF)
+OPTION(USE_NETWORK_TARGETS
+    "Stream video to the network" OFF)
 OPTION(USE_BLACKMAGIC_DECKLINK_SDI_4K
     "Capture video with Blackmagic DeckLink SDI 4K" OFF)
 OPTION(USE_FILES
