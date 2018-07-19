@@ -45,7 +45,6 @@ BibTeX entry:
 
 ## Useful links
 
-* GIFT-Grab codebase on CMICLab: https://cmiclab.cs.ucl.ac.uk/GIFT-Surg/GIFT-Grab
 * GIFT-Grab codebase mirror on GitHub: https://github.com/gift-surg/GIFT-Grab
 * API documentation: https://codedocs.xyz/gift-surg/GIFT-Grab/
 * Python examples: http://gift-grab.rtfd.io
