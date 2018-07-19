@@ -3,7 +3,7 @@
 We appreciate any contribution to GIFT-Grab, be it a bug report, feature request, general feedback or source code.
 Please see the relevant section below for guidelines.
 
-If you have other questions, suggestions, etc. you can also contact Dzhoshkun Shakir (d.shakir [at] ucl.ac.uk) directly.
+If you have other questions, suggestions, etc. you can also contact Dzhoshkun Shakir (dzhoshkun.shakir [at] gmail.com) directly.
 
 
 # Submitting a bug report or a feature request
