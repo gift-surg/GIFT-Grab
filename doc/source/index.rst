@@ -86,7 +86,7 @@ BibTeX entry:
 Useful links
 ^^^^^^^^^^^^
 
-* GIFT-Grab codebase mirror on GitHub: https://github.com/gift-surg/GIFT-Grab
+* GIFT-Grab codebase on GitHub: https://github.com/gift-surg/GIFT-Grab
 * API documentation: https://codedocs.xyz/gift-surg/GIFT-Grab/
 * Python examples: http://gift-grab.rtfd.io
 * GIFT-Grab on Python Package Index: https://pypi.org/project/GIFT-Grab
