@@ -464,6 +464,7 @@ pypi-blackmagic-decklink-sdi-4k:
     - gift-blackmagic-decklink-sdi-4k
   only:
     - this-branch-should-never-exist
+    - 5-support-for-3d-capture-on-blackmagic-cards
 
 blackmagic-decklink-sdi-4k:
   stage: test_cmake
@@ -483,3 +484,4 @@ blackmagic-decklink-sdi-4k:
     - gift-blackmagic-decklink-sdi-4k
   only:
     - this-branch-should-never-exist
+    - 5-support-for-3d-capture-on-blackmagic-cards
