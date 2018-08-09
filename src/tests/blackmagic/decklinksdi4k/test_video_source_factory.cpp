@@ -46,5 +46,11 @@ TEST_CASE( "free_device garbage-collects device", "[VideoSourceFactory]" )
     REQUIRE( frame.cols() > 0 );
     REQUIRE( frame.rows() > 0 );
     factory.free_device(device);
+    /* allocate dummy buffer, as otherwise sometimes the new video source
+     * gets allocated exactly at the same address as the freed source, which
+     * subsequently causes the next assertion to fail.
+     */
+    char *dummy_buffer = new char[128];
     REQUIRE_FALSE( source == factory.get_device(device, colour) );
+    delete []dummy_buffer;
 }
