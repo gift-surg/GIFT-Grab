@@ -215,6 +215,10 @@ HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::VideoInputFrameArrived(
     IDeckLinkAudioInputPacket * audio_packet
 )
 {
+    if (not _running)
+        // nop if not running!
+        return S_OK;
+
     // Not processing the audio packet, but only the video
     // frame for the time being
     if (video_frame == nullptr)
