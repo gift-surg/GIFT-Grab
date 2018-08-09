@@ -28,8 +28,8 @@ VideoSourceFactory::VideoSourceFactory()
 
 VideoSourceFactory::~VideoSourceFactory()
 {
-    free_device(DVI2PCIeDuo_DVI);
-    free_device(DVI2PCIeDuo_SDI);
+    for (size_t i = 0; i < NUM_DEVICES; i++)
+        free_device((Device) i);
 }
 
 VideoSourceFactory & VideoSourceFactory::get_instance()
