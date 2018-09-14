@@ -137,6 +137,12 @@ BMDDisplayMode DeckLinkDisplayModeDetector::get_display_mode() noexcept
 }
 
 
+BMDVideoInputFlags DeckLinkDisplayModeDetector::get_video_input_flags() noexcept
+{
+    return _video_input_flags;
+}
+
+
 double DeckLinkDisplayModeDetector::get_frame_rate() noexcept
 {
     return _frame_rate;
