@@ -112,6 +112,14 @@ public:
 
     //!
     //! \brief
+    //!
+    //! \return The discovered video input flags, provided
+    //! \c getDisplayMode does not return \c bmdModeUnknown
+    //!
+    BMDVideoInputFlags get_video_input_flags() noexcept;
+
+    //!
+    //! \brief
     //! \return
     //!
     double get_frame_rate() noexcept;
