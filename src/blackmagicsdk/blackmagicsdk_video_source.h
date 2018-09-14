@@ -162,7 +162,7 @@ protected:
     //! could be used for instance for throwing an exception
     //!
     bool detect_input_format(BMDPixelFormat pixel_format,
-                             BMDVideoInputFlags video_input_flags,
+                             BMDVideoInputFlags & video_input_flags,
                              BMDDisplayMode & display_mode,
                              double & frame_rate,
                              std::string & error_msg) noexcept;

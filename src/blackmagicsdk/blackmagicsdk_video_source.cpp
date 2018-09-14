@@ -286,7 +286,7 @@ void VideoSourceBlackmagicSDK::release_deck_link() noexcept
 
 
 bool VideoSourceBlackmagicSDK::detect_input_format(BMDPixelFormat pixel_format,
-                                                   BMDVideoInputFlags video_input_flags,
+                                                   BMDVideoInputFlags & video_input_flags,
                                                    BMDDisplayMode & display_mode,
                                                    double & frame_rate,
                                                    std::string & error_msg) noexcept
@@ -317,6 +317,7 @@ bool VideoSourceBlackmagicSDK::detect_input_format(BMDPixelFormat pixel_format,
     {
         frame_rate = detector.get_frame_rate();
         display_mode = display_mode_;
+        video_input_flags = detector.get_video_input_flags();
         return true;
     }
     else
