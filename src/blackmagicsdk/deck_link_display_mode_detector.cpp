@@ -108,7 +108,12 @@ DeckLinkDisplayModeDetector::DeckLinkDisplayModeDetector(IDeckLinkInput * deck_l
             _error_msg = "Could not infer frame rate of Blackmagic DeckLink device";
         }
         else
+        {
             _frame_rate = (double) frame_rate_scale / (double) frame_rate_duration;
+            if (_video_input_flags & bmdVideoInputDualStream3D)
+                if (not (deck_link_display_mode->GetFlags() & bmdDisplayModeSupports3D))
+                    _video_input_flags ^= bmdVideoInputDualStream3D;
+        }
     }
 
     // Release the DeckLink display mode object
