@@ -81,7 +81,7 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
     BMDDisplayMode display_mode;
     std::string error_msg = "";
     BMDVideoInputFlags video_input_flags = bmdVideoInputFlagDefault
-            | bmdVideoInputEnableFormatDetection | bmdVideoInputDualStream3D;
+            | bmdVideoInputDualStream3D;
     if (not detect_input_format(pixel_format, video_input_flags, display_mode, _frame_rate, error_msg))
         bail(error_msg);
 
