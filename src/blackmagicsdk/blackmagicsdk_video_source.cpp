@@ -85,7 +85,11 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
     BMDVideoInputFlags video_input_flags = bmdVideoInputFlagDefault
             | bmdVideoInputDualStream3D;
     if (not detect_input_format(pixel_format, video_input_flags, display_mode, _frame_rate, error_msg))
-        bail(error_msg);
+    {
+        video_input_flags ^= bmdVideoInputDualStream3D;
+        if (not detect_input_format(pixel_format, video_input_flags, display_mode, _frame_rate, error_msg))
+            bail(error_msg);
+    }
 
     // Set this object (IDeckLinkInputCallback instance) as callback
     res = _deck_link_input->SetCallback(this);
