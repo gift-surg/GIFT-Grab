@@ -1,6 +1,5 @@
 #include "blackmagicsdk_video_source.h"
 #include "deck_link_display_mode_detector.h"
-#include <thread>
 #include <chrono>
 
 namespace gg
@@ -112,10 +111,6 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
         _running = false;
         bail("Could not start streaming from the Blackmagic DeckLink device");
     }
-
-    // artificial sleep introduced to allow for starting of streams
-    // the value is determined empirically
-    std::this_thread::sleep_for(std::chrono::milliseconds(75));
 }
 
 
