@@ -16,3 +16,4 @@ src/build
 src/dist
 src/*.egg-info
 *.swp
+src/tests/pipeline/mtr-build
