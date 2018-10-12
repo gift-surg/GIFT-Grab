@@ -44,11 +44,12 @@ class Histogrammer(threading.Thread):
 
     channels = ('Blue', 'Green', 'Red', 'Alpha')
 
-    def __init__(self, buffer, channel):
+    def __init__(self, buffer, channel, tag):
         super(Histogrammer, self).__init__()
         assert channel in range(3)
         self.channel = channel
         self.buffer = buffer
+        self.tag = tag
         self.running = False
 
     def run(self):
@@ -68,8 +69,8 @@ class Histogrammer(threading.Thread):
                 coloredness /= np.sum(histogram)
                 coloredness /= num_bins
                 coloredness *= 100
-                print('{}ness of dyed image: {} %'.format(
-                    Histogrammer.channels[self.channel], int(round(coloredness))
+                print('{}ness of {} image: {} %'.format(
+                    Histogrammer.channels[self.channel], self.tag, int(round(coloredness))
                 ))
             sleep(0.100)
 
@@ -121,7 +122,7 @@ if __name__ == '__main__':
     buffer_red = np.zeros(frame_shape, np.uint8)
     bufferer_red = Bufferer(buffer_red)
 
-    hist = Histogrammer(buffer_red, 2)
+    hist = Histogrammer(buffer_red, 2, 'red-dyed')
     hist.start()
 
     red_file = os.path.join('.', ''.join([filename, '-red', ext]))
