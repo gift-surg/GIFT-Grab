@@ -24,7 +24,7 @@ problem is fixed.
 """
 
 
-buffer_red = None
+buffer_red, buffer_orig = None, None
 lock = threading.Lock()
 
 
@@ -121,25 +121,32 @@ if __name__ == '__main__':
 
     buffer_red = np.zeros(frame_shape, np.uint8)
     bufferer_red = Bufferer(buffer_red)
+    buffer_orig = np.zeros_like(buffer_red)
+    bufferer_orig = Bufferer(buffer_orig)
 
-    hist = Histogrammer(buffer_red, 2, 'red-dyed')
-    hist.start()
+    hist_red = Histogrammer(buffer_red, 2, 'red-dyed')
+    hist_red.start()
+    hist_orig = Histogrammer(buffer_orig, 2, 'original')
+    hist_orig.start()
 
     red_file = os.path.join('.', ''.join([filename, '-red', ext]))
     red_writer = tfac.create_file_writer(Codec.HEVC, red_file, frame_rate)
     yellow_file = os.path.join('.', ''.join([filename, '-yellow', ext]))
     yellow_writer = tfac.create_file_writer(Codec.HEVC, yellow_file, frame_rate)
 
-    reader.attach(red_dyer)
+    reader.attach(bufferer_orig)
+    bufferer_orig.attach(red_dyer)
     red_dyer.attach(red_writer)
     red_dyer.attach(bufferer_red)
     red_dyer.attach(green_dyer)
     green_dyer.attach(yellow_writer)
 
     sleep(20)  # operate pipeline for 20 sec
-    hist.stop()
+    hist_red.stop()
+    hist_orig.stop()
 
-    reader.detach(red_dyer)
+    reader.detach(bufferer_orig)
+    bufferer_orig.detach(red_dyer)
     red_dyer.detach(red_writer)
     red_dyer.detach(bufferer_red)
     red_dyer.detach(green_dyer)
