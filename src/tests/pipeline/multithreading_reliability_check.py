@@ -101,8 +101,8 @@ if __name__ == '__main__':
     tfac = VideoTargetFactory.get_instance()
     frame_rate = reader.get_frame_rate()
 
-    red = Dyer(2, 127)
-    green = Dyer(1, 191)
+    red_dyer = Dyer(2, 127)
+    green_dyer = Dyer(1, 191)
     hist = HistogrammerRed()
     hist.start()
 
@@ -111,15 +111,15 @@ if __name__ == '__main__':
     yellow_file = os.path.join('.', ''.join([filename, '-yellow', ext]))
     yellow_writer = tfac.create_file_writer(Codec.HEVC, yellow_file, frame_rate)
 
-    reader.attach(red)
-    red.attach(red_writer)
-    red.attach(green)
-    green.attach(yellow_writer)
+    reader.attach(red_dyer)
+    red_dyer.attach(red_writer)
+    red_dyer.attach(green_dyer)
+    green_dyer.attach(yellow_writer)
 
     sleep(20)  # operate pipeline for 20 sec
     hist.stop()
 
-    reader.detach(red)
-    red.detach(red_writer)
-    red.detach(green)
-    green.detach(yellow_writer)
+    reader.detach(red_dyer)
+    red_dyer.detach(red_writer)
+    red_dyer.detach(green_dyer)
+    green_dyer.detach(yellow_writer)
