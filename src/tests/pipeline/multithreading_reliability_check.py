@@ -24,7 +24,7 @@ problem is fixed.
 """
 
 
-buffer_red = None
+buffer_red, buffer_orig = None, None
 lock = threading.Lock()
 
 
@@ -39,6 +39,21 @@ class BuffererRed(IObservableObserver):
             data = frame.data(True)
             if buffer_red is None:
                 buffer_red = np.copy(data)
+            else:
+                buffer_red[:, :, :] = data[:, :, :]
+
+
+class BuffererOrig(IObservableObserver):
+
+    def __init__(self):
+        super(BuffererOrig, self).__init__()
+
+    def update(self, frame):
+        global buffer_orig
+        with lock:
+            data = frame.data(True)
+            if buffer_orig is None:
+                buffer_orig = np.copy(data)
             else:
                 buffer_red[:, :, :] = data[:, :, :]
 
