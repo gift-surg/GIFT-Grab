@@ -28,10 +28,10 @@ buffer_red = None
 lock = threading.Lock()
 
 
-class BuffererRed(IObservableObserver):
+class Bufferer(IObservableObserver):
 
     def __init__(self, buffer):
-        super(BuffererRed, self).__init__()
+        super(Bufferer, self).__init__()
         self.buffer = buffer
 
     def update(self, frame):
@@ -114,7 +114,7 @@ if __name__ == '__main__':
     green_dyer = Dyer(1, 64)
 
     buffer_red = np.zeros(frame_shape, np.uint8)
-    bufferer_red = BuffererRed(buffer_red)
+    bufferer_red = Bufferer(buffer_red)
 
     hist = HistogrammerRed()
     hist.start()
