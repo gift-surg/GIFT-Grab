@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import argparse
+import os.path
 from pygiftgrab import (VideoSourceFactory,
                         ColourSpace,
                         IObservableObserver)
@@ -34,4 +36,14 @@ class Dyer(IObservableObserver):
 
 
 if __name__ == '__main__':
-    print('multithreading reliability check script')
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--input', type=str, required=True,
+                        metavar='VIDEO_FILE',
+                        help='Input video file (HEVC-encoded MP4)')
+    args = parser.parse_args()
+    in_file = args.input
+
+    filename = os.path.basename(in_file)
+    filename, ext = os.path.splitext(filename)
+    assert filename
+    assert ext == '.mp4'
