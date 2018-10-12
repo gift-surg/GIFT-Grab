@@ -40,10 +40,14 @@ class Bufferer(IObservableObserver):
             self.buffer[:, :, :] = data[:, :, :]
 
 
-class HistogrammerRed(threading.Thread):
+class Histogrammer(threading.Thread):
 
-    def __init__(self, buffer):
-        super(HistogrammerRed, self).__init__()
+    channels = ('Blue', 'Green', 'Red', 'Alpha')
+
+    def __init__(self, buffer, channel):
+        super(Histogrammer, self).__init__()
+        assert channel in range(3)
+        self.channel = channel
         self.buffer = buffer
         self.running = False
 
@@ -52,7 +56,7 @@ class HistogrammerRed(threading.Thread):
             return
 
         histogram, num_bins = None, 10
-        redness_scale = np.array([i for i in range(1, num_bins + 1)], np.float)
+        scale = np.array([i for i in range(1, num_bins + 1)], np.float)
         self.running = True
         while self.running:
             with lock:
@@ -60,11 +64,13 @@ class HistogrammerRed(threading.Thread):
                     self.buffer[:, :, 2], bins=num_bins, range=(0, 256)
                 )
             if histogram is not None:
-                redness = np.sum(histogram * redness_scale)
-                redness /= np.sum(histogram)
-                redness /= num_bins
-                redness *= 100
-                print('Redness: {} %'.format(int(round(redness))))
+                coloredness = np.sum(histogram * scale)
+                coloredness /= np.sum(histogram)
+                coloredness /= num_bins
+                coloredness *= 100
+                print('{}ness of dyed image: {} %'.format(
+                    Histogrammer.channels[self.channel], int(round(coloredness))
+                ))
             sleep(0.100)
 
     def stop(self):
@@ -115,7 +121,7 @@ if __name__ == '__main__':
     buffer_red = np.zeros(frame_shape, np.uint8)
     bufferer_red = Bufferer(buffer_red)
 
-    hist = HistogrammerRed(buffer_red)
+    hist = Histogrammer(buffer_red, 2)
     hist.start()
 
     red_file = os.path.join('.', ''.join([filename, '-red', ext]))
