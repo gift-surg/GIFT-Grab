@@ -110,8 +110,8 @@ if __name__ == '__main__':
     tfac = VideoTargetFactory.get_instance()
     frame_rate = reader.get_frame_rate()
 
-    red_dyer = Dyer(2, 127)
-    green_dyer = Dyer(1, 191)
+    red_dyer = Dyer(2, 64)
+    green_dyer = Dyer(1, 64)
 
     bufferer_red = BuffererRed()
 
