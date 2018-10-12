@@ -53,11 +53,15 @@ class HistogrammerRed(threading.Thread):
         if self.running:
             return
 
-        # TODO
+        global buffer_red
+        histogram = None
         self.running = True
         while self.running:
-            print('Running')
-            # TODO
+            with lock:
+                if buffer_red is not None:
+                    histogram = np.histogram(buffer_red[:, :, 2],
+                                             bins=8, range=(0, 256))
+            print(histogram)
             sleep(0.100)
 
     def stop(self):
