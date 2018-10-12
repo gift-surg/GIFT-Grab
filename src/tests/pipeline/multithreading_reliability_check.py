@@ -6,7 +6,7 @@ import argparse
 import os.path
 import threading
 import numpy as np
-from pygiftgrab import (VideoSourceFactory,
+from pygiftgrab import (VideoSourceFactory, VideoFrame,
                         ColourSpace, IObservableObserver,
                         VideoTargetFactory, Codec)
 
@@ -30,17 +30,14 @@ lock = threading.Lock()
 
 class BuffererRed(IObservableObserver):
 
-    def __init__(self):
+    def __init__(self, buffer):
         super(BuffererRed, self).__init__()
+        self.buffer = buffer
 
     def update(self, frame):
-        global buffer_red
         with lock:
             data = frame.data(True)
-            if buffer_red is None:
-                buffer_red = np.copy(data)
-            else:
-                buffer_red[:, :, :] = data[:, :, :]
+            self.buffer[:, :, :] = data[:, :, :]
 
 
 class BuffererOrig(IObservableObserver):
@@ -121,6 +118,9 @@ if __name__ == '__main__':
 
     sfac = VideoSourceFactory.get_instance()
     reader = sfac.create_file_reader(in_file, ColourSpace.BGRA)
+    frame = VideoFrame(ColourSpace.BGRA, False)
+    reader.get_frame(frame)
+    frame_shape = (frame.rows(), frame.cols(), 4)
 
     tfac = VideoTargetFactory.get_instance()
     frame_rate = reader.get_frame_rate()
@@ -128,7 +128,8 @@ if __name__ == '__main__':
     red_dyer = Dyer(2, 64)
     green_dyer = Dyer(1, 64)
 
-    bufferer_red = BuffererRed()
+    buffer_red = np.zeros(frame_shape, np.uint8)
+    bufferer_red = BuffererRed(buffer_red)
 
     hist = HistogrammerRed()
     hist.start()
