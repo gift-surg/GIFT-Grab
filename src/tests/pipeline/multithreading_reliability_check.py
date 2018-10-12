@@ -59,8 +59,9 @@ class HistogrammerRed(threading.Thread):
         while self.running:
             with lock:
                 if buffer_red is not None:
-                    histogram = np.histogram(buffer_red[:, :, 2],
-                                             bins=8, range=(0, 256))
+                    histogram, _ = np.histogram(
+                        buffer_red[:, :, 2], bins=8, range=(0, 256)
+                    )
             print(histogram)
             sleep(0.100)
 
