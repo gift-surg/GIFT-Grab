@@ -18,5 +18,20 @@ pipelines, which should serve as a validation that this
 problem is fixed.
 """
 
+
+class Dyer(IObservableObserver):
+
+    def __init__(self, channel, value):
+        super(Dyer, self).__init__()
+        assert 0 <= channel < 3
+        assert 0 <= value < 256
+        self.channel = channel
+        self.value = value
+
+    def update(self, frame):
+        data = frame.data(True)
+        data[:, :, self.channel] = self.value
+
+
 if __name__ == '__main__':
     print('multithreading reliability check script')
