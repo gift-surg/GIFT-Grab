@@ -134,9 +134,9 @@ if __name__ == '__main__':
     buffer_orig = np.zeros_like(buffer_red)
     bufferer_orig = Bufferer(buffer_orig)
 
-    hist_red = Histogrammer(buffer_red, 2, 'red-dyed', 30.0, 10)
+    hist_red = Histogrammer(buffer_red, 2, 'red-dyed', 60.0, 10)
     hist_red.start()
-    hist_orig = Histogrammer(buffer_orig, 2, 'original', 30.0, 10)
+    hist_orig = Histogrammer(buffer_orig, 2, 'original', 50.0, 10)
     hist_orig.start()
 
     red_file = os.path.join('.', ''.join([filename, '-red', ext]))
