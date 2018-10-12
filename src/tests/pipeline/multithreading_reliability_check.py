@@ -42,24 +42,23 @@ class Bufferer(IObservableObserver):
 
 class HistogrammerRed(threading.Thread):
 
-    def __init__(self):
+    def __init__(self, buffer):
         super(HistogrammerRed, self).__init__()
+        self.buffer = buffer
         self.running = False
 
     def run(self):
         if self.running:
             return
 
-        global buffer_red
         histogram, num_bins = None, 10
         redness_scale = np.array([i for i in range(1, num_bins + 1)], np.float)
         self.running = True
         while self.running:
             with lock:
-                if buffer_red is not None:
-                    histogram, _ = np.histogram(
-                        buffer_red[:, :, 2], bins=num_bins, range=(0, 256)
-                    )
+                histogram, _ = np.histogram(
+                    self.buffer[:, :, 2], bins=num_bins, range=(0, 256)
+                )
             if histogram is not None:
                 redness = np.sum(histogram * redness_scale)
                 redness /= np.sum(histogram)
@@ -116,7 +115,7 @@ if __name__ == '__main__':
     buffer_red = np.zeros(frame_shape, np.uint8)
     bufferer_red = Bufferer(buffer_red)
 
-    hist = HistogrammerRed()
+    hist = HistogrammerRed(buffer_red)
     hist.start()
 
     red_file = os.path.join('.', ''.join([filename, '-red', ext]))
