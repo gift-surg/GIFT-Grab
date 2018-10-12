@@ -24,7 +24,7 @@ problem is fixed.
 """
 
 
-buffer_red, buffer_orig = None, None
+buffer_red = None
 lock = threading.Lock()
 
 
@@ -38,21 +38,6 @@ class BuffererRed(IObservableObserver):
         with lock:
             data = frame.data(True)
             self.buffer[:, :, :] = data[:, :, :]
-
-
-class BuffererOrig(IObservableObserver):
-
-    def __init__(self):
-        super(BuffererOrig, self).__init__()
-
-    def update(self, frame):
-        global buffer_orig
-        with lock:
-            data = frame.data(True)
-            if buffer_orig is None:
-                buffer_orig = np.copy(data)
-            else:
-                buffer_red[:, :, :] = data[:, :, :]
 
 
 class HistogrammerRed(threading.Thread):
