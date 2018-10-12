@@ -78,8 +78,9 @@ class Dyer(IObservableObserver):
         self.value = value
 
     def update(self, frame):
-        data = frame.data(True)
-        data[:, :, self.channel] = self.value
+        with lock:
+            data = frame.data(True)
+            data[:, :, self.channel] = self.value
 
 
 if __name__ == '__main__':
