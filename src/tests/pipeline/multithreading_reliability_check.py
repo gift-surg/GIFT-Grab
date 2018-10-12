@@ -4,6 +4,7 @@
 from time import sleep
 import argparse
 import os.path
+import threading
 from pygiftgrab import (VideoSourceFactory,
                         ColourSpace, IObservableObserver,
                         VideoTargetFactory, Codec)
@@ -21,6 +22,30 @@ pipelines, which should serve as a validation that this
 problem is fixed.
 """
 
+
+buffer = None
+lock = threading.Lock()
+
+
+class Histogrammer(threading.Thread, IObservableObserver):
+
+    def __init__(self, channel):
+        super(Histogrammer, self).__init__()
+        assert 0 <= channel < 3
+        self.channel = channel
+        self.running = False
+
+    def run(self):
+        if self.running:
+            return
+
+        pass
+
+    def stop(self):
+        self.running = False
+
+    def update(self, frame):
+        pass
 
 class Dyer(IObservableObserver):
 
@@ -57,6 +82,8 @@ if __name__ == '__main__':
 
     red = Dyer(2, 127)
     green = Dyer(1, 191)
+    hist = Histogrammer(0)
+    hist.start()
 
     red_file = os.path.join('.', ''.join([filename, '-red', ext]))
     red_writer = tfac.create_file_writer(Codec.HEVC, red_file, frame_rate)
@@ -69,6 +96,7 @@ if __name__ == '__main__':
     green.attach(yellow_writer)
 
     sleep(20)  # operate pipeline for 20 sec
+    hist.stop()
 
     reader.detach(red)
     red.detach(red_writer)
