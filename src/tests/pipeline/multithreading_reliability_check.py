@@ -23,33 +23,40 @@ problem is fixed.
 """
 
 
-buffer = None
+buffer_red = None
 lock = threading.Lock()
 
 
-class Histogrammer(threading.Thread, IObservableObserver):
+class BuffererRed(IObservableObserver):
 
-    def __init__(self, channel):
-        super(Histogrammer, self).__init__()
-        assert 0 <= channel < 3
-        self.channel = channel
+    def __init__(self):
+        super(BuffererRed, self).__init__()
+
+    def update(self, frame):
+        global buffer_red
+        # TODO
+
+
+class HistogrammerRed(threading.Thread):
+
+    def __init__(self):
+        super(HistogrammerRed, self).__init__()
         self.running = False
 
     def run(self):
         if self.running:
             return
 
-        pass
+        # TODO
         self.running = True
         while self.running:
             print('Running')
+            # TODO
             sleep(0.100)
 
     def stop(self):
         self.running = False
 
-    def update(self, frame):
-        pass
 
 class Dyer(IObservableObserver):
 
@@ -86,7 +93,7 @@ if __name__ == '__main__':
 
     red = Dyer(2, 127)
     green = Dyer(1, 191)
-    hist = Histogrammer(0)
+    hist = HistogrammerRed()
     hist.start()
 
     red_file = os.path.join('.', ''.join([filename, '-red', ext]))
