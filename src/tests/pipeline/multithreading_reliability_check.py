@@ -104,6 +104,9 @@ if __name__ == '__main__':
 
     red_dyer = Dyer(2, 127)
     green_dyer = Dyer(1, 191)
+
+    bufferer_red = BuffererRed()
+
     hist = HistogrammerRed()
     hist.start()
 
@@ -114,6 +117,7 @@ if __name__ == '__main__':
 
     reader.attach(red_dyer)
     red_dyer.attach(red_writer)
+    red_dyer.attach(bufferer_red)
     red_dyer.attach(green_dyer)
     green_dyer.attach(yellow_writer)
 
@@ -122,5 +126,6 @@ if __name__ == '__main__':
 
     reader.detach(red_dyer)
     red_dyer.detach(red_writer)
+    red_dyer.detach(bufferer_red)
     red_dyer.detach(green_dyer)
     green_dyer.detach(yellow_writer)
