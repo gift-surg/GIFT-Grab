@@ -5,6 +5,7 @@ from time import sleep
 import argparse
 import os.path
 import threading
+import numpy as np
 from pygiftgrab import (VideoSourceFactory,
                         ColourSpace, IObservableObserver,
                         VideoTargetFactory, Codec)
@@ -34,7 +35,12 @@ class BuffererRed(IObservableObserver):
 
     def update(self, frame):
         global buffer_red
-        # TODO
+        with lock:
+            data = frame.data(True)
+            if buffer_red is None:
+                buffer_red = np.copy(data)
+            else:
+                buffer_red[:, :, :] = data[:, :, :]
 
 
 class HistogrammerRed(threading.Thread):
