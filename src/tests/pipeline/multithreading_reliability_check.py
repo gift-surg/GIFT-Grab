@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from time import sleep
 import argparse
 import os.path
 from pygiftgrab import (VideoSourceFactory,
-                        ColourSpace,
-                        IObservableObserver)
+                        ColourSpace, IObservableObserver,
+                        VideoTargetFactory, Codec)
 
 """
 This script provides a multi-threading reliability check.
@@ -47,3 +48,29 @@ if __name__ == '__main__':
     filename, ext = os.path.splitext(filename)
     assert filename
     assert ext == '.mp4'
+
+    sfac = VideoSourceFactory.get_instance()
+    reader = sfac.create_file_reader(in_file, ColourSpace.BGRA)
+
+    tfac = VideoTargetFactory.get_instance()
+    frame_rate = reader.get_frame_rate()
+
+    red = Dyer(2, 127)
+    green = Dyer(1, 191)
+
+    red_file = os.path.join('.', ''.join([filename, '-red', ext]))
+    red_writer = tfac.create_file_writer(Codec.HEVC, red_file, frame_rate)
+    yellow_file = os.path.join('.', ''.join([filename, '-yellow', ext]))
+    yellow_writer = tfac.create_file_writer(Codec.HEVC, yellow_file, frame_rate)
+
+    reader.attach(red)
+    red.attach(red_writer)
+    red.attach(green)
+    green.attach(yellow_writer)
+
+    sleep(20)  # operate pipeline for 20 sec
+
+    reader.detach(red)
+    red.detach(red_writer)
+    red.detach(green)
+    green.detach(yellow_writer)
