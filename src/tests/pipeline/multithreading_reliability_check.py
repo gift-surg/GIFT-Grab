@@ -54,15 +54,21 @@ class HistogrammerRed(threading.Thread):
             return
 
         global buffer_red
-        histogram = None
+        histogram, num_bins = None, 10
+        redness_scale = np.array([i for i in range(1, num_bins + 1)], np.float)
         self.running = True
         while self.running:
             with lock:
                 if buffer_red is not None:
                     histogram, _ = np.histogram(
-                        buffer_red[:, :, 2], bins=8, range=(0, 256)
+                        buffer_red[:, :, 2], bins=num_bins, range=(0, 256)
                     )
-            print(histogram)
+            if histogram is not None:
+                redness = np.sum(histogram * redness_scale)
+                redness /= np.sum(histogram)
+                redness /= num_bins
+                redness *= 100
+                print('Redness: {} %'.format(int(round(redness))))
             sleep(0.100)
 
     def stop(self):
