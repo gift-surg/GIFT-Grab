@@ -71,17 +71,18 @@ class HistogrammerRed(threading.Thread):
 
 class Dyer(IObservableObserver):
 
-    def __init__(self, channel, value):
+    def __init__(self, channel, increment):
         super(Dyer, self).__init__()
         assert 0 <= channel < 3
-        assert 0 <= value < 256
+        assert 0 <= increment < 256
         self.channel = channel
-        self.value = value
+        self.increment = increment
 
     def update(self, frame):
         with lock:
             data = frame.data(True)
-            data[:, :, self.channel] = self.value
+            channel_data = data[:, :, self.channel]
+            channel_data[channel_data < 255 - self.increment] += self.increment
 
 
 if __name__ == '__main__':
