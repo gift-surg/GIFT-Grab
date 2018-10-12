@@ -126,7 +126,7 @@ if __name__ == '__main__':
     tfac = VideoTargetFactory.get_instance()
     frame_rate = reader.get_frame_rate()
 
-    red_dyer = Dyer(2, 64)
+    red_dyer = Dyer(2, 128)
     green_dyer = Dyer(1, 64)
 
     buffer_red = np.zeros(frame_shape, np.uint8)
