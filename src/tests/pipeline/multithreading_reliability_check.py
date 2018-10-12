@@ -40,6 +40,10 @@ class Histogrammer(threading.Thread, IObservableObserver):
             return
 
         pass
+        self.running = True
+        while self.running:
+            print('Running')
+            sleep(0.100)
 
     def stop(self):
         self.running = False
