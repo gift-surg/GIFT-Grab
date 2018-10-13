@@ -28,13 +28,20 @@ BUILD_LOG=$SESSION_DIR/build.log
     make -j4
 } > $BUILD_LOG 2>&1
 
-run_no=1
-WORKING_DIR=$SESSION_DIR/$run_no
-mkdir $WORKING_DIR
-cd $WORKING_DIR
-RUN_LOG=$WORKING_DIR/run.log
-{
-    PYTHONPATH=$BUILD_DIR python $MTR_SCRIPT --input $1
-} > $RUN_LOG 2>&1
+num_reps=1
+if [ $# -ge 2 ];
+then
+    num_reps=$2
+fi
+for run_no in `seq 1 $num_reps`;
+do
+    WORKING_DIR=$SESSION_DIR/$(printf "%03d" $run_no)
+    mkdir $WORKING_DIR
+    cd $WORKING_DIR
+    RUN_LOG=$WORKING_DIR/run.log
+    {
+        PYTHONPATH=$BUILD_DIR python $MTR_SCRIPT --input $1
+    } > $RUN_LOG 2>&1
+done
 
 ulimit -c 0
