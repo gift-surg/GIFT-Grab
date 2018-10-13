@@ -6,15 +6,22 @@
 # and NumPy support. Subsequently run the multi-threading
 # reliability check script.
 
-ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+CALL_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+SOURCE_DIR="$( cd "$CALL_DIR/../.." >/dev/null && pwd )"
+MTR_SCRIPT=$SOURCE_DIR/tests/pipeline/multithreading_reliability_check.py
+if [ $# -ge 3 ];
+then
+    ROOT_DIR=$3
+else
+    ROOT_DIR=$CALL_DIR
+fi
+
 BUILD_DIR=$ROOT_DIR/mtr-build
-SOURCE_DIR="$( cd "$ROOT_DIR/../.." >/dev/null && pwd )"
 CMAKE_OPTS="-D USE_FILES=ON"
 CMAKE_OPTS="$CMAKE_OPTS -D USE_HEVC=ON"
 CMAKE_OPTS="$CMAKE_OPTS -D ENABLE_NONFREE=ON -D USE_NVENC=ON"
 CMAKE_OPTS="$CMAKE_OPTS -D BUILD_PYTHON=ON -D USE_NUMPY=ON"
 CMAKE_OPTS="$CMAKE_OPTS -D CMAKE_BUILD_TYPE=Debug"
-MTR_SCRIPT=$ROOT_DIR/multithreading_reliability_check.py
 SESSION_DIR=$ROOT_DIR/$(date +"%Y-%m-%d-%H-%M-%S")
 mkdir $SESSION_DIR
 ulimit -c unlimited
