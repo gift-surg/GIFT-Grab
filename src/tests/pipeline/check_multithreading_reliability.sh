@@ -58,18 +58,21 @@ do
         exit_code_freqs[$exit_code]=$freq
     } > $RUN_LOG 2>&1
 
-    sleep 5
-done
+    if [ $(($run_no % 10)) -eq 0 ] || [ $run_no -eq $num_reps ];
+    then
+        EXIT_CODES_LOG=$SESSION_DIR/exit-codes-$run_no.csv
+        printf "%10s" "exit-code" >> $EXIT_CODES_LOG
+        printf "%10s" "frequency" >> $EXIT_CODES_LOG
+        printf "\n" >> $EXIT_CODES_LOG
+        for exit_code in "${!exit_code_freqs[@]}";
+        do
+            printf "%10d" $exit_code >> $EXIT_CODES_LOG
+            printf "%10d" ${exit_code_freqs[$exit_code]} >> $EXIT_CODES_LOG
+            printf "\n" >> $EXIT_CODES_LOG
+        done
+    fi
 
-EXIT_CODES_LOG=$SESSION_DIR/exit-codes.csv
-printf "%10s" "exit-code" >> $EXIT_CODES_LOG
-printf "%10s" "frequency" >> $EXIT_CODES_LOG
-printf "\n" >> $EXIT_CODES_LOG
-for exit_code in "${!exit_code_freqs[@]}";
-do
-    printf "%10d" $exit_code >> $EXIT_CODES_LOG
-    printf "%10d" ${exit_code_freqs[$exit_code]} >> $EXIT_CODES_LOG
-    printf "\n" >> $EXIT_CODES_LOG
+    sleep 5
 done
 
 ulimit -c 0
