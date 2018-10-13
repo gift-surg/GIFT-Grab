@@ -40,6 +40,8 @@ if [ $# -ge 2 ];
 then
     num_reps=$2
 fi
+
+declare -a exit_code_freqs
 for run_no in `seq 1 $num_reps`;
 do
     WORKING_DIR=$SESSION_DIR/$(printf "%03d" $run_no)
@@ -48,7 +50,21 @@ do
     RUN_LOG=$WORKING_DIR/run.log
     {
         PYTHONPATH=$BUILD_DIR python $MTR_SCRIPT --input $1
+
+        exit_code=$?
+        echo "Exit code was: $exit_code"
+        freq=${exit_code_freqs[$exit_code]}
+        let freq=$freq+1
+        exit_code_freqs[$exit_code]=$freq
     } > $RUN_LOG 2>&1
+
+    sleep 5
+done
+
+EXIT_CODES_LOG=$SESSION_DIR/exit-codes.csv
+for exit_code in "${!exit_code_freqs[@]}";
+do
+    echo "$exit_code ${exit_code_freqs[$exit_code]}" >> $EXIT_CODES_LOG
 done
 
 ulimit -c 0
