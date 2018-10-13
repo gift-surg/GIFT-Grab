@@ -332,11 +332,13 @@ public:
 
     void update(gg::VideoFrame & frame)
     {
-        if (override f = this->get_override("update"))
         {
-            VideoFrameNumPyWrapper wrapped_frame(&frame);
             gg::ScopedPythonGILLock gil_lock;
-            f(boost::ref(wrapped_frame));
+            if (override f = this->get_override("update"))
+            {
+                VideoFrameNumPyWrapper wrapped_frame(&frame);
+                f(boost::ref(wrapped_frame));
+            }
         }
         notify(frame);
     }
