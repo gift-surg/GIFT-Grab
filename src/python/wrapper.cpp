@@ -268,7 +268,8 @@ public:
     {
         gg::ScopedPythonGILLock gil_lock;
         VideoFrameNumPyWrapper wrapped_frame(&frame);
-        this->get_override("update")(boost::ref(wrapped_frame));
+        if (override f = this->get_override("update"))
+            f(boost::ref(wrapped_frame));
     }
 };
 
