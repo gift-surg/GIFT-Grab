@@ -21,11 +21,11 @@ ulimit -c unlimited
 
 BUILD_LOG=$SESSION_DIR/build.log
 {
-mkdir -p $BUILD_DIR
-rm -rf $BUILD_DIR/*
-cd $BUILD_DIR
-cmake $CMAKE_OPTS $SOURCE_DIR
-make -j4
+    mkdir -p $BUILD_DIR
+    rm -rf $BUILD_DIR/*
+    cd $BUILD_DIR
+    cmake $CMAKE_OPTS $SOURCE_DIR
+    make -j4
 } > $BUILD_LOG 2>&1
 
 run_no=1
@@ -34,7 +34,7 @@ mkdir $WORKING_DIR
 cd $WORKING_DIR
 RUN_LOG=$WORKING_DIR/run.log
 {
-PYTHONPATH=$BUILD_DIR python $MTR_SCRIPT --input $1
+    PYTHONPATH=$BUILD_DIR python $MTR_SCRIPT --input $1
 } > $RUN_LOG 2>&1
 
 ulimit -c 0
