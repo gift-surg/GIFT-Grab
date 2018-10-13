@@ -28,6 +28,7 @@ ulimit -c unlimited
 
 BUILD_LOG=$SESSION_DIR/build.log
 {
+    git describe --dirty
     mkdir -p $BUILD_DIR
     rm -rf $BUILD_DIR/*
     cd $BUILD_DIR
