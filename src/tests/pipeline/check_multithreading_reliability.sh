@@ -11,7 +11,7 @@ SOURCE_DIR="$( cd "$CALL_DIR/../.." >/dev/null && pwd )"
 MTR_SCRIPT=$SOURCE_DIR/tests/pipeline/multithreading_reliability_check.py
 if [ $# -ge 3 ];
 then
-    ROOT_DIR=$3
+    ROOT_DIR="$( cd "$3" >/dev/null && pwd )"
 else
     ROOT_DIR=$CALL_DIR
 fi
