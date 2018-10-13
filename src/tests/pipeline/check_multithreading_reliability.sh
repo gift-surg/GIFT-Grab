@@ -62,9 +62,14 @@ do
 done
 
 EXIT_CODES_LOG=$SESSION_DIR/exit-codes.csv
+printf "%10s" "exit-code" >> $EXIT_CODES_LOG
+printf "%10s" "frequency" >> $EXIT_CODES_LOG
+printf "\n" >> $EXIT_CODES_LOG
 for exit_code in "${!exit_code_freqs[@]}";
 do
-    echo "$exit_code ${exit_code_freqs[$exit_code]}" >> $EXIT_CODES_LOG
+    printf "%10d" $exit_code >> $EXIT_CODES_LOG
+    printf "%10d" ${exit_code_freqs[$exit_code]} >> $EXIT_CODES_LOG
+    printf "\n" >> $EXIT_CODES_LOG
 done
 
 ulimit -c 0
