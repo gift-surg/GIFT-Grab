@@ -15,6 +15,7 @@ CMAKE_OPTS="$CMAKE_OPTS -D ENABLE_NONFREE=ON -D USE_NVENC=ON"
 CMAKE_OPTS="$CMAKE_OPTS -D BUILD_PYTHON=ON -D USE_NUMPY=ON"
 CMAKE_OPTS="$CMAKE_OPTS -D CMAKE_BUILD_TYPE=Debug"
 MTR_SCRIPT=$ROOT_DIR/multithreading_reliability_check.py
+ulimit -c unlimited
 
 mkdir -p $BUILD_DIR
 rm -rf $BUILD_DIR/*
@@ -22,3 +23,5 @@ cd $BUILD_DIR
 cmake $CMAKE_OPTS $SOURCE_DIR
 make -j4
 PYTHONPATH=$BUILD_DIR python $MTR_SCRIPT --input $1
+
+ulimit -c 0
