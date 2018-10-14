@@ -6,9 +6,10 @@ import argparse
 import os.path
 import threading
 import numpy as np
+import scipy.misc
 from pygiftgrab import (VideoSourceFactory, VideoFrame,
                         ColourSpace, IObservableObserver,
-                        VideoTargetFactory, Codec)
+                        VideoTargetFactory, Codec, IObserver)
 
 """
 This script provides a multi-threading reliability check.
@@ -26,6 +27,32 @@ problem is fixed.
 
 buffer_red, buffer_orig = None, None
 lock = threading.Lock()
+
+
+class SnapshotSaver(IObserver):
+    """A snapshot saver for saving incoming frames to PNG files."""
+
+    def __init__(self, root_dir, frame_rate=0.2):
+        """
+        Initialise a snapshot saver with a saving frequency.
+
+        :param root_dir: the folder where to save the snapshots
+        :param frame_rate: saving frequency. The default value tells
+        the saver to save a frame every 5 sec.
+        """
+        super(SnapshotSaver, self).__init__()
+        assert 0 < frame_rate <= 1  # to avoid flooding disk with images
+        self.save_freq = 1.0 / frame_rate
+        self.root_dir = root_dir
+        self.num_called = 0
+
+    def update(self, frame):
+        """Implement ``IObserver.update``."""
+        self.num_called += 1
+        if self.num_called % self.save_freq == 1:
+            out_file = os.path.join(self.root_dir,
+                                    'frame-{:010d}.png'.format(self.num_called))
+            scipy.misc.imsave(out_file, frame.data(True))
 
 
 class Bufferer(IObservableObserver):
