@@ -45,6 +45,7 @@ CMAKE_OPTS="$CMAKE_OPTS -D BUILD_PYTHON=ON -D USE_NUMPY=ON"
 CMAKE_OPTS="$CMAKE_OPTS -D CMAKE_BUILD_TYPE=Debug"
 SESSION_DIR=$ROOT_DIR/$(date +"%Y-%m-%d-%H-%M-%S")
 mkdir $SESSION_DIR
+echo "Session directory: $SESSION_DIR"
 ulimit -c unlimited
 
 BUILD_LOG=$SESSION_DIR/build.log
