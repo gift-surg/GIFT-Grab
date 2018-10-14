@@ -68,6 +68,11 @@ protected:
     IDeckLinkInput * _deck_link_input;
 
     //!
+    //! \brief Detected video input flags
+    //!
+    BMDVideoInputFlags _video_input_flags;
+
+    //!
     //! \brief Flag indicating streaming status
     //!
     bool _running;

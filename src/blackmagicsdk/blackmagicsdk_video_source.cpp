@@ -30,6 +30,7 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
     , _buffer_video_frame(VideoFrame(colour, false)) // TODO manage data?
     , _deck_link(nullptr)
     , _deck_link_input(nullptr)
+    , _video_input_flags(bmdVideoInputFlagDefault | bmdVideoInputDualStream3D)
     , _running(false)
 {
     // Pixel format, i.e. colour space
@@ -81,12 +82,10 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
     // Set the input format (i.e. display mode)
     BMDDisplayMode display_mode;
     std::string error_msg = "";
-    BMDVideoInputFlags video_input_flags = bmdVideoInputFlagDefault
-            | bmdVideoInputDualStream3D;
-    if (not detect_input_format(pixel_format, video_input_flags, display_mode, _frame_rate, error_msg))
+    if (not detect_input_format(pixel_format, _video_input_flags, display_mode, _frame_rate, error_msg))
     {
-        video_input_flags ^= bmdVideoInputDualStream3D;
-        if (not detect_input_format(pixel_format, video_input_flags, display_mode, _frame_rate, error_msg))
+        _video_input_flags ^= bmdVideoInputDualStream3D;
+        if (not detect_input_format(pixel_format, _video_input_flags, display_mode, _frame_rate, error_msg))
             bail(error_msg);
     }
 
@@ -99,7 +98,7 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
     // Enable video input
     res = _deck_link_input->EnableVideoInput(display_mode,
                                              pixel_format,
-                                             video_input_flags);
+                                             _video_input_flags);
     // No glory
     if (res != S_OK)
         bail("Could not enable video input of Blackmagic DeckLink device");
