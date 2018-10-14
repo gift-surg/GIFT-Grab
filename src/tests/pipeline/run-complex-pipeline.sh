@@ -5,7 +5,7 @@
 # The background is issue #16. It looks like in applications
 # where multiple Python threads are involved, occasionally
 # the acquisition of the Global Interpreter Lock leads to a
-# deadlocks, which crashes the whole application with a
+# deadlock, which crashes the whole application with a
 # non-specific segmentation fault.
 #
 # It builds a basic GIFT-Grab capable of reading a video file,
