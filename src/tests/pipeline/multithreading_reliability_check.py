@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from time import sleep
+from time import (sleep, time)
 import argparse
 import os.path
 import threading
@@ -32,27 +32,29 @@ lock = threading.Lock()
 class SnapshotSaver(IObserver):
     """A snapshot saver for saving incoming frames to PNG files."""
 
-    def __init__(self, root_dir, frame_rate=0.2):
+    def __init__(self, root_dir, save_freq=5):
         """
         Initialise a snapshot saver with a saving frequency.
 
         :param root_dir: the folder where to save the snapshots
-        :param frame_rate: saving frequency. The default value tells
-        the saver to save a frame every 5 sec.
+        :param save_freq: saving frequency. The default value tells
+        the saver to save every 5 seconds.
         """
         super(SnapshotSaver, self).__init__()
-        assert 0 < frame_rate <= 1  # to avoid flooding disk with images
-        self.save_freq = 1.0 / frame_rate
+        assert 5 <= save_freq  # to avoid flooding disk with images
+        self.save_freq = save_freq
         self.root_dir = root_dir
-        self.num_called = 0
+        self.last_saved = time()
+        self.num_saved = 0
 
     def update(self, frame):
         """Implement ``IObserver.update``."""
-        self.num_called += 1
-        if self.num_called % self.save_freq == 1:
+        if time() - self.last_saved >= self.save_freq:
+            self.num_saved += 1
             out_file = os.path.join(self.root_dir,
-                                    'frame-{:010d}.png'.format(self.num_called))
+                                    'frame-{:010d}.png'.format(self.num_saved))
             scipy.misc.imsave(out_file, frame.data(True))
+            self.last_saved = time()
 
 
 class Bufferer(IObservableObserver):
