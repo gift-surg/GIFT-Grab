@@ -51,6 +51,7 @@ Examples
    network
    scipy
    encoding
+   complex
 
 Citing GIFT-Grab
 ^^^^^^^^^^^^^^^^
