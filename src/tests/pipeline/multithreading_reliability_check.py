@@ -59,9 +59,9 @@ class SnapshotSaver(IObserver):
 
 class Bufferer(IObservableObserver):
 
-    def __init__(self, buffer):
+    def __init__(self, np_buffer):
         super(Bufferer, self).__init__()
-        self.buffer = buffer
+        self.buffer = np_buffer
 
     def update(self, frame):
         with lock:
@@ -73,13 +73,13 @@ class Histogrammer(threading.Thread):
 
     channels = ('Blue', 'Green', 'Red', 'Alpha')
 
-    def __init__(self, buffer, channel, tag, frame_rate, display_freq):
+    def __init__(self, np_buffer, channel, tag, frame_rate, display_freq):
         super(Histogrammer, self).__init__()
         assert channel in range(3)
         assert 0 < frame_rate <= 60
         assert 0 <= display_freq
         self.channel = channel
-        self.buffer = buffer
+        self.buffer = np_buffer
         self.tag = tag
         self.display_freq = display_freq
         self.num_skipped = 0
