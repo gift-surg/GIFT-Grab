@@ -29,7 +29,7 @@ fi
 
 CALL_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 SOURCE_DIR="$( cd "$CALL_DIR/../.." >/dev/null && pwd )"
-MTR_SCRIPT=$SOURCE_DIR/tests/pipeline/multithreading_reliability_check.py
+MTR_SCRIPT=$SOURCE_DIR/tests/pipeline/complex_pipeline.py
 if [ $# -ge 3 ];
 then
     ROOT_DIR="$( cd "$3" >/dev/null && pwd )"
