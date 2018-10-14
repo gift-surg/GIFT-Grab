@@ -25,7 +25,7 @@ problem is fixed.
 """
 
 
-buffer_red, buffer_orig = None, None
+np_buffer_red, np_buffer_orig = None, None
 lock = threading.Lock()
 
 
@@ -157,14 +157,14 @@ if __name__ == '__main__':
     red_dyer = Dyer(2, 128)
     green_dyer = Dyer(1, 64)
 
-    buffer_red = np.zeros(frame_shape, np.uint8)
-    bufferer_red = Bufferer(buffer_red)
-    buffer_orig = np.zeros_like(buffer_red)
-    bufferer_orig = Bufferer(buffer_orig)
+    np_buffer_red = np.zeros(frame_shape, np.uint8)
+    bufferer_red = Bufferer(np_buffer_red)
+    np_buffer_orig = np.zeros_like(np_buffer_red)
+    bufferer_orig = Bufferer(np_buffer_orig)
 
-    hist_red = Histogrammer(buffer_red, 2, 'red-dyed', 60.0, 10)
+    hist_red = Histogrammer(np_buffer_red, 2, 'red-dyed', 60.0, 10)
     hist_red.start()
-    hist_orig = Histogrammer(buffer_orig, 2, 'original', 50.0, 10)
+    hist_orig = Histogrammer(np_buffer_orig, 2, 'original', 50.0, 10)
     hist_orig.start()
 
     red_file = os.path.join('.', ''.join([filename, '-red', ext]))
