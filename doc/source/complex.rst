@@ -1,7 +1,7 @@
 .. _Complex:
 
-Multi-threaded processing pipelines
-===================================
+Multi-threaded complex processing pipelines
+===========================================
 
 This example shows how GIFT-Grab can be used for running complex pipelines with multiple intermediate
 processing nodes and threads.
