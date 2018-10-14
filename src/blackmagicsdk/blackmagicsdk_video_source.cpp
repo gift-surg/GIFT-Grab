@@ -231,6 +231,8 @@ HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::VideoInputFrameArrived(
 
     // Nr. of bytes of received data
     size_t n_bytes = video_frame->GetRowBytes() * video_frame->GetHeight();
+    if (is_stereo())
+        n_bytes *= 2;
 
     { // Artificial scope for data lock
         // Make sure only this thread is accessing the buffer now
@@ -252,6 +254,35 @@ HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::VideoInputFrameArrived(
         // If data could not be read into the buffer, return
         if (FAILED(res))
             return res;
+
+        if (is_stereo())
+        {
+            IDeckLinkVideoFrame *right_eye_frame = nullptr;
+            IDeckLinkVideoFrame3DExtensions *three_d_extensions = nullptr;
+            if ((video_frame->QueryInterface(
+                    IID_IDeckLinkVideoFrame3DExtensions,
+                    (void **) &three_d_extensions) != S_OK) ||
+                (three_d_extensions->GetFrameForRightEye(
+                    &right_eye_frame) != S_OK))
+            {
+                right_eye_frame = nullptr;
+            }
+
+            if (three_d_extensions != nullptr)
+                three_d_extensions->Release();
+
+            if (right_eye_frame != nullptr)
+            {
+                res = right_eye_frame->GetBytes(
+                    reinterpret_cast<void **>(&_video_buffer[n_bytes / 2])
+                );
+                right_eye_frame->Release();
+                // If data could not be read into the buffer, return
+                if (FAILED(res))
+                    return res;
+            }
+        }
+
         // Set video frame specs according to new data
         _video_buffer_length = n_bytes;
         _cols = video_frame->GetWidth();
