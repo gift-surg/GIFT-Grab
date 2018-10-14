@@ -205,7 +205,7 @@ if __name__ == '__main__':
 
     # create a SnapshotSaver for saving a number of yellow-dyed
     # video frames
-    yellow_snapshots = SnapshotSaver('.')
+    yellow_snapshots = SnapshotSaver('.', 9)
 
     # assemble the GIFT-Grab pipeline
     reader.attach(bufferer_orig)
