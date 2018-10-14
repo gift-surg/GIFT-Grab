@@ -203,7 +203,7 @@ if __name__ == '__main__':
     yellow_file = os.path.join('.', ''.join([filename, '-yellow', ext]))
     yellow_writer = tfac.create_file_writer(Codec.HEVC, yellow_file, frame_rate)
 
-    # create a SnapshotSavers for saving a number of yellow-dyed
+    # create a SnapshotSaver for saving a number of yellow-dyed
     # video frames
     yellow_snapshots = SnapshotSaver('.')
 
