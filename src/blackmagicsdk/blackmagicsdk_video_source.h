@@ -185,6 +185,15 @@ protected:
         throw VideoSourceError(error_msg);
     }
 
+    //!
+    //! \brief
+    //! \return whether this source is in stereo mode
+    //!
+    inline bool is_stereo()
+    {
+        return _video_input_flags & bmdVideoInputDualStream3D;
+    }
+
 private:
     DISALLOW_COPY_AND_ASSIGNMENT(VideoSourceBlackmagicSDK);
 };
