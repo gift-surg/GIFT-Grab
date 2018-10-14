@@ -170,12 +170,15 @@ if __name__ == '__main__':
     yellow_file = os.path.join('.', ''.join([filename, '-yellow', ext]))
     yellow_writer = tfac.create_file_writer(Codec.HEVC, yellow_file, frame_rate)
 
+    yellow_snapshots = SnapshotSaver('.')
+
     reader.attach(bufferer_orig)
     bufferer_orig.attach(red_dyer)
     red_dyer.attach(red_writer)
     red_dyer.attach(bufferer_red)
     red_dyer.attach(green_dyer)
     green_dyer.attach(yellow_writer)
+    green_dyer.attach(yellow_snapshots)
 
     sleep(20)  # operate pipeline for 20 sec
     hist_red.stop()
@@ -187,3 +190,4 @@ if __name__ == '__main__':
     red_dyer.detach(bufferer_red)
     red_dyer.detach(green_dyer)
     green_dyer.detach(yellow_writer)
+    green_dyer.detach(yellow_snapshots)
