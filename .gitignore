@@ -17,3 +17,4 @@ src/dist
 src/*.egg-info
 *.swp
 gg-iss-5
+bm3d-build
