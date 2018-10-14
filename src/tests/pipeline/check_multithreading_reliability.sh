@@ -15,6 +15,18 @@
 # status each time. This is essentially a stress-test that
 # should serve as a validation that issue #16 is fixed.
 
+if [ $# -lt 1 ] || [ $# -gt 3 ];
+then
+    THIS_SCRIPT="$(basename "$(test -L "${BASH_SOURCE[0]}" && readlink "$0" || echo "$0")")"
+    printf "Usage: $THIS_SCRIPT video_file [ num_reps [ output_dir ] ]\n"
+    printf "\tvideo_file: path to an HEVC-encoded MP4 file\n"
+    printf "\tnum_reps:   how many times to run the Python script "
+    printf "(default: once)\n"
+    printf "\toutput_dir: where to save all the generated output "
+    printf "(default: current directory)\n"
+    exit 1
+fi
+
 CALL_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 SOURCE_DIR="$( cd "$CALL_DIR/../.." >/dev/null && pwd )"
 MTR_SCRIPT=$SOURCE_DIR/tests/pipeline/multithreading_reliability_check.py
