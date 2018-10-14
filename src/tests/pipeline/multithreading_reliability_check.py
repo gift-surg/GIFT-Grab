@@ -73,11 +73,10 @@ class Histogrammer(threading.Thread):
                 coloredness = np.sum(histogram * scale)
                 coloredness /= np.sum(histogram)
                 coloredness /= num_bins
-                coloredness *= 100
                 if self.num_skipped >= self.display_freq:
-                    print('{}ness of {} image: {} %'.format(
+                    print('{}ness of {} image: {:.0%}'.format(
                         Histogrammer.channels[self.channel],
-                        self.tag, int(round(coloredness))
+                        self.tag, coloredness
                     ))
                     self.num_skipped = 0
                 else:
