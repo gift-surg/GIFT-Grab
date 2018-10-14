@@ -19,3 +19,4 @@ src/*.egg-info
 src/tests/pipeline/mtr-build
 gg-iss-16
 gg-iss-5
+bm3d-build
