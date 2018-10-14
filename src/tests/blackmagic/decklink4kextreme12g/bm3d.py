@@ -41,11 +41,14 @@ class FrameSaver(IObservableObserver):
         data_bgra = np.zeros(self.frame_dims + [4], np.uint8)
         for i, frame in enumerate(self.frames):
             data = frame.data(False)
-            data = np.reshape(data, self.frame_dims + [2])
-            out_file = os.path.join(out_folder, 'frame-{:03d}.png'.format(i+1))
+            left, right = data[:data.size / 2], data[data.size / 2:]
+            for j, current in enumerate([left, right]):
+                current = np.reshape(current, self.frame_dims + [2])
+                out_file = os.path.join(out_folder,
+                                        'frame-{:03d}-{}.png'.format(i+1, j))
 
-            cv2.cvtColor(src=data, code=cv2.COLOR_YUV2BGRA_UYVY, dst=data_bgra)
-            cv2.imwrite(out_file, data_bgra)
+                cv2.cvtColor(src=current, code=cv2.COLOR_YUV2BGRA_UYVY, dst=data_bgra)
+                cv2.imwrite(out_file, data_bgra)
         print('Saved {} frames in {}'.format(len(self.frames), out_folder))
 
 
