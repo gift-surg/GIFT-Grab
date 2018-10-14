@@ -5,7 +5,7 @@
 # The background is issue #16. It looks like in applications
 # where multiple Python threads are involved, occasionally
 # the acquisition of the Global Interpreter Lock leads to a
-# deadlock, which crashes the whole application with a
+# deadlocks, which crashes the whole application with a
 # non-specific segmentation fault.
 #
 # It builds a basic GIFT-Grab capable of reading a video file,
@@ -29,7 +29,7 @@ fi
 
 CALL_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 SOURCE_DIR="$( cd "$CALL_DIR/../.." >/dev/null && pwd )"
-MTR_SCRIPT=$SOURCE_DIR/tests/pipeline/complex_pipeline.py
+MTR_SCRIPT=$SOURCE_DIR/tests/pipeline/multithreading_reliability_check.py
 if [ $# -ge 3 ];
 then
     ROOT_DIR="$( cd "$3" >/dev/null && pwd )"
