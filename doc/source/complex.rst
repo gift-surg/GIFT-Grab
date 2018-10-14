@@ -19,6 +19,5 @@ This example is also available on GitHub_:
 
 .. literalinclude:: ../../src/tests/pipeline/complex_pipeline.py
    :language: python
-   :linenos:
 
 .. _GitHub: https://github.com/gift-surg/GIFT-Grab/blob/master/src/tests/pipeline/complex_pipeline.py
