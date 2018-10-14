@@ -1,10 +1,19 @@
 #!/usr/bin/env bash
 # -*- coding: utf-8 -*-
 
-# Build a basic GIFT-Grab capable of reading a video file,
-# and encoding to a video file in real time, with Python
-# and NumPy support. Subsequently run the multi-threading
-# reliability check script.
+# This script provides a multi-threading reliability check.
+# The background is issue #16. It looks like in applications
+# where multiple Python threads are involved, occasionally
+# the acquisition of the Global Interpreter Lock leads to a
+# deadlocks, which crashes the whole application with a
+# non-specific segmentation fault.
+#
+# It builds a basic GIFT-Grab capable of reading a video file,
+# and encoding to a video file in real time, with Python and
+# NumPy support. It subsequently runs a multi-threaded
+# GIFT-Grab pipeline a number of times, recording the exit
+# status each time. This is essentially a stress-test that
+# should serve as a validation that issue #16 is fixed.
 
 CALL_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 SOURCE_DIR="$( cd "$CALL_DIR/../.." >/dev/null && pwd )"
