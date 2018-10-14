@@ -5,7 +5,7 @@ Multi-threaded processing pipelines
 
 This example shows how GIFT-Grab can be used for running complex pipelines with multiple intermediate
 processing nodes and threads.
-The intermediate processing nodes are built on the same principles as in the SciPy_ example.
+The intermediate processing nodes are built on the same principles as in the :ref:`SciPy` example.
 Running the example requires an `HEVC-encoded MP4 file`_, an `NVENC-capable GPU`_, and `NumPy support`_.
 
 .. _`HEVC-encoded MP4 file`: https://github.com/gift-surg/GIFT-Grab/blob/master/doc/build.md#reading-video-files
