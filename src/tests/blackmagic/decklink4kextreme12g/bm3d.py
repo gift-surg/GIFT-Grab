@@ -17,18 +17,15 @@ class FrameSaver(IObservableObserver):
         super(FrameSaver, self).__init__()
         self.num_saved = 0
         self.num_to_save = num_to_save
-        self.frames = []
+        self.frames_np_data = []
         self.frame_dims = None
 
     def update(self, frame):
         if self.num_saved < self.num_to_save:
             if self.frame_dims is None:
                 self.frame_dims = [frame.rows(), frame.cols()]
-            frame_copy = VideoFrame(
-                ColourSpace.UYVY, frame.rows(), frame.cols()
-            )
-            frame_copy.data(False)[:] = frame.data(False)[:]
-            self.frames.append(frame_copy)
+            np_data = np.copy(frame.data(False))
+            self.frames_np_data.append(np_data)
             self.num_saved += 1
 
     def dump(self):
@@ -39,9 +36,8 @@ class FrameSaver(IObservableObserver):
         out_folder = os.path.join('.', time.strftime('%Y-%m-%d-%H-%M-%S'))
         os.mkdir(out_folder)
         data_bgra = np.zeros(self.frame_dims + [4], np.uint8)
-        for i, frame in enumerate(self.frames):
-            data = frame.data(False)
-            left, right = data[:data.size / 2], data[data.size / 2:]
+        for i, np_data in enumerate(self.frames_np_data):
+            left, right = np_data[:np_data.size / 2], np_data[np_data.size / 2:]
             for j, current in enumerate([left, right]):
                 current = np.reshape(current, self.frame_dims + [2])
                 out_file = os.path.join(out_folder,
@@ -49,7 +45,7 @@ class FrameSaver(IObservableObserver):
 
                 cv2.cvtColor(src=current, code=cv2.COLOR_YUV2BGRA_UYVY, dst=data_bgra)
                 cv2.imwrite(out_file, data_bgra)
-        print('Saved {} frames in {}'.format(len(self.frames), out_folder))
+        print('Saved {} frames in {}'.format(len(self.frames_np_data), out_folder))
 
 
 if __name__ == '__main__':
