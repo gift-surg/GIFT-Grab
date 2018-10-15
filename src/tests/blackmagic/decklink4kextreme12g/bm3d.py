@@ -33,7 +33,9 @@ class FrameSaver(IObservableObserver):
         if self.num_saved < self.num_to_save:
             print('Still acquiring')
             return
-        out_folder = os.path.join('.', time.strftime('%Y-%m-%d-%H-%M-%S'))
+        out_folder = os.path.abspath(
+            os.path.join('.', time.strftime('%Y-%m-%d-%H-%M-%S'))
+        )
         os.mkdir(out_folder)
         data_bgra = np.zeros(self.frame_dims + [4], np.uint8)
         for i, np_data in enumerate(self.frames_np_data):
