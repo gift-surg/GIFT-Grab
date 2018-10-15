@@ -14,7 +14,7 @@ CMAKE_OPTS="-D USE_BLACKMAGIC_DECKLINK_SDI_4K=ON -D ENABLE_NONFREE=ON"
 CMAKE_OPTS="$CMAKE_OPTS -D BUILD_PYTHON=ON -D USE_NUMPY=ON"
 CMAKE_OPTS="$CMAKE_OPTS -D CMAKE_BUILD_TYPE=Debug"
 SESSION_DIR=$ROOT_DIR/$(date +"%Y-%m-%d-%H-%M-%S")
-export BlackmagicSDK_DIR="/home/gitlab-runner/environments/giftgrab/blackmagic_sdk/sdk"
+export BlackmagicSDK_DIR="/opt/blackmagic_sdk"
 
 mkdir $SESSION_DIR
 echo "Session directory: $SESSION_DIR"
