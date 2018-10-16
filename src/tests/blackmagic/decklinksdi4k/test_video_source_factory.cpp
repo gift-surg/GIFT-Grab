@@ -2,10 +2,27 @@
 #include "include_catch.h"
 
 gg::Device device = gg::DeckLinkSDI4K;
-gg::ColourSpace colour = gg::UYVY;
+gg::ColourSpace colour;
 
-int main()
+int main(int argc, char * argv[])
 {
+    bool args_ok = true;
+    if (argc < 2)
+        args_ok = false;
+    else
+    {
+        if (strcmp(argv[1], "BGRA") == 0)
+            colour = gg::BGRA;
+        else if (strcmp(argv[1], "UYVY") == 0)
+            colour = gg::UYVY;
+        else
+            args_ok = false;
+    }
+    if (not args_ok)
+    {
+        printf("Synopsis: %s BGRA|UYVY\n", argv[0]);
+        return EXIT_FAILURE;
+    }
     return Catch::Session().run();
 }
 
