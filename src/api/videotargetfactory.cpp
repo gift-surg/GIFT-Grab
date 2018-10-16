@@ -9,8 +9,6 @@
 namespace gg
 {
 
-VideoTargetFactory VideoTargetFactory::_factory_singleton;
-
 VideoTargetFactory::VideoTargetFactory()
 {
     // nop
@@ -23,6 +21,7 @@ VideoTargetFactory::~VideoTargetFactory()
 
 VideoTargetFactory & VideoTargetFactory::get_instance()
 {
+    static VideoTargetFactory _factory_singleton;
     return _factory_singleton;
 }
 
