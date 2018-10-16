@@ -21,8 +21,8 @@ VideoTargetFactory::~VideoTargetFactory()
 
 VideoTargetFactory & VideoTargetFactory::get_instance()
 {
-    static VideoTargetFactory _video_target_factory_singleton;
-    return _video_target_factory_singleton;
+    static VideoTargetFactory video_target_factory;
+    return video_target_factory;
 }
 
 IVideoTarget * VideoTargetFactory::create_file_writer(enum Codec codec,
