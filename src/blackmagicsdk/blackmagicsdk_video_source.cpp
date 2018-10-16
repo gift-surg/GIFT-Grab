@@ -41,6 +41,8 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
         pixel_format = bmdFormat8BitYUV;
         break;
     case BGRA:
+        pixel_format = bmdFormat8BitBGRA;
+        break;
     case I420:
     default:
         bail("BlackmagicSDK video source supports only the UYVY colour space");
