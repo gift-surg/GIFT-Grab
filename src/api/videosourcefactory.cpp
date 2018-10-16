@@ -34,7 +34,8 @@ VideoSourceFactory::~VideoSourceFactory()
 
 VideoSourceFactory & VideoSourceFactory::get_instance()
 {
-    return _factory_singleton;
+    static VideoSourceFactory _video_source_factory_singleton;
+    return _video_source_factory_singleton;
 }
 
 IVideoSource * VideoSourceFactory::get_device(Device device,
