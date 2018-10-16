@@ -50,8 +50,9 @@ class SnapshotSaver(IObserver):
             out_file = os.path.join(self.root_dir,
                                     'frame-{:010d}.png'.format(self.num_saved))
             data_uyvy = frame.data(False)
-            data_bgra = cv2.cvtColor(data_uyvy, cv2.COLOR_YUV2BGRA_UYVY)
-            scipy.misc.imsave(out_file, data_bgra)
+            data_uyvy = np.reshape(data_uyvy, (frame.rows(), frame.cols(), 2))
+            data_bgr = cv2.cvtColor(data_uyvy, cv2.COLOR_YUV2BGR_UYVY)
+            scipy.misc.imsave(out_file, data_bgr)
             self.last_saved = time()
 
 
