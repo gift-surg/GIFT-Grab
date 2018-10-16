@@ -37,8 +37,9 @@ else
     ROOT_DIR=$CALL_DIR
 fi
 
+export BlackmagicSDK_DIR="/opt/blackmagic_sdk/10.11.1"
 BUILD_DIR=$ROOT_DIR/mtr-build
-CMAKE_OPTS="-D USE_FILES=ON"
+CMAKE_OPTS="-D USE_BLACKMAGIC_DECKLINK_SDI_4K=ON -D ENABLE_NONFREE=ON"
 CMAKE_OPTS="$CMAKE_OPTS -D USE_HEVC=ON"
 CMAKE_OPTS="$CMAKE_OPTS -D ENABLE_NONFREE=ON -D USE_NVENC=ON"
 CMAKE_OPTS="$CMAKE_OPTS -D BUILD_PYTHON=ON -D USE_NUMPY=ON"
@@ -72,7 +73,7 @@ do
     cd $WORKING_DIR
     RUN_LOG=$WORKING_DIR/run.log
     {
-        PYTHONPATH=$BUILD_DIR python $MTR_SCRIPT --input $1
+        PYTHONPATH=$BUILD_DIR python $MTR_SCRIPT
 
         exit_code=$?
         echo "Exit code was: $exit_code"

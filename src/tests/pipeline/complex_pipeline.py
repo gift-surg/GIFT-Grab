@@ -7,12 +7,12 @@ multiple intermediate processing nodes.
 """
 
 from time import (sleep, time)
-import argparse
 import os.path
 import threading
+import cv2
 import numpy as np
 import scipy.misc
-from pygiftgrab import (VideoSourceFactory, VideoFrame,
+from pygiftgrab import (VideoSourceFactory, Device, VideoFrame,
                         ColourSpace, IObservableObserver,
                         VideoTargetFactory, Codec, IObserver)
 
@@ -49,7 +49,9 @@ class SnapshotSaver(IObserver):
             self.num_saved += 1
             out_file = os.path.join(self.root_dir,
                                     'frame-{:010d}.png'.format(self.num_saved))
-            scipy.misc.imsave(out_file, frame.data(True))
+            data_uyvy = frame.data(False)
+            data_bgra = cv2.cvtColor(data_uyvy, cv2.COLOR_YUV2BGRA_UYVY)
+            scipy.misc.imsave(out_file, data_bgra)
             self.last_saved = time()
 
 
@@ -64,8 +66,8 @@ class Bufferer(IObservableObserver):
     def update(self, frame):
         """Implement ``IObservableObserver.update``."""
         with lock:
-            data = frame.data(True)
-            self.buffer[:, :, :] = data[:, :, :]
+            data = frame.data(False)
+            self.buffer[:] = data[:]
 
 
 class Histogrammer(threading.Thread):
@@ -112,7 +114,7 @@ class Histogrammer(threading.Thread):
         while self.running:
             with lock:
                 histogram, _ = np.histogram(
-                    self.buffer[:, :, 2], bins=num_bins, range=(0, 256)
+                    self.buffer, bins=num_bins, range=(0, 256)
                 )
             if histogram is not None:
                 coloredness = np.sum(histogram * scale)
@@ -150,33 +152,22 @@ class Dyer(IObservableObserver):
     def update(self, frame):
         """Implement ``IObservableObserver.update``."""
         with lock:
-            data = frame.data(True)
-            channel_data = data[:, :, self.channel]
+            channel_data = frame.data(False)
             channel_data[channel_data < 255 - self.increment] += self.increment
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--input', type=str, required=True,
-                        metavar='VIDEO_FILE',
-                        help='Input video file (HEVC-encoded MP4)')
-    args = parser.parse_args()
-    in_file = args.input
-
-    filename = os.path.basename(in_file)
-    filename, ext = os.path.splitext(filename)
-    assert filename
-    assert ext == '.mp4'
-
     # initialise reading of passed file
     sfac = VideoSourceFactory.get_instance()
-    reader = sfac.create_file_reader(in_file, ColourSpace.BGRA)
-    frame = VideoFrame(ColourSpace.BGRA, False)
+    reader = sfac.get_device(Device.DeckLinkSDI4K, ColourSpace.UYVY)
+    frame = VideoFrame(ColourSpace.UYVY, False)
     reader.get_frame(frame)
-    frame_shape = (frame.rows(), frame.cols(), 4)
+    frame_shape = (frame.rows() * frame.cols() * 2,)
 
     # prepare for creating encoders (writers)
+    print('The following line segfaults')
     tfac = VideoTargetFactory.get_instance()
+    print('This line does not get printed')
     frame_rate = reader.get_frame_rate()
 
     # create a red and green Dyer
@@ -198,6 +189,7 @@ if __name__ == '__main__':
 
     # create encoders for the red-dyed and yellow-dyed (as green
     # is applied on top of red) video streams
+    filename, ext = 'bm', '.mp4'
     red_file = os.path.join('.', ''.join([filename, '-red', ext]))
     red_writer = tfac.create_file_writer(Codec.HEVC, red_file, frame_rate)
     yellow_file = os.path.join('.', ''.join([filename, '-yellow', ext]))
