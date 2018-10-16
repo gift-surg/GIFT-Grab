@@ -24,6 +24,7 @@ namespace gg
 //!
 class VideoSourceFactory
 {
+protected:
     //!
     //! \brief So that can keep track of everything
     //! opened and in use
