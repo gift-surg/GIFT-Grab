@@ -297,7 +297,6 @@ pypi-epiphan-dvi2pcie-duo:
     - gift-epiphan-dvi2pcie-duo
   only:
     - this-branch-should-never-exist
-    - 20-support-for-capturing-bgra-frames-with-blackmagic-devices
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 epiphan-dvi2pcie-duo:
@@ -465,6 +464,7 @@ pypi-blackmagic-decklink-sdi-4k:
     - gift-blackmagic-decklink-sdi-4k
   only:
     - this-branch-should-never-exist
+    - 20-support-for-capturing-bgra-frames-with-blackmagic-devices
 
 blackmagic-decklink-sdi-4k:
   stage: test_cmake
