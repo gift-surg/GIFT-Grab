@@ -15,7 +15,8 @@ Please note that currently **only Python 2** is supported.
 
 * Capturing video streams using frame-grabber hardware, the following cards are supported:
    - [Epiphan DVI2PCIe Duo][e-dd]
-   - [Blackmagic DeckLink SDI 4K][bm-dls4]
+   - [Blackmagic DeckLink SDI 4K][bm-models]
+   - [Blackmagic DeckLink 4K Extreme 12G][bm-models]
 * Capturing standard-compliant network video streams
 * Reading (decoding) video files
 * Writing (encoding) video files (including real-time encoding), the following formats are supported:
@@ -52,7 +53,7 @@ Please note that currently **only Python 2** is supported.
 
 
 [e-dd]: http://www.epiphan.com/products/dvi2pcie-duo/
-[bm-dls4]: https://www.blackmagicdesign.com/products/decklink/models
+[bm-models]: https://www.blackmagicdesign.com/products/decklink/models
 [xvid]: https://www.xvid.com/
 [avi]: https://msdn.microsoft.com/en-us/library/windows/desktop/dd318189(v=vs.85).aspx
 [hevc]: http://www.itu.int/ITU-T/recommendations/rec.aspx?rec=11885
