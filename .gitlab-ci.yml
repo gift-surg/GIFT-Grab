@@ -485,3 +485,21 @@ blackmagic-decklink-sdi-4k:
     - gift-blackmagic-decklink-sdi-4k
   only:
     - this-branch-should-never-exist
+
+################## Device: Blackmagic DeckLink 4K Extreme 12G ##################
+blackmagic-decklink-4k-extreme-12g:
+  stage: test_cmake
+  script:
+    # prepare environment
+    - export BlackmagicSDK_DIR="/opt/blackmagic_sdk/10.11.1"
+    - export GiftGrab_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab-blackmagic-decklink-4k-extreme-12g"
+    - rm -rf "$GiftGrab_BUILD_DIR"
+    - mkdir -p "$GiftGrab_BUILD_DIR"
+    - cd "$GiftGrab_BUILD_DIR"
+    - cmake -D BUILD_PYTHON=ON -D BUILD_TESTS=ON -D USE_BLACKMAGIC_DECKLINK_4K_EXTREME_12G=ON -D ENABLE_NONFREE=ON "$GiftGrab_SOURCE_DIR"
+    - make -j; exit_on_fail
+    - ctest; exit_on_fail
+  tags:
+    - gift-blackmagic-decklink-4k-extreme-12g
+  only:
+    - this-branch-should-never-exist
