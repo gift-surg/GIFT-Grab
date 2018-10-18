@@ -3,22 +3,53 @@
 # Convenience script providing a higher-level CLI
 # for running tests selectively
 
+args_ok=true
+this_colour=""
+this_codec=""
+this_file_extension=""
+
+function parse_colour()
+{
+    if [ "$1" = "bgra" ] || [ "$1" = "i420" ] || [ "$1" = "uyvy" ]; then
+        this_colour=$1
+    else
+        args_ok=false
+    fi
+}
+
+function parse_codec()
+{
+    if [ "$1" = "hevc" ]; then
+        this_file_extension="mp4"
+    elif [ "$1" = "xvid" ]; then
+        this_file_extension="avi"
+    elif [ "$1" = "vp9" ]; then
+        this_file_extension="webm"
+    else
+        args_ok=false
+    fi
+
+    if [ "$args_ok" = true ]; then
+        this_codec=$1
+    fi
+}
+
 THIS_SCRIPT="$(basename "$(test -L "${BASH_SOURCE[0]}" && readlink "$0" || echo "$0")")"
 
-args_ok=true
 if [ $# -lt 1 ]; then
     args_ok=false
 elif [ "$1" = "encode" ] || [ "$1" = "decode" ];then
     if [ $# -ne "3" ]; then
         args_ok=false
     else
-        echo $2 $3  # TODO
+        parse_codec $2
+        parse_colour $3
     fi
 elif [ "$1" = "numpy" ]; then
     if [ $# -ne "2" ]; then
         args_ok=false
     else
-        echo $2  # TODO
+        parse_colour $2
     fi
 elif [ "$1" = "epiphan-dvi2pcieduo" ]; then
     printf "$1 option not implemented yet\n"  # TODO
