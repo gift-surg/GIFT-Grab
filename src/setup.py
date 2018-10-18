@@ -4,7 +4,7 @@ from distutils.errors import LibError
 from setuptools.command.install import install
 from distutils.command.build_ext import build_ext
 from distutils.command.install_lib import install_lib
-from os import mkdir, chdir, listdir, getcwd, link, rename
+from os import mkdir, chdir, link, rename
 from os.path import join, abspath, dirname
 from subprocess import check_output
 from sys import stderr
@@ -483,23 +483,6 @@ for port in ['sdi', 'dvi']:
              record_script += '=giftgrab.utils:record_epiphan_dvi2pcieduo_{}_{}_{}'.format(
                  port, colour_space, codec)
              console_scripts.append(record_script)
-for colour_space in ['bgra', 'i420', 'uyvy']:
-    for codec in ['xvid', 'hevc', 'vp9']:
-        target_script = 'test-giftgrab-{}-{}'.format(
-            codec, colour_space)
-        target_script += '=giftgrab.tests:test_{}_{}'.format(
-            codec, colour_space)
-        console_scripts.append(target_script)
-
-        file_script = 'test-giftgrab-file-{}-{}'.format(
-            codec, colour_space)
-        file_script += '=giftgrab.tests:test_file_{}_{}'.format(
-            codec, colour_space)
-        console_scripts.append(file_script)
-
-    numpy_script = 'test-giftgrab-numpy-{}'.format(colour_space)
-    numpy_script += '=giftgrab.tests:test_numpy_{}'.format(colour_space)
-    console_scripts.append(numpy_script)
 # Disabled the BGRA tests of Epiphan DVI2PCIe Duo (currently using OpenCV) until issue #115 is resolved
 #'test-giftgrab-epiphan-dvi2pcieduo-bgra=giftgrab.tests:test_epiphan_dvi2pcieduo_bgra',
 console_scripts = console_scripts +\
@@ -563,10 +546,6 @@ setup(
         'console_scripts': console_scripts,
     },
     package_data={'giftgrab.tests': ['*.py',
-                                     join('target', '*.py'),
-                                     join('videoframe', '*.py'),
-                                     join('files', '*.py'),
-                                     join('files', 'data', 'video_15frames_30fps.*'),
                                      join('epiphan', 'dvi2pcieduo', '*.py'),
                                      join('epiphan', 'dvi2pcieduo', 'data', '*.yml'),
                                      join('blackmagic', 'decklinksdi4k', '*.py'),
