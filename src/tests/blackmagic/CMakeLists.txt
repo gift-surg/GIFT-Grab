@@ -6,10 +6,10 @@ FILE(COPY
 )
 
 # VideoSourceFactory
-SET(VIDEO_SOURCE_FACTORY_TEST test_video_source_factory_blackmagic_decklinksdi4k)
+SET(VIDEO_SOURCE_FACTORY_TEST test_video_source_factory_blackmagic)
 ADD_EXECUTABLE(
     ${VIDEO_SOURCE_FACTORY_TEST}
-    ${CMAKE_SOURCE_DIR}/tests/blackmagic/decklinksdi4k/test_video_source_factory.cpp
+    ${CMAKE_SOURCE_DIR}/tests/blackmagic/test_video_source_factory.cpp
 )
 TARGET_LINK_LIBRARIES(
     ${VIDEO_SOURCE_FACTORY_TEST}
