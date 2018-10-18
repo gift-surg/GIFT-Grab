@@ -88,8 +88,10 @@ elif [ "$1" = "numpy" ]; then
     fi
 elif [ "$1" = "epiphan-dvi2pcieduo" ]; then
     printf "$1 option not implemented yet\n"  # TODO
+    args_ok=false
 elif [ "$1" = "network" ]; then
     printf "$1 option not implemented yet\n"  # TODO
+    args_ok=false
 elif [ "$1" = "blackmagic-decklinksdi4k" ]; then
     if [ $# -ne "1" ]; then
         args_ok=false
