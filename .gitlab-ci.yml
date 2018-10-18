@@ -526,6 +526,7 @@ pypi-blackmagic-decklink-4k-extreme-12g:
     - gift-blackmagic-decklink-4k-extreme-12g
   only:
     - this-branch-should-never-exist
+    - 23-support-for-blackmagic-decklink-4k-extreme-12g
 
 blackmagic-decklink-4k-extreme-12g:
   stage: test_cmake
@@ -543,3 +544,4 @@ blackmagic-decklink-4k-extreme-12g:
     - gift-blackmagic-decklink-4k-extreme-12g
   only:
     - this-branch-should-never-exist
+    - 23-support-for-blackmagic-decklink-4k-extreme-12g
