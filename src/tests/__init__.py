@@ -18,8 +18,6 @@ epiphan_dvi2pcieduo_config_dir = abspath(
 blackmagic_decklinksdi4k_working_dir = abspath(
     resource_filename('giftgrab.tests',
                       join('blackmagic', 'decklinksdi4k')))
-videoframe_working_dir = abspath(
-    resource_filename('giftgrab.tests', 'videoframe'))
 
 
 def __run_target_tests(codec, colour_space):
@@ -191,12 +189,6 @@ def __run_network_tests(colour_space):
     if ret: exit(ret)
 
 
-def __run_numpy_tests(colour_space):
-    ret = main(['--colour-space=%s' % (colour_space),
-                videoframe_working_dir, '-m', 'numpy_compatibility'])
-    if ret: exit(ret)
-
-
 def test_epiphan_dvi2pcieduo_bgra():
     __run_epiphan_tests('BGRA')
 
@@ -215,11 +207,3 @@ def test_network_sources_bgra():
 
 def test_network_sources_i420():
     __run_network_tests('I420')
-
-
-def test_numpy_bgra():
-    __run_numpy_tests('BGRA')
-
-
-def test_numpy_i420():
-    __run_numpy_tests('I420')
