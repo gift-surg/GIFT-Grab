@@ -8,6 +8,26 @@ THIS_SCRIPT="$(basename "$(test -L "${BASH_SOURCE[0]}" && readlink "$0" || echo 
 args_ok=true
 if [ $# -lt 1 ]; then
     args_ok=false
+elif [ "$1" = "encode" ] || [ "$1" = "decode" ];then
+    if [ $# -ne "3" ]; then
+        args_ok=false
+    else
+        echo $2 $3  # TODO
+    fi
+elif [ "$1" = "numpy" ]; then
+    if [ $# -ne "2" ]; then
+        args_ok=false
+    else
+        echo $2  # TODO
+    fi
+elif [ "$1" = "epiphan-dvi2pcieduo" ]; then
+    printf "$1 option not implemented yet\n"  # TODO
+elif [ "$1" = "network" ]; then
+    printf "$1 option not implemented yet\n"  # TODO
+elif [ "$1" = "blackmagic-decklinksdi4k" ]; then
+    printf "$1 option not implemented yet\n"  # TODO
+else
+    args_ok=false
 fi
 
 if [ "$args_ok" != true ];
