@@ -3,6 +3,8 @@
 # Convenience script providing a higher-level CLI
 # for running tests selectively
 
+THIS_SCRIPT="$(basename "$(test -L "${BASH_SOURCE[0]}" && readlink "$0" || echo "$0")")"
+
 args_ok=true
 test_colour_space=""
 test_codec=""
@@ -14,6 +16,8 @@ test_file_frame_count=15
 test_file_frame_width=128
 test_file_frame_height=64
 
+
+# Function for parsing passed CLI argument for colour space
 function parse_colour()
 {
     if [ "$1" = "bgra" ] || [ "$1" = "i420" ] || [ "$1" = "uyvy" ]; then
@@ -23,6 +27,8 @@ function parse_colour()
     fi
 }
 
+
+# Function for parsing passed CLI argument for codec
 function parse_codec()
 {
     if [ "$1" = "hevc" ]; then
@@ -40,8 +46,8 @@ function parse_codec()
     fi
 }
 
-THIS_SCRIPT="$(basename "$(test -L "${BASH_SOURCE[0]}" && readlink "$0" || echo "$0")")"
 
+# Compose actual command to run based on CLI arguments
 if [ $# -lt 1 ]; then
     args_ok=false
 elif [ "$1" = "encode" ] || [ "$1" = "decode" ];then
@@ -90,6 +96,8 @@ else
     args_ok=false
 fi
 
+
+# Display synopsis in case there is a problem
 if [ "$args_ok" != true ];
 then
     printf "Usage:\t${THIS_SCRIPT} encode | decode CODEC COLOUR\n"
@@ -102,4 +110,6 @@ then
     exit 1
 fi
 
-echo $test_cmd
+
+# Run the command, as everything seems fine
+echo "Will run: $test_cmd"
