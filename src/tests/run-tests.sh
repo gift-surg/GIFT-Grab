@@ -4,9 +4,9 @@
 # for running tests selectively
 
 args_ok=true
-this_colour=""
-this_codec=""
-this_file_extension=""
+test_colour_space=""
+test_codec=""
+test_file_extension=""
 test_cmd="pytest"
 test_dir="$GiftGrab_SOURCE_DIR/tests"
 test_file_frame_rate=30
@@ -17,7 +17,7 @@ test_file_frame_height=64
 function parse_colour()
 {
     if [ "$1" = "bgra" ] || [ "$1" = "i420" ] || [ "$1" = "uyvy" ]; then
-        this_colour=$1
+        test_colour_space=$1
     else
         args_ok=false
     fi
@@ -26,17 +26,17 @@ function parse_colour()
 function parse_codec()
 {
     if [ "$1" = "hevc" ]; then
-        this_file_extension="mp4"
+        test_file_extension="mp4"
     elif [ "$1" = "xvid" ]; then
-        this_file_extension="avi"
+        test_file_extension="avi"
     elif [ "$1" = "vp9" ]; then
-        this_file_extension="webm"
+        test_file_extension="webm"
     else
         args_ok=false
     fi
 
     if [ "$args_ok" = true ]; then
-        this_codec=$1
+        test_codec=$1
     fi
 }
 
@@ -51,14 +51,14 @@ elif [ "$1" = "encode" ] || [ "$1" = "decode" ];then
         parse_codec $2
         parse_colour $3
         if [ "$args_ok" = true ]; then
-            test_cmd="$test_cmd --colour-space=$this_colour"
+            test_cmd="$test_cmd --colour-space=$test_colour_space"
             if [ "$1" = "encode" ]; then
-                test_cmd="$test_cmd --codec=$this_codec $test_dir/target"
+                test_cmd="$test_cmd --codec=$test_codec $test_dir/target"
             else  # decode
                 test_file="$test_dir/files/data"
                 test_file="$test_file/video_${test_file_frame_count}frames"
                 test_file="${test_file}_${test_file_frame_rate}fps"
-                test_file="${test_file}.${this_file_extension}"
+                test_file="${test_file}.${test_file_extension}"
                 test_cmd="$test_cmd --filepath=$test_file"
                 test_cmd="$test_cmd --frame-rate=$test_file_frame_rate"
                 test_cmd="$test_cmd --frame-count=$test_file_frame_count"
@@ -73,10 +73,10 @@ elif [ "$1" = "numpy" ]; then
         args_ok=false
     else
         parse_colour $2
-        if [ "$this_colour" = "uyvy" ]; then
+        if [ "$test_colour_space" = "uyvy" ]; then
             args_ok=false
         else
-            test_cmd="$test_cmd --colour-space=$this_colour"
+            test_cmd="$test_cmd --colour-space=$test_colour_space"
             test_cmd="$test_cmd $test_dir/videoframe -m numpy_compatibility"
         fi
     fi
