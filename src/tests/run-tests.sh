@@ -49,7 +49,11 @@ elif [ "$1" = "numpy" ]; then
     if [ $# -ne "2" ]; then
         args_ok=false
     else
-        parse_colour $2
+        if [ "$2" = "uyvy" ]; then
+            args_ok=false
+        else
+            parse_colour $2
+        fi
     fi
 elif [ "$1" = "epiphan-dvi2pcieduo" ]; then
     printf "$1 option not implemented yet\n"  # TODO
