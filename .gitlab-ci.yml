@@ -178,7 +178,7 @@ pypi:
     - test-giftgrab-file-hevc-uyvy; exit_on_fail
     - test-giftgrab-file-xvid-bgra; exit_on_fail
     - test-giftgrab-file-xvid-i420; exit_on_fail
-    - test-giftgrab-file-xvid-i420; exit_on_fail
+    - test-giftgrab-file-xvid-uyvy; exit_on_fail
     # not executing VP9 tests due to issue #189
     # - test-giftgrab-file-vp9-bgra; exit_on_fail
     # - test-giftgrab-file-vp9-i420; exit_on_fail
