@@ -4,7 +4,7 @@ from distutils.errors import LibError
 from setuptools.command.install import install
 from distutils.command.build_ext import build_ext
 from distutils.command.install_lib import install_lib
-from os import mkdir, chdir, listdir, getcwd, link, rename
+from os import mkdir, chdir, link, rename
 from os.path import join, abspath, dirname
 from subprocess import check_output
 from sys import stderr
