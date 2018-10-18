@@ -483,13 +483,6 @@ for port in ['sdi', 'dvi']:
              record_script += '=giftgrab.utils:record_epiphan_dvi2pcieduo_{}_{}_{}'.format(
                  port, colour_space, codec)
              console_scripts.append(record_script)
-for colour_space in ['bgra', 'i420', 'uyvy']:
-    for codec in ['xvid', 'hevc', 'vp9']:
-        target_script = 'test-giftgrab-{}-{}'.format(
-            codec, colour_space)
-        target_script += '=giftgrab.tests:test_{}_{}'.format(
-            codec, colour_space)
-        console_scripts.append(target_script)
 # Disabled the BGRA tests of Epiphan DVI2PCIe Duo (currently using OpenCV) until issue #115 is resolved
 #'test-giftgrab-epiphan-dvi2pcieduo-bgra=giftgrab.tests:test_epiphan_dvi2pcieduo_bgra',
 console_scripts = console_scripts +\
