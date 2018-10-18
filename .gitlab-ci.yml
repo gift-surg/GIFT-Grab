@@ -290,7 +290,7 @@ pypi-epiphan-dvi2pcie-duo:
     - rm -f ./*.mp4 ./*.avi ./*.webm
     # Run the actual NumPy tests
     - pip install numpy
-    - test-giftgrab-numpy-i420; exit_on_fail
+    - $TEST_LAUNCHER numpy i420; exit_on_fail
     - unset USE_EPIPHANSDK  # remove dummy var
     - deactivate
   tags:
