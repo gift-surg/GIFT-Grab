@@ -52,69 +52,6 @@ def test_vp9_i420():
     __run_target_tests('VP9', 'I420')
 
 
-def __run_file_tests(codec, colour_space):
-    working_dir = abspath(resource_filename('giftgrab.tests', 'files'))
-    data_dir = abspath(resource_filename('giftgrab.tests',
-                       join('files', 'data')))
-    if codec == 'HEVC':
-        extension = '.mp4'
-    elif codec == 'Xvid':
-        extension = '.avi'
-    elif codec == 'VP9':
-        extension = '.webm'
-    frame_count = 15
-    frame_rate = 30
-    filename = 'video_{}frames_{}fps{}'.format(
-                    frame_count, frame_rate, extension)
-    filepath = os.path.join(data_dir, filename)
-    frame_width = 128
-    frame_height = 64
-    ret = main(['--colour-space={}'.format(colour_space),
-                '--filepath={}'.format(filepath),
-                '--frame-rate={}'.format(frame_rate),
-                '--frame-count={}'.format(frame_count),
-                '--frame-width={}'.format(frame_width),
-                '--frame-height={}'.format(frame_height),
-                working_dir, '-m', 'observer_pattern'])
-    if ret: exit(ret)
-
-
-def test_file_hevc_bgra():
-    __run_file_tests('HEVC', 'BGRA')
-
-
-def test_file_hevc_i420():
-    __run_file_tests('HEVC', 'I420')
-
-
-def test_file_hevc_uyvy():
-    __run_file_tests('HEVC', 'UYVY')
-
-
-def test_file_xvid_bgra():
-    __run_file_tests('Xvid', 'BGRA')
-
-
-def test_file_xvid_i420():
-    __run_file_tests('Xvid', 'I420')
-
-
-def test_file_xvid_uyvy():
-    __run_file_tests('Xvid', 'UYVY')
-
-
-def test_file_vp9_bgra():
-    __run_file_tests('VP9', 'BGRA')
-
-
-def test_file_vp9_i420():
-    __run_file_tests('VP9', 'I420')
-
-
-def test_file_vp9_uyvy():
-    __run_file_tests('VP9', 'UYVY')
-
-
 def __run_epiphan_tests(colour_space):
     for port in ['SDI', 'DVI']:
         ret = main(['--colour-space=%s' % (colour_space),
