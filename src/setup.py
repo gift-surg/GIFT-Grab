@@ -496,10 +496,6 @@ for colour_space in ['bgra', 'i420', 'uyvy']:
         file_script += '=giftgrab.tests:test_file_{}_{}'.format(
             codec, colour_space)
         console_scripts.append(file_script)
-
-    numpy_script = 'test-giftgrab-numpy-{}'.format(colour_space)
-    numpy_script += '=giftgrab.tests:test_numpy_{}'.format(colour_space)
-    console_scripts.append(numpy_script)
 # Disabled the BGRA tests of Epiphan DVI2PCIe Duo (currently using OpenCV) until issue #115 is resolved
 #'test-giftgrab-epiphan-dvi2pcieduo-bgra=giftgrab.tests:test_epiphan_dvi2pcieduo_bgra',
 console_scripts = console_scripts +\
