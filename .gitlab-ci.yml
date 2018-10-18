@@ -8,6 +8,8 @@ before_script:
   - export SCRATCH_DIR="$SCRATCH_DIR/$REVHASH"
   - mkdir -p $SCRATCH_DIR
   - export GiftGrab_SOURCE_DIR="$(pwd)/src"
+  # Path to the convenience script for launching tests
+  - export RUN_TESTS="${GiftGrab_SOURCE_DIR}/tests/run-tests.sh"
   - source "$CI_SCRIPTS_DIR/utils.sh"
   - export BOOST_163_ROOT_DIR="/home/gitlab-runner/environments/giftgrab/boost163"
 
@@ -139,8 +141,6 @@ pypi:
     - set +e
     - pip install -vvv --upgrade "$PyPI_INSTALLER"; exit_on_success
     - set -e
-    # Path to the convenience script for launching tests
-    - RUN_TESTS="${GiftGrab_SOURCE_DIR}/tests/run-tests.sh"
     # HEVC support
     - pip install -vvv --install-option="--hevc" --upgrade "$PyPI_INSTALLER"
     - $RUN_TESTS encode hevc bgra; exit_on_fail
