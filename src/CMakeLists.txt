@@ -27,6 +27,8 @@ OPTION(USE_NETWORK_SOURCES
     "Capture video from network sources" OFF)
 OPTION(USE_BLACKMAGIC_DECKLINK_SDI_4K
     "Capture video with Blackmagic DeckLink SDI 4K" OFF)
+OPTION(USE_BLACKMAGIC_DECKLINK_4K_EXTREME_12G
+    "Capture video with Blackmagic DeckLink 4K Extreme 12G" OFF)
 OPTION(USE_FILES
     "Support for reading video files" OFF)
 OPTION(USE_HEVC
@@ -81,10 +83,12 @@ if(USE_EPIPHANSDK AND NOT ENABLE_NONFREE)
     MESSAGE(FATAL_ERROR
         "Epiphan video grabbing SDK has a proprietary licence: you must explicitly enable non-free (ENABLE_NONFREE=ON) to build GIFT-Grab with Epiphan video grabbing SDK support.")
 endif(USE_EPIPHANSDK AND NOT ENABLE_NONFREE)
-if(USE_BLACKMAGIC_DECKLINK_SDI_4K AND NOT ENABLE_NONFREE)
-    MESSAGE(FATAL_ERROR
-        "Blackmagic Desktop Video SDK has a proprietary licence: you must explicitly enable non-free (ENABLE_NONFREE=ON) to build GIFT-Grab with Blackmagic DeckLink SDI 4K support")
-endif(USE_BLACKMAGIC_DECKLINK_SDI_4K AND NOT ENABLE_NONFREE)
+if(USE_BLACKMAGIC_DECKLINK_SDI_4K OR USE_BLACKMAGIC_DECKLINK_4K_EXTREME_12G)
+    if(NOT ENABLE_NONFREE)
+        MESSAGE(FATAL_ERROR
+            "Blackmagic Desktop Video SDK has a proprietary licence: you must explicitly enable non-free (ENABLE_NONFREE=ON) to build GIFT-Grab with Blackmagic DeckLink SDI 4K support")
+    endif(NOT ENABLE_NONFREE)
+endif(USE_BLACKMAGIC_DECKLINK_SDI_4K OR USE_BLACKMAGIC_DECKLINK_4K_EXTREME_12G)
 
 # Check GPL explicitly enabled for relevant components
 if(USE_X265 AND NOT ENABLE_GPL)
@@ -119,11 +123,11 @@ if(USE_NETWORK_SOURCES)
 endif(USE_NETWORK_SOURCES)
 
 # Check at least one colour space activated if using Blackmagic DeckLink SDI 4K
-if(USE_BLACKMAGIC_DECKLINK_SDI_4K)
+if(USE_BLACKMAGIC_DECKLINK_SDI_4K OR USE_BLACKMAGIC_DECKLINK_4K_EXTREME_12G)
     if(NOT USE_UYVY)
         MESSAGE(FATAL_ERROR "UYVY colour space must be activated to use Blackmagic DeckLink SDI 4K")
     endif(NOT USE_UYVY)
-endif(USE_BLACKMAGIC_DECKLINK_SDI_4K)
+endif(USE_BLACKMAGIC_DECKLINK_SDI_4K OR USE_BLACKMAGIC_DECKLINK_4K_EXTREME_12G)
 
 # Determine whether OpenCV needed
 if(((USE_EPIPHAN_DVI2PCIE_DUO OR USE_NETWORK_SOURCES) AND USE_BGRA) OR
@@ -142,9 +146,9 @@ if(USE_NETWORK_SOURCES AND USE_I420)
 endif(USE_NETWORK_SOURCES AND USE_I420)
 
 # Determine if Blackmagic Desktop Video SDK needed
-if(USE_BLACKMAGIC_DECKLINK_SDI_4K)
+if(USE_BLACKMAGIC_DECKLINK_SDI_4K OR USE_BLACKMAGIC_DECKLINK_4K_EXTREME_12G)
     SET(USE_BLACKMAGICSDK ON CACHE BOOL "OFF ON" FORCE)
-endif(USE_BLACKMAGIC_DECKLINK_SDI_4K)
+endif(USE_BLACKMAGIC_DECKLINK_SDI_4K OR USE_BLACKMAGIC_DECKLINK_4K_EXTREME_12G)
 
 # Determine whether FFmpeg needed
 if(USE_HEVC OR USE_VP9 OR USE_FILES)
