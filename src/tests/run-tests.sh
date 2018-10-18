@@ -91,7 +91,18 @@ elif [ "$1" = "epiphan-dvi2pcieduo" ]; then
 elif [ "$1" = "network" ]; then
     printf "$1 option not implemented yet\n"  # TODO
 elif [ "$1" = "blackmagic-decklinksdi4k" ]; then
-    printf "$1 option not implemented yet\n"  # TODO
+    if [ $# -ne "1" ]; then
+        args_ok=false
+    else
+        test_colour_space="uyvy"
+        test_cmd="$test_cmd --colour-space=$test_colour_space"
+        test_cmd_working_dir="$test_dir/blackmagic/decklinksdi4k"
+        test_cmd="$test_cmd "
+        test_cmd_unit="$test_cmd $test_cmd_working_dir -m unit"
+        test_cmd_observer="$test_cmd --frame-rate=27 --observers=3"
+        test_cmd_observer="$test_cmd_observer $test_cmd_working_dir -m observer_pattern"
+        test_cmd="$test_cmd_unit && $test_cmd_observer"
+    fi
 else
     args_ok=false
 fi
