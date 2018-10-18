@@ -466,6 +466,7 @@ pypi-blackmagic-decklink-sdi-4k:
     - gift-blackmagic-decklink-sdi-4k
   only:
     - this-branch-should-never-exist
+    - 23-support-for-blackmagic-decklink-4k-extreme-12g
 
 blackmagic-decklink-sdi-4k:
   stage: test_cmake
@@ -485,6 +486,7 @@ blackmagic-decklink-sdi-4k:
     - gift-blackmagic-decklink-sdi-4k
   only:
     - this-branch-should-never-exist
+    - 23-support-for-blackmagic-decklink-4k-extreme-12g
 
 ################## Device: Blackmagic DeckLink 4K Extreme 12G ##################
 pypi-blackmagic-decklink-4k-extreme-12g:
