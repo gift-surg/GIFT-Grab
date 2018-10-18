@@ -113,3 +113,4 @@ fi
 
 # Run the command, as everything seems fine
 echo "Will run: $test_cmd"
+$test_cmd
