@@ -64,7 +64,7 @@ endif(USE_NETWORK_SOURCES)
 
 # Blackmagic DeckLink SDI 4K tests
 if(USE_BLACKMAGIC_DECKLINK_SDI_4K)
-    SUBDIRS(blackmagic/decklinksdi4k)
+    SUBDIRS(blackmagic)
 endif(USE_BLACKMAGIC_DECKLINK_SDI_4K)
 
 # Support for reading video files
