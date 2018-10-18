@@ -493,7 +493,7 @@ pypi-blackmagic-decklink-4k-extreme-12g:
   stage: test_pypi
   script:
     # prepare environment
-    - export BlackmagicSDK_DIR="/opt/blackmagic_sdk/10.11.1"
+    - export BlackmagicSDK_DIR="/opt/blackmagic_sdk"
     - GiftGrab_PyPI_BUILD_DIR="$SCRATCH_DIR/pypi-blackmagic-decklink-4k-extreme-12g"
     - GiftGrab_PyPI_INSTALL_DIR="$GiftGrab_PyPI_BUILD_DIR/install"
     - GiftGrab_venv=venv
@@ -532,7 +532,7 @@ blackmagic-decklink-4k-extreme-12g:
   stage: test_cmake
   script:
     # prepare environment
-    - export BlackmagicSDK_DIR="/opt/blackmagic_sdk/10.11.1"
+    - export BlackmagicSDK_DIR="/opt/blackmagic_sdk"
     - export GiftGrab_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab-blackmagic-decklink-4k-extreme-12g"
     - rm -rf "$GiftGrab_BUILD_DIR"
     - mkdir -p "$GiftGrab_BUILD_DIR"
