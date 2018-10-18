@@ -7,6 +7,12 @@ args_ok=true
 this_colour=""
 this_codec=""
 this_file_extension=""
+test_cmd="pytest"
+test_dir="$GiftGrab_SOURCE_DIR/tests"
+test_file_frame_rate=30
+test_file_frame_count=15
+test_file_frame_width=128
+test_file_frame_height=64
 
 function parse_colour()
 {
@@ -44,15 +50,34 @@ elif [ "$1" = "encode" ] || [ "$1" = "decode" ];then
     else
         parse_codec $2
         parse_colour $3
+        if [ "$args_ok" = true ]; then
+            test_cmd="$test_cmd --colour-space=$this_colour"
+            if [ "$1" = "encode" ]; then
+                test_cmd="$test_cmd --codec=$this_codec $test_dir/target"
+            else  # decode
+                test_file="$test_dir/files/data"
+                test_file="$test_file/video_${test_file_frame_count}frames"
+                test_file="${test_file}_${test_file_frame_rate}fps"
+                test_file="${test_file}.${this_file_extension}"
+                test_cmd="$test_cmd --filepath=$test_file"
+                test_cmd="$test_cmd --frame-rate=$test_file_frame_rate"
+                test_cmd="$test_cmd --frame-count=$test_file_frame_count"
+                test_cmd="$test_cmd --frame-width=$test_file_frame_width"
+                test_cmd="$test_cmd --frame-height=$test_file_frame_height"
+                test_cmd="$test_cmd $test_dir/files -m observer_pattern"
+            fi
+        fi
     fi
 elif [ "$1" = "numpy" ]; then
     if [ $# -ne "2" ]; then
         args_ok=false
     else
-        if [ "$2" = "uyvy" ]; then
+        parse_colour $2
+        if [ "$this_colour" = "uyvy" ]; then
             args_ok=false
         else
-            parse_colour $2
+            test_cmd="$test_cmd --colour-space=$this_colour"
+            test_cmd="$test_cmd $test_dir/videoframe -m numpy_compatibility"
         fi
     fi
 elif [ "$1" = "epiphan-dvi2pcieduo" ]; then
@@ -76,3 +101,5 @@ then
     printf " or:\t${THIS_SCRIPT} blackmagic-decklinksdi4k\n"
     exit 1
 fi
+
+echo $test_cmd
