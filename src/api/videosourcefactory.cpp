@@ -165,15 +165,14 @@ IVideoSource * VideoSourceFactory::get_device(Device device,
 #ifdef USE_BLACKMAGICSDK
         switch (colour)
         {
-
-        // BGRA ========================================
-        case BGRA:
         // UYVY ========================================
         case UYVY:
             break;
 
         // I420 ========================================
         case I420:
+        // BGRA ========================================
+        case BGRA:
         default:
             throw VideoSourceError("Colour space not supported for"
                                    " Blackmagic DeckLink SDI 4K");
