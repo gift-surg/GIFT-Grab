@@ -17,6 +17,7 @@ enum Device
     DVI2PCIeDuo_DVI
     , DVI2PCIeDuo_SDI
     , DeckLinkSDI4K
+    , DeckLink4KExtreme12G
 };
 
 }
