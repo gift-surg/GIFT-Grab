@@ -32,14 +32,14 @@ protected:
     //! array is to be kept in sync with the
     //! number of devices supported
     //!
-    IVideoSource * _devices[NUM_DEVICES];
+    IVideoSource * _devices[Device::COUNT];
 
     //!
     //! \brief At a single point in time, only one
     //! connection using only one colour space
     //! may exist
     //!
-    ColourSpace _device_colours[NUM_DEVICES];
+    ColourSpace _device_colours[Device::COUNT];
 
 protected:
     //!
