@@ -167,7 +167,7 @@ if __name__ == '__main__':
     sfac = VideoSourceFactory.get_instance()
 
     if video_input == 'decklink':
-        filename = 'decklink'
+        filename, ext = 'decklink', '.mp4'
 
         # start acquiring frames from a DeckLink 4K Extreme 12G
         source = sfac.get_device(Device.DeckLink4KExtreme12G, ColourSpace.BGRA)
