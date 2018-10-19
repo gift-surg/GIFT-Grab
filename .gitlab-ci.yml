@@ -467,6 +467,7 @@ pypi-blackmagic-decklink-sdi-4k:
   only:
     - this-branch-should-never-exist
     - 23-support-for-blackmagic-decklink-4k-extreme-12g
+    - 20-support-for-capturing-bgra-frames-with-blackmagic-devices
 
 blackmagic-decklink-sdi-4k:
   stage: test_cmake
@@ -487,6 +488,7 @@ blackmagic-decklink-sdi-4k:
   only:
     - this-branch-should-never-exist
     - 23-support-for-blackmagic-decklink-4k-extreme-12g
+    - 20-support-for-capturing-bgra-frames-with-blackmagic-devices
 
 ################## Device: Blackmagic DeckLink 4K Extreme 12G ##################
 pypi-blackmagic-decklink-4k-extreme-12g:
