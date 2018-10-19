@@ -190,12 +190,12 @@ IVideoSource * VideoSourceFactory::get_device(Device device,
         {
         // UYVY ========================================
         case UYVY:
+        // BGRA ========================================
+        case BGRA:
             break;
 
         // I420 ========================================
         case I420:
-        // BGRA ========================================
-        case BGRA:
         default:
             throw VideoSourceError("Colour space not supported by"
                                    " Blackmagic DeckLink 4K Extreme 12G");
