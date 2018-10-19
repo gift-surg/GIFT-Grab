@@ -93,10 +93,13 @@ elif [ "$1" = "network" ]; then
     printf "$1 option not implemented yet\n"  # TODO
     args_ok=false
 elif [ "$1" = "blackmagic-decklinksdi4k" ] || [ "$1" = "blackmagic-decklink4kextreme12g" ]; then
+    test_device=$1
+    test_device=${test_device:11}
     if [ $# -ne "1" ]; then
         args_ok=false
     else
         test_colour_space="uyvy"
+        test_cmd="$test_cmd --device=$test_device"
         test_cmd="$test_cmd --colour-space=$test_colour_space"
         test_cmd_working_dir="$test_dir/blackmagic"
         test_cmd_unit="$test_cmd $test_cmd_working_dir -m unit"
