@@ -1,5 +1,5 @@
-from pytest import yield_fixture, fail, mark
-from pygiftgrab import VideoSourceFactory, VideoFrame, ColourSpace, Device
+from pytest import yield_fixture, mark
+from pygiftgrab import VideoSourceFactory, VideoFrame, ColourSpace
 
 source = None
 frame = None
@@ -17,17 +17,16 @@ sub2_height = 0
 
 
 @yield_fixture(scope='session')
-def peri_test(colour_space):
+def peri_test(device, colour_space):
     # This section runs before each test
     factory = VideoSourceFactory.get_instance()
     global source
     try:
-        source = factory.get_device(Device.DeckLinkSDI4K, colour_space)
+        source = factory.get_device(device, colour_space)
     except IOError as e:
         raise RuntimeError(
-            'Could not connect to Blackmagic DeckLink SDI 4K,\n' +
-            'The detailed error was:\n' +
-            e.message
+            'Could not connect to Blackmagic device {},\n'
+            'The detailed error was:{}\n'.format(device, e.message)
         )
     assert source is not None
 

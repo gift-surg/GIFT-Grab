@@ -10,12 +10,12 @@ import time
 
 
 @mark.observer_pattern
-def test_frame_rate(colour_space, frame_rate, observers):
+def test_frame_rate(device, colour_space, frame_rate, observers):
     timers = []
     for i in range(observers):
         timers.append(FrameRateTimer(frame_rate))
     factory = pgg.VideoSourceFactory.get_instance()
-    source = factory.get_device(pgg.Device.DeckLinkSDI4K, colour_space)
+    source = factory.get_device(device, colour_space)
 
     for timer in timers:
         source.attach(timer)

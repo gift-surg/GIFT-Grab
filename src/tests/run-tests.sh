@@ -88,10 +88,25 @@ elif [ "$1" = "numpy" ]; then
     fi
 elif [ "$1" = "epiphan-dvi2pcieduo" ]; then
     printf "$1 option not implemented yet\n"  # TODO
+    args_ok=false
 elif [ "$1" = "network" ]; then
     printf "$1 option not implemented yet\n"  # TODO
-elif [ "$1" = "blackmagic-decklinksdi4k" ]; then
-    printf "$1 option not implemented yet\n"  # TODO
+    args_ok=false
+elif [ "$1" = "blackmagic-decklinksdi4k" ] || [ "$1" = "blackmagic-decklink4kextreme12g" ]; then
+    test_device=$1
+    test_device=${test_device:11}
+    if [ $# -ne "1" ]; then
+        args_ok=false
+    else
+        test_colour_space="uyvy"
+        test_cmd="$test_cmd --device=$test_device"
+        test_cmd="$test_cmd --colour-space=$test_colour_space"
+        test_cmd_working_dir="$test_dir/blackmagic"
+        test_cmd_unit="$test_cmd $test_cmd_working_dir -m unit"
+        test_cmd_observer="$test_cmd --frame-rate=27 --observers=3"
+        test_cmd_observer="$test_cmd_observer $test_cmd_working_dir -m observer_pattern"
+        test_cmd="$test_cmd_unit && $test_cmd_observer"
+    fi
 else
     args_ok=false
 fi
@@ -107,11 +122,14 @@ then
     printf " or:\t${THIS_SCRIPT} epiphan-dvi2pcieduo bgra | i420\n"
     printf " or:\t${THIS_SCRIPT} network\n"
     printf " or:\t${THIS_SCRIPT} blackmagic-decklinksdi4k\n"
+    printf " or:\t${THIS_SCRIPT} blackmagic-decklink4kextreme12g\n"
     exit 1
 fi
 
 
 # Run the command, as everything seems fine
 echo "Will run: $test_cmd"
-$test_cmd
-echo "Exit code was: $?"
+eval $test_cmd
+exit_code=$?
+echo "Exit code was: $exit_code"
+exit $exit_code

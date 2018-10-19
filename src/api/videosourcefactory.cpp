@@ -20,7 +20,7 @@ namespace gg
 
 VideoSourceFactory::VideoSourceFactory()
 {
-    for (size_t i = 0; i < NUM_DEVICES; i++)
+    for (size_t i = 0; i < Device::COUNT; i++)
         _devices[i] = nullptr;
 }
 
@@ -159,28 +159,28 @@ IVideoSource * VideoSourceFactory::get_device(Device device,
         }
         break;
 
-    // Blackmagic DeckLink SDI 4K ========================================
+    // Blackmagic devices ========================================
     case DeckLinkSDI4K:
+    case DeckLink4KExtreme12G:
 #ifdef USE_BLACKMAGICSDK
         switch (colour)
         {
-
-        // BGRA ========================================
-        case BGRA:
         // UYVY ========================================
         case UYVY:
             break;
 
         // I420 ========================================
         case I420:
+        // BGRA ========================================
+        case BGRA:
         default:
             throw VideoSourceError("Colour space not supported for"
-                                   " Blackmagic DeckLink SDI 4K");
+                                   " Blackmagic devices");
         }
         src = new VideoSourceBlackmagicSDK(0, colour);
 #else
         throw VideoSourceError(
-            "Blackmagic DeckLink SDI 4K supported only through"
+            "Blackmagic devices supported only through"
             " Blackmagic Desktop Video SDK");
 #endif
         break;
@@ -234,6 +234,7 @@ void VideoSourceFactory::free_device(Device device)
     case DVI2PCIeDuo_DVI:
     case DVI2PCIeDuo_SDI:
     case DeckLinkSDI4K:
+    case DeckLink4KExtreme12G:
         break; // everything up to here is recognised
     default:
         std::string msg;

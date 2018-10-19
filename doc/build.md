@@ -70,6 +70,14 @@ This option **makes GIFT-Grab undistributable**.
 [uyvy]: https://wiki.videolan.org/YUV#UYVY
 
 
+## Blackmagic DeckLink 4K Extreme 12G
+
+`-D USE_BLACKMAGIC_DECKLINK_4K_EXTREME_12G=ON -D ENABLE_NONFREE=ON` (requires [Blackmagic Desktop Video SDK](tips.md#blackmagic-drivers-and-blackmagic-desktop-video-sdk))
+
+This currently works only with the [UYVY][uyvy] colour space (active by default).
+This option **makes GIFT-Grab undistributable**.
+
+
 ## Network streams
 
 `-D USE_NETWORK_SOURCES=ON` (requires [OpenCV](tips.md#opencv) and [libVLC](tips.md#libvlc))

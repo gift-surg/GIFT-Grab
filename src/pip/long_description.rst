@@ -27,6 +27,7 @@ Features
 * Capturing video streams using frame-grabber hardware, the following cards are supported:
    - `Epiphan DVI2PCIe Duo`_
    - `Blackmagic DeckLink SDI 4K`_
+   - `Blackmagic DeckLink 4K Extreme 12G`_
 * Capturing standard-compliant network video streams
 * Reading (decoding) video files
 * Writing (encoding) video files (including real-time encoding), the following formats are supported:
@@ -37,6 +38,7 @@ Features
 
 .. _`Epiphan DVI2PCIe Duo`: http://www.epiphan.com/products/dvi2pcie-duo/
 .. _`Blackmagic DeckLink SDI 4K`: https://www.blackmagicdesign.com/products/decklink/models
+.. _`Blackmagic DeckLink 4K Extreme 12G`: https://www.blackmagicdesign.com/products/decklink/models
 .. _`Xvid`: https://www.xvid.com/
 .. _`AVI`: https://msdn.microsoft.com/en-us/library/windows/desktop/dd318189(v=vs.85).aspx
 .. _`HEVC (H.265)`: http://www.itu.int/ITU-T/recommendations/rec.aspx?rec=11885

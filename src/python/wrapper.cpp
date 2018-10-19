@@ -424,6 +424,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .value("DVI2PCIeDuo_SDI", gg::Device::DVI2PCIeDuo_SDI)
         .value("DVI2PCIeDuo_DVI", gg::Device::DVI2PCIeDuo_DVI)
         .value("DeckLinkSDI4K", gg::Device::DeckLinkSDI4K)
+        .value("DeckLink4KExtreme12G", gg::Device::DeckLink4KExtreme12G)
     ;
 
     enum_<gg::Codec>("Codec")

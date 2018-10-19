@@ -431,7 +431,7 @@ pypi-blackmagic-decklink-sdi-4k:
   stage: test_pypi
   script:
     # prepare environment
-    - export BlackmagicSDK_DIR="/home/gitlab-runner/environments/giftgrab/opt/Blackmagic_DeckLink_SDK_10.4/SDK"
+    - export BlackmagicSDK_DIR="/home/gitlab-runner/environments/giftgrab/blackmagic_sdk/sdk"
     # custom Boost
     - export BOOST_ROOT="/home/gitlab-runner/environments/giftgrab/usr/local"
     - GiftGrab_PyPI_BUILD_DIR="$SCRATCH_DIR/pypi-blackmagic-decklink-sdi-4k"
@@ -459,19 +459,20 @@ pypi-blackmagic-decklink-sdi-4k:
     - pip install pytest
     - pip install -vvv --install-option="--blackmagic-decklink-sdi-4k" --install-option="--enable-nonfree" --upgrade "$PyPI_INSTALLER"
     # run tests
-    - test-giftgrab-blackmagic-decklinksdi4k-uyvy; exit_on_fail
+    - $TEST_LAUNCHER blackmagic-decklinksdi4k; exit_on_fail
     # deactivate virtual env
     - deactivate
   tags:
     - gift-blackmagic-decklink-sdi-4k
   only:
     - this-branch-should-never-exist
+    - 23-support-for-blackmagic-decklink-4k-extreme-12g
 
 blackmagic-decklink-sdi-4k:
   stage: test_cmake
   script:
     # prepare environment
-    - export BlackmagicSDK_DIR="/home/gitlab-runner/environments/giftgrab/opt/Blackmagic_DeckLink_SDK_10.4/SDK"
+    - export BlackmagicSDK_DIR="/home/gitlab-runner/environments/giftgrab/blackmagic_sdk/sdk"
     # custom Boost
     - export BOOST_ROOT="/home/gitlab-runner/environments/giftgrab/usr/local"
     - export GiftGrab_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab-blackmagic-decklink-sdi-4k"
@@ -485,3 +486,62 @@ blackmagic-decklink-sdi-4k:
     - gift-blackmagic-decklink-sdi-4k
   only:
     - this-branch-should-never-exist
+    - 23-support-for-blackmagic-decklink-4k-extreme-12g
+
+################## Device: Blackmagic DeckLink 4K Extreme 12G ##################
+pypi-blackmagic-decklink-4k-extreme-12g:
+  stage: test_pypi
+  script:
+    # prepare environment
+    - export BlackmagicSDK_DIR="/opt/blackmagic_sdk"
+    - GiftGrab_PyPI_BUILD_DIR="$SCRATCH_DIR/pypi-blackmagic-decklink-4k-extreme-12g"
+    - GiftGrab_PyPI_INSTALL_DIR="$GiftGrab_PyPI_BUILD_DIR/install"
+    - GiftGrab_venv=venv
+    - rm -rf "$GiftGrab_PyPI_BUILD_DIR"
+    - mkdir "$GiftGrab_PyPI_BUILD_DIR"
+    - rm -rf "$GiftGrab_PyPI_INSTALL_DIR"
+    - mkdir "$GiftGrab_PyPI_INSTALL_DIR"
+    - cd "$GiftGrab_PyPI_BUILD_DIR"
+    - export GiftGrab_PyPI_DIST_DIR=dist
+    - rm -rfv "$GiftGrab_PyPI_DIST_DIR"
+    - cd "$GiftGrab_SOURCE_DIR"
+    - python setup.py sdist
+    - mv "$GiftGrab_PyPI_DIST_DIR" "$GiftGrab_PyPI_BUILD_DIR"
+    - cd "$GiftGrab_PyPI_BUILD_DIR"
+    - virtualenv $GiftGrab_venv
+    - cd $GiftGrab_venv
+    - source bin/activate
+    - ls -alh ./*
+    - PyPI_INSTALLER="../$GiftGrab_PyPI_DIST_DIR/$(ls ../$GiftGrab_PyPI_DIST_DIR | grep tar.gz)"
+    - if [ -z "$PyPI_INSTALLER" ]; then exit 1; fi
+    # because pip seems to be getting confused about install options sometimes:
+    - pip install PyYAML
+    - pip install pytest
+    - pip install -vvv --install-option="--blackmagic-decklink-4k-extreme-12g" --install-option="--enable-nonfree" --upgrade "$PyPI_INSTALLER"
+    # run tests
+    - $TEST_LAUNCHER blackmagic-decklink4kextreme12g; exit_on_fail
+    # deactivate virtual env
+    - deactivate
+  tags:
+    - gift-blackmagic-decklink-4k-extreme-12g
+  only:
+    - this-branch-should-never-exist
+    - 23-support-for-blackmagic-decklink-4k-extreme-12g
+
+blackmagic-decklink-4k-extreme-12g:
+  stage: test_cmake
+  script:
+    # prepare environment
+    - export BlackmagicSDK_DIR="/opt/blackmagic_sdk"
+    - export GiftGrab_BUILD_DIR="$SCRATCH_DIR/build/GiftGrab-blackmagic-decklink-4k-extreme-12g"
+    - rm -rf "$GiftGrab_BUILD_DIR"
+    - mkdir -p "$GiftGrab_BUILD_DIR"
+    - cd "$GiftGrab_BUILD_DIR"
+    - cmake -D BUILD_PYTHON=ON -D BUILD_TESTS=ON -D USE_BLACKMAGIC_DECKLINK_4K_EXTREME_12G=ON -D ENABLE_NONFREE=ON "$GiftGrab_SOURCE_DIR"
+    - make -j; exit_on_fail
+    - ctest; exit_on_fail
+  tags:
+    - gift-blackmagic-decklink-4k-extreme-12g
+  only:
+    - this-branch-should-never-exist
+    - 23-support-for-blackmagic-decklink-4k-extreme-12g

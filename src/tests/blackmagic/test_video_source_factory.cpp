@@ -1,11 +1,28 @@
 #include "videosourcefactory.h"
 #include "include_catch.h"
 
-gg::Device device = gg::DeckLinkSDI4K;
+gg::Device device;
 gg::ColourSpace colour = gg::UYVY;
 
-int main()
+int main(int argc, char *argv[])
 {
+    bool args_ok = true;
+    if (argc < 2)
+        args_ok = false;
+    else
+    {
+        if (strcmp(argv[1], "DeckLinkSDI4K") == 0)
+            device = gg::DeckLinkSDI4K;
+        else if (strcmp(argv[1], "DeckLink4KExtreme12G") == 0)
+            device = gg::DeckLink4KExtreme12G;
+        else
+            args_ok = false;
+    }
+    if (not args_ok)
+    {
+        printf("Synopsis: %s DeckLinkSDI4K|DeckLink4KExtreme12G\n", argv[0]);
+        return EXIT_FAILURE;
+    }
     return Catch::Session().run();
 }
 
@@ -32,19 +49,4 @@ TEST_CASE( "get_device returns singleton", "[VideoSourceFactory]" )
     IVideoSource * source_ = factory.get_device(device, colour);
     REQUIRE_FALSE( source == nullptr );
     REQUIRE( source == source_ );
-}
-
-TEST_CASE( "free_device garbage-collects device", "[VideoSourceFactory]" )
-{
-    gg::VideoSourceFactory & factory = gg::VideoSourceFactory::get_instance();
-    IVideoSource * source = factory.get_device(device, colour);
-    REQUIRE_FALSE( source == nullptr );
-    gg::VideoFrame frame(colour, false);
-    REQUIRE( frame.cols() == 0 );
-    REQUIRE( frame.rows() == 0 );
-    REQUIRE( source->get_frame(frame) );
-    REQUIRE( frame.cols() > 0 );
-    REQUIRE( frame.rows() > 0 );
-    factory.free_device(device);
-    REQUIRE_FALSE( source == factory.get_device(device, colour) );
 }

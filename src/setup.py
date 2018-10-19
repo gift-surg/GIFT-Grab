@@ -90,6 +90,7 @@ class GiftGrabInstallCommand(install):
     user_options = install.user_options + \
                   [('epiphan-dvi2pcie-duo', None, None),
                    ('blackmagic-decklink-sdi-4k', None, None),
+                   ('blackmagic-decklink-4k-extreme-12g', None, None),
                    ('network-sources', None, None),
                    ('epiphansdk', None, None),
                    ('files', None, None),
@@ -122,6 +123,8 @@ class GiftGrabInstallCommand(install):
                 str_rep += ' using Epiphan SDK,'
         if self.blackmagic_decklink_sdi_4k and self.enable_nonfree:
             str_rep += ' Blackmagic DeckLink SDI 4K,'
+        if self.blackmagic_decklink_4k_extreme_12g and self.enable_nonfree:
+            str_rep += ' Blackmagic DeckLink 4K Extreme 12G,'
         if self.network_sources:
             str_rep += ' Network sources,'
         if self.files:
@@ -146,6 +149,7 @@ class GiftGrabInstallCommand(install):
         install.initialize_options(self)
         self.epiphan_dvi2pcie_duo = None
         self.blackmagic_decklink_sdi_4k = None
+        self.blackmagic_decklink_4k_extreme_12g = None
         self.network_sources = None
         self.epiphansdk = None
         self.files = None
@@ -212,6 +216,7 @@ class GiftGrabInstallCommand(install):
         # Sanity check: at least one feature should be enabled
         if not self.epiphan_dvi2pcie_duo and\
            not self.blackmagic_decklink_sdi_4k and\
+           not self.blackmagic_decklink_4k_extreme_12g and\
            not self.network_sources and\
            not self.files and\
            not self.xvid and\
@@ -296,13 +301,14 @@ class GiftGrabInstallCommand(install):
                 self.__check_command(cmd, err_msg)
 
         # check Blackmagic Desktop Video SDK
-        if self.blackmagic_decklink_sdi_4k and self.enable_nonfree:
-            cmd = ['cmake', join(self.here, 'cmake', 'blackmagicsdk')]
-            err_msg = 'Blackmagic Desktop Video SDK does not seem to be'\
-                      ' available on your system. Blackmagic Desktop Video'\
-                      ' SDK is needed for Blackmagic DeckLink SDI 4K'\
-                      ' support.'
-            self.__check_command(cmd, err_msg)
+        if self.blackmagic_decklink_sdi_4k or self.blackmagic_decklink_4k_extreme_12g:
+            if self.enable_nonfree:
+                cmd = ['cmake', join(self.here, 'cmake', 'blackmagicsdk')]
+                err_msg = 'Blackmagic Desktop Video SDK does not seem to be'\
+                          ' available on your system. Blackmagic Desktop Video'\
+                          ' SDK is needed for Blackmagic DeckLink SDI 4K'\
+                          ' support.'
+                self.__check_command(cmd, err_msg)
 
         # check FFmpeg
         if self.hevc or self.vp9 or self.files:
@@ -389,6 +395,9 @@ class GiftGrabInstallCommand(install):
                 cmake_args.append('-DUSE_EPIPHANSDK=ON')
         if self.blackmagic_decklink_sdi_4k:
             cmake_args.append('-DUSE_BLACKMAGIC_DECKLINK_SDI_4K=ON')
+            cmake_args.append('-DENABLE_NONFREE=ON')
+        if self.blackmagic_decklink_4k_extreme_12g:
+            cmake_args.append('-DUSE_BLACKMAGIC_DECKLINK_4K_EXTREME_12G=ON')
             cmake_args.append('-DENABLE_NONFREE=ON')
         if self.network_sources:
             cmake_args.append('-DUSE_NETWORK_SOURCES=ON')
@@ -486,8 +495,7 @@ for port in ['sdi', 'dvi']:
 # Disabled the BGRA tests of Epiphan DVI2PCIe Duo (currently using OpenCV) until issue #115 is resolved
 #'test-giftgrab-epiphan-dvi2pcieduo-bgra=giftgrab.tests:test_epiphan_dvi2pcieduo_bgra',
 console_scripts = console_scripts +\
-                  ['test-giftgrab-epiphan-dvi2pcieduo-i420=giftgrab.tests:test_epiphan_dvi2pcieduo_i420',
-                   'test-giftgrab-blackmagic-decklinksdi4k-uyvy=giftgrab.tests:test_blackmagic_decklinksdi4k_uyvy']
+                  ['test-giftgrab-epiphan-dvi2pcieduo-i420=giftgrab.tests:test_epiphan_dvi2pcieduo_i420']
 console_scripts = console_scripts +\
                   ['test-giftgrab-network-sources-bgra=giftgrab.tests:test_network_sources_bgra',
                    'test-giftgrab-network-sources-i420=giftgrab.tests:test_network_sources_i420']
@@ -548,6 +556,5 @@ setup(
     package_data={'giftgrab.tests': ['*.py',
                                      join('epiphan', 'dvi2pcieduo', '*.py'),
                                      join('epiphan', 'dvi2pcieduo', 'data', '*.yml'),
-                                     join('blackmagic', 'decklinksdi4k', '*.py'),
                                      join('network', '*.py')]}
 )
