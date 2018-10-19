@@ -161,6 +161,27 @@ IVideoSource * VideoSourceFactory::get_device(Device device,
 
     // Blackmagic devices ========================================
     case DeckLinkSDI4K:
+#ifdef USE_BLACKMAGICSDK
+        switch (colour)
+        {
+        // UYVY ========================================
+        case UYVY:
+            break;
+
+        // I420 ========================================
+        case I420:
+        // BGRA ========================================
+        case BGRA:
+        default:
+            throw VideoSourceError("Colour space not supported by"
+                                   " Blackmagic DeckLink SDI 4K");
+        }
+        src = new VideoSourceBlackmagicSDK(0, colour);
+#else
+        throw VideoSourceError(
+            "Blackmagic DeckLink SDI 4K supported only through"
+            " Blackmagic Desktop Video SDK");
+#endif
     case DeckLink4KExtreme12G:
 #ifdef USE_BLACKMAGICSDK
         switch (colour)
@@ -174,13 +195,13 @@ IVideoSource * VideoSourceFactory::get_device(Device device,
         // BGRA ========================================
         case BGRA:
         default:
-            throw VideoSourceError("Colour space not supported for"
-                                   " Blackmagic devices");
+            throw VideoSourceError("Colour space not supported by"
+                                   " Blackmagic DeckLink 4K Extreme 12G");
         }
         src = new VideoSourceBlackmagicSDK(0, colour);
 #else
         throw VideoSourceError(
-            "Blackmagic devices supported only through"
+            "Blackmagic DeckLink 4K Extreme 12G supported only through"
             " Blackmagic Desktop Video SDK");
 #endif
         break;
