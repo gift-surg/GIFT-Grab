@@ -1,4 +1,4 @@
-from pytest import yield_fixture, fail, mark
+from pytest import yield_fixture, mark
 from pygiftgrab import VideoSourceFactory, VideoFrame, ColourSpace, Device
 
 source = None
