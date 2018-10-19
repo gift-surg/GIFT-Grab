@@ -1,3 +1,8 @@
+# Unreleased
+
+* Added support for:
+  * Blackmagic DeckLink 4K Extreme 12G
+
 # August 2017
 
 Use `git checkout v1708`.
