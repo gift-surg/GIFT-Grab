@@ -122,12 +122,18 @@ if(USE_NETWORK_SOURCES)
     endif(NOT USE_BGRA AND NOT USE_I420)
 endif(USE_NETWORK_SOURCES)
 
-# Check at least one colour space activated if using Blackmagic DeckLink SDI 4K
-if(USE_BLACKMAGIC_DECKLINK_SDI_4K OR USE_BLACKMAGIC_DECKLINK_4K_EXTREME_12G)
+# Check at least UYVY colour space activated if using Blackmagic DeckLink SDI 4K
+if(USE_BLACKMAGIC_DECKLINK_SDI_4K)
     if(NOT USE_UYVY)
-        MESSAGE(FATAL_ERROR "UYVY colour space must be activated to use Blackmagic devices")
+        MESSAGE(FATAL_ERROR "UYVY colour space must be activated to use Blackmagic DeckLink SDI 4K")
     endif(NOT USE_UYVY)
-endif(USE_BLACKMAGIC_DECKLINK_SDI_4K OR USE_BLACKMAGIC_DECKLINK_4K_EXTREME_12G)
+endif(USE_BLACKMAGIC_DECKLINK_SDI_4K)
+# Check at least UYVY or BGRA are activated if using Blackmagic DeckLink 4K Extreme 12G
+if(USE_BLACKMAGIC_DECKLINK_4K_EXTREME_12G)
+    if(NOT USE_UYVY AND NOT USE_BGRA)
+        MESSAGE(FATAL_ERROR "One of UYVY or BGRA colour spaces must be activated to use Blackmagic DeckLink 4K Extreme 12G")
+    endif(NOT USE_UYVY AND NOT USE_BGRA)
+endif(USE_BLACKMAGIC_DECKLINK_4K_EXTREME_12G)
 
 # Determine whether OpenCV needed
 if(((USE_EPIPHAN_DVI2PCIE_DUO OR USE_NETWORK_SOURCES) AND USE_BGRA) OR
