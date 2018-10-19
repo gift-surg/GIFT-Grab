@@ -22,7 +22,7 @@ VideoSourceFactory VideoSourceFactory::_factory_singleton;
 
 VideoSourceFactory::VideoSourceFactory()
 {
-    for (size_t i = 0; i < NUM_DEVICES; i++)
+    for (size_t i = 0; i < Device::COUNT; i++)
         _devices[i] = nullptr;
 }
 
