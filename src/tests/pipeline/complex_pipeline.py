@@ -167,9 +167,10 @@ if __name__ == '__main__':
     sfac = VideoSourceFactory.get_instance()
 
     if video_input == 'decklink':
+        filename = 'decklink'
+
         # start acquiring frames from a DeckLink 4K Extreme 12G
         source = sfac.get_device(Device.DeckLink4KExtreme12G, ColourSpace.BGRA)
-        source.set_sub_frame(640, 300, 640, 480)
     else:
         filename = os.path.basename(video_input)
         filename, ext = os.path.splitext(filename)
