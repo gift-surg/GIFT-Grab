@@ -18,8 +18,6 @@
 namespace gg
 {
 
-VideoSourceFactory VideoSourceFactory::_factory_singleton;
-
 VideoSourceFactory::VideoSourceFactory()
 {
     for (size_t i = 0; i < NUM_DEVICES; i++)
@@ -34,7 +32,8 @@ VideoSourceFactory::~VideoSourceFactory()
 
 VideoSourceFactory & VideoSourceFactory::get_instance()
 {
-    return _factory_singleton;
+    static VideoSourceFactory video_source_factory;
+    return video_source_factory;
 }
 
 IVideoSource * VideoSourceFactory::get_device(Device device,

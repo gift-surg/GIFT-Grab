@@ -9,8 +9,6 @@
 namespace gg
 {
 
-VideoTargetFactory VideoTargetFactory::_factory_singleton;
-
 VideoTargetFactory::VideoTargetFactory()
 {
     // nop
@@ -23,7 +21,8 @@ VideoTargetFactory::~VideoTargetFactory()
 
 VideoTargetFactory & VideoTargetFactory::get_instance()
 {
-    return _factory_singleton;
+    static VideoTargetFactory video_target_factory;
+    return video_target_factory;
 }
 
 IVideoTarget * VideoTargetFactory::create_file_writer(enum Codec codec,

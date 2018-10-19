@@ -23,12 +23,6 @@ class VideoTargetFactory
 {
 protected:
     //!
-    //! \brief The factory singleton object
-    //!
-    static VideoTargetFactory _factory_singleton;
-
-protected:
-    //!
     //! \brief The constructor should never
     //! be publicly called
     //! \sa get_instance
@@ -73,5 +67,10 @@ public:
 protected:
     DISALLOW_COPY_AND_ASSIGNMENT(VideoTargetFactory);
 };
+
+//!
+//! \brief The factory singleton object
+//!
+static VideoTargetFactory& _video_target_factory = VideoTargetFactory::get_instance();
 
 }

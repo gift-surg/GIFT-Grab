@@ -26,13 +26,6 @@ class VideoSourceFactory
 {
 protected:
     //!
-    //! \brief The factory singleton object
-    //! that does the lifetime management of
-    //! all created video sources
-    //!
-    static VideoSourceFactory _factory_singleton;
-
-    //!
     //! \brief So that can keep track of everything
     //! opened and in use
     //! \sa Device the length of this pointer
@@ -162,5 +155,12 @@ public:
 protected:
     DISALLOW_COPY_AND_ASSIGNMENT(VideoSourceFactory);
 };
+
+//!
+//! \brief The factory singleton object
+//! that does the lifetime management of
+//! all created video sources
+//!
+static VideoSourceFactory& _video_source_factory = VideoSourceFactory::get_instance();
 
 }
