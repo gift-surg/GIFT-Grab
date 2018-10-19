@@ -130,4 +130,6 @@ fi
 # Run the command, as everything seems fine
 echo "Will run: $test_cmd"
 eval $test_cmd
-echo "Exit code was: $?"
+exit_code=$?
+echo "Exit code was: $exit_code"
+exit $exit_code
