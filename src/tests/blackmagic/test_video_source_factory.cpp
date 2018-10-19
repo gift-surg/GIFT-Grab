@@ -1,11 +1,28 @@
 #include "videosourcefactory.h"
 #include "include_catch.h"
 
-gg::Device device = gg::DeckLinkSDI4K;
+gg::Device device;
 gg::ColourSpace colour = gg::UYVY;
 
-int main()
+int main(int argc, char *argv[])
 {
+    bool args_ok = true;
+    if (argc < 2)
+        args_ok = false;
+    else
+    {
+        if (strcmp(argv[1], "DeckLinkSDI4K") == 0)
+            device = gg::DeckLinkSDI4K;
+        else if (strcmp(argv[1], "DeckLink4KExtreme12G") == 0)
+            device = gg::DeckLink4KExtreme12G;
+        else
+            args_ok = false;
+    }
+    if (not args_ok)
+    {
+        printf("Synopsis: %s DeckLinkSDI4K|DeckLink4KExtreme12G\n", argv[0]);
+        return EXIT_FAILURE;
+    }
     return Catch::Session().run();
 }
 
