@@ -2,25 +2,40 @@
 #include "include_catch.h"
 
 gg::Device device;
-gg::ColourSpace colour = gg::UYVY;
+gg::ColourSpace colour;
 
 int main(int argc, char *argv[])
 {
     bool args_ok = true;
-    if (argc < 2)
+    if (argc < 3)
         args_ok = false;
     else
     {
         if (strcmp(argv[1], "DeckLinkSDI4K") == 0)
+        {
             device = gg::DeckLinkSDI4K;
+            if (strcmp(argv[2], "UYVY") == 0)
+                colour = gg::UYVY;
+            else
+                args_ok = false;
+        }
         else if (strcmp(argv[1], "DeckLink4KExtreme12G") == 0)
+        {
             device = gg::DeckLink4KExtreme12G;
+            if (strcmp(argv[2], "UYVY") == 0)
+                colour = gg::UYVY;
+            else if (strcmp(argv[2], "BGRA") == 0)
+                colour = gg::BGRA;
+            else
+                args_ok = false;
+        }
         else
             args_ok = false;
     }
     if (not args_ok)
     {
-        printf("Synopsis: %s DeckLinkSDI4K|DeckLink4KExtreme12G\n", argv[0]);
+        printf("Synopsis: %s DeckLinkSDI4K UYVY\n", argv[0]);
+        printf(" or:      %s DeckLink4KExtreme12G UYVY|BGRA\n", argv[0]);
         return EXIT_FAILURE;
     }
     return Catch::Session().run();

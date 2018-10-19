@@ -73,10 +73,18 @@ This option **makes GIFT-Grab undistributable**.
 
 `--install-option="--blackmagic-decklink-sdi-4k" --install-option="--enable-nonfree"` (requires [Blackmagic Desktop Video SDK](tips.md#blackmagic-drivers-and-blackmagic-desktop-video-sdk))
 
-This currently works only with the [UYVY][uyvy] colour space (active by default).
+This currently works only with the [UYVY][uyvy] and BGRA colour spaces (both active by default).
 This option **makes GIFT-Grab undistributable**.
 
 [uyvy]: https://wiki.videolan.org/YUV#UYVY
+
+
+## Blackmagic DeckLink 4K Extreme 12G
+
+`--install-option="--blackmagic-decklink-4k-extreme-12g" --install-option="--enable-nonfree"` (requires [Blackmagic Desktop Video SDK](tips.md#blackmagic-drivers-and-blackmagic-desktop-video-sdk))
+
+This currently works only with the [UYVY][uyvy] and BGRA colour spaces (both active by default).
+This option **makes GIFT-Grab undistributable**.
 
 
 ## Network streams
