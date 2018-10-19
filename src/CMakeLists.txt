@@ -58,7 +58,7 @@ OPTION(USE_BGRA
 OPTION(USE_I420
     "Capture video in I420 colour space (requires libVLC)" ON)
 OPTION(USE_UYVY
-    "Capture video in UYVY colour space (currently only for Blackmagic DeckLink SDI 4K)" ON)
+    "Capture video in UYVY colour space (currently only for Blackmagic devices)" ON)
 OPTION(USE_EPIPHANSDK
     "Use Epiphan video grabbing SDK (requires zlib and ptreads)" OFF)
 OPTION(GENERATE_PERFORMANCE_OUTPUT
@@ -125,7 +125,7 @@ endif(USE_NETWORK_SOURCES)
 # Check at least one colour space activated if using Blackmagic DeckLink SDI 4K
 if(USE_BLACKMAGIC_DECKLINK_SDI_4K OR USE_BLACKMAGIC_DECKLINK_4K_EXTREME_12G)
     if(NOT USE_UYVY)
-        MESSAGE(FATAL_ERROR "UYVY colour space must be activated to use Blackmagic DeckLink SDI 4K")
+        MESSAGE(FATAL_ERROR "UYVY colour space must be activated to use Blackmagic devices")
     endif(NOT USE_UYVY)
 endif(USE_BLACKMAGIC_DECKLINK_SDI_4K OR USE_BLACKMAGIC_DECKLINK_4K_EXTREME_12G)
 
