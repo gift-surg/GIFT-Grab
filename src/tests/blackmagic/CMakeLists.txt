@@ -22,27 +22,28 @@ TARGET_LINK_LIBRARIES(
     ${VIDEO_SOURCE_FACTORY_TEST}
     ${LIBS} ${NAME}
 )
-SET(COLOUR_SPACE UYVY)
 
 foreach(BLACKMAGIC_DEVICE ${BLACKMAGIC_DEVICES})
-    SET(NAME_TEST Test_Blackmagic_${BLACKMAGIC_DEVICE}_VideoSourceFactory_${COLOUR_SPACE})
-    ADD_TEST(NAME ${NAME_TEST} COMMAND ${VIDEO_SOURCE_FACTORY_TEST} ${BLACKMAGIC_DEVICE} ${COLOUR_SPACE})
-    LIST(APPEND TESTS_LIST ${NAME_TEST})
+    foreach(COLOUR_SPACE ${COLOUR_SPACES})
+        SET(NAME_TEST Test_Blackmagic_${BLACKMAGIC_DEVICE}_VideoSourceFactory_${COLOUR_SPACE})
+        ADD_TEST(NAME ${NAME_TEST} COMMAND ${VIDEO_SOURCE_FACTORY_TEST} ${BLACKMAGIC_DEVICE} ${COLOUR_SPACE})
+        LIST(APPEND TESTS_LIST ${NAME_TEST})
 
-    # Blackmagic device on its own
-    SET(NAME_TEST Test_Blackmagic_${BLACKMAGIC_DEVICE}_${COLOUR_SPACE})
-    ADD_TEST(NAME ${NAME_TEST}
-        COMMAND py.test --device=${BLACKMAGIC_DEVICE} --colour-space=${COLOUR_SPACE} test_unit.py
-    )
-    LIST(APPEND TESTS_LIST ${NAME_TEST})
+        # Blackmagic device on its own
+        SET(NAME_TEST Test_Blackmagic_${BLACKMAGIC_DEVICE}_${COLOUR_SPACE})
+        ADD_TEST(NAME ${NAME_TEST}
+            COMMAND py.test --device=${BLACKMAGIC_DEVICE} --colour-space=${COLOUR_SPACE} test_unit.py
+        )
+        LIST(APPEND TESTS_LIST ${NAME_TEST})
 
-    # Blackmagic device using the observer design pattern
-    SET(NAME_TEST Test_Blackmagic_${BLACKMAGIC_DEVICE}_ObserverPattern_${COLOUR_SPACE})
-    SET(FRAME_RATE 27)
-    ADD_TEST(NAME ${NAME_TEST}
-        COMMAND py.test --device=${BLACKMAGIC_DEVICE} --colour-space=${COLOUR_SPACE} --frame-rate=${FRAME_RATE} --observers=3 test_observer.py
-    )
-    LIST(APPEND TESTS_LIST ${NAME_TEST})
+        # Blackmagic device using the observer design pattern
+        SET(NAME_TEST Test_Blackmagic_${BLACKMAGIC_DEVICE}_ObserverPattern_${COLOUR_SPACE})
+        SET(FRAME_RATE 27)
+        ADD_TEST(NAME ${NAME_TEST}
+            COMMAND py.test --device=${BLACKMAGIC_DEVICE} --colour-space=${COLOUR_SPACE} --frame-rate=${FRAME_RATE} --observers=3 test_observer.py
+        )
+        LIST(APPEND TESTS_LIST ${NAME_TEST})
+    endforeach(COLOUR_SPACE)
 endforeach(BLACKMAGIC_DEVICE)
 
 # to avoid copying stuff around
