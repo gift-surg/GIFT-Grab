@@ -159,32 +159,33 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--input', type=str, required=True,
                         metavar='VIDEO_INPUT',
-                        help='"decklink" (for grabbing frames from a Blackmagic DeckLink 4K Extreme 12G)'
+                        help='decklink (for grabbing frames from a Blackmagic DeckLink 4K Extreme 12G)'
                              ' or a video file (HEVC-encoded MP4)')
     args = parser.parse_args()
-    in_file = args.input
+    video_input = args.input
 
     sfac = VideoSourceFactory.get_instance()
 
-    if in_file == 'decklink':
-        reader = sfac.get_device(Device.DeckLink4KExtreme12G, ColourSpace.BGRA)
-        reader.set_sub_frame(640, 300, 640, 480)
+    if video_input == 'decklink':
+        # start acquiring frames from a DeckLink 4K Extreme 12G
+        source = sfac.get_device(Device.DeckLink4KExtreme12G, ColourSpace.BGRA)
+        source.set_sub_frame(640, 300, 640, 480)
     else:
-        filename = os.path.basename(in_file)
+        filename = os.path.basename(video_input)
         filename, ext = os.path.splitext(filename)
         assert filename
         assert ext == '.mp4'
 
         # initialise reading of passed file
-        reader = sfac.create_file_reader(in_file, ColourSpace.BGRA)
+        source = sfac.create_file_reader(video_input, ColourSpace.BGRA)
 
     frame = VideoFrame(ColourSpace.BGRA, False)
-    reader.get_frame(frame)
+    source.get_frame(frame)
     frame_shape = (frame.rows(), frame.cols(), 4)
 
     # prepare for creating encoders (writers)
     tfac = VideoTargetFactory.get_instance()
-    frame_rate = reader.get_frame_rate()
+    frame_rate = source.get_frame_rate()
 
     # create a red and green Dyer
     red_dyer = Dyer(2, 128)
@@ -215,7 +216,7 @@ if __name__ == '__main__':
     yellow_snapshots = SnapshotSaver('.', 9)
 
     # assemble the GIFT-Grab pipeline
-    reader.attach(bufferer_orig)
+    source.attach(bufferer_orig)
     bufferer_orig.attach(red_dyer)
     red_dyer.attach(red_writer)
     red_dyer.attach(bufferer_red)
@@ -230,7 +231,7 @@ if __name__ == '__main__':
     hist_orig.stop()
 
     # disassemble the GIFT-Grab pipeline
-    reader.detach(bufferer_orig)
+    source.detach(bufferer_orig)
     bufferer_orig.detach(red_dyer)
     red_dyer.detach(red_writer)
     red_dyer.detach(bufferer_red)
