@@ -19,7 +19,7 @@ def device(request):
     case_insensitive = device.lower()
     if case_insensitive == 'decklinksdi4k':
         return Device.DeckLinkSDI4K
-    elif case_insensitive == 'decklink4kextreme12g'
+    elif case_insensitive == 'decklink4kextreme12g':
         return Device.DeckLink4KExtreme12G
     else:
         raise RuntimeError('Could not recognise device {}'.format(device))
