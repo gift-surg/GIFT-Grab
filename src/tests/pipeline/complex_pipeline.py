@@ -12,7 +12,7 @@ import os.path
 import threading
 import numpy as np
 import scipy.misc
-from pygiftgrab import (VideoSourceFactory, VideoFrame,
+from pygiftgrab import (VideoSourceFactory, VideoFrame, Device,
                         ColourSpace, IObservableObserver,
                         VideoTargetFactory, Codec, IObserver)
 
@@ -158,19 +158,26 @@ class Dyer(IObservableObserver):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--input', type=str, required=True,
-                        metavar='VIDEO_FILE',
-                        help='Input video file (HEVC-encoded MP4)')
+                        metavar='VIDEO_INPUT',
+                        help='"decklink" (for grabbing frames from a Blackmagic DeckLink 4K Extreme 12G)'
+                             ' or a video file (HEVC-encoded MP4)')
     args = parser.parse_args()
     in_file = args.input
 
-    filename = os.path.basename(in_file)
-    filename, ext = os.path.splitext(filename)
-    assert filename
-    assert ext == '.mp4'
-
-    # initialise reading of passed file
     sfac = VideoSourceFactory.get_instance()
-    reader = sfac.create_file_reader(in_file, ColourSpace.BGRA)
+
+    if in_file == 'decklink':
+        reader = sfac.get_device(Device.DeckLink4KExtreme12G, ColourSpace.BGRA)
+        reader.set_sub_frame(640, 300, 640, 480)
+    else:
+        filename = os.path.basename(in_file)
+        filename, ext = os.path.splitext(filename)
+        assert filename
+        assert ext == '.mp4'
+
+        # initialise reading of passed file
+        reader = sfac.create_file_reader(in_file, ColourSpace.BGRA)
+
     frame = VideoFrame(ColourSpace.BGRA, False)
     reader.get_frame(frame)
     frame_shape = (frame.rows(), frame.cols(), 4)

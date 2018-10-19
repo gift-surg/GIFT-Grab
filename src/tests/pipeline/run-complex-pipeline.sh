@@ -18,8 +18,9 @@
 if [ $# -lt 1 ] || [ $# -gt 3 ];
 then
     THIS_SCRIPT="$(basename "$(test -L "${BASH_SOURCE[0]}" && readlink "$0" || echo "$0")")"
-    printf "Usage: $THIS_SCRIPT video_file [ num_reps [ output_dir ] ]\n"
+    printf "Usage: $THIS_SCRIPT video_file|decklink [ num_reps [ output_dir ] ]\n"
     printf "\tvideo_file: path to an HEVC-encoded MP4 file\n"
+    printf "\tdecklink: Blackmagic DeckLink 4K Extreme 12G frame grabber\n"
     printf "\tnum_reps:   how many times to run the Python script "
     printf "(default: once)\n"
     printf "\toutput_dir: where to save all the generated output "
@@ -42,6 +43,13 @@ CMAKE_OPTS="-D USE_FILES=ON"
 CMAKE_OPTS="$CMAKE_OPTS -D USE_HEVC=ON"
 CMAKE_OPTS="$CMAKE_OPTS -D ENABLE_NONFREE=ON -D USE_NVENC=ON"
 CMAKE_OPTS="$CMAKE_OPTS -D BUILD_PYTHON=ON -D USE_NUMPY=ON"
+if [ "$1" = "decklink" ]; then
+    if [[ -z "${BlackmagicSDK_DIR}" ]]; then
+        echo "Please set BlackmagicSDK_DIR to the path of the Blackmagic SDK"
+        exit 1
+    fi
+    CMAKE_OPTS="$CMAKE_OPTS -D USE_BLACKMAGIC_DECKLINK_4K_EXTREME_12G=ON -D ENABLE_NONFREE=ON"
+fi
 CMAKE_OPTS="$CMAKE_OPTS -D CMAKE_BUILD_TYPE=Debug"
 SESSION_DIR=$ROOT_DIR/$(date +"%Y-%m-%d-%H-%M-%S")
 mkdir $SESSION_DIR
