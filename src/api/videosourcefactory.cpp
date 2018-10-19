@@ -159,8 +159,9 @@ IVideoSource * VideoSourceFactory::get_device(Device device,
         }
         break;
 
-    // Blackmagic DeckLink SDI 4K ========================================
+    // Blackmagic devices ========================================
     case DeckLinkSDI4K:
+    case DeckLink4KExtreme12G:
 #ifdef USE_BLACKMAGICSDK
         switch (colour)
         {
@@ -174,12 +175,12 @@ IVideoSource * VideoSourceFactory::get_device(Device device,
         case BGRA:
         default:
             throw VideoSourceError("Colour space not supported for"
-                                   " Blackmagic DeckLink SDI 4K");
+                                   " Blackmagic devices");
         }
         src = new VideoSourceBlackmagicSDK(0, colour);
 #else
         throw VideoSourceError(
-            "Blackmagic DeckLink SDI 4K supported only through"
+            "Blackmagic devices supported only through"
             " Blackmagic Desktop Video SDK");
 #endif
         break;
