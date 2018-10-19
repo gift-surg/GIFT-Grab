@@ -182,6 +182,8 @@ IVideoSource * VideoSourceFactory::get_device(Device device,
             "Blackmagic DeckLink SDI 4K supported only through"
             " Blackmagic Desktop Video SDK");
 #endif
+        break;
+
     case DeckLink4KExtreme12G:
 #ifdef USE_BLACKMAGICSDK
         switch (colour)
