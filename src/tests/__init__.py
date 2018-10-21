@@ -17,20 +17,6 @@ epiphan_dvi2pcieduo_config_dir = abspath(
                       join('epiphan', 'dvi2pcieduo', 'data')))
 
 
-def __run_epiphan_tests(colour_space):
-    for port in ['SDI', 'DVI']:
-        ret = main(['--colour-space=%s' % (colour_space),
-                    '--port=%s' % (port),
-                    epiphan_dvi2pcieduo_working_dir, '-m', 'unit'])
-        if ret: exit(ret)
-
-    # Disabled the Python module tests until issue #114 is resolved
-    # ret = main(['--colour-space=%s' % (colour_space),
-    #             '--config-dir=%s' % (epiphan_dvi2pcieduo_config_dir),
-    #             epiphan_dvi2pcieduo_working_dir, '-m', 'epiphan_py_module'])
-    # if ret: exit(ret)
-
-
 def __run_network_tests(colour_space):
     # parse needed arguments from environment variables
     var_name = 'TESTING_NETWORK_SOURCE_ADDRESS'
@@ -77,14 +63,6 @@ def __run_network_tests(colour_space):
                 '--init-delay=%f' % (testing_network_source_delay),
                 network_sources_working_dir, '-m', 'observer_pattern'])
     if ret: exit(ret)
-
-
-def test_epiphan_dvi2pcieduo_bgra():
-    __run_epiphan_tests('BGRA')
-
-
-def test_epiphan_dvi2pcieduo_i420():
-    __run_epiphan_tests('I420')
 
 
 def test_network_sources_bgra():
