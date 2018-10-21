@@ -550,7 +550,5 @@ setup(
         'console_scripts': console_scripts,
     },
     package_data={'giftgrab.tests': ['*.py',
-                                     join('epiphan', 'dvi2pcieduo', '*.py'),
-                                     join('epiphan', 'dvi2pcieduo', 'data', '*.yml'),
                                      join('network', '*.py')]}
 )
