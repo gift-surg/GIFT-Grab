@@ -18,9 +18,10 @@
 if [ $# -lt 1 ] || [ $# -gt 3 ];
 then
     THIS_SCRIPT="$(basename "$(test -L "${BASH_SOURCE[0]}" && readlink "$0" || echo "$0")")"
-    printf "Usage: $THIS_SCRIPT video_file|decklink [ num_reps [ output_dir ] ]\n"
+    printf "Usage: $THIS_SCRIPT video_file|decklink|dvi2pcie [ num_reps [ output_dir ] ]\n"
     printf "\tvideo_file: path to an HEVC-encoded MP4 file\n"
     printf "\tdecklink: Blackmagic DeckLink 4K Extreme 12G frame grabber\n"
+    printf "\tdvi2pcie: Epiphan DVI2PCIe Duo frame grabber\n"
     printf "\tnum_reps:   how many times to run the Python script "
     printf "(default: once)\n"
     printf "\toutput_dir: where to save all the generated output "
@@ -49,6 +50,8 @@ if [ "$1" = "decklink" ]; then
         exit 1
     fi
     CMAKE_OPTS="$CMAKE_OPTS -D USE_BLACKMAGIC_DECKLINK_4K_EXTREME_12G=ON -D ENABLE_NONFREE=ON"
+elif [ "$1" = "dvi2pcie" ]; then
+    CMAKE_OPTS="$CMAKE_OPTS -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D USE_I420=OFF"
 fi
 CMAKE_OPTS="$CMAKE_OPTS -D CMAKE_BUILD_TYPE=Debug"
 SESSION_DIR=$ROOT_DIR/$(date +"%Y-%m-%d-%H-%M-%S")
