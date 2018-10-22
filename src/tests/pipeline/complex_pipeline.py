@@ -160,7 +160,7 @@ if __name__ == '__main__':
     parser.add_argument('-i', '--input', type=str, required=True,
                         metavar='VIDEO_INPUT',
                         help='decklink (for grabbing frames from a Blackmagic DeckLink 4K Extreme 12G),\n'
-                             'dvi2pcie (for grabbing frames from an Epiphan DVI2PCIe Duo DVI port\n'
+                             'dvi2pcie (for grabbing frames from an Epiphan DVI2PCIe Duo SDI port\n'
                              ' or a video file (HEVC-encoded MP4)')
     args = parser.parse_args()
     video_input = args.input
@@ -175,8 +175,8 @@ if __name__ == '__main__':
     elif video_input == 'dvi2pcie':
         filename, ext = 'dvi2pcie', '.mp4'
 
-        # start acquirigin frames from an Epiphan DVI2PCIe Duo DVI port
-        source = sfac.get_device(Device.DVI2PCIeDuo_DVI, ColourSpace.BGRA)
+        # start acquirigin frames from an Epiphan DVI2PCIe Duo SDI port
+        source = sfac.get_device(Device.DVI2PCIeDuo_SDI, ColourSpace.BGRA)
     else:
         filename = os.path.basename(video_input)
         filename, ext = os.path.splitext(filename)
