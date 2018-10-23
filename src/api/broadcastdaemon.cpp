@@ -10,6 +10,7 @@ namespace gg
 BroadcastDaemon::BroadcastDaemon(IVideoSource * source)
         : _source(source)
         , _running(false)
+        , _thread()
 {
     if (_source == nullptr)
         throw VideoSourceError("Null pointer passed"
