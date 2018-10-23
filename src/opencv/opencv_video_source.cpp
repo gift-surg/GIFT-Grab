@@ -121,8 +121,24 @@ bool VideoSourceOpenCV::get_frame(gg::VideoFrame & frame)
             _buffer_bgra.cols != _buffer.cols) {
             _buffer_bgra = cv::Mat::zeros(_buffer.rows, _buffer.cols, CV_8UC4);
         }
-        // Convert to BGRA
-        cv::cvtColor(_buffer, _buffer_bgra, CV_BGR2BGRA);
+        /* This too broad try-catch block is a workaround to
+         * https://github.com/gift-surg/GIFT-Grab/issues/35
+         * as OpenCV seems to intermittently throw an assertion
+         * exception in the form:
+         * "Can't fetch data from terminated TLS container".
+         * To make things worse, this exception is unhandled in
+         * the accompanying BroadcastDaemon thread, and so leads
+         * to an unspecific abortion of the whole application.
+         */
+        try
+        {
+            // Convert to BGRA
+            cv::cvtColor(_buffer, _buffer_bgra, CV_BGR2BGRA);
+        }
+        catch (...)
+        {
+            return false;
+        }
         unsigned char * data = nullptr;
         size_t data_length = 0;
         size_t cols = 0, rows = 0;
