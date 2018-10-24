@@ -481,19 +481,7 @@ header = 'A C++ and NumPy-compatible Python API for acquiring, processing ' +\
          'and encoding video streams in real time'
 with open('pip/long_description.rst') as f:
     description = f.read()
-console_scripts = []
-for port in ['sdi', 'dvi']:
-    for colour_space in ['i420']:
-        # Disabled the BGRA tests of Epiphan DVI2PCIe Duo (currently using OpenCV)
-        # until issue #115 is resolved
-        for codec in ['xvid', 'hevc', 'vp9']:
-             record_script = 'edd-{}-{}-{}'.format(
-                 port, colour_space, codec)
-             record_script += '=giftgrab.utils:record_epiphan_dvi2pcieduo_{}_{}_{}'.format(
-                 port, colour_space, codec)
-             console_scripts.append(record_script)
-console_scripts = console_scripts +\
-                  ['test-giftgrab-network-sources-bgra=giftgrab.tests:test_network_sources_bgra',
+console_scripts = ['test-giftgrab-network-sources-bgra=giftgrab.tests:test_network_sources_bgra',
                    'test-giftgrab-network-sources-i420=giftgrab.tests:test_network_sources_i420']
 setup(
     name='GIFT-Grab',
