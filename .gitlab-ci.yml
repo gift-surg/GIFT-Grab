@@ -317,7 +317,6 @@ epiphan-dvi2pcie-duo:
     - gift-epiphan-dvi2pcie-duo
   only:
     - this-branch-should-never-exist
-    - 24-remove-user-tests-installed-via-pip
 
 ################## Device: Epiphan Pearl #########################
 ################## Platform: PyPI ################################
