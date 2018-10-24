@@ -108,7 +108,7 @@ elif [ "$1" = "epiphan-dvi2pcieduo" ]; then
         parse_port $3
         test_cmd="$test_cmd --colour-space=$test_colour_space"
         test_cmd="$test_cmd --port=$test_port"
-        test_cmd_working_dir="$test_dir/epiphan"
+        test_cmd_working_dir="$test_dir/epiphan/dvi2pcieduo"
         test_cmd_unit="$test_cmd $test_cmd_working_dir -m unit"
         test_cmd_observer="$test_cmd --frame-rate=27 --observers=3"
         test_cmd_observer="$test_cmd_observer $test_cmd_working_dir -m observer_pattern"
