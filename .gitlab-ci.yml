@@ -245,22 +245,22 @@ pypi-epiphan-dvi2pcie-duo:
     # Epiphan DVI2PCIe Duo support (OpenCV only)
     - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--enable-nonfree" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--no-i420" --upgrade "$PyPI_INSTALLER"
     # Disabled the BGRA tests of Epiphan DVI2PCIe Duo (currently using OpenCV) until issue #115 is resolved
-    # - $TEST_LAUNCHER epiphan-dvi2pcie bgra sdi; exit_on_fail
-    # - $TEST_LAUNCHER epiphan-dvi2pcie bgra dvi; exit_on_fail
+    # - $TEST_LAUNCHER epiphan-dvi2pcieduo bgra sdi; exit_on_fail
+    # - $TEST_LAUNCHER epiphan-dvi2pcieduo bgra dvi; exit_on_fail
     # Epiphan DVI2PCIe Duo support (Epiphan SDK only)
     - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--enable-nonfree" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--epiphansdk" --install-option="--no-bgra" --upgrade "$PyPI_INSTALLER"
     # TODO: issue #102
-    # - $TEST_LAUNCHER epiphan-dvi2pcie i420 sdi; exit_on_fail
-    # - $TEST_LAUNCHER epiphan-dvi2pcie i420 dvi; exit_on_fail
+    # - $TEST_LAUNCHER epiphan-dvi2pcieduo i420 sdi; exit_on_fail
+    # - $TEST_LAUNCHER epiphan-dvi2pcieduo i420 dvi; exit_on_fail
     # Epiphan DVI2PCIe Duo support (both OpenCV and Epiphan SDK)
     # dummy var, to induce width_offset in test_epiphan_py_module.py
     # see definition of width_offset in test_epiphan_py_module.py (Epiphan DVI2PCIe Duo tests)
     - export USE_EPIPHANSDK=3
     - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--enable-nonfree" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--epiphansdk" --upgrade "$PyPI_INSTALLER"
-    - $TEST_LAUNCHER epiphan-dvi2pcie i420 sdi; exit_on_fail
+    - $TEST_LAUNCHER epiphan-dvi2pcieduo i420 sdi; exit_on_fail
     # NumPy support
     - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--enable-nonfree" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--epiphansdk" --install-option="--numpy" --upgrade "$PyPI_INSTALLER"
-    - $TEST_LAUNCHER epiphan-dvi2pcie i420 sdi; exit_on_fail
+    - $TEST_LAUNCHER epiphan-dvi2pcieduo i420 sdi; exit_on_fail
     # Run the actual NumPy tests
     - pip install numpy
     - $TEST_LAUNCHER numpy i420; exit_on_fail
