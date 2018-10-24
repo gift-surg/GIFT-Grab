@@ -106,7 +106,6 @@ elif [ "$1" = "epiphan-dvi2pcieduo" ]; then
     else
         parse_colour $2
         parse_port $3
-        test_cmd="$test_cmd --device=$test_device"
         test_cmd="$test_cmd --colour-space=$test_colour_space"
         test_cmd="$test_cmd --port=$test_port"
         test_cmd_working_dir="$test_dir/epiphan"
