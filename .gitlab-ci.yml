@@ -258,19 +258,22 @@ pypi-epiphan-dvi2pcie-duo:
     - export USE_EPIPHANSDK=3
     - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--enable-nonfree" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--epiphansdk" --upgrade "$PyPI_INSTALLER"
     - $TEST_LAUNCHER epiphan-dvi2pcieduo i420 sdi; exit_on_fail
+    - $TEST_LAUNCHER epiphan-dvi2pcieduo i420 dvi; exit_on_fail
     # NumPy support
     - pip install -vvv --install-option="--hevc" --install-option="--nvenc" --install-option="--enable-nonfree" --install-option="--xvid" --install-option="--vp9" --install-option="--epiphan-dvi2pcie-duo" --install-option="--epiphansdk" --install-option="--numpy" --upgrade "$PyPI_INSTALLER"
     - $TEST_LAUNCHER epiphan-dvi2pcieduo i420 sdi; exit_on_fail
+    - $TEST_LAUNCHER epiphan-dvi2pcieduo i420 dvi; exit_on_fail
     # Run the actual NumPy tests
     - pip install numpy
     - $TEST_LAUNCHER numpy i420; exit_on_fail
     - unset USE_EPIPHANSDK  # remove dummy var
     - deactivate
   tags:
+    - gift-linux
+    - gift-pypi
     - gift-epiphan-dvi2pcie-duo
   only:
     - this-branch-should-never-exist
-    - 24-remove-user-tests-installed-via-pip
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 epiphan-dvi2pcie-duo:
@@ -295,6 +298,7 @@ epiphan-dvi2pcie-duo:
     - cmake -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D USE_EPIPHANSDK=ON -D ENABLE_NONFREE=ON -D BUILD_PYTHON=ON -D BUILD_TESTS=ON -D USE_HEVC=ON -D USE_NVENC=ON -D ENABLE_NONFREE=ON "$GiftGrab_SOURCE_DIR"
     - make -j; exit_on_fail
     - check_epiphan_alive
+    - ctest -R Epiphan_DVI2PCIeDuo_VideoSourceFactory_DVI_I420; exit_on_fail  # due to issue #126
     - ctest -R Epiphan_DVI2PCIeDuo_VideoSourceFactory_SDI_I420; exit_on_fail  # due to issue #126
     # test BGRA colour space
     - cmake -D USE_BGRA=ON -D USE_I420=OFF .
@@ -302,6 +306,7 @@ epiphan-dvi2pcie-duo:
     - check_epiphan_alive
     # -E => excluding VideoSourceFactory tests
     - ctest -E Epiphan_DVI2PCIeDuo_VideoSourceFactory; exit_on_fail
+    - ctest -R Epiphan_DVI2PCIeDuo_VideoSourceFactory_DVI_BGRA; exit_on_fail  # due to issue #126
     - ctest -R Epiphan_DVI2PCIeDuo_VideoSourceFactory_SDI_BGRA; exit_on_fail  # due to issue #126
     # test I420 colour space
     - cmake -D USE_BGRA=OFF -D USE_I420=ON .
@@ -314,10 +319,10 @@ epiphan-dvi2pcie-duo:
     - ctest; exit_on_fail
     - unset USE_EPIPHANSDK  # remove dummy var
   tags:
+    - gift-linux
     - gift-epiphan-dvi2pcie-duo
   only:
     - this-branch-should-never-exist
-    - 24-remove-user-tests-installed-via-pip
 
 ################## Device: Epiphan Pearl #########################
 ################## Platform: PyPI ################################

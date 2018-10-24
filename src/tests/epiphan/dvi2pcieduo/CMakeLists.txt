@@ -8,6 +8,7 @@ FILE(COPY
 SET(CONFIG_DIR ${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/data)
 
 LIST(APPEND PORTS SDI)
+LIST(APPEND PORTS DVI)
 
 # Simultaneous grabbing + encoding frame rate in pure C++
 if(USE_FFMPEG)
