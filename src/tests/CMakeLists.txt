@@ -71,3 +71,6 @@ endif(USE_BLACKMAGIC_DECKLINK_SDI_4K OR USE_BLACKMAGIC_DECKLINK_4K_EXTREME_12G)
 if(USE_FILES)
     ADD_SUBDIRECTORY(files)
 endif(USE_FILES)
+
+# VideoSourceFactory leak checker
+ADD_SUBDIRECTORY(videosourcefactory)
