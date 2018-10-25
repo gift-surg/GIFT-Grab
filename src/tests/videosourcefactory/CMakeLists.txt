@@ -1,0 +1,5 @@
+SET(VIDEO_SOURCE_FACTORY_LEAK_CHECKER video_source_factory_leak_checker)
+ADD_EXECUTABLE(
+    ${VIDEO_SOURCE_FACTORY_LEAK_CHECKER}
+    ${CMAKE_SOURCE_DIR}/tests/videosourcefactory/leak_checker.cpp
+)
