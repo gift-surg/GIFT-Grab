@@ -7,6 +7,7 @@ THIS_SCRIPT="$(basename "$(test -L "${BASH_SOURCE[0]}" && readlink "$0" || echo 
 
 args_ok=true
 test_colour_space=""
+test_port=""
 test_codec=""
 test_file_extension=""
 test_cmd="pytest"
@@ -22,6 +23,17 @@ function parse_colour()
 {
     if [ "$1" = "bgra" ] || [ "$1" = "i420" ] || [ "$1" = "uyvy" ]; then
         test_colour_space=$1
+    else
+        args_ok=false
+    fi
+}
+
+
+# Function for parsing passed CLI argument for Epiphan device port
+function parse_port()
+{
+    if [ "$1" = "dvi" ] || [ "$1" = "sdi" ]; then
+        test_port=$1
     else
         args_ok=false
     fi
@@ -87,8 +99,21 @@ elif [ "$1" = "numpy" ]; then
         fi
     fi
 elif [ "$1" = "epiphan-dvi2pcieduo" ]; then
-    printf "$1 option not implemented yet\n"  # TODO
-    args_ok=false
+    test_device=$1
+    test_device=${test_device:8}
+    if [ $# -ne "3" ]; then
+        args_ok=false
+    else
+        parse_colour $2
+        parse_port $3
+        test_cmd="$test_cmd --colour-space=$test_colour_space"
+        test_cmd="$test_cmd --port=$test_port"
+        test_cmd_working_dir="$test_dir/epiphan/dvi2pcieduo"
+        test_cmd_unit="$test_cmd $test_cmd_working_dir -m unit"
+        test_cmd_observer="$test_cmd --frame-rate=27 --observers=3"
+        test_cmd_observer="$test_cmd_observer $test_cmd_working_dir -m observer_pattern"
+        test_cmd="$test_cmd_unit && $test_cmd_observer"
+    fi
 elif [ "$1" = "network" ]; then
     printf "$1 option not implemented yet\n"  # TODO
     args_ok=false
@@ -119,7 +144,7 @@ then
     printf "\tCODEC should be one of hevc, xvid, or vp9\n"
     printf " or:\tCOLOUR should be one of bgra, i420, or uyvy\n"
     printf " or:\t${THIS_SCRIPT} numpy bgra | i420\n"
-    printf " or:\t${THIS_SCRIPT} epiphan-dvi2pcieduo bgra | i420\n"
+    printf " or:\t${THIS_SCRIPT} epiphan-dvi2pcieduo bgra | i420 dvi | sdi\n"
     printf " or:\t${THIS_SCRIPT} network\n"
     printf " or:\t${THIS_SCRIPT} blackmagic-decklinksdi4k uyvy\n"
     printf " or:\t${THIS_SCRIPT} blackmagic-decklink4kextreme12g bgra|uyvy\n"
