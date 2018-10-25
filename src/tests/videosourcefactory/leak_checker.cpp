@@ -33,10 +33,10 @@ int main(int argc, char *argv[])
     ColourSpace colour;
     if (std::strcmp(argv[2], "BGRA") == 0)
         colour = ColourSpace::BGRA;
-    if (std::strcmp(argv[2], "I420") == 0)
+    else if (std::strcmp(argv[2], "I420") == 0)
         colour = ColourSpace::I420;
-    if (std::strcmp(argv[2], "UYVY") == 0)
-        colour = ColourSpace::BGRA;
+    else if (std::strcmp(argv[2], "UYVY") == 0)
+        colour = ColourSpace::UYVY;
     else
         show_error(argc, argv);
 
