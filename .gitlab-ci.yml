@@ -443,6 +443,7 @@ pypi-blackmagic-decklink-sdi-4k:
     - this-branch-should-never-exist
     - 23-support-for-blackmagic-decklink-4k-extreme-12g
     - 20-support-for-capturing-bgra-frames-with-blackmagic-devices
+    - 14-unable-to-free-blackmagic-video-source
 
 blackmagic-decklink-sdi-4k:
   stage: test_cmake
@@ -464,6 +465,7 @@ blackmagic-decklink-sdi-4k:
     - this-branch-should-never-exist
     - 23-support-for-blackmagic-decklink-4k-extreme-12g
     - 20-support-for-capturing-bgra-frames-with-blackmagic-devices
+    - 14-unable-to-free-blackmagic-video-source
 
 ################## Device: Blackmagic DeckLink 4K Extreme 12G ##################
 pypi-blackmagic-decklink-4k-extreme-12g:
@@ -507,6 +509,7 @@ pypi-blackmagic-decklink-4k-extreme-12g:
     - 23-support-for-blackmagic-decklink-4k-extreme-12g
     - 20-support-for-capturing-bgra-frames-with-blackmagic-devices
     - 32-videosourcefactory-destructor-does-not-free-all-devices
+    - 14-unable-to-free-blackmagic-video-source
 
 blackmagic-decklink-4k-extreme-12g:
   stage: test_cmake
@@ -527,3 +530,4 @@ blackmagic-decklink-4k-extreme-12g:
     - 23-support-for-blackmagic-decklink-4k-extreme-12g
     - 20-support-for-capturing-bgra-frames-with-blackmagic-devices
     - 32-videosourcefactory-destructor-does-not-free-all-devices
+    - 14-unable-to-free-blackmagic-video-source
