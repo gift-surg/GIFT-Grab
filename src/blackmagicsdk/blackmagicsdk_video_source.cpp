@@ -125,6 +125,7 @@ VideoSourceBlackmagicSDK::~VideoSourceBlackmagicSDK()
     }
 
     // Stop streaming and disable enabled inputs
+    _deck_link_input->SetCallback(nullptr);
     _deck_link_input->StopStreams();
     _deck_link_input->DisableVideoInput();
 
