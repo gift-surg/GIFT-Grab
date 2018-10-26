@@ -26,8 +26,9 @@ VideoSourceFactory::VideoSourceFactory()
 
 VideoSourceFactory::~VideoSourceFactory()
 {
-    free_device(DVI2PCIeDuo_DVI);
-    free_device(DVI2PCIeDuo_SDI);
+    size_t num_devices = static_cast<size_t>(Device::COUNT);
+    for (size_t device = 0; device < num_devices; device++)
+        free_device(static_cast<Device>(device));
 }
 
 VideoSourceFactory & VideoSourceFactory::get_instance()
