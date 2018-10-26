@@ -118,9 +118,11 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
 
 VideoSourceBlackmagicSDK::~VideoSourceBlackmagicSDK()
 {
-    // Make sure streamer thread not trying to access buffer
-    std::lock_guard<std::mutex> data_lock_guard(_data_lock);
-    _running = false;
+    { // Artificial scope for data lock
+        // Make sure streamer thread not trying to access buffer
+        std::lock_guard<std::mutex> data_lock_guard(_data_lock);
+        _running = false;
+    }
 
     // Stop streaming and disable enabled inputs
     _deck_link_input->StopStreams();
