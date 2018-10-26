@@ -506,6 +506,7 @@ pypi-blackmagic-decklink-4k-extreme-12g:
     - this-branch-should-never-exist
     - 23-support-for-blackmagic-decklink-4k-extreme-12g
     - 20-support-for-capturing-bgra-frames-with-blackmagic-devices
+    - 32-videosourcefactory-destructor-does-not-free-all-devices
 
 blackmagic-decklink-4k-extreme-12g:
   stage: test_cmake
@@ -525,3 +526,4 @@ blackmagic-decklink-4k-extreme-12g:
     - this-branch-should-never-exist
     - 23-support-for-blackmagic-decklink-4k-extreme-12g
     - 20-support-for-capturing-bgra-frames-with-blackmagic-devices
+    - 32-videosourcefactory-destructor-does-not-free-all-devices
