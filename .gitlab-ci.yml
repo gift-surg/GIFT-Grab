@@ -24,7 +24,7 @@ stages:
 build-py27:
   stage: offline
   script:
-    - tox
+    - tox -e py27
   tags:
     - gift-adelie
 
