@@ -14,6 +14,9 @@ before_script:
   - export BOOST_163_ROOT_DIR="/home/gitlab-runner/environments/giftgrab/boost163"
 
 stages:
+  - offline
+  - device-cmake
+  - device-pip
   - install
   - test_cmake
   - test_pypi
