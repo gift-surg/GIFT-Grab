@@ -2,7 +2,6 @@ variables:
   CI_SCRIPTS_DIR: "./ci"
   SCRATCH_DIR: "/home/gitlab-runner/giftgrab-scratch"
   CTEST_OUTPUT_ON_FAILURE: "1"
-  BOOST_ROOT_163_PY35: "/home/gitlab-runner/environments/giftgrab/usr/local/include"
 
 before_script:
   - export REVHASH=$(git rev-parse --short HEAD)
@@ -32,7 +31,8 @@ build-py27:
 build-py35:
   stage: offline
   script:
-    - BOOST_ROOT=$BOOST_ROOT_163_PY35 tox -e py35
+    - export BOOST_ROOT="/home/gitlab-runner/environments/giftgrab/usr/local/include"
+    - tox -e py35
   tags:
     - gift-adelie
 
