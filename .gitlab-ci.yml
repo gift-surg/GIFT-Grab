@@ -21,6 +21,13 @@ stages:
   - test_cmake
   - test_pypi
 
+build-py27:
+  stage: offline
+  script:
+    - tox
+  tags:
+    - gift-adelie
+
 ################## Platform: CMake ##################
 ################## Target: All ######################
 linux:
