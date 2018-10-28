@@ -24,6 +24,7 @@ stages:
 build-py27:
   stage: offline
   script:
+    - export BOOST_ROOT=""  # otherwise tox complains!
     - tox -e py27
   tags:
     - gift-adelie
