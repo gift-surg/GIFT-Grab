@@ -21,7 +21,7 @@ stages:
   - test_cmake
   - test_pypi
 
-build-py27:
+build:
   stage: offline
   script:
     - tox
