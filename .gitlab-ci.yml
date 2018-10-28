@@ -32,7 +32,7 @@ build-py27:
 build-py35:
   stage: offline
   script:
-    - export BOOST_ROOT="/home/gitlab-runner/environments/giftgrab/usr/local/include"
+    - export BOOST_ROOT="/home/gitlab-runner/environments/giftgrab/install/boost/include"
     - sed -i 's/2\.7/3\.5/g' src/cmake/pythonlibs/CMakeLists.txt
     - tox -e py35
   tags:
