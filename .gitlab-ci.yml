@@ -28,6 +28,13 @@ build-py27:
   tags:
     - gift-adelie
 
+build-py35:
+  stage: offline
+  script:
+    - tox -e py35
+  tags:
+    - gift-adelie
+
 ################## Platform: CMake ##################
 ################## Target: All ######################
 linux:
