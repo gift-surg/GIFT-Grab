@@ -109,6 +109,7 @@ linux:
     - 224-add-a-citing-gift-grab-section-to-pypi-page
     - 225-add-citing-gift-grab-section-to-rtd-index
     - 223-add-some-information-on-the-main-doxygen-home-page
+    - 42-support-for-cross-python-testing
 
 ################## Platform: PyPI ##################
 ################## Target: All #####################
@@ -208,6 +209,7 @@ pypi:
     - 222-add-how-to-cite-block-in-main-readme
     - 225-add-citing-gift-grab-section-to-rtd-index
     - 223-add-some-information-on-the-main-doxygen-home-page
+    - 42-support-for-cross-python-testing
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 ################## Platform: PyPI ################################
