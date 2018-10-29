@@ -45,8 +45,8 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
     _full.height = 1080;
     if (_colour == BGRA)
     {
-        _bgra_data = reinterpret_cast<unsigned char*>(realloc(
-            _bgra_data, 4 * _full.width * _full.height * sizeof(unsigned char)
+        _bgra_data = reinterpret_cast<unsigned char*>(malloc(
+            4 * _full.width * _full.height * sizeof(unsigned char)
         ));
     }
     get_full_frame();
