@@ -11,6 +11,7 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
     , _flags(0)
     , _daemon(nullptr)
     , _bgra_data(nullptr)
+    , _buffer(nullptr)
 {
     FrmGrab_Init();
 
@@ -120,6 +121,7 @@ bool VideoSourceEpiphanSDK::get_frame(VideoFrame & frame)
             frame_width, frame_height
         );
         FrmGrab_Release(_frame_grabber, _buffer);
+        _buffer = nullptr;
         return true;
     }
     else
