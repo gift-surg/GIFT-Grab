@@ -41,7 +41,16 @@ int main(int argc, char *argv[])
         show_error(argc, argv);
 
     VideoSourceFactory &factory = VideoSourceFactory::get_instance();
-    IVideoSource *source = factory.get_device(device, colour);
+    try
+    {
+        IVideoSource *source = factory.get_device(device, colour);
+    }
+    catch (gg::DeviceOffline &device_offline)
+    {
+        printf("Device offline\n");
+        return EXIT_FAILURE;
+    }
+    printf("OK\n");
 
     /* Upon exiting, the factory should free all
      * allocated memory. So there should be no
