@@ -42,6 +42,11 @@ protected:
     //!
     gg::BroadcastDaemon * _daemon;
 
+    //!
+    //! \brief Buffer for converting from ARGB to BGRA
+    //!
+    unsigned char *_bgra_data;
+
 public:
     //!
     //! \brief Connects to specified port of an Epiphan
@@ -50,7 +55,7 @@ public:
     //! as \c \#define'd in Epiphan device properties
     //! header
     //! \param colour_space \c V2U_GRABFRAME_FORMAT_I420
-    //! or \c V2U_GRABFRAME_FORMAT_BGR24
+    //! or \c V2U_GRABFRAME_FORMAT_ARGB32
     //! \throw VideoSourceError if connection attempt
     //! fails, with a detailed error message
     //!
