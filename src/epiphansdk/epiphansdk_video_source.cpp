@@ -10,6 +10,7 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
     , _frame_grabber(nullptr)
     , _flags(0)
     , _daemon(nullptr)
+    , _bgra_data(nullptr)
 {
     FrmGrab_Init();
 
@@ -21,7 +22,7 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
         return;
     }
 
-    if (colour_space != V2U_GRABFRAME_FORMAT_I420 && colour_space != V2U_GRABFRAME_FORMAT_RGB24)
+    if (colour_space != V2U_GRABFRAME_FORMAT_I420 && colour_space != V2U_GRABFRAME_FORMAT_ARGB32)
     {
         // TODO - exception GiftGrab#42
         std::cerr << "Colour space " << colour_space << " not supported" << std::endl;
@@ -42,6 +43,12 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
      */
     _full.width = 1920;
     _full.height = 1080;
+    if (_colour == BGRA)
+    {
+        _bgra_data = reinterpret_cast<unsigned char*>(realloc(
+            _bgra_data, 4 * _full.width * _full.height * sizeof(unsigned char)
+        ));
+    }
     get_full_frame();
     // TODO - exception GiftGrab#42
     if (!get_frame(frame)) return;
@@ -55,6 +62,11 @@ VideoSourceEpiphanSDK::~VideoSourceEpiphanSDK()
     delete _daemon;
     if (_frame_grabber) FrmGrab_Close(_frame_grabber);
     FrmGrab_Deinit();
+    if (_colour == BGRA && _bgra_data != nullptr)
+    {
+        free(_bgra_data);
+        _bgra_data = nullptr;
+    }
 }
 
 bool VideoSourceEpiphanSDK::get_frame_dimensions(int & width, int & height)
@@ -73,17 +85,40 @@ bool VideoSourceEpiphanSDK::get_frame(VideoFrame & frame)
     _buffer = FrmGrab_Frame(_frame_grabber, _flags, &_roi);
     if (_buffer)
     {
+        unsigned char *data = static_cast<unsigned char*>(_buffer->pixbuf);
+        size_t frame_data_length = _buffer->imagelen;
+        /* TODO #54 specified _roi not always
+         * respected by FrmGrab_Frame, hence
+         * constructing with _buffer->crop
+         * instead of _roi to avoid alignment
+         * problems when saving to video files
+         */
+        size_t frame_width = _buffer->crop.width,
+               frame_height = _buffer->crop.height;
+        unsigned char *frame_data = nullptr;
+        switch(_colour)
+        {
+        case I420:
+            frame_data = data;
+            break;
+        case BGRA:
+            for (size_t i = 0; i < frame_data_length; i += 4)
+            {
+                _bgra_data[i] = data[i + 3];
+                _bgra_data[i + 1] = data[i + 2];
+                _bgra_data[i + 2] = data[i + 1];
+                _bgra_data[i + 3] = data[i];
+            }
+            frame_data = _bgra_data;
+            break;
+        default:
+            // TODO
+            break;
+        }
         frame.init_from_specs(
-                    static_cast<unsigned char*>(_buffer->pixbuf),
-                    _buffer->imagelen,
-                    /* TODO #54 specified _roi not always
-                     * respected by FrmGrab_Frame, hence
-                     * constructing with _buffer->crop
-                     * instead of _roi to avoid alignment
-                     * problems when saving to video files
-                     */
-                    _buffer->crop.width, _buffer->crop.height
-                    );
+            frame_data, frame_data_length,
+            frame_width, frame_height
+        );
         FrmGrab_Release(_frame_grabber, _buffer);
         return true;
     }
