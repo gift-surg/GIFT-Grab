@@ -13,6 +13,17 @@ namespace gg
 //!
 class ArgbToBgraConverter
 {
+protected:
+    //!
+    //! \brief Width of frames passed for conversion
+    //!
+    size_t _width;
+
+    //!
+    //! \brief Height of frames passed for conversion
+    //!
+    size_t _height;
+
 public:
     //!
     //! \brief Create a converter, which should be
