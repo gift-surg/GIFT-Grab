@@ -27,7 +27,9 @@ void ArgbToBgraConverter::convert(unsigned char *argb,
 {
 #ifdef USE_FFMPEG
     _sws_srcSlice[0] = argb;
+    _sws_srcStride[0] = _width;
     _sws_dst[0] = bgra;
+    _sws_dstStride[0] = _width;
     sws_scale(_sws_context,
               _sws_srcSlice, _sws_srcStride, 0, _height,
               _sws_dst, _sws_dstStride);
