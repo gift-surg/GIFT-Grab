@@ -127,6 +127,7 @@ bool VideoSourceEpiphanSDK::get_frame(VideoFrame & frame)
 
 double VideoSourceEpiphanSDK::get_frame_rate()
 {
+    double frame_rate = -1;
     if (_frame_grabber)
     {
 #if defined(Epiphan_DVI2PCIeDuo_DVI) && \
@@ -135,9 +136,18 @@ double VideoSourceEpiphanSDK::get_frame_rate()
     defined(Epiphan_DVI2PCIeDuo_SDI_MAX_FRAME_RATE)
         std::string port_id = FrmGrab_GetId(_frame_grabber);
         if (port_id == Epiphan_DVI2PCIeDuo_DVI)
-            return Epiphan_DVI2PCIeDuo_DVI_MAX_FRAME_RATE;
+            frame_rate = Epiphan_DVI2PCIeDuo_DVI_MAX_FRAME_RATE;
         else if (port_id == Epiphan_DVI2PCIeDuo_SDI)
-            return Epiphan_DVI2PCIeDuo_SDI_MAX_FRAME_RATE;
+            frame_rate = Epiphan_DVI2PCIeDuo_SDI_MAX_FRAME_RATE;
+        if (frame_rate > 0)
+        {
+            /* The above max frame rates are defined for I420,
+             * and are halved for BGRA, due to hardware bandwidth
+             */
+            if (_colour == BGRA)
+                frame_rate /= 2.0;
+            return frame_rate;
+        }
 #endif
     }
 
