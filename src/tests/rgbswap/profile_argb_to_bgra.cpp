@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
     copy_strided(argb, argb + l, bgra_functor + 3, 4);
     t2 = high_resolution_clock::now();
     duration = duration_cast<microseconds>( t2 - t1 ).count();
-    cout << "functor (" << (argb_same_as_bgra(argb, bgra_functor, l) ? "success" : "failure")
+    cout << "Function (" << (argb_same_as_bgra(argb, bgra_functor, l) ? "success" : "failure")
          << ") took: " << duration << " usec" << endl;
     free(bgra_functor);
 
@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
     sws_scale(c, srcSlice, srcStride, srcSliceY, srcSliceH, dst, dstStride);
     t2 = high_resolution_clock::now();
     duration = duration_cast<microseconds>( t2 - t1 ).count();
-    cout << "ffmpeg (" << (argb_same_as_bgra(argb, bgra_ffmpeg, l) ? "success" : "failure")
+    cout << "FFmpeg (" << (argb_same_as_bgra(argb, bgra_ffmpeg, l) ? "success" : "failure")
          << ") took: " << duration << " usec" << endl;
     free(bgra_ffmpeg);
 #endif
