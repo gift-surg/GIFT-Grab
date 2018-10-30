@@ -107,19 +107,19 @@ int main(int argc, char *argv[])
     cout << "memcpy took: " << duration << " usec" << endl;
     free(argb_memcpy);
 
-    // ARGB => BGRA with a functor
-    unsigned char *bgra_functor = nullptr;
-    bgra_functor = reinterpret_cast<unsigned char *>(malloc(l * sizeof(unsigned char)));
+    // ARGB => BGRA with a function
+    unsigned char *bgra_function = nullptr;
+    bgra_function = reinterpret_cast<unsigned char *>(malloc(l * sizeof(unsigned char)));
     t1 = high_resolution_clock::now();
-    copy_strided(argb + 3, argb + l, bgra_functor, 4);
-    copy_strided(argb + 2, argb + l, bgra_functor + 1, 4);
-    copy_strided(argb + 1, argb + l, bgra_functor + 2, 4);
-    copy_strided(argb, argb + l, bgra_functor + 3, 4);
+    copy_strided(argb + 3, argb + l, bgra_function, 4);
+    copy_strided(argb + 2, argb + l, bgra_function + 1, 4);
+    copy_strided(argb + 1, argb + l, bgra_function + 2, 4);
+    copy_strided(argb, argb + l, bgra_function + 3, 4);
     t2 = high_resolution_clock::now();
     duration = duration_cast<microseconds>( t2 - t1 ).count();
-    cout << "Function (" << (argb_same_as_bgra(argb, bgra_functor, l) ? "success" : "failure")
+    cout << "Function (" << (argb_same_as_bgra(argb, bgra_function, l) ? "success" : "failure")
          << ") took: " << duration << " usec" << endl;
-    free(bgra_functor);
+    free(bgra_function);
 
 #ifdef USE_FFMPEG
     // ARGB => BGRA using FFmpeg
