@@ -39,6 +39,13 @@ protected:
     V2U_GrabFrame2 * _buffer;
 
     //!
+    //! \brief This mutex to be locked when
+    //! accessing the buffer
+    //! \sa _buffer
+    //!
+    std::mutex _buffer_lock;
+
+    //!
     //! \brief
     //!
     gg::BroadcastDaemon * _daemon;
