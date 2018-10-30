@@ -83,6 +83,8 @@ bool VideoSourceEpiphanSDK::get_frame(VideoFrame & frame)
         // TODO - exception GiftGrab#42
         return false;
 
+    std::lock_guard<std::mutex> buffer_lock_guard(_buffer_lock);
+
     _buffer = FrmGrab_Frame(_frame_grabber, _flags, &_roi);
     if (_buffer)
     {
