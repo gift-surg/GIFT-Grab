@@ -3,6 +3,7 @@
 #include "ivideosource.h"
 #include "macros.h"
 #include "broadcastdaemon.h"
+#include "argb_to_bgra_converter.h"
 
 namespace gg
 {
@@ -46,6 +47,11 @@ protected:
     //! \brief Buffer for converting from ARGB to BGRA
     //!
     unsigned char *_bgra_data;
+
+    //!
+    //! \brief ARGB to BGRA converter
+    //!
+    ArgbToBgraConverter _argb_to_bgra;
 
 public:
     //!
