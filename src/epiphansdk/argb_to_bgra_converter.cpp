@@ -48,6 +48,9 @@ void ArgbToBgraConverter::set_frame_dimensions(size_t width,
 {
     assert(width > 0);
     assert(height > 0);
+    if (_width == width and _height == height)
+        return;
+
     _width = width;
     _height = height;
 #ifdef USE_FFMPEG
