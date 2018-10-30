@@ -63,7 +63,7 @@ public:
     //! input buffer
     //! \sa set_frame_dimensions
     //!
-    void convert(const unsigned char *argb, unsigned char *bgra);
+    void convert(unsigned char *argb, unsigned char *bgra);
 
     //!
     //! \brief Allocate all resources needed for ARGB to

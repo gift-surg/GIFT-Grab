@@ -22,9 +22,16 @@ ArgbToBgraConverter::~ArgbToBgraConverter()
 #endif
 }
 
-void ArgbToBgraConverter::convert(const unsigned char *argb,
+void ArgbToBgraConverter::convert(unsigned char *argb,
                                   unsigned char *bgra)
 {
+#ifdef USE_FFMPEG
+    _sws_srcSlice[0] = argb;
+    _sws_dst[0] = bgra;
+    sws_scale(_sws_context,
+              _sws_srcSlice, _sws_srcStride, 0, _height,
+              _sws_dst, _sws_dstStride);
+#else
     size_t length = 4 * _width * _height;
     for (size_t i = 0; i < length; i += 4)
     {
@@ -33,6 +40,7 @@ void ArgbToBgraConverter::convert(const unsigned char *argb,
         bgra[i+2] = argb[i+1];
         bgra[i+3] = argb[i];
     }
+#endif
 }
 
 void ArgbToBgraConverter::set_frame_dimensions(size_t width,
@@ -42,6 +50,14 @@ void ArgbToBgraConverter::set_frame_dimensions(size_t width,
     assert(height > 0);
     _width = width;
     _height = height;
+#ifdef USE_FFMPEG
+    _sws_context = sws_getCachedContext(
+                _sws_context,
+                _width, _height, _sws_srcFormat,
+                _width, _height, _sws_dstFormat,
+                0, nullptr, nullptr, nullptr       // advanced
+                );
+#endif
 }
 
 }
