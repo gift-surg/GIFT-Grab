@@ -8,6 +8,9 @@ extern "C" {
 #include <libswscale/swscale.h>
 }
 #endif
+#ifdef USE_OPENCV
+#include <opencv2/opencv.hpp>
+#endif
 
 using namespace std;
 using namespace std::chrono;
@@ -38,22 +41,43 @@ int main(int argc, char *argv[])
 {
     // ARGB with random values
     size_t w = 1920, h = 1080;
-    if (argc >= 3)
+    size_t l;
+    unsigned char *argb = nullptr;
+    bool compose = true;
+    if (argc == 2)
+    {
+#ifdef USE_OPENCV
+        cv::Mat orig = cv::imread(argv[1]), _bgra;
+        w = orig.cols;
+        h = orig.rows;
+        cv::cvtColor(orig, _bgra, cv::COLOR_BGR2BGRA);
+        cv::Mat _argb(_bgra.size(), _bgra.type());
+        int from_to[] = { 0,3, 1,2, 2,1, 3,0 };
+        cv::mixChannels(&_bgra, 1, &_argb, 1, from_to, 4);
+        compose = false;
+        l = 4 * w * h;
+        argb = reinterpret_cast<unsigned char *>(malloc(l * sizeof(unsigned char)));
+        memcpy(argb, _argb.data, l * sizeof(unsigned char));
+#endif
+    }
+    else if (argc == 3)
     {
         w = atoi(argv[1]);
         h = atoi(argv[2]);
     }
     cout << "Profiling ARGB => BGRA conversion for "
          << w << " x " << h << " image" << endl;
-    size_t l = 4 * w * h;
-    unsigned char *argb = nullptr;
-    argb = reinterpret_cast<unsigned char *>(malloc(l * sizeof(unsigned char)));
-    for (size_t i = 0; i < l; i++)
+    if (compose)
     {
-        argb[i] = i % 32;
-        argb[i+1] = argb[i] * 4;
-        argb[i+2] = i % 256;
-        argb[i+3] = 255;
+        l = 4 * w * h;
+        argb = reinterpret_cast<unsigned char *>(malloc(l * sizeof(unsigned char)));
+        for (size_t i = 0; i < l; i++)
+        {
+            argb[i] = i % 32;
+            argb[i+1] = argb[i] * 4;
+            argb[i+2] = i % 256;
+            argb[i+3] = 255;
+        }
     }
 
     // ARGB => BGRA in a strided loop
@@ -117,6 +141,9 @@ int main(int argc, char *argv[])
     cout << "FFmpeg (" << (argb_same_as_bgra(argb, bgra_ffmpeg, l) ? "success" : "failure")
          << ") took: " << duration << " usec" << endl;
     free(bgra_ffmpeg);
+#endif
+#ifdef USE_OPENCV
+    cv::imwrite("bgra_ffmpeg.png", cv::Mat(h, w, CV_8UC4, bgra_ffmpeg));
 #endif
 
     // free all memory
