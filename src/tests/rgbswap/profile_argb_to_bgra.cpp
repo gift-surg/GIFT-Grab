@@ -96,6 +96,13 @@ int main(int argc, char *argv[])
     cout << "Loop (" << (argb_same_as_bgra(argb, bgra_loop, l) ? "success" : "failure")
          << ") took: " << duration << " usec" << endl;
     free(bgra_loop);
+#ifdef USE_OPENCV
+	{
+        cv::Mat _bgra(h, w, CV_8UC4, bgra_loop), bgr;
+        cv::cvtColor(_bgra, bgr, cv::COLOR_BGRA2BGR);
+        cv::imwrite("bgra_loop.png", bgr);
+	}
+#endif
 
     // simple memcopy (no ARGB => BGRA)
     unsigned char *argb_memcpy = nullptr;
@@ -143,7 +150,11 @@ int main(int argc, char *argv[])
     free(bgra_ffmpeg);
 #endif
 #ifdef USE_OPENCV
-    cv::imwrite("bgra_ffmpeg.png", cv::Mat(h, w, CV_8UC4, bgra_ffmpeg));
+    {
+        cv::Mat _bgra(h, w, CV_8UC4, bgra_ffmpeg), bgr;
+        cv::cvtColor(_bgra, bgr, cv::COLOR_BGRA2BGR);
+        cv::imwrite("bgra_ffmpeg.png", bgr);
+    }
 #endif
 
     // free all memory
