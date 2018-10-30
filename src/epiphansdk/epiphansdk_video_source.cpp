@@ -103,13 +103,8 @@ bool VideoSourceEpiphanSDK::get_frame(VideoFrame & frame)
             frame_data = data;
             break;
         case BGRA:
-            for (size_t i = 0; i < frame_data_length; i += 4)
-            {
-                _bgra_data[i] = data[i + 3];
-                _bgra_data[i + 1] = data[i + 2];
-                _bgra_data[i + 2] = data[i + 1];
-                _bgra_data[i + 3] = data[i];
-            }
+            _argb_to_bgra.set_frame_dimensions(frame_width, frame_height);
+            _argb_to_bgra.convert(data, _bgra_data);
             frame_data = _bgra_data;
             break;
         default:
