@@ -31,9 +31,9 @@ protected:
 
 #ifdef USE_FFMPEG
     unsigned char *_sws_srcSlice[1];
-    int _sws_srcStride[1] = {4};
+    int _sws_srcStride[1];
     unsigned char *_sws_dst[1];
-    int _sws_dstStride[1] = {4};
+    int _sws_dstStride[1];
     AVPixelFormat _sws_srcFormat = AV_PIX_FMT_ARGB;
     AVPixelFormat _sws_dstFormat = AV_PIX_FMT_BGRA;
     SwsContext *_sws_context;
