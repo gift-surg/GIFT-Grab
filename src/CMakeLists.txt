@@ -270,7 +270,9 @@ if(USE_EPIPHANSDK)
 
     INCLUDE_DIRECTORIES(epiphansdk)
     LIST(APPEND HEADERS epiphansdk/epiphansdk_video_source.h)
+    LIST(APPEND HEADERS epiphansdk/argb_to_bgra_converter.h)
     LIST(APPEND SOURCES epiphansdk/epiphansdk_video_source.cpp)
+    LIST(APPEND SOURCES epiphansdk/argb_to_bgra_converter.cpp)
 endif(USE_EPIPHANSDK)
 
 # Blackmagic SDK video source
