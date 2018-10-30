@@ -19,7 +19,14 @@ ArgbToBgraConverter::~ArgbToBgraConverter()
 void ArgbToBgraConverter::convert(const unsigned char *argb,
                                   unsigned char *bgra)
 {
-
+    size_t length = 4 * _width * _height;
+    for (size_t i = 0; i < length; i += 4)
+    {
+        bgra[i] = argb[i+3];
+        bgra[i+1] = argb[i+2];
+        bgra[i+2] = argb[i+1];
+        bgra[i+3] = argb[i];
+    }
 }
 
 void ArgbToBgraConverter::set_frame_dimensions(size_t width,
