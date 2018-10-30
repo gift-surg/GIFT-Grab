@@ -1,6 +1,11 @@
 #pragma once
 
 #include <cstdlib>
+#ifdef USE_FFMPEG
+extern "C" {
+#include <libswscale/swscale.h>
+}
+#endif
 
 namespace gg
 {
@@ -23,6 +28,16 @@ protected:
     //! \brief Height of frames passed for conversion
     //!
     size_t _height;
+
+#ifdef USE_FFMPEG
+    unsigned char *_sws_srcSlice[1];
+    int _sws_srcStride[1] = {4};
+    unsigned char *_sws_dst[1];
+    int _sws_dstStride[1] = {4};
+    AVPixelFormat _sws_srcFormat = AV_PIX_FMT_ARGB;
+    AVPixelFormat _sws_dstFormat = AV_PIX_FMT_BGRA;
+    SwsContext *_sws_context;
+#endif
 
 public:
     //!

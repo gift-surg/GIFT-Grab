@@ -7,13 +7,19 @@ namespace gg
 ArgbToBgraConverter::ArgbToBgraConverter()
     : _width(0)
     , _height(0)
+#ifdef USE_FFMPEG
+    , _sws_context(nullptr)
+#endif
 {
 
 }
 
 ArgbToBgraConverter::~ArgbToBgraConverter()
 {
-
+#ifdef USE_FFMPEG
+    sws_freeContext(_sws_context);
+    _sws_context = nullptr;
+#endif
 }
 
 void ArgbToBgraConverter::convert(const unsigned char *argb,
