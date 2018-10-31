@@ -47,17 +47,20 @@ int main(int argc, char *argv[])
     if (argc == 2)
     {
 #ifdef USE_OPENCV
-        cv::Mat orig = cv::imread(argv[1]), _bgra;
+        cv::Mat orig = cv::imread(argv[1]);
+        cv::imwrite("bgr_orig.png", orig);
         w = orig.cols;
         h = orig.rows;
-        cv::cvtColor(orig, _bgra, cv::COLOR_BGR2BGRA);
-        cv::Mat _argb(_bgra.size(), _bgra.type());
-        int from_to[] = { 0,3, 1,2, 2,1, 3,0 };
-        cv::mixChannels(&_bgra, 1, &_argb, 1, from_to, 4);
         compose = false;
         l = 4 * w * h;
         argb = reinterpret_cast<unsigned char *>(malloc(l * sizeof(unsigned char)));
-        memcpy(argb, _argb.data, l * sizeof(unsigned char));
+        for (size_t i = 0, j = 0; i < l; i +=4, j += 3)
+        {
+            argb[i] = 255;
+            argb[i+1] = orig.data[j+2];
+            argb[i+2] = orig.data[j+1];
+            argb[i+3] = orig.data[j];
+        }
 #endif
     }
     else if (argc == 3)
