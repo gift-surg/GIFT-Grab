@@ -98,14 +98,13 @@ int main(int argc, char *argv[])
     auto duration = duration_cast<microseconds>( t2 - t1 ).count();
     cout << "Loop (" << (argb_same_as_bgra(argb, bgra_loop, l) ? "success" : "failure")
          << ") took: " << duration << " usec" << endl;
-    free(bgra_loop);
 #ifdef USE_OPENCV
 	{
-        cv::Mat _bgra(h, w, CV_8UC4, bgra_loop), bgr;
-        cv::cvtColor(_bgra, bgr, cv::COLOR_BGRA2BGR);
-        cv::imwrite("bgra_loop.png", bgr);
+        cv::Mat _bgra(h, w, CV_8UC4, bgra_loop);
+        cv::imwrite("bgra_loop.png", _bgra);
 	}
 #endif
+    free(bgra_loop);
 
     // simple memcopy (no ARGB => BGRA)
     unsigned char *argb_memcpy = nullptr;
@@ -136,14 +135,14 @@ int main(int argc, char *argv[])
     duration = duration_cast<microseconds>( t2 - t1 ).count();
     cout << "FFmpeg (" << (argb_same_as_bgra(argb, bgra_ffmpeg, l) ? "success" : "failure")
          << ") took: " << duration << " usec" << endl;
-    free(bgra_ffmpeg);
-#endif
 #ifdef USE_OPENCV
     {
         cv::Mat _bgra(h, w, CV_8UC4, bgra_ffmpeg), bgr;
         cv::cvtColor(_bgra, bgr, cv::COLOR_BGRA2BGR);
         cv::imwrite("bgra_ffmpeg.png", bgr);
     }
+#endif
+    free(bgra_ffmpeg);
 #endif
 
     // ARGB => BGRA with a function
