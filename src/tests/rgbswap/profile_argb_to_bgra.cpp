@@ -159,6 +159,13 @@ int main(int argc, char *argv[])
     cout << "Function (" << (argb_same_as_bgra(argb, bgra_function, l) ? "success" : "failure")
          << ") took: " << duration << " usec" << endl;
     free(bgra_function);
+#ifdef USE_OPENCV
+    {
+        cv::Mat _bgra(h, w, CV_8UC4, bgra_function), bgr;
+        cv::cvtColor(_bgra, bgr, cv::COLOR_BGRA2BGR);
+        cv::imwrite("bgra_function.png", bgr);
+    }
+#endif
 
     // free all memory
     free(argb);
