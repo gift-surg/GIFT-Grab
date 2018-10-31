@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
     unsigned char *argb_memcpy = nullptr;
     argb_memcpy = reinterpret_cast<unsigned char *>(malloc(l * sizeof(unsigned char)));
     t1 = high_resolution_clock::now();
-    memcpy(argb, argb_memcpy, l * sizeof(unsigned char));
+    memcpy(argb_memcpy, argb, l * sizeof(unsigned char));
     t2 = high_resolution_clock::now();
     duration = duration_cast<microseconds>( t2 - t1 ).count();
     cout << "memcpy took: " << duration << " usec" << endl;
