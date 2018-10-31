@@ -121,11 +121,11 @@ int main(int argc, char *argv[])
     unsigned char *bgra_ffmpeg = nullptr;
     bgra_ffmpeg = reinterpret_cast<unsigned char *>(malloc(l * sizeof(unsigned char)));
     unsigned char *srcSlice[] = {argb};
-    int srcStride[] = {4 * w};
+    int srcStride[] = {static_cast<int>(4 * w)};
     int srcSliceY = 0;
     int srcSliceH = h;
     unsigned char *dst[] = {bgra_ffmpeg};
-    int dstStride[] = {4 * w};
+    int dstStride[] = {static_cast<int>(4 * w)};
     int srcW = w, srcH = h, dstW = w, dstH = h;
     AVPixelFormat srcFormat = AV_PIX_FMT_ARGB, dstFormat = AV_PIX_FMT_BGRA;
     SwsContext *c = sws_getCachedContext(nullptr, srcW, srcH, srcFormat, dstW, dstH, dstFormat, 0, nullptr, nullptr, nullptr);
