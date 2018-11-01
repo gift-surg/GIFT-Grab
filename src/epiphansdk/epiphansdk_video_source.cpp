@@ -32,7 +32,10 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
     else if (colour_space == V2U_GRABFRAME_FORMAT_I420)
         _colour = I420;
     else
+    {
         _colour = BGRA;
+        _flags |= V2U_GRABFRAME_BOTTOM_UP_FLAG; // for some reason without this the image is flipped
+    }
     _flags |= colour_space;
 
     VideoFrame frame(_colour);
