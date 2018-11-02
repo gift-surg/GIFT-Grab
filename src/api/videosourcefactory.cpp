@@ -66,7 +66,7 @@ IVideoSource * VideoSourceFactory::get_device(Device device,
         case BGRA:
 #ifdef USE_EPIPHANSDK
             src = new VideoSourceEpiphanSDK(Epiphan_DVI2PCIeDuo_DVI,
-                                            V2U_GRABFRAME_FORMAT_ARGB32);
+                                            V2U_GRABFRAME_FORMAT_RGB24);
 #else
             throw VideoSourceError(
                 "BGRA colour space on Epiphan DVI2PCIe Duo supported only with Epiphan SDK");
@@ -119,7 +119,7 @@ IVideoSource * VideoSourceFactory::get_device(Device device,
         case BGRA:
 #ifdef USE_EPIPHANSDK
             src = new VideoSourceEpiphanSDK(Epiphan_DVI2PCIeDuo_SDI,
-                                            V2U_GRABFRAME_FORMAT_ARGB32);
+                                            V2U_GRABFRAME_FORMAT_RGB24);
 #else
             throw VideoSourceError(
                 "BGRA colour space on Epiphan DVI2PCIe Duo supported only with Epiphan SDK");

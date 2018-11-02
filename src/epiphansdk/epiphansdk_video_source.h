@@ -3,7 +3,7 @@
 #include "ivideosource.h"
 #include "macros.h"
 #include "broadcastdaemon.h"
-#include "argb_to_bgra_converter.h"
+#include "rgb_to_bgra_converter.h"
 
 namespace gg
 {
@@ -51,14 +51,14 @@ protected:
     gg::BroadcastDaemon * _daemon;
 
     //!
-    //! \brief Buffer for converting from ARGB to BGRA
+    //! \brief Buffer for converting from RGB to BGRA
     //!
-    unsigned char *_bgra_data;
+    unsigned char *_rgb_data;
 
     //!
-    //! \brief ARGB to BGRA converter
+    //! \brief RGB to BGRA converter
     //!
-    ArgbToBgraConverter _argb_to_bgra;
+    RgbToBgraConverter _rgb_to_bgra;
 
 public:
     //!
@@ -68,7 +68,7 @@ public:
     //! as \c \#define'd in Epiphan device properties
     //! header
     //! \param colour_space \c V2U_GRABFRAME_FORMAT_I420
-    //! or \c V2U_GRABFRAME_FORMAT_ARGB32
+    //! or \c V2U_GRABFRAME_FORMAT_RGB24
     //! \throw VideoSourceError if connection attempt
     //! fails, with a detailed error message
     //!
