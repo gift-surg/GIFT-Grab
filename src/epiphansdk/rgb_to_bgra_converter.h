@@ -11,12 +11,12 @@ namespace gg
 {
 
 //!
-//! \brief Epiphan SDK seems to support ARGB but not BGRA.
-//! This class abstracts the conversion of captured ARGB
+//! \brief Epiphan SDK seems to support RGB but not BGRA.
+//! This class abstracts the conversion of captured RGB
 //! data to BGRA.
 //! \sa VideoSourceEpiphanSDK
 //!
-class ArgbToBgraConverter
+class RgbToBgraConverter
 {
 protected:
     //!
@@ -34,7 +34,7 @@ protected:
     int _sws_srcStride[1];
     unsigned char *_sws_dst[1];
     int _sws_dstStride[1];
-    AVPixelFormat _sws_srcFormat = AV_PIX_FMT_ARGB;
+    AVPixelFormat _sws_srcFormat = AV_PIX_FMT_RGB24;
     AVPixelFormat _sws_dstFormat = AV_PIX_FMT_BGRA;
     SwsContext *_sws_context;
 #endif
@@ -46,27 +46,27 @@ public:
     //! dimensions
     //! \sa set_frame_dimensions
     //!
-    ArgbToBgraConverter();
+    RgbToBgraConverter();
 
     //!
     //! \brief Free all allocated resources
     //!
-    ~ArgbToBgraConverter();
+    ~RgbToBgraConverter();
 
 public:
     //!
-    //! \brief Convert ARGB data in passed buffer to BGRA
+    //! \brief Convert RGB data in passed buffer to BGRA
     //! data, saving it into the passed output buffer.
-    //! \param argb should be in line with the frame
+    //! \param rgb should be in line with the frame
     //! dimensions set before
     //! \param bgra should be at least as large as the
     //! input buffer
     //! \sa set_frame_dimensions
     //!
-    void convert(unsigned char *argb, unsigned char *bgra);
+    void convert(unsigned char *rgb, unsigned char *bgra);
 
     //!
-    //! \brief Allocate all resources needed for ARGB to
+    //! \brief Allocate all resources needed for RGB to
     //! BGRA conversion based on passed frame dimensions
     //! \param width
     //! \param height
