@@ -10,7 +10,7 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
     , _frame_grabber(nullptr)
     , _flags(0)
     , _daemon(nullptr)
-    , _bgra_data(nullptr)
+    , _rgb_data(nullptr)
     , _buffer(nullptr)
 {
     FrmGrab_Init();
@@ -23,7 +23,7 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
         return;
     }
 
-    if (colour_space != V2U_GRABFRAME_FORMAT_I420 && colour_space != V2U_GRABFRAME_FORMAT_ARGB32)
+    if (colour_space != V2U_GRABFRAME_FORMAT_I420 && colour_space != V2U_GRABFRAME_FORMAT_RGB24)
     {
         // TODO - exception GiftGrab#42
         std::cerr << "Colour space " << colour_space << " not supported" << std::endl;
@@ -49,8 +49,9 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
     _full.height = 1080;
     if (_colour == BGRA)
     {
-        _bgra_data = reinterpret_cast<unsigned char*>(malloc(
-            4 * _full.width * _full.height * sizeof(unsigned char)
+        // 3: RGB
+        _rgb_data = reinterpret_cast<unsigned char*>(malloc(
+            3 * _full.width * _full.height * sizeof(unsigned char)
         ));
     }
     get_full_frame();
@@ -66,10 +67,10 @@ VideoSourceEpiphanSDK::~VideoSourceEpiphanSDK()
     delete _daemon;
     if (_frame_grabber) FrmGrab_Close(_frame_grabber);
     FrmGrab_Deinit();
-    if (_colour == BGRA && _bgra_data != nullptr)
+    if (_colour == BGRA && _rgb_data != nullptr)
     {
-        free(_bgra_data);
-        _bgra_data = nullptr;
+        free(_rgb_data);
+        _rgb_data = nullptr;
     }
 }
 
@@ -108,9 +109,9 @@ bool VideoSourceEpiphanSDK::get_frame(VideoFrame & frame)
             frame_data = data;
             break;
         case BGRA:
-            _argb_to_bgra.set_frame_dimensions(frame_width, frame_height);
-            _argb_to_bgra.convert(data, _bgra_data);
-            frame_data = _bgra_data;
+            _rgb_to_bgra.set_frame_dimensions(frame_width, frame_height);
+            _rgb_to_bgra.convert(data, _rgb_data);
+            frame_data = _rgb_data;
             break;
         default:
             // TODO
