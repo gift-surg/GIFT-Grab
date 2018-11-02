@@ -53,7 +53,7 @@ protected:
     //!
     //! \brief Buffer for converting from RGB to BGRA
     //!
-    unsigned char *_rgb_data;
+    unsigned char *_bgra_data;
 
     //!
     //! \brief RGB to BGRA converter
