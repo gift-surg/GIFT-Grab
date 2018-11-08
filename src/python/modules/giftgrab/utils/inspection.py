@@ -1,6 +1,11 @@
 from subprocess import check_output
 
 
+equals_char = b'='
+slash_char = b'/'
+double_quote_char = b'"'
+
+
 def frame_rate(file_path):
     """Use ``ffprobe`` to inspect frame rate of video file
 
@@ -16,7 +21,7 @@ def frame_rate(file_path):
                                    '-of', 'flat=s=_',
                                    '-show_entries', 'stream=r_frame_rate',
                                    file_path])
-    frame_rate_str = ffprobe_output.split('=')[1].strip()[1:-1].split('/')
+    frame_rate_str = ffprobe_output.split(equals_char)[1].strip()[1:-1].split(slash_char)
     fr = -1
     if len(frame_rate_str) == 1:
         fr = float(frame_rate_str[0])
@@ -62,7 +67,7 @@ def duration(file_path):
                                    '-of', 'flat=s=_',
                                    '-show_entries', 'format=duration',
                                    file_path])
-    duration_str = ffprobe_output.split('=')[1].strip()[1:-1]
+    duration_str = ffprobe_output.split(equals_char)[1].strip()[1:-1]
     dur = -1
     if duration_str is not None:
         dur = float(duration_str)
@@ -97,7 +102,7 @@ def resolution(file_path):
     res = []
     for ffprobe_command in ffprobe_commands:
         ffprobe_output = check_output(ffprobe_command)
-        resolution_str = ffprobe_output.split('=')[1].strip()
+        resolution_str = ffprobe_output.split(equals_char)[1].strip()
         if resolution_str is not None:
             res.append(float(resolution_str))
         else:
@@ -123,7 +128,7 @@ def codec(file_path):
                                    '-of', 'flat=s=_',
                                    '-show_entries', 'stream=codec_name',
                                    file_path])
-    codec_str = ffprobe_output.split('=')[1].strip().strip('"')
+    codec_str = ffprobe_output.split(equals_char)[1].strip().strip(double_quote_char)
     if codec_str is not None:
         return codec_str
     else:
