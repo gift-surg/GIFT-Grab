@@ -1,5 +1,5 @@
 PROJECT(GiftGrab)
-CMAKE_MINIMUM_REQUIRED(VERSION 3.2.0)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.12.4)
 
 # Will be used when installing
 SET(GiftGrab_PATH_SUFFIX giftgrab)
