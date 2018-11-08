@@ -12,6 +12,9 @@ before_script:
   - export TEST_LAUNCHER="${GiftGrab_SOURCE_DIR}/tests/run-tests.sh"
   - source "$CI_SCRIPTS_DIR/utils.sh"
   - export BOOST_163_ROOT_DIR="/home/gitlab-runner/environments/giftgrab/boost163"
+  # force use of CMake version 3.12.4 (issue #50)
+  - export CMAKE_3_12_4_PATH="/home/gitlab-runner/environments/giftgrab/install/cmake/cmake-3.12.4-Linux-x86_64/bin"
+  - export PATH="$CMAKE_3_12_4_PATH:$PATH"
 
 stages:
   - offline
