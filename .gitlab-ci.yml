@@ -25,6 +25,8 @@ build-py27:
   stage: offline
   script:
     - export BOOST_ROOT=""  # otherwise tox complains!
+    # force use of Python 2.7 libs
+    - sed -i 's:PythonLibs REQUIRED:PythonLibs 2.7 REQUIRED:g' src/cmake/pythonlibs/CMakeLists.txt
     - tox -e py27
   tags:
     - gift-adelie
@@ -33,6 +35,8 @@ build-py35:
   stage: offline
   script:
     - export BOOST_ROOT="/home/gitlab-runner/environments/giftgrab/install/boost/include"
+    # force use of Python 3 libs
+    - sed -i 's:PythonLibs REQUIRED:PythonLibs 3 REQUIRED:g' src/cmake/pythonlibs/CMakeLists.txt
     - tox -e py35
   tags:
     - gift-adelie
