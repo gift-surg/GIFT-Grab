@@ -13,6 +13,15 @@ endif()
 
 SET(GG_BOOST_COMPONENTS python${GG_BOOST_PYTHON_SUFFIX})
 if(USE_NUMPY)
+    if(BOOST_ROOT and GG_BOOST_PYTHON_SUFFIX)
+        # The following line is a workaround to a problem related to issue #50.
+        # In the case of specifying a custom Boost via e.g. BOOST_ROOT on a system
+        # with another (global) Boost installation, pkg-config's linker flags lead
+        # to the implicit discovery of the system-wide Boost.Python (version 2!)
+        # library, which gets linked into GIFT-Grab and causes conflicts with the
+        # specified Boost installation
+        LIST(APPEND GG_BOOST_COMPONENTS python)
+    endif()
     LIST(APPEND GG_BOOST_COMPONENTS numpy${GG_BOOST_PYTHON_SUFFIX})
 endif(USE_NUMPY)
 FIND_PACKAGE(Boost COMPONENTS ${GG_BOOST_COMPONENTS} REQUIRED)
