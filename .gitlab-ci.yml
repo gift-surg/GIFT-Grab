@@ -37,7 +37,7 @@ build-py27:
 build-py35:
   stage: offline
   script:
-    - export BOOST_ROOT="/home/gitlab-runner/environments/giftgrab/install/boost/include"
+    - export BOOST_ROOT="/home/gitlab-runner/environments/giftgrab/install/boost"
     # force use of Python 3 libs
     - sed -i 's:PythonLibs REQUIRED:PythonLibs 3 REQUIRED:g' src/cmake/pythonlibs/CMakeLists.txt
     - tox -e py35
