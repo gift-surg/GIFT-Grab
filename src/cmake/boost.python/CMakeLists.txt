@@ -13,7 +13,7 @@ endif()
 
 SET(GG_BOOST_COMPONENTS python${GG_BOOST_PYTHON_SUFFIX})
 if(USE_NUMPY)
-    if(BOOST_ROOT and GG_BOOST_PYTHON_SUFFIX)
+    if(BOOST_ROOT AND GG_BOOST_PYTHON_SUFFIX)
         # The following line is a workaround to a problem related to issue #50.
         # In the case of specifying a custom Boost via e.g. BOOST_ROOT on a system
         # with another (global) Boost installation, pkg-config's linker flags lead
