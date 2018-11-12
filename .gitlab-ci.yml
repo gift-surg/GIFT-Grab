@@ -4,6 +4,7 @@ variables:
   CTEST_OUTPUT_ON_FAILURE: "1"
 
 before_script:
+  - export GiftGrab_REPO_DIR=$(pwd)
   - export REVHASH=$(git rev-parse --short HEAD)
   - export SCRATCH_DIR="$SCRATCH_DIR/$REVHASH"
   - mkdir -p $SCRATCH_DIR
@@ -15,6 +16,18 @@ before_script:
   # force use of CMake version 3.12.4 (issue #50)
   - export CMAKE_3_12_4_PATH="/home/gitlab-runner/environments/giftgrab/install/cmake/cmake-3.12.4-Linux-x86_64/bin"
   - export PATH="$CMAKE_3_12_4_PATH:$PATH"
+  # create pip installer
+  - export GiftGrab_PIP_INSTALLER_DIR="$SCRATCH_DIR/pip-installer"
+  - rm -rf "$GiftGrab_PIP_INSTALLER_DIR"
+  - mkdir -p "$GiftGrab_PIP_INSTALLER_DIR"
+  - cd "$GiftGrab_SOURCE_DIR"
+  - python setup.py sdist
+  - export GiftGrab_PIP_INSTALLER="$(ls dist | grep tar.gz)"
+  - if [ -z "$GiftGrab_PIP_INSTALLER" ]; then exit 1; fi
+  - mv dist/${GiftGrab_PIP_INSTALLER} "$GiftGrab_PIP_INSTALLER_DIR"
+  - export GiftGrab_PIP_INSTALLER="${GiftGrab_PIP_INSTALLER_DIR}/${GiftGrab_PIP_INSTALLER}"
+  - unset GiftGrab_PIP_INSTALLER_DIR
+  - cd "$GiftGrab_REPO_DIR"
 
 stages:
   - offline
