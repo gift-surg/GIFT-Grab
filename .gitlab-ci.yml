@@ -57,6 +57,22 @@ build-py35:
   tags:
     - gift-adelie
 
+pip-py27:
+  stage: offline
+  script:
+    - export BOOST_ROOT=""  # otherwise tox complains!
+    - tox -c ci/pip.tox.ini -e py27
+  tags:
+    - gift-adelie
+
+pip-py35:
+  stage: offline
+  script:
+    - export BOOST_ROOT="/home/gitlab-runner/environments/giftgrab/install/boost"
+    - tox -c ci/pip.tox.ini -e py35
+  tags:
+    - gift-adelie
+
 ################## Platform: CMake ##################
 ################## Target: All ######################
 linux:
