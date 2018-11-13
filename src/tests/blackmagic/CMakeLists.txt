@@ -45,7 +45,11 @@ foreach(BLACKMAGIC_DEVICE ${BLACKMAGIC_DEVICES})
 
         # Blackmagic device using the observer design pattern
         SET(NAME_TEST Test_Blackmagic_${BLACKMAGIC_DEVICE}_ObserverPattern_${COLOUR_SPACE})
-        SET(FRAME_RATE 27)
+        if(BLACKMAGIC_DEVICE STREQUAL DeckLink4KExtreme12G)
+            SET(FRAME_RATE 24)  # frame rate seems to be reduced, due to stereo?
+        else()
+            SET(FRAME_RATE 27)
+        endif()
         ADD_TEST(NAME ${NAME_TEST}
             COMMAND py.test --device=${BLACKMAGIC_DEVICE} --colour-space=${COLOUR_SPACE} --frame-rate=${FRAME_RATE} --observers=3 test_observer.py
         )
