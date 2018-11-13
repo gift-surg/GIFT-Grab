@@ -445,6 +445,7 @@ pypi-blackmagic-decklink-sdi-4k:
     - 20-support-for-capturing-bgra-frames-with-blackmagic-devices
     - 14-unable-to-free-blackmagic-video-source
     - 5-support-for-3d-capture-on-blackmagic-cards
+    - 18-extend-api-to-support-stereo-streams
 
 blackmagic-decklink-sdi-4k:
   stage: test_cmake
@@ -468,6 +469,7 @@ blackmagic-decklink-sdi-4k:
     - 20-support-for-capturing-bgra-frames-with-blackmagic-devices
     - 14-unable-to-free-blackmagic-video-source
     - 5-support-for-3d-capture-on-blackmagic-cards
+    - 18-extend-api-to-support-stereo-streams
 
 ################## Device: Blackmagic DeckLink 4K Extreme 12G ##################
 pypi-blackmagic-decklink-4k-extreme-12g:
@@ -513,6 +515,7 @@ pypi-blackmagic-decklink-4k-extreme-12g:
     - 32-videosourcefactory-destructor-does-not-free-all-devices
     - 14-unable-to-free-blackmagic-video-source
     - 5-support-for-3d-capture-on-blackmagic-cards
+    - 18-extend-api-to-support-stereo-streams
 
 blackmagic-decklink-4k-extreme-12g:
   stage: test_cmake
@@ -535,3 +538,4 @@ blackmagic-decklink-4k-extreme-12g:
     - 32-videosourcefactory-destructor-does-not-free-all-devices
     - 14-unable-to-free-blackmagic-video-source
     - 5-support-for-3d-capture-on-blackmagic-cards
+    - 18-extend-api-to-support-stereo-streams
