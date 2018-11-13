@@ -135,7 +135,13 @@ elif [ "$1" = "blackmagic-decklinksdi4k" ] || [ "$1" = "blackmagic-decklink4kext
         test_cmd_unit="$test_cmd $test_cmd_working_dir -m unit"
         test_cmd_observer="$test_cmd --frame-rate=$frame_rate --observers=3"
         test_cmd_observer="$test_cmd_observer $test_cmd_working_dir -m observer_pattern"
+        if [ "$1" = "blackmagic-decklink4kextreme12g" ]; then
+            test_cmd_stereo="$test_cmd -m stereo_frames"
+        fi
         test_cmd="$test_cmd_unit && $test_cmd_observer"
+        if [ "$1" = "blackmagic-decklink4kextreme12g" ]; then
+            test_cmd="$test_cmd && $test_cmd_stereo"
+        fi
     fi
 else
     args_ok=false
