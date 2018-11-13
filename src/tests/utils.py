@@ -22,7 +22,22 @@ class StereoFrameChecker(pgg.IObserver):
         self.stereo_frames_consistencies = []
 
     def update(self, frame):
-        pass  # TODO
+        self.stereo_frames_consistencies.append(True)
+        frames_consistent = True
+        for index in range(frame.stereo_count() - 1):
+            this_data = frame.data(False, index)
+            next_data = frame.data(False, index + 1)
+            if this_data.size == 0:
+                frames_consistent = False
+                break
+            if this_data.shape != next_data.shape:
+                frames_consistent = False
+                break
+            if np.array_equal(this_data, next_data):
+                frames_consistent = False
+                break
+        if not frames_consistent:
+            self.stereo_frames_consistencies[-1] = False
 
     def __bool__(self):
         if not self.stereo_frames_consistencies:
