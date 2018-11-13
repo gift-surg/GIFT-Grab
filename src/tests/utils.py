@@ -25,6 +25,8 @@ class StereoFrameChecker(pgg.IObserver):
         pass  # TODO
 
     def __bool__(self):
+        if not self.stereo_frames_consistencies:
+            return False
         for consistency in self.stereo_frames_consistencies:
             if not consistency:
                 return False
