@@ -9,6 +9,28 @@ except ImportError:
     use_numpy = False
 
 
+class StereoFrameChecker(pgg.IObserver):
+    """Descendant of GIFT-Grab's `Observer`, which
+    will listen to `Observable`s for some time and
+    when asked, will report whether the video
+    source has been sending consistent stereo frames
+    consistently.
+    """
+
+    def __init__(self):
+        super(StereoFrameChecker, self).__init__()
+        self.stereo_frames_consistencies = []
+
+    def update(self, frame):
+        pass  # TODO
+
+    def __bool__(self):
+        for consistency in self.stereo_frames_consistencies:
+            if not consistency:
+                return False
+        return True
+
+
 class FrameRateTimer(pgg.IObserver):
     """Descendant of GIFT-Grab's `Observer`, which
     will listen to `Observable`s for some time and
