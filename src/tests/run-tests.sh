@@ -123,12 +123,17 @@ elif [ "$1" = "blackmagic-decklinksdi4k" ] || [ "$1" = "blackmagic-decklink4kext
     if [ $# -ne "2" ]; then
         args_ok=false
     else
+        if [ "$1" = "blackmagic-decklinksdi4k" ]; then
+            frame_rate=27
+        elif [ "$1" = "blackmagic-decklink4kextreme12g" ]; then
+            frame_rate=24
+        fi
         parse_colour $2
         test_cmd="$test_cmd --device=$test_device"
         test_cmd="$test_cmd --colour-space=$test_colour_space"
         test_cmd_working_dir="$test_dir/blackmagic"
         test_cmd_unit="$test_cmd $test_cmd_working_dir -m unit"
-        test_cmd_observer="$test_cmd --frame-rate=27 --observers=3"
+        test_cmd_observer="$test_cmd --frame-rate=$frame_rate --observers=3"
         test_cmd_observer="$test_cmd_observer $test_cmd_working_dir -m observer_pattern"
         test_cmd="$test_cmd_unit && $test_cmd_observer"
     fi
