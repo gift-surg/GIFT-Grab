@@ -135,14 +135,18 @@ public:
     //! available yet.
     //!
     //! \param data
-    //! \param data_length
-    //! \param cols
-    //! \param rows
+    //! \param data_length in case of stereo frames, this is the
+    //! \b total length of passed data buffer, and as such assumed
+    //! to be divisible by the number of stereo frames
+    //! \param cols the width of a \b single video frame
+    //! \param rows the height of a \b single video frame
+    //! \param stereo_count the number of stereo frames included in
+    //! passed data
     //! \sa manages_own_data
     //! \sa VideoFrame(enum ColourSpace, size_t, size_t)
     //!
     void init_from_specs(unsigned char * data, size_t data_length,
-                         size_t cols, size_t rows);
+                         size_t cols, size_t rows, size_t stereo_count = 1);
 
     //!
     //! \brief Get length of data buffer
