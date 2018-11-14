@@ -17,9 +17,14 @@ class StereoFrameNumpyCompatibilityChecker(pgg.IObserver):
     NumPy data interface.
     """
 
-    def __init__(self):
+    def __init__(self, colour):
         super(StereoFrameNumpyCompatibilityChecker, self).__init__()
         self.obtained_numpy_compatible_stereo_frames = []
+        # currently structured NumPy arrays are supported
+        # only for BGRA frames
+        self.structured_flags = [colour == pgg.ColourSpace.BGRA]
+        if self.structured_flags[-1]:
+            self.structured_flags.append(False)
 
     def update(self, frame):
         self.obtained_numpy_compatible_stereo_frames.append(True)
@@ -28,27 +33,32 @@ class StereoFrameNumpyCompatibilityChecker(pgg.IObserver):
             return
 
         frames_numpy_compatible = True
-        # regression tests for backwards compatibility
-        frames_numpy_compatible &= np.array_equal(frame.data(), frame.data(False))
-        frames_numpy_compatible &= np.array_equal(frame.data(), frame.data(False, 0))
-        frames_numpy_compatible &= frame.data_length() == frame.data_length(0)
-        if not frames_numpy_compatible:
-            self.obtained_numpy_compatible_stereo_frames[-1] = False
-            return
 
-        for index in range(frame.stereo_count()):
-            data_np = frame.data(False, index)
-            frames_numpy_compatible &= data_np.dtype == np.uint8
-            data_len = frame.data_length(index)
-            frames_numpy_compatible &= data_len == data_np.size
-            try:
-                data_np[data_len]
-            except IndexError:
-                pass
-            else:
-                frames_numpy_compatible = False
+        for structured_flag in self.structured_flags:
+            # regression tests for backwards compatibility
+            if not structured_flag:
+                frames_numpy_compatible &= np.array_equal(frame.data(), frame.data(False))
+                frames_numpy_compatible &= np.array_equal(frame.data(), frame.data(False, 0))
+            frames_numpy_compatible &= np.array_equal(frame.data(structured_flag), frame.data(structured_flag, 0))
+            frames_numpy_compatible &= frame.data_length() == frame.data_length(0)
             if not frames_numpy_compatible:
-                break
+                self.obtained_numpy_compatible_stereo_frames[-1] = False
+                return
+
+            for index in range(frame.stereo_count()):
+                data_np = frame.data(structured_flag, index)
+                frames_numpy_compatible &= data_np.dtype == np.uint8
+                data_len = frame.data_length(index)
+                frames_numpy_compatible &= data_len == data_np.size
+                try:
+                    data_np[data_len]
+                except IndexError:
+                    pass
+                else:
+                    frames_numpy_compatible = False
+                if not frames_numpy_compatible:
+                    self.obtained_numpy_compatible_stereo_frames[-1] = False
+                    return
 
         self.obtained_numpy_compatible_stereo_frames[-1] = frames_numpy_compatible
 
