@@ -9,6 +9,58 @@ except ImportError:
     use_numpy = False
 
 
+class StereoFrameNumpyCompatibilityChecker(pgg.IObserver):
+    """Descendant of GIFT-Grab's `Observer`, which will
+    listen to `Observable`s for some time and when asked,
+    will report whether the video source has been sending
+    stereo frames that are compatible with the GIFT-Grab
+    NumPy data interface.
+    """
+
+    def __init__(self):
+        super(StereoFrameNumpyCompatibilityChecker, self).__init__()
+        self.obtained_numpy_compatible_stereo_frames = []
+
+    def update(self, frame):
+        self.obtained_numpy_compatible_stereo_frames.append(True)
+        if frame.stereo_count() <= 1:
+            self.obtained_numpy_compatible_stereo_frames[-1] = False
+            return
+
+        frames_numpy_compatible = True
+        # regression tests for backwards compatibility
+        frames_numpy_compatible &= np.array_equal(frame.data(), frame.data(False))
+        frames_numpy_compatible &= np.array_equal(frame.data(), frame.data(False, 0))
+        frames_numpy_compatible &= frame.data_length() == frame.data_length(0)
+        if not frames_numpy_compatible:
+            self.obtained_numpy_compatible_stereo_frames[-1] = False
+            return
+
+        for index in range(frame.stereo_count()):
+            data_np = frame.data(False, index)
+            frames_numpy_compatible &= data_np.dtype == np.uint8
+            data_len = frame.data_length(index)
+            frames_numpy_compatible &= data_len == data_np.size
+            try:
+                data_np[data_len]
+            except IndexError:
+                pass
+            else:
+                frames_numpy_compatible = False
+            if not frames_numpy_compatible:
+                break
+
+        self.obtained_numpy_compatible_stereo_frames[-1] = frames_numpy_compatible
+
+    def __bool__(self):
+        if not self.obtained_numpy_compatible_stereo_frames:
+            return False
+        for numpy_compatibility in self.obtained_numpy_compatible_stereo_frames:
+            if not numpy_compatibility:
+                return False
+        return True
+
+
 class StereoFrameConsistencyChecker(pgg.IObserver):
     """Descendant of GIFT-Grab's `Observer`, which
     will listen to `Observable`s for some time and
