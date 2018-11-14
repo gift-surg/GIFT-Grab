@@ -19,10 +19,10 @@ class StereoFrameChecker(pgg.IObserver):
 
     def __init__(self):
         super(StereoFrameChecker, self).__init__()
-        self.stereo_frames_consistencies = []
+        self.obtained_consistent_stereo_frames = []
 
     def update(self, frame):
-        self.stereo_frames_consistencies.append(True)
+        self.obtained_consistent_stereo_frames.append(True)
         frames_consistent = True
         for index in range(frame.stereo_count() - 1):
             this_data = frame.data(False, index)
@@ -37,12 +37,12 @@ class StereoFrameChecker(pgg.IObserver):
                 frames_consistent = False
                 break
         if not frames_consistent:
-            self.stereo_frames_consistencies[-1] = False
+            self.obtained_consistent_stereo_frames[-1] = False
 
     def __bool__(self):
-        if not self.stereo_frames_consistencies:
+        if not self.obtained_consistent_stereo_frames:
             return False
-        for consistency in self.stereo_frames_consistencies:
+        for consistency in self.obtained_consistent_stereo_frames:
             if not consistency:
                 return False
         return True
