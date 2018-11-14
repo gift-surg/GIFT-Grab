@@ -209,13 +209,17 @@ public:
     //!     # struc_arr.shape => (frame.rows(), frame.cols(), 4)
     //! \endcode
     //!
+    //! \param stereo_index index of requested stereo frame.
+    //! Stereo frame data from a particular point in time
+    //! are included within a single frame object, so as to
+    //! preserve temporal relations and to facilitate potential
+    //! stereo encoding.
+    //! \throw std::out_of_range if provided index value is
+    //! invalid (i.e. out of range)
     //! \return
     //! \sa VideoFrame(const VideoFrame & rhs)
     //!
-    unsigned char * const data() const
-    {
-        return _data;
-    }
+    unsigned char * const data(size_t stereo_index = 0) const;
 
     //!
     //! \brief Get what colour space \c this frame uses

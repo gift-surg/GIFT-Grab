@@ -161,6 +161,11 @@ void VideoFrame::init_from_specs(unsigned char * data, size_t data_length,
     set_dimensions(cols, rows);
 }
 
+unsigned char * const VideoFrame::data(size_t stereo_index) const
+{
+    return _data;
+}
+
 void VideoFrame::clone(const VideoFrame & rhs)
 {
     if (not _manage_data)
