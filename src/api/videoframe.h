@@ -142,12 +142,13 @@ public:
 
     //!
     //! \brief Get length of data buffer
+    //! \param stereo_index index of stereo frame whose
+    //! length is requested
+    //! \throw std::out_of_range if provided index value is
+    //! invalid (i.e. out of range)
     //! \return
     //!
-    const size_t data_length() const
-    {
-        return _data_length;
-    }
+    const size_t data_length(size_t stereo_index = 0) const;
 
     //!
     //! \brief Get number of rows (y-axis, i.e. height)

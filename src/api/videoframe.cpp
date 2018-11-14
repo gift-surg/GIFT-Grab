@@ -161,6 +161,11 @@ void VideoFrame::init_from_specs(unsigned char * data, size_t data_length,
     set_dimensions(cols, rows);
 }
 
+const size_t VideoFrame::data_length(size_t stereo_index) const
+{
+    return _data_length;
+}
+
 unsigned char * const VideoFrame::data(size_t stereo_index) const
 {
     return _data;
