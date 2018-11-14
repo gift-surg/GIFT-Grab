@@ -40,6 +40,10 @@ enum ColourSpace
 //! In that case, the caller is responsible for ensuring the data
 //! pointer is valid during the lifetime of the frame object.
 //!
+//! Stereo frame data from a particular point in time are included
+//! within a single frame object, so as to preserve temporal
+//! relations and to facilitate potential stereo encoding.
+//!
 class VideoFrame
 {
 protected:
@@ -210,11 +214,7 @@ public:
     //!     # struc_arr.shape => (frame.rows(), frame.cols(), 4)
     //! \endcode
     //!
-    //! \param stereo_index index of requested stereo frame.
-    //! Stereo frame data from a particular point in time
-    //! are included within a single frame object, so as to
-    //! preserve temporal relations and to facilitate potential
-    //! stereo encoding.
+    //! \param stereo_index index of requested stereo frame
     //! \throw std::out_of_range if provided index value is
     //! invalid (i.e. out of range)
     //! \return
