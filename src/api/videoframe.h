@@ -159,6 +159,15 @@ public:
     const size_t data_length(size_t stereo_index = 0) const;
 
     //!
+    //! \brief Get number of stereo frames stored in this object
+    //! \return
+    //!
+    size_t stereo_count() const
+    {
+        return _stereo_count;
+    }
+
+    //!
     //! \brief Get number of rows (y-axis, i.e. height)
     //! \return
     //!
@@ -274,6 +283,12 @@ protected:
     //! \brief Frame data length
     //!
     size_t _data_length;
+
+    //!
+    //! \brief Number of stereo frames stored, i.e.
+    //! the total number of frames
+    //!
+    size_t _stereo_count;
 
     //!
     //! \brief Always use \c set_dimensions() to set
