@@ -23,6 +23,10 @@ class StereoFrameChecker(pgg.IObserver):
 
     def update(self, frame):
         self.obtained_consistent_stereo_frames.append(True)
+        if frame.stereo_count() <= 1:
+            self.obtained_consistent_stereo_frames[-1] = False
+            return
+
         frames_consistent = True
         for index in range(frame.stereo_count() - 1):
             this_data = frame.data(False, index)
