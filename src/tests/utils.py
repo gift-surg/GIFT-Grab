@@ -50,12 +50,15 @@ class StereoFrameNumpyCompatibilityChecker(pgg.IObserver):
                 frames_numpy_compatible &= data_np.dtype == np.uint8
                 data_len = frame.data_length(index)
                 frames_numpy_compatible &= data_len == data_np.size
-                try:
-                    data_np[data_len]
-                except IndexError:
-                    pass
+                if structured_flag:
+                    frames_numpy_compatible &= data_np.shape[:2] == (frame.rows(), frame.cols())
                 else:
-                    frames_numpy_compatible = False
+                    try:
+                        data_np[data_len]
+                    except IndexError:
+                        pass
+                    else:
+                        frames_numpy_compatible = False
                 if not frames_numpy_compatible:
                     self.obtained_numpy_compatible_stereo_frames[-1] = False
                     return
