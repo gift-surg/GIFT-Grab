@@ -9,6 +9,34 @@ except ImportError:
     use_numpy = False
 
 
+class StereoFrameBackwardsCompatibilityChecker(pgg.IObserver):
+    """Descendant of GIFT-Grab's `Observer`, which will
+    listen to `Observable`s for some time and when asked,
+    will report whether the video source has been sending
+    stereo frames that are backwards compatible with the
+    GIFT-Grab NumPy data interface.
+    """
+
+    def __init__(self):
+        super(StereoFrameBackwardsCompatibilityChecker, self).__init__()
+        self.obtained_backwards_compatible_frames = []
+
+    def update(self, frame):
+        frame_backwards_compatible = True
+        frame_backwards_compatible &= np.array_equal(frame.data(), frame.data(False))
+        frame_backwards_compatible &= np.array_equal(frame.data(), frame.data(False, 0))
+        frame_backwards_compatible &= frame.data_length() == frame.data_length(0)
+        self.obtained_numpy_compatible_stereo_frames.append(frame_backwards_compatible)
+
+    def __bool__(self):
+        if not self.obtained_backwards_compatible_frames:
+            return False
+        for backwards_compatibility in self.obtained_backwards_compatible_frames:
+            if not backwards_compatibility:
+                return False
+        return True
+
+
 class StereoFrameNumpyCompatibilityChecker(pgg.IObserver):
     """Descendant of GIFT-Grab's `Observer`, which will
     listen to `Observable`s for some time and when asked,
@@ -33,14 +61,6 @@ class StereoFrameNumpyCompatibilityChecker(pgg.IObserver):
             return
 
         frames_numpy_compatible = True
-
-        # regression tests for backwards compatibility
-        frames_numpy_compatible &= np.array_equal(frame.data(), frame.data(False))
-        frames_numpy_compatible &= np.array_equal(frame.data(), frame.data(False, 0))
-        frames_numpy_compatible &= frame.data_length() == frame.data_length(0)
-        if not frames_numpy_compatible:
-            self.obtained_numpy_compatible_stereo_frames[-1] = False
-            return
 
         for structured_flag in self.structured_flags:
             frames_numpy_compatible &= np.array_equal(frame.data(structured_flag), frame.data(structured_flag, 0))
