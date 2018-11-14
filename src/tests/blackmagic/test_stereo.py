@@ -1,6 +1,6 @@
 import time
 from pytest import mark
-from utils import StereoFrameChecker
+from utils import StereoFrameConsistencyChecker
 import pygiftgrab as pgg
 
 
@@ -8,7 +8,7 @@ import pygiftgrab as pgg
 def test_stereo_frames(device, colour_space):
     factory = pgg.VideoSourceFactory.get_instance()
     source = factory.get_device(device, colour_space)
-    checker = StereoFrameChecker()
+    checker = StereoFrameConsistencyChecker()
     source.attach(checker)
 
     time.sleep(15)
