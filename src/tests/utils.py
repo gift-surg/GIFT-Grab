@@ -34,13 +34,16 @@ class StereoFrameNumpyCompatibilityChecker(pgg.IObserver):
 
         frames_numpy_compatible = True
 
+        # regression tests for backwards compatibility
+        frames_numpy_compatible &= np.array_equal(frame.data(), frame.data(False))
+        frames_numpy_compatible &= np.array_equal(frame.data(), frame.data(False, 0))
+        frames_numpy_compatible &= frame.data_length() == frame.data_length(0)
+        if not frames_numpy_compatible:
+            self.obtained_numpy_compatible_stereo_frames[-1] = False
+            return
+
         for structured_flag in self.structured_flags:
-            # regression tests for backwards compatibility
-            if not structured_flag:
-                frames_numpy_compatible &= np.array_equal(frame.data(), frame.data(False))
-                frames_numpy_compatible &= np.array_equal(frame.data(), frame.data(False, 0))
             frames_numpy_compatible &= np.array_equal(frame.data(structured_flag), frame.data(structured_flag, 0))
-            frames_numpy_compatible &= frame.data_length() == frame.data_length(0)
             if not frames_numpy_compatible:
                 self.obtained_numpy_compatible_stereo_frames[-1] = False
                 return
