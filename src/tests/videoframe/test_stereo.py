@@ -12,7 +12,7 @@ def peri_test(colour_space):
     stereo_count = 2
     cols, rows = 1920, 1080
     stereo_frame = VideoFrame(colour_space, cols, rows, stereo_count)
-    data_length = VideoFrame.required_data_length(colour_space)
+    data_length = VideoFrame.required_data_length(colour_space, cols, rows)
 
 
 @mark.stereo_frames
