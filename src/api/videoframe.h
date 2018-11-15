@@ -136,8 +136,9 @@ public:
     //!
     //! \param data
     //! \param data_length in case of stereo frames, this is the
-    //! \b total length of passed data buffer, and as such assumed
-    //! to be divisible by the number of stereo frames
+    //! \b total length of passed data buffer. Only stereo frames
+    //! with exactly the same dimensions are supports, so this is
+    //! assumed to be divisible by the number of stereo frames.
     //! \param cols the width of a \b single video frame
     //! \param rows the height of a \b single video frame
     //! \param stereo_count the number of stereo frames included in
