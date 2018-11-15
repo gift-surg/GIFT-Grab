@@ -378,7 +378,7 @@ protected:
     //! \throw std::out_of_range if passed stereo
     //! index is invalid
     //!
-    inline void validate_stereo_index(size_t stereo_index)
+    inline void validate_stereo_index(size_t stereo_index) const
     {
         if (stereo_index >= _stereo_count)
         {
