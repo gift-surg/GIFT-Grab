@@ -83,8 +83,25 @@ public:
     //! \param rows
     //!
     VideoFrameNumPyWrapper(enum gg::ColourSpace colour,
+                           size_t cols, size_t rows)
+        : _frame(new gg::VideoFrame(colour, cols, rows))
+        , _manage_frame(true)
+    {
+        _manage_data = false;
+        sync_specs();
+    }
+
+    //!
+    //! \brief This constructor needs to be defined
+    //! here as well for compatibility with exposed
+    //! interface
+    //! \param colour
+    //! \param cols
+    //! \param rows
+    //!
+    VideoFrameNumPyWrapper(enum gg::ColourSpace colour,
                            size_t cols, size_t rows,
-                           size_t stereo_count = 1)
+                           size_t stereo_count)
         : _frame(new gg::VideoFrame(colour, cols, rows,
                                     stereo_count))
         , _manage_frame(true)
