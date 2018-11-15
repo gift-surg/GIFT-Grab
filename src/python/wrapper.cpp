@@ -212,6 +212,7 @@ protected:
         _rows = _frame->rows();
         _data = _frame->data();
         _data_length = _frame->data_length();
+	_stereo_count = _frame->stereo_count();
     }
 };
 
