@@ -172,16 +172,8 @@ const size_t VideoFrame::data_length(size_t stereo_index) const
 
 unsigned char * const VideoFrame::data(size_t stereo_index) const
 {
-    if (stereo_index >= _stereo_count)
-    {
-        std::string msg = "This frame has ";
-        msg.append(std::to_string(_stereo_count))
-           .append(" stereo frames (requested ")
-           .append(std::to_string(stereo_index + 1))
-           .append(". stereo frame)");
-        throw std::out_of_range(msg);
-    }
-    return _data;
+    validate_stereo_index(stereo_index);
+    return &_data[stereo_index * _data_length / _stereo_count];
 }
 
 void VideoFrame::clone(const VideoFrame & rhs)
