@@ -26,6 +26,11 @@ def test_data():
 
 
 @mark.numpy_compatibility
+def test_stereo_data():
+    raise NotImplementedError
+
+
+@mark.numpy_compatibility
 def test_data_length():
     global frame, cols, rows
     data_np = frame.data()
@@ -38,6 +43,11 @@ def test_data_length():
         data_np[data_len - 1]
     except IndexError as e:
         fail(e.message)
+
+
+@mark.numpy_compatibility
+def test_stereo_data_length():
+    raise NotImplementedError
 
 
 @mark.numpy_compatibility
