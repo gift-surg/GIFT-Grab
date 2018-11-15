@@ -83,8 +83,10 @@ public:
     //! \param rows
     //!
     VideoFrameNumPyWrapper(enum gg::ColourSpace colour,
-                           size_t cols, size_t rows)
-        : _frame(new gg::VideoFrame(colour, cols, rows))
+                           size_t cols, size_t rows,
+                           size_t stereo_count = 1)
+        : _frame(new gg::VideoFrame(colour, cols, rows,
+                                    stereo_count))
         , _manage_frame(true)
     {
         _manage_data = false;
