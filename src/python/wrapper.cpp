@@ -411,6 +411,13 @@ void translate_ObserverError(gg::ObserverError const & e)
     PyErr_SetString(PyExc_RuntimeError, msg.c_str());
 }
 
+void translate_out_of_range(std::out_of_range const &e)
+{
+    std::string msg;
+    msg.append("std::out_of_range: ").append(e.what());
+    PyErr_SetString(PyExc_IndexError, msg.c_str());
+}
+
 BOOST_PYTHON_MODULE(pygiftgrab)
 {
     PyEval_InitThreads();
@@ -426,6 +433,7 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     register_exception_translator<gg::NetworkSourceUnavailable>(&translate_NetworkSourceUnavailable);
     register_exception_translator<gg::VideoTargetError>(&translate_VideoTargetError);
     register_exception_translator<gg::ObserverError>(&translate_ObserverError);
+    register_exception_translator<std::out_of_range>(&translate_out_of_range);
 
     enum_<gg::ColourSpace>("ColourSpace")
         .value("BGRA", gg::ColourSpace::BGRA)
