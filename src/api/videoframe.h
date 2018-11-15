@@ -225,6 +225,15 @@ public:
     //! if frame.colour() == ColourSpace.BGRA:
     //!     struc_arr = frame.data(True) # True => structured NumPy array
     //!     # struc_arr.shape => (frame.rows(), frame.cols(), 4)
+    //!
+    //! # stereo index is the second (optional) parameter to this
+    //! # function in Python, e.g:
+    //! struc_arr_of_2nd_stereo_frame = frame.data(True, 1)
+    //!
+    //! # the following calls are equivalent
+    //! frame.data() == frame.data(False)
+    //! frame.data() == frame.data(False, 0)
+    //! frame.data(True) == frame.data(True, 0)
     //! \endcode
     //!
     //! \param stereo_index index of requested stereo frame
