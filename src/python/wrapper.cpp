@@ -144,21 +144,40 @@ public:
 
 #ifdef USE_NUMPY
     //!
-    //! \brief see:
+    //! \brief default arguments for both structured flag (i.e. false)
+    //! and the stereo index (i.e. 0), see:
     //! http://www.boost.org/doc/libs/1_63_0/
     //! libs/python/doc/html/tutorial/tutorial/
     //! functions.html#tutorial.functions.default_arguments
-    //! \return a flat NumPy array
-    //! \sa data_as_ndarray()
+    //! \return the first stereo frame's data as a flat NumPy array
+    //! \sa stereo_data_as_ndarray()
     //!
-    numpy::ndarray data_as_flat_ndarray() const
+    numpy::ndarray first_stereo_data_as_flat_ndarray() const
     {
-        return data_as_ndarray(false);
+        return stereo_data_as_ndarray(false, 0);
+    }
+
+    //!
+    //! \brief default argument for stereo index (i.e. 0), see:
+    //! http://www.boost.org/doc/libs/1_63_0/
+    //! libs/python/doc/html/tutorial/tutorial/
+    //! functions.html#tutorial.functions.default_arguments
+    //! \param structured
+    //! \return the first stereo frame's data as desired NumPy array
+    //! \throw gg::BasicException if wrapped gg::VideoFrame has colour
+    //! other than BGRA (currently only BGRA data supported for
+    //! structured ndarray exposure)
+    //! \sa stereo_data_as_ndarray()
+    //!
+    numpy::ndarray first_stereo_data_as_ndarray(bool structured) const
+    {
+        return stereo_data_as_ndarray(structured, 0);
     }
 
     //!
     //! \brief Create a NumPy array referencing gg::VideoFrame::data()
     //! \param structured
+    //! \param stereo_index
     //! \return a flat NumPy array if not \c structured; otherwise one
     //! that conforms to the shape SciPy routines expect: (height,
     //! width, channels), e.g. (9, 16, 4) for BGRA data of a 16 x 9
@@ -166,8 +185,10 @@ public:
     //! \throw gg::BasicException if wrapped gg::VideoFrame has colour
     //! other than BGRA (currently only BGRA data supported for
     //! structured ndarray exposure)
+    //! \throw std::out_of_range if stereo index invalid
     //!
-    numpy::ndarray data_as_ndarray(bool structured) const
+    numpy::ndarray stereo_data_as_ndarray(
+        bool structured, size_t stereo_index) const
     {
         tuple shape, strides;
         numpy::dtype data_type = numpy::dtype::get_builtin<uint8_t>();
@@ -192,12 +213,12 @@ public:
         }
         else
         {
-            shape = make_tuple(_frame->data_length());
+            shape = make_tuple(_frame->data_length(stereo_index));
             strides = make_tuple(sizeof(uint8_t));
         }
 
         return numpy::from_data(
-                    _frame->data(), data_type, shape, strides,
+                    _frame->data(stereo_index), data_type, shape, strides,
                     // owner (dangerous to pass None)
                     object()
                );
@@ -488,8 +509,9 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .def("required_pixel_length", &VideoFrameNumPyWrapper::required_pixel_length)
         .staticmethod("required_pixel_length")
 #ifdef USE_NUMPY
-        .def("data", &VideoFrameNumPyWrapper::data_as_flat_ndarray)
-        .def("data", &VideoFrameNumPyWrapper::data_as_ndarray)
+        .def("data", &VideoFrameNumPyWrapper::first_stereo_data_as_flat_ndarray)
+        .def("data", &VideoFrameNumPyWrapper::first_stereo_data_as_ndarray)
+        .def("data", &VideoFrameNumPyWrapper::stereo_data_as_ndarray)
 #endif
     ;
 
