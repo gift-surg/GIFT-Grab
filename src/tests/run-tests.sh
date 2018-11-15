@@ -98,6 +98,14 @@ elif [ "$1" = "numpy" ]; then
             test_cmd="$test_cmd $test_dir/videoframe -m numpy_compatibility"
         fi
     fi
+elif [ "$1" = "stereo" ]; then
+    if [ $# -ne "2" ]; then
+        args_ok=false
+    else
+        parse_colour $2
+        test_cmd="$test_cmd --colour-space=$test_colour_space"
+        test_cmd="$test_cmd $test_dir/videoframe -m stereo_frames"
+    fi
 elif [ "$1" = "epiphan-dvi2pcieduo" ]; then
     test_device=$1
     test_device=${test_device:8}
