@@ -113,6 +113,16 @@ public:
             delete _frame;
     }
 
+    const size_t data_length_default_frame() const
+    {
+        return _frame->data_length();
+    }
+
+    const size_t data_length_stereo_frame(size_t stereo_index) const
+    {
+        return _frame->data_length(stereo_index);
+    }
+
 #ifdef USE_NUMPY
     //!
     //! \brief see:
@@ -441,7 +451,8 @@ BOOST_PYTHON_MODULE(pygiftgrab)
         .def("colour", &VideoFrameNumPyWrapper::colour)
         .def("rows", &VideoFrameNumPyWrapper::rows)
         .def("cols", &VideoFrameNumPyWrapper::cols)
-        .def("data_length", &VideoFrameNumPyWrapper::data_length)
+        .def("data_length", &VideoFrameNumPyWrapper::data_length_default_frame)
+        .def("data_length", &VideoFrameNumPyWrapper::data_length_stereo_frame)
         .def("required_data_length", &VideoFrameNumPyWrapper::required_data_length)
         .staticmethod("required_data_length")
         .def("required_pixel_length", &VideoFrameNumPyWrapper::required_pixel_length)
