@@ -12,16 +12,7 @@ def peri_test(colour_space):
     stereo_count = 2
     cols, rows = 1920, 1080
     stereo_frame = VideoFrame(colour_space, cols, rows, stereo_count)
-    if colour_space == ColourSpace.BGRA:
-        data_length = cols * rows * 4
-    elif colour_space == ColourSpace.I420:
-        data_length = int(cols * rows * 1.5)
-    elif colour_space == ColourSpace.UYVY:
-        data_length = cols * rows * 2
-    else:
-        raise ValueError(
-            'Colour space {} not recognised'.format(colour_space)
-        )
+    data_length = VideoFrame.required_data_length(colour_space)
 
 
 @mark.stereo_frames
