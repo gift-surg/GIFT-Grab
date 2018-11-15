@@ -232,6 +232,7 @@ void VideoFrame::free_memory()
         _data = nullptr;
         _data_length = 0;
         set_dimensions(0, 0);
+        _stereo_count = 0;
     }
 }
 
