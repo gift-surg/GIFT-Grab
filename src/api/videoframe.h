@@ -368,6 +368,25 @@ protected:
     //! \brief Set all pixels of frame to black
     //!
     void set_pixels_black();
+
+    //!
+    //! \brief
+    //! \param stereo_index
+    //! \throw std::out_of_range if passed stereo
+    //! index is invalid
+    //!
+    inline void validate_stereo_index(size_t stereo_index)
+    {
+        if (stereo_index >= _stereo_count)
+        {
+            std::string msg = "This frame has ";
+            msg.append(std::to_string(_stereo_count))
+               .append(" stereo frames (requested ")
+               .append(std::to_string(stereo_index + 1))
+               .append(". stereo frame)");
+            throw std::out_of_range(msg);
+        }
+    }
 };
 
 }
