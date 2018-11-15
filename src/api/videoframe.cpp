@@ -152,6 +152,8 @@ void VideoFrame::operator=(const VideoFrame & rhs)
 void VideoFrame::init_from_specs(unsigned char * data, size_t data_length,
                                  size_t cols, size_t rows, size_t stereo_count)
 {
+    _stereo_count = stereo_count;
+
     if (_manage_data)
     {
         allocate_memory(data_length);
