@@ -78,8 +78,11 @@ public:
     //! \param colour
     //! \param cols
     //! \param rows
+    //! \param stereo_count if larger than 1, then this frame
+    //! will keep the specified number of stereo frames
     //!
-    VideoFrame(enum ColourSpace colour, size_t cols, size_t rows);
+    VideoFrame(enum ColourSpace colour, size_t cols, size_t rows,
+               size_t stereo_count = 1);
 
     //!
     //! \brief Create a video frame by copying the data and

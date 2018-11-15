@@ -19,15 +19,17 @@ VideoFrame::VideoFrame(enum ColourSpace colour, bool manage_data)
     set_dimensions(0, 0);
 }
 
-VideoFrame::VideoFrame(ColourSpace colour, size_t cols, size_t rows)
+VideoFrame::VideoFrame(ColourSpace colour, size_t cols, size_t rows,
+                       size_t stereo_count)
     : _colour(colour)
     , _manage_data(true)
     , _data(nullptr)
     , _data_length(0)
-    , _stereo_count(1)
+    , _stereo_count(stereo_count)
 {
     set_dimensions(cols, rows);
     size_t data_length = required_data_length(_colour, _cols, _rows);
+    data_length *= _stereo_count;
     allocate_memory(data_length);
     set_pixels_black();
 }
