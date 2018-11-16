@@ -1,6 +1,7 @@
 FILE(COPY
     test_unit.py
     test_observer.py
+    test_stereo.py
     conftest.py
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
 )
