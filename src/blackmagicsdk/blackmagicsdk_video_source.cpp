@@ -290,7 +290,8 @@ HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::VideoInputFrameArrived(
 
         // Propagate new video frame to observers
         _buffer_video_frame.init_from_specs(
-            _video_buffer, _video_buffer_length, _cols, _rows
+            _video_buffer, _video_buffer_length, _cols, _rows,
+            is_stereo() ? 2 : 1
         );
     }
 
