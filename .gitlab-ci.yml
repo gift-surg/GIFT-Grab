@@ -28,6 +28,8 @@ before_script:
   - export GiftGrab_PIP_INSTALLER="${GiftGrab_PIP_INSTALLER_DIR}/${GiftGrab_PIP_INSTALLER}"
   - unset GiftGrab_PIP_INSTALLER_DIR
   - cd "$GiftGrab_REPO_DIR"
+  # test launcher
+  - export GiftGrab_TEST_LAUNCHER=${GiftGrab_SOURCE_DIR}/tests/run-tests.sh
 
 stages:
   - offline
