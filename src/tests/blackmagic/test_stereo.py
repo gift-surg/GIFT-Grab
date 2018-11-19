@@ -26,3 +26,4 @@ def test_stereo_frames(device, colour_space):
 
     assert consistency_checker
     assert numpy_checker
+    assert backwards_compatibility_checker
