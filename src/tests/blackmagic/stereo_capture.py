@@ -14,6 +14,11 @@ from pygiftgrab import (IObserver, VideoSourceFactory,
 
 
 class StereoFrameSaver(IObserver):
+    """
+    Simple class that demonstrates how mono and stereo frames,
+    and their respective parameters can be queried and the actual
+    frame data can be saved using the GIFT-Grab stereo API.
+    """
 
     def __init__(self):
         super(StereoFrameSaver, self).__init__()
@@ -22,12 +27,20 @@ class StereoFrameSaver(IObserver):
     def update(self, frame):
         self.current += 1
 
-        if self.current <= 4:  # do not flood terminal
+        # 4 is the number of variations of stereo/mono
+        # calls to the data method, using it here as well to
+        # avoid flooding the user's terminal
+        if self.current <= 4:
+            # display number of stereo frames, should be 2
+            # for this device
             print(
                 'Got {} stereo frames'.format(
                     frame.stereo_count()
                 )
             )
+            # display length of data of each stereo frame,
+            # each stereo frame should consist of same number
+            # of bytes for this device
             print(
                 'Stereo data length (bytes):\n'
                 '\tdata_length(): {}\n'
