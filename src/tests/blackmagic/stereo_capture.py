@@ -24,7 +24,7 @@ class StereoFrameSaver(IObserver):
 
         if self.current <= 3:  # do not flood terminal
             print(
-                'Got {} stereo frames\n'.format(
+                'Got {} stereo frames'.format(
                     frame.stereo_count()
                 )
             )
