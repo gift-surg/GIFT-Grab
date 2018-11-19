@@ -504,7 +504,7 @@ pypi-blackmagic-decklink-4k-extreme-12g:
     # because pip seems to be getting confused about install options sometimes:
     - pip install PyYAML
     - pip install pytest
-    - pip install -vvv --install-option="--blackmagic-decklink-4k-extreme-12g" --install-option="--enable-nonfree" --upgrade "$PyPI_INSTALLER"
+    - pip install -vvv --install-option="--blackmagic-decklink-4k-extreme-12g" --install-option="--enable-nonfree" --install-option="--numpy" --upgrade "$PyPI_INSTALLER"
     # run tests
     - $TEST_LAUNCHER blackmagic-decklink4kextreme12g uyvy; exit_on_fail
     - $TEST_LAUNCHER blackmagic-decklink4kextreme12g bgra; exit_on_fail
@@ -530,7 +530,7 @@ blackmagic-decklink-4k-extreme-12g:
     - rm -rf "$GiftGrab_BUILD_DIR"
     - mkdir -p "$GiftGrab_BUILD_DIR"
     - cd "$GiftGrab_BUILD_DIR"
-    - cmake -D BUILD_PYTHON=ON -D BUILD_TESTS=ON -D USE_BLACKMAGIC_DECKLINK_4K_EXTREME_12G=ON -D ENABLE_NONFREE=ON "$GiftGrab_SOURCE_DIR"
+    - cmake -D BUILD_PYTHON=ON -D USE_NUMPY=ON -D BUILD_TESTS=ON -D USE_BLACKMAGIC_DECKLINK_4K_EXTREME_12G=ON -D ENABLE_NONFREE=ON "$GiftGrab_SOURCE_DIR"
     - make -j; exit_on_fail
     - ctest; exit_on_fail
   tags:
