@@ -26,7 +26,7 @@ class StereoFrameBackwardsCompatibilityChecker(pgg.IObserver):
         frame_backwards_compatible &= np.array_equal(frame.data(), frame.data(False))
         frame_backwards_compatible &= np.array_equal(frame.data(), frame.data(False, 0))
         frame_backwards_compatible &= frame.data_length() == frame.data_length(0)
-        self.obtained_numpy_compatible_stereo_frames.append(frame_backwards_compatible)
+        self.obtained_backwards_compatible_frames.append(frame_backwards_compatible)
 
     def __bool__(self):
         if not self.obtained_backwards_compatible_frames:
