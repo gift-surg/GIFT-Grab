@@ -1,8 +1,15 @@
 import time
 from pytest import mark
-from utils import (StereoFrameConsistencyChecker,
-                   StereoFrameNumpyCompatibilityChecker,
-                   StereoFrameBackwardsCompatibilityChecker)
+try:
+    # in case of PyPI installation, this will work:
+    from giftgrab.tests.utils import (StereoFrameConsistencyChecker,
+                                      StereoFrameNumpyCompatibilityChecker,
+                                      StereoFrameBackwardsCompatibilityChecker)
+except ImportError:
+    # in case of installation from source, this will work:
+    from utils import (StereoFrameConsistencyChecker,
+                       StereoFrameNumpyCompatibilityChecker,
+                       StereoFrameBackwardsCompatibilityChecker)
 import pygiftgrab as pgg
 
 
