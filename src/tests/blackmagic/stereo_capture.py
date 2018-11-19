@@ -22,7 +22,7 @@ class StereoFrameSaver(IObserver):
     def update(self, frame):
         self.current += 1
 
-        if self.current <= 3:  # do not flood terminal
+        if self.current <= 4:  # do not flood terminal
             print(
                 'Got {} stereo frames'.format(
                     frame.stereo_count()
@@ -70,6 +70,20 @@ class StereoFrameSaver(IObserver):
             )
 
         elif self.current == 3:
+            # the two calls below save the two stereo frames,
+            # without the need for reshaping the data, as the
+            # call to the data method already yields a
+            # structured NumPy array
+            cv2.imwrite(
+                'mono-frame.data-True.png',
+                frame.data(True)
+            )
+            cv2.imwrite(
+                'mono-frame.data-True-0.png',
+                frame.data(True, 0)
+            )
+
+        elif self.current == 4:
             # the two calls below save the two stereo frames,
             # without the need for reshaping the data, as the
             # call to the data method already yields a
