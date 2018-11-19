@@ -57,7 +57,7 @@ foreach(BLACKMAGIC_DEVICE ${BLACKMAGIC_DEVICES})
         LIST(APPEND TESTS_LIST ${NAME_TEST})
 
         # Blackmagic device supporting stereo (3D) video streams
-        if(BLACKMAGIC_DEVICE STREQUAL DeckLink4KExtreme12G)
+        if(BLACKMAGIC_DEVICE STREQUAL DeckLink4KExtreme12G AND USE_NUMPY)
             SET(NAME_TEST Test_Blackmagic_${BLACKMAGIC_DEVICE}_StereoFrames_${COLOUR_SPACE})
             ADD_TEST(NAME ${NAME_TEST}
                 COMMAND py.test --device=${BLACKMAGIC_DEVICE} --colour-space=${COLOUR_SPACE} test_stereo.py
