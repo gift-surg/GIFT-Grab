@@ -1,66 +1,99 @@
 #!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+
+"""
+Example demonstrating how stereo video frames can be captured
+using a frame grabber card that supports this feature.
+"""
 
 import time
-import os
 import cv2
 import numpy as np
-from pygiftgrab import IObservableObserver
-from pygiftgrab import VideoSourceFactory
-from pygiftgrab import ColourSpace
-from pygiftgrab import Device
-from pygiftgrab import VideoFrame
+from pygiftgrab import (IObserver, VideoSourceFactory,
+                        ColourSpace, Device, VideoFrame)
 
 
-class FrameSaver(IObservableObserver):
+class StereoFrameSaver(IObserver):
 
-    def __init__(self, num_to_save):
-        super(FrameSaver, self).__init__()
-        self.num_saved = 0
-        self.num_to_save = num_to_save
-        self.frames_np_data = []
-        self.frame_dims = None
+    def __init__(self):
+        super(StereoFrameSaver, self).__init__()
+        self.current = 0
 
     def update(self, frame):
-        if self.num_saved < self.num_to_save:
-            if self.frame_dims is None:
-                self.frame_dims = [frame.rows(), frame.cols()]
-            np_data = np.copy(frame.data(False))
-            self.frames_np_data.append(np_data)
-            self.num_saved += 1
+        self.current += 1
 
-    def dump(self):
-        print('Acquired {} frames'.format(self.num_saved))
-        if self.num_saved < self.num_to_save:
-            print('Still acquiring')
-            return
-        out_folder = os.path.abspath(
-            os.path.join('.', time.strftime('%Y-%m-%d-%H-%M-%S'))
-        )
-        os.mkdir(out_folder)
-        data_bgra = np.zeros(self.frame_dims + [4], np.uint8)
-        for i, np_data in enumerate(self.frames_np_data):
-            left, right = np_data[:np_data.size / 2], np_data[np_data.size / 2:]
-            for j, current in enumerate([left, right]):
-                current = np.reshape(current, self.frame_dims + [2])
-                out_file = os.path.join(out_folder,
-                                        'frame-{:03d}-{}.png'.format(i+1, j))
+        if self.current <= 3:  # do not flood terminal
+            print(
+                'Got {} stereo frames\n'.format(
+                    frame.stereo_count()
+                )
+            )
+            print(
+                'Stereo data length (bytes):\n'
+                '\tdata_length(): {}\n'
+                '\tdata_length(0): {}\n'
+                '\tdata_length(1): {}\n'.format(
+                    frame.data_length(), frame.data_length(0),
+                    frame.data_length(1)
+                )
+            )
 
-                cv2.cvtColor(src=current, code=cv2.COLOR_YUV2BGRA_UYVY, dst=data_bgra)
-                cv2.imwrite(out_file, data_bgra)
-        print('Saved {} frames in {}'.format(len(self.frames_np_data), out_folder))
+        frame_shape = (frame.rows(), frame.cols(), 4)
+
+        if self.current == 1:
+            # all three calls below save the same frame,
+            # that is the first of the two stereo frames
+            cv2.imwrite(
+                'mono-frame.data.png',
+                np.reshape(frame.data(), frame_shape)
+            )
+            cv2.imwrite(
+                'mono-frame.data-False.png',
+                np.reshape(frame.data(False), frame_shape)
+            )
+            cv2.imwrite(
+                'mono-frame.data-False-0.png',
+                np.reshape(frame.data(False, 0), frame_shape)
+            )
+
+        elif self.current == 2:
+            # the two calls below save the two stereo frames,
+            # however the data needs to be reshaped, as the
+            # call to the data method yields a flat NumPy array
+            cv2.imwrite(
+                'stereo-frame.data-False-0.png',
+                np.reshape(frame.data(False, 0), frame_shape)
+            )
+            cv2.imwrite(
+                'stereo-frame.data-False-1.png',
+                np.reshape(frame.data(False, 1), frame_shape)
+            )
+
+        elif self.current == 3:
+            # the two calls below save the two stereo frames,
+            # without the need for reshaping the data, as the
+            # call to the data method already yields a
+            # structured NumPy array
+            cv2.imwrite(
+                'stereo-frame.data-True-0.png',
+                frame.data(True, 0)
+            )
+            cv2.imwrite(
+                'stereo-frame.data-True-1.png',
+                frame.data(True, 1)
+            )
 
 
 if __name__ == '__main__':
     sfac = VideoSourceFactory.get_instance()
-    bm = sfac.get_device(Device.DeckLinkSDI4K, ColourSpace.UYVY)
-    frame = VideoFrame(ColourSpace.UYVY, False)
+    source = sfac.get_device(
+        Device.DeckLink4KExtreme12G, ColourSpace.BGRA
+    )
 
-    saver = FrameSaver(10)
+    saver = StereoFrameSaver()
 
-    bm.attach(saver)
+    source.attach(saver)
 
-    time.sleep(2)  # operate pipeline for 20 sec
+    time.sleep(2)  # operate pipeline for 2 sec
 
-    bm.detach(saver)
-
-    saver.dump()
+    source.detach(saver)
