@@ -52,7 +52,7 @@ The parantheses in the version column mean that the listed version has been test
 | [libvpx](https://www.webmproject.org/code/) | 1.3.0 | |
 | [libVLC (VLC SDK)](https://wiki.videolan.org/LibVLC/) | 3.0.0 release candidate: [nighly build ID: 20160913-0237](http://nightlies.videolan.org/build/source/?C=M;O=D) | Please see the note in the [libVLC installation instructions](tips.md#libvlc) about using libVLC for capturing network streams. |
 | [Epiphan Video Grabber SDK](https://www.epiphan.com/support/) | 3.30.3.0007 | Epiphan Video Grabber SDK has a proprietary licence: enabling Epiphan Video Grabber SDK makes GIFT-Grab undistributable. |
-| [Blackmagic Desktop Video SDK](https://www.blackmagicdesign.com/support) | 10.4 | Blackmagic Desktop Video SDK has a proprietary licence: enabling support for Blackmagic cards makes GIFT-Grab undistributable. |
+| [Blackmagic Desktop Video SDK](https://www.blackmagicdesign.com/support) | 10.11 | Blackmagic Desktop Video SDK has a proprietary licence: enabling support for Blackmagic cards makes GIFT-Grab undistributable. |
 | [Python](https://www.python.org/) | 2.7 | |
 | [Boost.Python](http://www.boost.org/doc/libs/release/libs/python/) | 1.54.0, and 1.63.0 beta 1 for NumPy support | |
 | [pkg-config](https://www.freedesktop.org/wiki/Software/pkg-config/) | | |
