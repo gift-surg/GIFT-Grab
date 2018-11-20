@@ -53,20 +53,24 @@ class StereoFrameSaver(IObserver):
 
         frame_shape = (frame.rows(), frame.cols(), 4)
 
+        # the slicing below, i.e. [:, :, :3], is due to OpenCV's
+        # imwrite expecting BGR data, so we strip out the alpha
+        # channel of each frame when saving it
+
         if self.current == 1:
             # all three calls below save the same frame,
             # that is the first of the two stereo frames
             cv2.imwrite(
                 'mono-frame.data.png',
-                np.reshape(frame.data(), frame_shape)
+                np.reshape(frame.data(), frame_shape)[:, :, :3]
             )
             cv2.imwrite(
                 'mono-frame.data-False.png',
-                np.reshape(frame.data(False), frame_shape)
+                np.reshape(frame.data(False), frame_shape)[:, :, :3]
             )
             cv2.imwrite(
                 'mono-frame.data-False-0.png',
-                np.reshape(frame.data(False, 0), frame_shape)
+                np.reshape(frame.data(False, 0), frame_shape)[:, :, :3]
             )
 
         elif self.current == 2:
@@ -75,11 +79,11 @@ class StereoFrameSaver(IObserver):
             # call to the data method yields a flat NumPy array
             cv2.imwrite(
                 'stereo-frame.data-False-0.png',
-                np.reshape(frame.data(False, 0), frame_shape)
+                np.reshape(frame.data(False, 0), frame_shape)[:, :, :3]
             )
             cv2.imwrite(
                 'stereo-frame.data-False-1.png',
-                np.reshape(frame.data(False, 1), frame_shape)
+                np.reshape(frame.data(False, 1), frame_shape)[:, :, :3]
             )
 
         elif self.current == 3:
@@ -89,11 +93,11 @@ class StereoFrameSaver(IObserver):
             # structured NumPy array
             cv2.imwrite(
                 'mono-frame.data-True.png',
-                frame.data(True)
+                frame.data(True)[:, :, :3]
             )
             cv2.imwrite(
                 'mono-frame.data-True-0.png',
-                frame.data(True, 0)
+                frame.data(True, 0)[:, :, :3]
             )
 
         elif self.current == 4:
@@ -103,11 +107,11 @@ class StereoFrameSaver(IObserver):
             # structured NumPy array
             cv2.imwrite(
                 'stereo-frame.data-True-0.png',
-                frame.data(True, 0)
+                frame.data(True, 0)[:, :, :3]
             )
             cv2.imwrite(
                 'stereo-frame.data-True-1.png',
-                frame.data(True, 1)
+                frame.data(True, 1)[:, :, :3]
             )
 
 
