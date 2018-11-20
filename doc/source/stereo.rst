@@ -7,9 +7,12 @@ GIFT-Grab allows for capturing stereo video streams from frame grabbers supporti
 feature.
 The example below demonstrates how stereo frames can be acquired and saved to individual
 image files.
-Running this example requires a `Blackmagic DeckLink 4K Extreme 12G`_ and OpenCV_.
+Running this example requires GIFT-Grab built/installed with support for
+`Blackmagic DeckLink 4K Extreme 12G`_ and NumPy_.
+The example uses OpenCV_ to save video frames to disk.
 
-.. _`Blackmagic DeckLink 4K Extreme 12G`: https://www.blackmagicdesign.com/products/decklink/models
+.. _`Blackmagic DeckLink 4K Extreme 12G`: https://github.com/gift-surg/GIFT-Grab/blob/master/doc/pypi.md#blackmagic-decklink-4k-extreme-12g
+.. _NumPy: https://github.com/gift-surg/GIFT-Grab/blob/master/doc/pypi.md#numpy
 .. _OpenCV: http://www.opencv.org/
 
 The full source code of the example is below.
