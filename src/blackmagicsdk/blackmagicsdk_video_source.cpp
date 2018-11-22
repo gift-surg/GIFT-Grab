@@ -43,7 +43,7 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
         pixel_format = bmdFormat8BitYUV;
         break;
     case BGRA:
-        pixel_format = bmdFormat8BitBGRA;
+        pixel_format = bmdFormat12BitRGB;
         break;
     case I420:
     default:
