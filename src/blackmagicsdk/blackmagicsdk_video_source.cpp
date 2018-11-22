@@ -43,6 +43,8 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
         pixel_format = bmdFormat8BitYUV;
         break;
     case BGRA:
+        // We currently only support BGRA with DeckLink 4K Extreme 12G,
+        // and that card supports only this RGB format:
         pixel_format = bmdFormat12BitRGB;
         break;
     case I420:
