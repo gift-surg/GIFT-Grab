@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdlib>
 #include "DeckLinkAPI.h"
 
 namespace gg

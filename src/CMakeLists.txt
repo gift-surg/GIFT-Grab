@@ -279,6 +279,8 @@ if(USE_BLACKMAGICSDK)
     LIST(APPEND SOURCES blackmagicsdk/blackmagicsdk_video_source.cpp)
     LIST(APPEND HEADERS blackmagicsdk/deck_link_display_mode_detector.h)
     LIST(APPEND SOURCES blackmagicsdk/deck_link_display_mode_detector.cpp)
+    LIST(APPEND HEADERS blackmagicsdk/deck_link_bgra_video_frame.h)
+    LIST(APPEND SOURCES blackmagicsdk/deck_link_bgra_video_frame.cpp)
 endif(USE_BLACKMAGICSDK)
 
 # Performance benchmarking

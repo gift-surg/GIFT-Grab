@@ -5,7 +5,8 @@ namespace gg
 
 DeckLinkBGRAVideoFrame::DeckLinkBGRAVideoFrame(
     size_t width, size_t height,
-    LPVOID pixel_buffer, BMDFrameFlags frame_flags)
+    LPVOID pixel_buffer, BMDFrameFlags frame_flags
+)
 {
     // TODO
 }
@@ -33,7 +34,7 @@ DeckLinkBGRAVideoFrame::GetRowBytes(void)
     // TODO
 }
 
-virtual HRESULT STDMETHODCALLTYPE
+HRESULT STDMETHODCALLTYPE
 DeckLinkBGRAVideoFrame::GetBytes(void **buffer)
 {
     // TODO
@@ -77,8 +78,9 @@ DeckLinkBGRAVideoFrame::GetAncillaryData(
     // TODO
 }
 
-HRESULT STDMETHODCALLTYPE DeckLinkBGRAVideoFrame::GetTimecode(
-        BMDTimecodeFormat format, IDeckLinkTimecode** timecode
+HRESULT STDMETHODCALLTYPE
+DeckLinkBGRAVideoFrame::GetTimecode(
+    BMDTimecodeFormat format, IDeckLinkTimecode** timecode
 )
 {
     // TODO
