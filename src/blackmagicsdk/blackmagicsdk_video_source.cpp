@@ -257,11 +257,27 @@ HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::VideoInputFrameArrived(
             // nop if something's terribly wrong!
             return S_OK;
 
-        // Get the new data into the buffer
-        HRESULT res = video_frame->GetBytes(
-            reinterpret_cast<void **>(&_video_buffer)
-        );
-        // If data could not be read into the buffer, return
+        HRESULT res;
+
+        if (_colour == BGRA)
+        {
+            // convert to BGRA from capture format
+            if (_bgra_frame_buffers[0] == nullptr)
+                _bgra_frame_buffers[0] = new DeckLinkBGRAVideoFrame(
+                    video_frame->GetWidth(), video_frame->GetHeight(),
+                    _video_buffer, video_frame->GetFlags()
+                );
+            res = _12_bit_rgb_to_bgra_converter->ConvertFrame(
+                video_frame, _bgra_frame_buffers[0]
+            );
+        }
+        else
+            // Get the new data into the buffer
+            res = video_frame->GetBytes(
+                reinterpret_cast<void **>(&_video_buffer)
+            );
+
+        // If the last operation failed, return
         if (FAILED(res))
             return res;
 
@@ -283,9 +299,22 @@ HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::VideoInputFrameArrived(
 
             if (right_eye_frame != nullptr)
             {
-                res = right_eye_frame->GetBytes(
-                    reinterpret_cast<void **>(&_video_buffer[n_bytes / 2])
-                );
+                if (_colour == BGRA)
+                {
+                    // convert to BGRA from capture format
+                    if (_bgra_frame_buffers[1] == nullptr)
+                        _bgra_frame_buffers[1] = new DeckLinkBGRAVideoFrame(
+                            video_frame->GetWidth(), video_frame->GetHeight(),
+                            &_video_buffer[n_bytes / 2], video_frame->GetFlags()
+                        );
+                    res = _12_bit_rgb_to_bgra_converter->ConvertFrame(
+                        right_eye_frame, _bgra_frame_buffers[1]
+                    );
+                }
+                else
+                    res = right_eye_frame->GetBytes(
+                        reinterpret_cast<void **>(&_video_buffer[n_bytes / 2])
+                    );
                 right_eye_frame->Release();
                 // If data could not be read into the buffer, return
                 if (FAILED(res))
