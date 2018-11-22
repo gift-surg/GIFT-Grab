@@ -47,11 +47,7 @@ DeckLinkBGRAVideoFrame::GetRowBytes(void)
 HRESULT STDMETHODCALLTYPE
 DeckLinkBGRAVideoFrame::GetBytes(void **buffer)
 {
-    std::memcpy(
-        reinterpret_cast<void *>(buffer),
-        _pixel_buffer,
-        _pixel_buffer_length
-    );
+    std::memcpy(*buffer, _pixel_buffer, _pixel_buffer_length);
     return S_OK;
 }
 
