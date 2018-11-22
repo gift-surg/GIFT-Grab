@@ -2,6 +2,7 @@
 
 #include "ivideosource.h"
 #include "macros.h"
+#include "deck_link_bgra_video_frame.h"
 #include <DeckLinkAPI.h>
 #include <mutex>
 
@@ -76,6 +77,12 @@ protected:
     //! \brief Converter needed in case of BGRA captures
     //!
     IDeckLinkVideoConversion *_12_bit_rgb_to_bgra_converter;
+
+    //!
+    //! \brief Internal frame buffers for post-capture
+    //! conversion
+    //!
+    DeckLinkBGRAVideoFrame *_bgra_frame_buffers[2];
 
     //!
     //! \brief Flag indicating streaming status
