@@ -328,6 +328,13 @@ void VideoSourceBlackmagicSDK::release_deck_link() noexcept
         _12_bit_rgb_to_bgra_converter->Release();
         _12_bit_rgb_to_bgra_converter = nullptr;
     }
+
+    for (size_t i = 0; i < 2; i++)
+        if (_bgra_frame_buffers[i] != nullptr)
+        {
+            _bgra_frame_buffers[i]->Release();
+            _bgra_frame_buffers[i] = nullptr;
+        }
 }
 
 
