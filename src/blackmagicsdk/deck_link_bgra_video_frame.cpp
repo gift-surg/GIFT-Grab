@@ -68,7 +68,7 @@ DeckLinkBGRAVideoFrame::QueryInterface(
     REFIID iid, LPVOID *ppv
 )
 {
-    // TODO
+    return E_NOINTERFACE;
 }
 
 ULONG STDMETHODCALLTYPE DeckLinkBGRAVideoFrame::AddRef()
