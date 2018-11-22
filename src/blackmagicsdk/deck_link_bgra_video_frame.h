@@ -17,11 +17,12 @@ class DeckLinkBGRAVideoFrame : public IDeckLinkVideoFrame
 {
 protected:
     // members for implementing promised API
-    long            _width;
-    long            _height;
-    BMDFrameFlags   _flags;
-    LPVOID          _pixel_buffer = nullptr;
-    ULONG           _ref_count;
+    long _width;
+    long _height;
+    BMDFrameFlags _flags;
+    LPVOID _pixel_buffer = nullptr;
+    long _pixel_buffer_length;
+    ULONG _ref_count;
 
 public:
     //!

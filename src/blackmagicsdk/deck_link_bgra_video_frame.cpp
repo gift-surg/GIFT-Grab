@@ -1,4 +1,5 @@
 #include "deck_link_bgra_video_frame.h"
+#include <cstring>
 
 namespace gg
 {
@@ -7,49 +8,62 @@ DeckLinkBGRAVideoFrame::DeckLinkBGRAVideoFrame(
     size_t width, size_t height,
     LPVOID pixel_buffer, BMDFrameFlags frame_flags
 )
+    : _width(width)
+    , _height(height)
+    , _pixel_buffer(pixel_buffer)
+    , _pixel_buffer_length(width * height)
+    , _flags(frame_flags)
 {
-    // TODO
+    // nop
 }
 
 DeckLinkBGRAVideoFrame::~DeckLinkBGRAVideoFrame()
 {
-    // TODO
+    _width = 0;
+    _height = 0;
+    _pixel_buffer = nullptr;
+    _pixel_buffer_length = 0;
 }
 
 long STDMETHODCALLTYPE
 DeckLinkBGRAVideoFrame::GetWidth(void)
 {
-    // TODO
+    return _width;
 }
 
 long STDMETHODCALLTYPE
 DeckLinkBGRAVideoFrame::GetHeight(void)
 {
-    // TODO
+    return _height;
 }
 
 long STDMETHODCALLTYPE
 DeckLinkBGRAVideoFrame::GetRowBytes(void)
 {
-    // TODO
+    return 4 * _width;
 }
 
 HRESULT STDMETHODCALLTYPE
 DeckLinkBGRAVideoFrame::GetBytes(void **buffer)
 {
-    // TODO
+    std::memcpy(
+        reinterpret_cast<void *>(buffer),
+        _pixel_buffer,
+        _pixel_buffer_length
+    );
+    return S_OK;
 }
 
 BMDFrameFlags STDMETHODCALLTYPE
 DeckLinkBGRAVideoFrame::GetFlags(void)
 {
-    // TODO
+    return _flags;
 }
 
 BMDPixelFormat STDMETHODCALLTYPE
 DeckLinkBGRAVideoFrame::GetPixelFormat(void)
 {
-    // TODO
+    return bmdFormat8BitBGRA;
 }
 
 HRESULT STDMETHODCALLTYPE
@@ -62,12 +76,14 @@ DeckLinkBGRAVideoFrame::QueryInterface(
 
 ULONG STDMETHODCALLTYPE DeckLinkBGRAVideoFrame::AddRef()
 {
-    // TODO
+    __sync_add_and_fetch(&_ref_count, 1);
+    return _ref_count;
 }
 
 ULONG STDMETHODCALLTYPE DeckLinkBGRAVideoFrame::Release()
 {
-    // TODO
+    __sync_sub_and_fetch(&_ref_count, 1);
+    return _ref_count;
 }
 
 HRESULT STDMETHODCALLTYPE
@@ -75,7 +91,7 @@ DeckLinkBGRAVideoFrame::GetAncillaryData(
     IDeckLinkVideoFrameAncillary **ancillary
 )
 {
-    // TODO
+    // nop
 }
 
 HRESULT STDMETHODCALLTYPE
@@ -83,7 +99,7 @@ DeckLinkBGRAVideoFrame::GetTimecode(
     BMDTimecodeFormat format, IDeckLinkTimecode** timecode
 )
 {
-    // TODO
+    // nop
 }
 
 }
