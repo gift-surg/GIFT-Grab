@@ -73,6 +73,11 @@ protected:
     BMDVideoInputFlags _video_input_flags;
 
     //!
+    //! \brief Converter needed in case of BGRA captures
+    //!
+    IDeckLinkVideoConversion *_12_bit_rgb_to_bgra_converter;
+
+    //!
     //! \brief Flag indicating streaming status
     //!
     bool _running;

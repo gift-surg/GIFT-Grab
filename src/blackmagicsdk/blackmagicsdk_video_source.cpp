@@ -31,6 +31,7 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
     , _deck_link(nullptr)
     , _deck_link_input(nullptr)
     , _video_input_flags(bmdVideoInputFlagDefault | bmdVideoInputDualStream3D)
+    , _12_bit_rgb_to_bgra_converter(nullptr)
     , _running(false)
 {
     // Pixel format, i.e. colour space
@@ -111,6 +112,13 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
     {
         _running = false;
         bail("Could not start streaming from the Blackmagic DeckLink device");
+    }
+
+    if (_colour == BGRA)
+    {
+        _12_bit_rgb_to_bgra_converter = CreateVideoConversionInstance();
+        if (_12_bit_rgb_to_bgra_converter == nullptr)
+            bail("Could not create colour converter for Blackmagic source");
     }
 }
 
