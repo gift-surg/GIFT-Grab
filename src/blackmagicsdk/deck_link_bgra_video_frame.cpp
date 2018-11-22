@@ -11,10 +11,11 @@ DeckLinkBGRAVideoFrame::DeckLinkBGRAVideoFrame(
     : _width(width)
     , _height(height)
     , _pixel_buffer(pixel_buffer)
-    , _pixel_buffer_length(width * height)
     , _flags(frame_flags)
 {
-    // nop
+    // just to avoid calling a method for each
+    // data copy:
+    _pixel_buffer_length = 4 * width * height;
 }
 
 DeckLinkBGRAVideoFrame::~DeckLinkBGRAVideoFrame()
