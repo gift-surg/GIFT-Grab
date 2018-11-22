@@ -242,7 +242,9 @@ HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::VideoInputFrameArrived(
         return S_OK;
 
     // Nr. of bytes of received data
-    size_t n_bytes = video_frame->GetRowBytes() * video_frame->GetHeight();
+    size_t n_bytes = VideoFrame::required_data_length(
+        _colour, video_frame->GetWidth(), video_frame->GetHeight()
+    );
     if (is_stereo())
         n_bytes *= 2;
 
