@@ -105,6 +105,14 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
     if (res != S_OK)
         bail("Could not enable video input of Blackmagic DeckLink device");
 
+    // Colour converter for post-capture colour conversion
+    if (_colour == BGRA)
+    {
+        _12_bit_rgb_to_bgra_converter = CreateVideoConversionInstance();
+        if (_12_bit_rgb_to_bgra_converter == nullptr)
+            bail("Could not create colour converter for Blackmagic source");
+    }
+
     // Start streaming
     _running = true;
     res = _deck_link_input->StartStreams();
@@ -113,13 +121,6 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
     {
         _running = false;
         bail("Could not start streaming from the Blackmagic DeckLink device");
-    }
-
-    if (_colour == BGRA)
-    {
-        _12_bit_rgb_to_bgra_converter = CreateVideoConversionInstance();
-        if (_12_bit_rgb_to_bgra_converter == nullptr)
-            bail("Could not create colour converter for Blackmagic source");
     }
 }
 
