@@ -289,7 +289,8 @@ HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::VideoInputFrameArrived(
                     delete _bgra_frame_buffers[i];
                     _bgra_frame_buffers[i] = new DeckLinkBGRAVideoFrame(
                         _cols, _rows,
-                        &_video_buffer[i * _video_buffer_length / 2], frame_flags
+                        &_video_buffer[i * _video_buffer_length / 2],
+                        video_frame->GetFlags()
                     );
                 }
             }
