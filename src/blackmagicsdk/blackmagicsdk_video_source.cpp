@@ -89,7 +89,7 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
     std::string error_msg = "";
     size_t cols = 0, rows = 0;
     if (not detect_input_format(pixel_format, _video_input_flags, display_mode,
-                                _frame_rate, _cols, _rows, frame_flags, error_msg))
+                                _frame_rate, cols, rows, frame_flags, error_msg))
     {
         _video_input_flags ^= bmdVideoInputDualStream3D;
         if (not detect_input_format(pixel_format, _video_input_flags, display_mode,
