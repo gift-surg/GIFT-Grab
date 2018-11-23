@@ -281,19 +281,22 @@ HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::VideoInputFrameArrived(
             _cols = video_frame->GetWidth();
             _rows = video_frame->GetHeight();
 
-            for (size_t i = 0; i < is_stereo() ? 2 : 1; i++)
-            {
-                if (_bgra_frame_buffers[i] != nullptr)
+            // reallocate internal conversion buffers as well
+            if (need_conversion())
+                for (size_t i = 0; i < is_stereo() ? 2 : 1; i++)
                 {
-                    _bgra_frame_buffers[i]->Release();
-                    delete _bgra_frame_buffers[i];
+                    if (_bgra_frame_buffers[i] != nullptr)
+                    {
+                        _bgra_frame_buffers[i]->Release();
+                        delete _bgra_frame_buffers[i];
+                        _bgra_frame_buffers[i] = nullptr;
+                    }
                     _bgra_frame_buffers[i] = new DeckLinkBGRAVideoFrame(
                         _cols, _rows,
                         &_video_buffer[i * _video_buffer_length / 2],
                         video_frame->GetFlags()
                     );
                 }
-            }
         }
         if (_video_buffer == nullptr) // something's terribly wrong!
             // nop if something's terribly wrong!
