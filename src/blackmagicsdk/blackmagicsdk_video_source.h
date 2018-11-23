@@ -173,7 +173,7 @@ protected:
     //! \param rows new frame height
     //! \param frame_flags
     //!
-    void smart_allocate_buffers(
+    inline void smart_allocate_buffers(
         size_t cols, size_t rows, BMDFrameFlags frame_flags
     ) noexcept;
 

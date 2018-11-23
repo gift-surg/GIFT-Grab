@@ -352,7 +352,7 @@ void VideoSourceBlackmagicSDK::release_deck_link() noexcept
 }
 
 
-void VideoSourceBlackmagicSDK::smart_allocate_buffers(
+inline void VideoSourceBlackmagicSDK::smart_allocate_buffers(
     size_t cols, size_t rows, BMDFrameFlags frame_flags
 ) noexcept
 {
