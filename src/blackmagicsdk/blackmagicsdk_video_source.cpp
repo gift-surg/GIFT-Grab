@@ -370,7 +370,7 @@ inline void VideoSourceBlackmagicSDK::smart_allocate_buffers(
     // Colour converter for post-capture colour conversion
     if (need_conversion())
     {
-        for (size_t i = 0; i < is_stereo() ? 2 : 1; i++)
+        for (size_t i = 0; i < (is_stereo() ? 2 : 1); i++)
         {
             if (_bgra_frame_buffers[i] != nullptr)
             {
