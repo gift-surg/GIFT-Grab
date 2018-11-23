@@ -269,10 +269,31 @@ HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::VideoInputFrameArrived(
         std::lock_guard<std::mutex> data_lock_guard(_data_lock);
 
         // Extend buffer if more memory needed than already allocated
-        if (n_bytes > _video_buffer_length)
+        if (n_bytes > _video_buffer_length or _cols != video_frame->GetWidth()
+            or _rows != video_frame->GetHeight())
+        {
             _video_buffer = reinterpret_cast<uint8_t *>(
-                        realloc(_video_buffer, n_bytes * sizeof(uint8_t))
+                realloc(_video_buffer, n_bytes * sizeof(uint8_t))
             );
+
+            // Set video frame specs according to new data
+            _video_buffer_length = n_bytes;
+            _cols = video_frame->GetWidth();
+            _rows = video_frame->GetHeight();
+
+            for (size_t i = 0; i < is_stereo() ? 2 : 1; i++)
+            {
+                if (_bgra_frame_buffers[i] != nullptr)
+                {
+                    _bgra_frame_buffers[i]->Release();
+                    delete _bgra_frame_buffers[i];
+                    _bgra_frame_buffers[i] = new DeckLinkBGRAVideoFrame(
+                        _cols, _rows,
+                        &_video_buffer[i * _video_buffer_length / 2], frame_flags
+                    );
+                }
+            }
+        }
         if (_video_buffer == nullptr) // something's terribly wrong!
             // nop if something's terribly wrong!
             return S_OK;
@@ -327,11 +348,6 @@ HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::VideoInputFrameArrived(
                     return res;
             }
         }
-
-        // Set video frame specs according to new data
-        _video_buffer_length = n_bytes;
-        _cols = video_frame->GetWidth();
-        _rows = video_frame->GetHeight();
 
         // Propagate new video frame to observers
         _buffer_video_frame.init_from_specs(
