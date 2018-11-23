@@ -87,35 +87,26 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
     BMDDisplayMode display_mode;
     BMDFrameFlags frame_flags;
     std::string error_msg = "";
+    size_t cols = 0, rows = 0;
     if (not detect_input_format(pixel_format, _video_input_flags, display_mode,
                                 _frame_rate, _cols, _rows, frame_flags, error_msg))
     {
         _video_input_flags ^= bmdVideoInputDualStream3D;
         if (not detect_input_format(pixel_format, _video_input_flags, display_mode,
-                                    _frame_rate, _cols, _rows, frame_flags, error_msg))
+                                    _frame_rate, cols, rows, frame_flags, error_msg))
             bail(error_msg);
     }
 
-    // Allocate pixel buffer
-    _video_buffer_length = VideoFrame::required_data_length(_colour, _cols, _rows);
-    if (is_stereo())
-        _video_buffer_length *= 2;
-    _video_buffer = reinterpret_cast<uint8_t *>(
-        realloc(_video_buffer, _video_buffer_length * sizeof(uint8_t))
-    );
-
-    // Colour converter for post-capture colour conversion
+    // Get a post-capture converter if necessary
     if (_colour == BGRA)
     {
         _12_bit_rgb_to_bgra_converter = CreateVideoConversionInstance();
         if (_12_bit_rgb_to_bgra_converter == nullptr)
             bail("Could not create colour converter for Blackmagic source");
-        for (size_t i = 0; i < is_stereo() ? 2 : 1; i++)
-            _bgra_frame_buffers[i] = new DeckLinkBGRAVideoFrame(
-                _cols, _rows,
-                &_video_buffer[i * _video_buffer_length / 2], frame_flags
-            );
     }
+
+    // Now allocate the internal buffers
+    smart_allocate_buffers(cols, rows, frame_flags);
 
     // Set this object (IDeckLinkInputCallback instance) as callback
     res = _deck_link_input->SetCallback(this);
@@ -257,47 +248,15 @@ HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::VideoInputFrameArrived(
         // nop if no data
         return S_OK;
 
-    // Nr. of bytes of received data
-    size_t n_bytes = VideoFrame::required_data_length(
-        _colour, video_frame->GetWidth(), video_frame->GetHeight()
+    smart_allocate_buffers(
+        video_frame->GetWidth(), video_frame->GetHeight(),
+        video_frame->GetFlags()
     );
-    if (is_stereo())
-        n_bytes *= 2;
 
     { // Artificial scope for data lock
         // Make sure only this thread is accessing the buffer now
         std::lock_guard<std::mutex> data_lock_guard(_data_lock);
 
-        // Extend buffer if more memory needed than already allocated
-        if (n_bytes > _video_buffer_length or _cols != video_frame->GetWidth()
-            or _rows != video_frame->GetHeight())
-        {
-            _video_buffer = reinterpret_cast<uint8_t *>(
-                realloc(_video_buffer, n_bytes * sizeof(uint8_t))
-            );
-
-            // Set video frame specs according to new data
-            _video_buffer_length = n_bytes;
-            _cols = video_frame->GetWidth();
-            _rows = video_frame->GetHeight();
-
-            // reallocate internal conversion buffers as well
-            if (need_conversion())
-                for (size_t i = 0; i < is_stereo() ? 2 : 1; i++)
-                {
-                    if (_bgra_frame_buffers[i] != nullptr)
-                    {
-                        _bgra_frame_buffers[i]->Release();
-                        delete _bgra_frame_buffers[i];
-                        _bgra_frame_buffers[i] = nullptr;
-                    }
-                    _bgra_frame_buffers[i] = new DeckLinkBGRAVideoFrame(
-                        _cols, _rows,
-                        &_video_buffer[i * _video_buffer_length / 2],
-                        video_frame->GetFlags()
-                    );
-                }
-        }
         if (_video_buffer == nullptr) // something's terribly wrong!
             // nop if something's terribly wrong!
             return S_OK;
@@ -344,7 +303,7 @@ HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::VideoInputFrameArrived(
                     );
                 else
                     res = right_eye_frame->GetBytes(
-                        reinterpret_cast<void **>(&_video_buffer[n_bytes / 2])
+                        reinterpret_cast<void **>(&_video_buffer[_video_buffer_length / 2])
                     );
                 right_eye_frame->Release();
                 // If data could not be read into the buffer, return
@@ -390,6 +349,44 @@ void VideoSourceBlackmagicSDK::release_deck_link() noexcept
             _bgra_frame_buffers[i]->Release();
             _bgra_frame_buffers[i] = nullptr;
         }
+}
+
+
+void VideoSourceBlackmagicSDK::smart_allocate_buffers(
+    size_t cols, size_t rows, BMDFrameFlags frame_flags
+) noexcept
+{
+    if (cols == _cols and rows == _rows)
+        return;
+
+    _cols = cols;
+    _rows = rows;
+
+    // Allocate pixel buffer
+    _video_buffer_length = VideoFrame::required_data_length(_colour, _cols, _rows);
+    if (is_stereo())
+        _video_buffer_length *= 2;
+    _video_buffer = reinterpret_cast<uint8_t *>(
+        realloc(_video_buffer, _video_buffer_length * sizeof(uint8_t))
+    );
+
+    // Colour converter for post-capture colour conversion
+    if (need_conversion())
+    {
+        for (size_t i = 0; i < is_stereo() ? 2 : 1; i++)
+        {
+            if (_bgra_frame_buffers[i] != nullptr)
+            {
+                _bgra_frame_buffers[i]->Release();
+                delete _bgra_frame_buffers[i];
+                _bgra_frame_buffers[i] = nullptr;
+            }
+            _bgra_frame_buffers[i] = new DeckLinkBGRAVideoFrame(
+                _cols, _rows,
+                &_video_buffer[i * _video_buffer_length / 2], frame_flags
+            );
+        }
+    }
 }
 
 

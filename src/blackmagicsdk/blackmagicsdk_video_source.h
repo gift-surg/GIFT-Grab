@@ -167,6 +167,17 @@ protected:
     void release_deck_link() noexcept;
 
     //!
+    //! \brief (Re-)allocate internal buffers ONLY IF the new
+    //! dimensions are different than the previous ones
+    //! \param cols new frame width
+    //! \param rows new frame height
+    //! \param frame_flags
+    //!
+    void smart_allocate_buffers(
+        size_t cols, size_t rows, BMDFrameFlags frame_flags
+    ) noexcept;
+
+    //!
     //! \brief Try to detect the input video format, i.e.
     //! the display mode as well as the frame rate
     //! \param pixel_format Use this pixel format
