@@ -245,12 +245,12 @@ HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::VideoInputFrameArrived(
         // nop if no data
         return S_OK;
 
-    smart_allocate_buffers(
-        video_frame->GetWidth(), video_frame->GetHeight(),
-        video_frame->GetFlags()
-    );
-
     { // Artificial scope for data lock
+        smart_allocate_buffers(
+            video_frame->GetWidth(), video_frame->GetHeight(),
+            video_frame->GetFlags()
+        );
+
         // Make sure only this thread is accessing the buffer now
         std::lock_guard<std::mutex> data_lock_guard(_data_lock);
 
