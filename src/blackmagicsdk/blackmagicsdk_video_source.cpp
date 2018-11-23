@@ -32,7 +32,7 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
     , _deck_link_input(nullptr)
     , _video_input_flags(bmdVideoInputFlagDefault | bmdVideoInputDualStream3D)
     , _12_bit_rgb_to_bgra_converter(nullptr)
-    , _bgra_frame_buffers({nullptr, nullptr})
+    , _bgra_frame_buffers{nullptr, nullptr}
     , _running(false)
 {
     // Pixel format, i.e. colour space
