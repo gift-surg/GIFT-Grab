@@ -13,9 +13,7 @@ DeckLinkBGRAVideoFrame::DeckLinkBGRAVideoFrame(
     , _pixel_buffer(pixel_buffer)
     , _flags(frame_flags)
 {
-    // just to avoid calling a method for each
-    // data copy:
-    _pixel_buffer_length = 4 * width * height;
+    // nop
 }
 
 DeckLinkBGRAVideoFrame::~DeckLinkBGRAVideoFrame()
@@ -23,7 +21,6 @@ DeckLinkBGRAVideoFrame::~DeckLinkBGRAVideoFrame()
     _width = 0;
     _height = 0;
     _pixel_buffer = nullptr;
-    _pixel_buffer_length = 0;
 }
 
 long STDMETHODCALLTYPE
