@@ -25,6 +25,8 @@ DeckLinkDisplayModeDetector::DeckLinkDisplayModeDetector(IDeckLinkInput * deck_l
     , _video_input_flags(video_input_flags)
     , _display_mode(bmdModeUnknown)
     , _frame_rate(0.0)
+    , _cols(0)
+    , _rows(0)
     // to be reset upon determining display mode
     , _error_msg("Could not determine display mode (unknown reason)")
     , _running(false)
@@ -149,6 +151,21 @@ double DeckLinkDisplayModeDetector::get_frame_rate() noexcept
 }
 
 
+void DeckLinkDisplayModeDetector::get_frame_dimensions(
+    size_t &cols, size_t &rows
+) noexcept
+{
+    cols = _cols;
+    rows = _rows;
+}
+
+
+BMDFrameFlags DeckLinkDisplayModeDetector::get_frame_flags() noexcept
+{
+    return _frame_flags;
+}
+
+
 std::string DeckLinkDisplayModeDetector::get_error_msg() noexcept
 {
     return _error_msg;
@@ -197,6 +214,9 @@ HRESULT STDMETHODCALLTYPE DeckLinkDisplayModeDetector::VideoInputFrameArrived(
         {
             if (video_frame->GetFlags() & bmdFrameHasNoInputSource)
                 _display_mode = bmdModeUnknown;
+            _cols = video_frame->GetWidth();
+            _rows = video_frame->GetHeight();
+            _frame_flags = video_frame->GetFlags();
             _running = false;
         }
     }
