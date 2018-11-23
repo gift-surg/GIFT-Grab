@@ -105,9 +105,6 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
             bail("Could not create colour converter for Blackmagic source");
     }
 
-    // Now allocate the internal buffers
-    smart_allocate_buffers(cols, rows, frame_flags);
-
     // Set this object (IDeckLinkInputCallback instance) as callback
     res = _deck_link_input->SetCallback(this);
     // No glory: release everything and throw exception
