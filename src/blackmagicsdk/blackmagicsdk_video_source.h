@@ -209,6 +209,17 @@ protected:
         return _video_input_flags & bmdVideoInputDualStream3D;
     }
 
+    //!
+    //! \brief
+    //! \return whether a post-capture colour conversion
+    //! is needed
+    //!
+    inline bool need_conversion()
+    {
+        return _colour == BGRA and
+               _12_bit_rgb_to_bgra_converter != nullptr;
+    }
+
 private:
     DISALLOW_COPY_AND_ASSIGNMENT(VideoSourceBlackmagicSDK);
 };

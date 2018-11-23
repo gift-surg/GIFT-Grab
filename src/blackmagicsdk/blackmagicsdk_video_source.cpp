@@ -265,7 +265,7 @@ HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::VideoInputFrameArrived(
 
         HRESULT res;
 
-        if (_colour == BGRA)
+        if (need_conversion())
         {
             // convert to BGRA from capture format
             if (_bgra_frame_buffers[0] == nullptr)
@@ -305,7 +305,7 @@ HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::VideoInputFrameArrived(
 
             if (right_eye_frame != nullptr)
             {
-                if (_colour == BGRA)
+                if (need_conversion())
                 {
                     // convert to BGRA from capture format
                     if (_bgra_frame_buffers[1] == nullptr)
