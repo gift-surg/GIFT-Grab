@@ -104,6 +104,19 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
         realloc(_video_buffer, _video_buffer_length * sizeof(uint8_t))
     );
 
+    // Colour converter for post-capture colour conversion
+    if (_colour == BGRA)
+    {
+        _12_bit_rgb_to_bgra_converter = CreateVideoConversionInstance();
+        if (_12_bit_rgb_to_bgra_converter == nullptr)
+            bail("Could not create colour converter for Blackmagic source");
+        for (size_t i = 0; i < is_stereo() ? 2 : 1; i++)
+            _bgra_frame_buffers[i] = new DeckLinkBGRAVideoFrame(
+                _cols, _rows,
+                &_video_buffer[i * _video_buffer_length / 2], frame_flags
+            );
+    }
+
     // Set this object (IDeckLinkInputCallback instance) as callback
     res = _deck_link_input->SetCallback(this);
     // No glory: release everything and throw exception
@@ -117,19 +130,6 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
     // No glory
     if (res != S_OK)
         bail("Could not enable video input of Blackmagic DeckLink device");
-
-    // Colour converter for post-capture colour conversion
-    if (_colour == BGRA)
-    {
-        _12_bit_rgb_to_bgra_converter = CreateVideoConversionInstance();
-        if (_12_bit_rgb_to_bgra_converter == nullptr)
-            bail("Could not create colour converter for Blackmagic source");
-        for (size_t i = 0; i < is_stereo() ? 2 : 1; i++)
-            _bgra_frame_buffers[i] = new DeckLinkBGRAVideoFrame(
-                _cols, _rows,
-                &_video_buffer[i * _video_buffer_length / 2], frame_flags
-            );
-    }
 
     // Start streaming
     _running = true;
