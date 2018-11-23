@@ -134,7 +134,7 @@ elif [ "$1" = "blackmagic-decklinksdi4k" ] || [ "$1" = "blackmagic-decklink4kext
         if [ "$1" = "blackmagic-decklinksdi4k" ]; then
             frame_rate=27
         elif [ "$1" = "blackmagic-decklink4kextreme12g" ]; then
-            frame_rate=24
+            frame_rate=22
         fi
         parse_colour $2
         test_cmd="$test_cmd --device=$test_device"
