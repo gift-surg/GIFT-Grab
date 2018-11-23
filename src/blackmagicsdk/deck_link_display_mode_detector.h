@@ -64,6 +64,11 @@ protected:
     //!
     //! \brief
     //!
+    BMDFrameFlags _frame_flags;
+
+    //!
+    //! \brief
+    //!
     std::string _error_msg;
 
     //!
@@ -140,6 +145,12 @@ public:
     //! \param rows
     //!
     void get_frame_dimensions(size_t &cols, size_t &rows) noexcept;
+
+    //!
+    //! \brief
+    //! \return
+    //!
+    BMDFrameFlags get_frame_flags() noexcept;
 
     //!
     //! \brief Get the last detailed error message set

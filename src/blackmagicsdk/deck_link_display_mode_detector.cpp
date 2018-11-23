@@ -160,6 +160,12 @@ void DeckLinkDisplayModeDetector::get_frame_dimensions(
 }
 
 
+BMDFrameFlags DeckLinkDisplayModeDetector::get_frame_flags() noexcept
+{
+    return _frame_flags;
+}
+
+
 std::string DeckLinkDisplayModeDetector::get_error_msg() noexcept
 {
     return _error_msg;
@@ -210,6 +216,7 @@ HRESULT STDMETHODCALLTYPE DeckLinkDisplayModeDetector::VideoInputFrameArrived(
                 _display_mode = bmdModeUnknown;
             _cols = video_frame->GetWidth();
             _rows = video_frame->GetHeight();
+            _frame_flags = video_frame->GetFlags();
             _running = false;
         }
     }

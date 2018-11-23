@@ -175,6 +175,7 @@ protected:
     //! \param frame_rate
     //! \param cols detected frame width
     //! \param rows detected frame height
+    //! \param frame_flags
     //! \param error_msg
     //! \return \c true on success, \c false otherwise,
     //! accompanied by a detailed error message, which
@@ -185,6 +186,7 @@ protected:
                              BMDDisplayMode & display_mode,
                              double & frame_rate,
                              size_t & cols, size_t & rows,
+                             BMDFrameFlags & frame_flags,
                              std::string & error_msg) noexcept;
 
     //!

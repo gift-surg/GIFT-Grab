@@ -85,13 +85,14 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
 
     // Set the input format (i.e. display mode)
     BMDDisplayMode display_mode;
+    BMDFrameFlags frame_flags;
     std::string error_msg = "";
     if (not detect_input_format(pixel_format, _video_input_flags, display_mode,
-                                _frame_rate, _cols, _rows, error_msg))
+                                _frame_rate, _cols, _rows, frame_flags, error_msg))
     {
         _video_input_flags ^= bmdVideoInputDualStream3D;
         if (not detect_input_format(pixel_format, _video_input_flags, display_mode,
-                                    _frame_rate, _cols, _rows, error_msg))
+                                    _frame_rate, _cols, _rows, frame_flags, error_msg))
             bail(error_msg);
     }
 
@@ -109,12 +110,25 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
     if (res != S_OK)
         bail("Could not enable video input of Blackmagic DeckLink device");
 
+    // Allocate pixel buffer
+    _video_buffer_length = VideoFrame::required_data_length(_colour, _cols, _rows);
+    if (is_stereo())
+        _video_buffer_length *= 2;
+    _video_buffer = reinterpret_cast<uint8_t *>(
+        realloc(_video_buffer, _video_buffer_length * sizeof(uint8_t))
+    );
+
     // Colour converter for post-capture colour conversion
     if (_colour == BGRA)
     {
         _12_bit_rgb_to_bgra_converter = CreateVideoConversionInstance();
         if (_12_bit_rgb_to_bgra_converter == nullptr)
             bail("Could not create colour converter for Blackmagic source");
+        for (size_t i = 0; i < is_stereo() ? 2 : 1; i++)
+            _bgra_frame_buffers[i] = new DeckLinkBGRAVideoFrame(
+                _cols, _rows,
+                &_video_buffer[i * _video_buffer_length / 2], frame_flags
+            );
     }
 
     // Start streaming
@@ -266,17 +280,10 @@ HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::VideoInputFrameArrived(
         HRESULT res;
 
         if (need_conversion())
-        {
             // convert to BGRA from capture format
-            if (_bgra_frame_buffers[0] == nullptr)
-                _bgra_frame_buffers[0] = new DeckLinkBGRAVideoFrame(
-                    video_frame->GetWidth(), video_frame->GetHeight(),
-                    _video_buffer, video_frame->GetFlags()
-                );
             res = _12_bit_rgb_to_bgra_converter->ConvertFrame(
                 video_frame, _bgra_frame_buffers[0]
             );
-        }
         else
             // Get the new data into the buffer
             res = video_frame->GetBytes(
@@ -306,17 +313,10 @@ HRESULT STDMETHODCALLTYPE VideoSourceBlackmagicSDK::VideoInputFrameArrived(
             if (right_eye_frame != nullptr)
             {
                 if (need_conversion())
-                {
                     // convert to BGRA from capture format
-                    if (_bgra_frame_buffers[1] == nullptr)
-                        _bgra_frame_buffers[1] = new DeckLinkBGRAVideoFrame(
-                            video_frame->GetWidth(), video_frame->GetHeight(),
-                            &_video_buffer[n_bytes / 2], video_frame->GetFlags()
-                        );
                     res = _12_bit_rgb_to_bgra_converter->ConvertFrame(
                         right_eye_frame, _bgra_frame_buffers[1]
                     );
-                }
                 else
                     res = right_eye_frame->GetBytes(
                         reinterpret_cast<void **>(&_video_buffer[n_bytes / 2])
@@ -378,6 +378,7 @@ bool VideoSourceBlackmagicSDK::detect_input_format(BMDPixelFormat pixel_format,
                                                    BMDDisplayMode & display_mode,
                                                    double & frame_rate,
                                                    size_t & cols, size_t & rows,
+                                                   BMDFrameFlags & frame_flags,
                                                    std::string & error_msg) noexcept
 {
     std::vector<BMDDisplayMode> display_modes =
@@ -406,6 +407,7 @@ bool VideoSourceBlackmagicSDK::detect_input_format(BMDPixelFormat pixel_format,
     {
         frame_rate = detector.get_frame_rate();
         detector.get_frame_dimensions(cols, rows);
+        frame_flags = detector.get_frame_flags();
         display_mode = display_mode_;
         video_input_flags = detector.get_video_input_flags();
         return true;
