@@ -353,6 +353,9 @@ inline void VideoSourceBlackmagicSDK::smart_allocate_buffers(
     size_t cols, size_t rows, BMDFrameFlags frame_flags
 ) noexcept
 {
+    if (cols <= 0 or rows <= 0)
+        return;
+
     if (cols == _cols and rows == _rows)
         return;
 
