@@ -96,6 +96,14 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
             bail(error_msg);
     }
 
+    // Allocate pixel buffer
+    _video_buffer_length = VideoFrame::required_data_length(_colour, _cols, _rows);
+    if (is_stereo())
+        _video_buffer_length *= 2;
+    _video_buffer = reinterpret_cast<uint8_t *>(
+        realloc(_video_buffer, _video_buffer_length * sizeof(uint8_t))
+    );
+
     // Set this object (IDeckLinkInputCallback instance) as callback
     res = _deck_link_input->SetCallback(this);
     // No glory: release everything and throw exception
@@ -109,14 +117,6 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
     // No glory
     if (res != S_OK)
         bail("Could not enable video input of Blackmagic DeckLink device");
-
-    // Allocate pixel buffer
-    _video_buffer_length = VideoFrame::required_data_length(_colour, _cols, _rows);
-    if (is_stereo())
-        _video_buffer_length *= 2;
-    _video_buffer = reinterpret_cast<uint8_t *>(
-        realloc(_video_buffer, _video_buffer_length * sizeof(uint8_t))
-    );
 
     // Colour converter for post-capture colour conversion
     if (_colour == BGRA)
