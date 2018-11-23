@@ -86,10 +86,12 @@ VideoSourceBlackmagicSDK::VideoSourceBlackmagicSDK(size_t deck_link_index,
     // Set the input format (i.e. display mode)
     BMDDisplayMode display_mode;
     std::string error_msg = "";
-    if (not detect_input_format(pixel_format, _video_input_flags, display_mode, _frame_rate, error_msg))
+    if (not detect_input_format(pixel_format, _video_input_flags, display_mode,
+                                _frame_rate, _cols, _rows, error_msg))
     {
         _video_input_flags ^= bmdVideoInputDualStream3D;
-        if (not detect_input_format(pixel_format, _video_input_flags, display_mode, _frame_rate, error_msg))
+        if (not detect_input_format(pixel_format, _video_input_flags, display_mode,
+                                    _frame_rate, _cols, _rows, error_msg))
             bail(error_msg);
     }
 
@@ -375,6 +377,7 @@ bool VideoSourceBlackmagicSDK::detect_input_format(BMDPixelFormat pixel_format,
                                                    BMDVideoInputFlags & video_input_flags,
                                                    BMDDisplayMode & display_mode,
                                                    double & frame_rate,
+                                                   size_t & cols, size_t & rows,
                                                    std::string & error_msg) noexcept
 {
     std::vector<BMDDisplayMode> display_modes =
@@ -402,6 +405,7 @@ bool VideoSourceBlackmagicSDK::detect_input_format(BMDPixelFormat pixel_format,
     if (display_mode_ != bmdModeUnknown)
     {
         frame_rate = detector.get_frame_rate();
+        detector.get_frame_dimensions(cols, rows);
         display_mode = display_mode_;
         video_input_flags = detector.get_video_input_flags();
         return true;

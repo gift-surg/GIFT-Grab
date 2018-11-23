@@ -173,6 +173,8 @@ protected:
     //! \param video_input_flags Use these video flags
     //! \param display_mode
     //! \param frame_rate
+    //! \param cols detected frame width
+    //! \param rows detected frame height
     //! \param error_msg
     //! \return \c true on success, \c false otherwise,
     //! accompanied by a detailed error message, which
@@ -182,6 +184,7 @@ protected:
                              BMDVideoInputFlags & video_input_flags,
                              BMDDisplayMode & display_mode,
                              double & frame_rate,
+                             size_t & cols, size_t & rows,
                              std::string & error_msg) noexcept;
 
     //!
