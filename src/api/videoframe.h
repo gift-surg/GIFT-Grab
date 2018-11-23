@@ -40,6 +40,10 @@ enum ColourSpace
 //! In that case, the caller is responsible for ensuring the data
 //! pointer is valid during the lifetime of the frame object.
 //!
+//! Stereo frame data from a particular point in time are included
+//! within a single frame object, so as to preserve temporal
+//! relations and to facilitate potential stereo encoding.
+//!
 class VideoFrame
 {
 protected:
@@ -74,8 +78,11 @@ public:
     //! \param colour
     //! \param cols
     //! \param rows
+    //! \param stereo_count if larger than 1, then this frame
+    //! will keep the specified number of stereo frames
     //!
-    VideoFrame(enum ColourSpace colour, size_t cols, size_t rows);
+    VideoFrame(enum ColourSpace colour, size_t cols, size_t rows,
+               size_t stereo_count = 1);
 
     //!
     //! \brief Create a video frame by copying the data and
@@ -131,22 +138,37 @@ public:
     //! available yet.
     //!
     //! \param data
-    //! \param data_length
-    //! \param cols
-    //! \param rows
+    //! \param data_length in case of stereo frames, this is the
+    //! \b total length of passed data buffer. Only stereo frames
+    //! with exactly the same dimensions are supports, so this is
+    //! assumed to be divisible by the number of stereo frames.
+    //! \param cols the width of a \b single video frame
+    //! \param rows the height of a \b single video frame
+    //! \param stereo_count the number of stereo frames included in
+    //! passed data
     //! \sa manages_own_data
     //! \sa VideoFrame(enum ColourSpace, size_t, size_t)
     //!
     void init_from_specs(unsigned char * data, size_t data_length,
-                         size_t cols, size_t rows);
+                         size_t cols, size_t rows, size_t stereo_count = 1);
 
     //!
     //! \brief Get length of data buffer
+    //! \param stereo_index index of stereo frame whose
+    //! length is requested
+    //! \throw std::out_of_range if provided index value is
+    //! invalid (i.e. out of range)
     //! \return
     //!
-    const size_t data_length() const
+    const size_t data_length(size_t stereo_index = 0) const;
+
+    //!
+    //! \brief Get number of stereo frames stored in this object
+    //! \return
+    //!
+    size_t stereo_count() const
     {
-        return _data_length;
+        return _stereo_count;
     }
 
     //!
@@ -207,15 +229,24 @@ public:
     //! if frame.colour() == ColourSpace.BGRA:
     //!     struc_arr = frame.data(True) # True => structured NumPy array
     //!     # struc_arr.shape => (frame.rows(), frame.cols(), 4)
+    //!
+    //! # stereo index is the second (optional) parameter to this
+    //! # function in Python, e.g:
+    //! struc_arr_of_2nd_stereo_frame = frame.data(True, 1)
+    //!
+    //! # the following calls are equivalent
+    //! frame.data() == frame.data(False)
+    //! frame.data() == frame.data(False, 0)
+    //! frame.data(True) == frame.data(True, 0)
     //! \endcode
     //!
+    //! \param stereo_index index of requested stereo frame
+    //! \throw std::out_of_range if provided index value is
+    //! invalid (i.e. out of range)
     //! \return
     //! \sa VideoFrame(const VideoFrame & rhs)
     //!
-    unsigned char * const data() const
-    {
-        return _data;
-    }
+    unsigned char * const data(size_t stereo_index = 0) const;
 
     //!
     //! \brief Get what colour space \c this frame uses
@@ -265,6 +296,12 @@ protected:
     //! \brief Frame data length
     //!
     size_t _data_length;
+
+    //!
+    //! \brief Number of stereo frames stored, i.e.
+    //! the total number of frames
+    //!
+    size_t _stereo_count;
 
     //!
     //! \brief Always use \c set_dimensions() to set
@@ -334,6 +371,25 @@ protected:
     //! \brief Set all pixels of frame to black
     //!
     void set_pixels_black();
+
+    //!
+    //! \brief
+    //! \param stereo_index
+    //! \throw std::out_of_range if passed stereo
+    //! index is invalid
+    //!
+    inline void validate_stereo_index(size_t stereo_index) const
+    {
+        if (stereo_index >= _stereo_count)
+        {
+            std::string msg = "This frame has ";
+            msg.append(std::to_string(_stereo_count))
+               .append(" stereo frames (requested ")
+               .append(std::to_string(stereo_index + 1))
+               .append(". stereo frame)");
+            throw std::out_of_range(msg);
+        }
+    }
 };
 
 }

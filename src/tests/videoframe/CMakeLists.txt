@@ -2,6 +2,7 @@
 if(USE_NUMPY)
     FILE(COPY
         ${CMAKE_SOURCE_DIR}/tests/videoframe/test_numpy_compatibility.py
+        ${CMAKE_SOURCE_DIR}/tests/videoframe/test_stereo.py
         ${CMAKE_SOURCE_DIR}/tests/videoframe/conftest.py
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
     )
@@ -13,6 +14,14 @@ if(USE_NUMPY)
         )
         LIST(APPEND TESTS_LIST ${NAME_TEST})
     endforeach(COLOUR_SPACE)
+
+    foreach(COLOUR_SPACE ${COLOUR_SPACES})
+        SET(NAME_TEST Test_VideoFrame_Stereo_${COLOUR_SPACE})
+        ADD_TEST(NAME ${NAME_TEST}
+            COMMAND py.test --colour-space=${COLOUR_SPACE} test_stereo.py
+        )
+        LIST(APPEND TESTS_LIST ${NAME_TEST})
+    endforeach()
 
     # to avoid copying stuff around
     SET_TESTS_PROPERTIES(${TESTS_LIST}

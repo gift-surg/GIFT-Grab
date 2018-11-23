@@ -9,6 +9,137 @@ except ImportError:
     use_numpy = False
 
 
+class StereoFrameBackwardsCompatibilityChecker(pgg.IObserver):
+    """Descendant of GIFT-Grab's `Observer`, which will
+    listen to `Observable`s for some time and when asked,
+    will report whether the video source has been sending
+    stereo frames that are backwards compatible with the
+    GIFT-Grab NumPy data interface.
+    """
+
+    def __init__(self):
+        super(StereoFrameBackwardsCompatibilityChecker, self).__init__()
+        self.obtained_backwards_compatible_frames = []
+
+    def update(self, frame):
+        frame_backwards_compatible = True
+        frame_backwards_compatible &= np.array_equal(frame.data(), frame.data(False))
+        frame_backwards_compatible &= np.array_equal(frame.data(), frame.data(False, 0))
+        frame_backwards_compatible &= frame.data_length() == frame.data_length(0)
+        self.obtained_backwards_compatible_frames.append(frame_backwards_compatible)
+
+    def __bool__(self):
+        if not self.obtained_backwards_compatible_frames:
+            return False
+        for backwards_compatibility in self.obtained_backwards_compatible_frames:
+            if not backwards_compatibility:
+                return False
+        return True
+
+
+class StereoFrameNumpyCompatibilityChecker(pgg.IObserver):
+    """Descendant of GIFT-Grab's `Observer`, which will
+    listen to `Observable`s for some time and when asked,
+    will report whether the video source has been sending
+    stereo frames that are compatible with the GIFT-Grab
+    NumPy data interface.
+    """
+
+    def __init__(self, colour):
+        super(StereoFrameNumpyCompatibilityChecker, self).__init__()
+        self.obtained_numpy_compatible_stereo_frames = []
+        # currently structured NumPy arrays are supported
+        # only for BGRA frames
+        self.structured_flags = [colour == pgg.ColourSpace.BGRA]
+        if self.structured_flags[-1]:
+            self.structured_flags.append(False)
+
+    def update(self, frame):
+        self.obtained_numpy_compatible_stereo_frames.append(True)
+        if frame.stereo_count() <= 1:
+            self.obtained_numpy_compatible_stereo_frames[-1] = False
+            return
+
+        frames_numpy_compatible = True
+
+        for structured_flag in self.structured_flags:
+            frames_numpy_compatible &= np.array_equal(frame.data(structured_flag), frame.data(structured_flag, 0))
+            if not frames_numpy_compatible:
+                self.obtained_numpy_compatible_stereo_frames[-1] = False
+                return
+
+            for index in range(frame.stereo_count()):
+                data_np = frame.data(structured_flag, index)
+                frames_numpy_compatible &= data_np.dtype == np.uint8
+                data_len = frame.data_length(index)
+                frames_numpy_compatible &= data_len == data_np.size
+                if structured_flag:
+                    frames_numpy_compatible &= data_np.shape[:2] == (frame.rows(), frame.cols())
+                else:
+                    try:
+                        data_np[data_len]
+                    except IndexError:
+                        pass
+                    else:
+                        frames_numpy_compatible = False
+                if not frames_numpy_compatible:
+                    self.obtained_numpy_compatible_stereo_frames[-1] = False
+                    return
+
+        self.obtained_numpy_compatible_stereo_frames[-1] = frames_numpy_compatible
+
+    def __bool__(self):
+        if not self.obtained_numpy_compatible_stereo_frames:
+            return False
+        for numpy_compatibility in self.obtained_numpy_compatible_stereo_frames:
+            if not numpy_compatibility:
+                return False
+        return True
+
+
+class StereoFrameConsistencyChecker(pgg.IObserver):
+    """Descendant of GIFT-Grab's `Observer`, which
+    will listen to `Observable`s for some time and
+    when asked, will report whether the video
+    source has been sending consistent stereo frames
+    consistently.
+    """
+
+    def __init__(self):
+        super(StereoFrameConsistencyChecker, self).__init__()
+        self.obtained_consistent_stereo_frames = []
+
+    def update(self, frame):
+        self.obtained_consistent_stereo_frames.append(True)
+        if frame.stereo_count() <= 1:
+            self.obtained_consistent_stereo_frames[-1] = False
+            return
+
+        frames_consistent = True
+        for index in range(frame.stereo_count() - 1):
+            this_data = frame.data(False, index)
+            next_data = frame.data(False, index + 1)
+            if this_data.size == 0:
+                frames_consistent = False
+                break
+            if this_data.shape != next_data.shape:
+                frames_consistent = False
+                break
+            if np.array_equal(this_data, next_data):
+                frames_consistent = False
+                break
+        if not frames_consistent:
+            self.obtained_consistent_stereo_frames[-1] = False
+
+    def __bool__(self):
+        if not self.obtained_consistent_stereo_frames:
+            return False
+        for consistency in self.obtained_consistent_stereo_frames:
+            if not consistency:
+                return False
+        return True
+
+
 class FrameRateTimer(pgg.IObserver):
     """Descendant of GIFT-Grab's `Observer`, which
     will listen to `Observable`s for some time and

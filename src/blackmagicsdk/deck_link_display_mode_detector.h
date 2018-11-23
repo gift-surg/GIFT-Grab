@@ -52,6 +52,21 @@ protected:
     double _frame_rate;
 
     //!
+    //! \brief Frame width
+    //!
+    size_t _cols;
+
+    //!
+    //! \brief Frame height
+    //!
+    size_t _rows;
+
+    //!
+    //! \brief
+    //!
+    BMDFrameFlags _frame_flags;
+
+    //!
     //! \brief
     //!
     std::string _error_msg;
@@ -112,9 +127,30 @@ public:
 
     //!
     //! \brief
+    //!
+    //! \return The discovered video input flags, provided
+    //! \c getDisplayMode does not return \c bmdModeUnknown
+    //!
+    BMDVideoInputFlags get_video_input_flags() noexcept;
+
+    //!
+    //! \brief
     //! \return
     //!
     double get_frame_rate() noexcept;
+
+    //!
+    //! \brief
+    //! \param cols
+    //! \param rows
+    //!
+    void get_frame_dimensions(size_t &cols, size_t &rows) noexcept;
+
+    //!
+    //! \brief
+    //! \return
+    //!
+    BMDFrameFlags get_frame_flags() noexcept;
 
     //!
     //! \brief Get the last detailed error message set

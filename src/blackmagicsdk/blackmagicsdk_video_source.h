@@ -2,6 +2,7 @@
 
 #include "ivideosource.h"
 #include "macros.h"
+#include "deck_link_bgra_video_frame.h"
 #include <DeckLinkAPI.h>
 #include <mutex>
 
@@ -66,6 +67,22 @@ protected:
     //! \brief Manages the input from the DeckLink hardware
     //!
     IDeckLinkInput * _deck_link_input;
+
+    //!
+    //! \brief Detected video input flags
+    //!
+    BMDVideoInputFlags _video_input_flags;
+
+    //!
+    //! \brief Converter needed in case of BGRA captures
+    //!
+    IDeckLinkVideoConversion *_12_bit_rgb_to_bgra_converter;
+
+    //!
+    //! \brief Internal frame buffers for post-capture
+    //! conversion
+    //!
+    DeckLinkBGRAVideoFrame *_bgra_frame_buffers[2];
 
     //!
     //! \brief Flag indicating streaming status
@@ -150,21 +167,37 @@ protected:
     void release_deck_link() noexcept;
 
     //!
+    //! \brief (Re-)allocate internal buffers ONLY IF the new
+    //! dimensions are different than the previous ones
+    //! \param cols new frame width
+    //! \param rows new frame height
+    //! \param frame_flags
+    //!
+    inline void smart_allocate_buffers(
+        size_t cols, size_t rows, BMDFrameFlags frame_flags
+    ) noexcept;
+
+    //!
     //! \brief Try to detect the input video format, i.e.
     //! the display mode as well as the frame rate
     //! \param pixel_format Use this pixel format
     //! \param video_input_flags Use these video flags
     //! \param display_mode
     //! \param frame_rate
+    //! \param cols detected frame width
+    //! \param rows detected frame height
+    //! \param frame_flags
     //! \param error_msg
     //! \return \c true on success, \c false otherwise,
     //! accompanied by a detailed error message, which
     //! could be used for instance for throwing an exception
     //!
     bool detect_input_format(BMDPixelFormat pixel_format,
-                             BMDVideoInputFlags video_input_flags,
+                             BMDVideoInputFlags & video_input_flags,
                              BMDDisplayMode & display_mode,
                              double & frame_rate,
+                             size_t & cols, size_t & rows,
+                             BMDFrameFlags & frame_flags,
                              std::string & error_msg) noexcept;
 
     //!
@@ -178,6 +211,26 @@ protected:
     {
         release_deck_link();
         throw VideoSourceError(error_msg);
+    }
+
+    //!
+    //! \brief
+    //! \return whether this source is in stereo mode
+    //!
+    inline bool is_stereo()
+    {
+        return _video_input_flags & bmdVideoInputDualStream3D;
+    }
+
+    //!
+    //! \brief
+    //! \return whether a post-capture colour conversion
+    //! is needed
+    //!
+    inline bool need_conversion()
+    {
+        return _colour == BGRA and
+               _12_bit_rgb_to_bgra_converter != nullptr;
     }
 
 private:

@@ -52,6 +52,7 @@ Examples
    scipy
    encoding
    complex
+   stereo
 
 Citing GIFT-Grab
 ^^^^^^^^^^^^^^^^

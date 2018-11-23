@@ -1,3 +1,4 @@
+#include <thread>
 #include "videosourcefactory.h"
 #ifdef USE_OPENCV
 #include "opencv_video_source.h"
@@ -222,11 +223,24 @@ IVideoSource * VideoSourceFactory::get_device(Device device,
     {
         // check querying frame dimensions
         int width = -1, height = -1;
-        if (not src->get_frame_dimensions(width, height))
+        bool device_online = false;
+        for (int attempts = 0; attempts < 5; attempts++)
         {
+            if (src->get_frame_dimensions(width, height))
+            {
+                device_online = true;
+                break;
+            }
+            // artificial sleep introduced to allow for making sure
+            // video capture has been launched (this was originally
+            // in BlackmagicSDKVideoSource, but moved here to
+            // enable a more adaptive waiting logic, to avoid
+            // dependencies on hardware specifics
+            std::this_thread::sleep_for(std::chrono::milliseconds(75));
+        }
+        if (not device_online)
             throw DeviceOffline(
                 "Device connected but does not return frame dimensions");
-        }
 
         // check meaningful frame dimensions
         if (width <= 0 or height <= 0)

@@ -4,6 +4,7 @@ import numpy as np
 
 
 frame = None
+stereo_frame, stereo_count = None, 3
 cols = 1920
 rows = 1080
 
@@ -14,6 +15,10 @@ def peri_test(colour_space):
     frame = VideoFrame(colour_space, cols, rows)
     assert frame is not None
 
+    global stereo_frame, stereo_count
+    stereo_frame = VideoFrame(colour_space, cols, rows, stereo_count)
+    assert stereo_frame is not None
+
     yield
 
 
@@ -23,6 +28,14 @@ def test_data():
     data_np = frame.data()
     assert data_np.dtype == np.uint8
     assert frame.data_length() == data_np.size
+
+
+@mark.numpy_compatibility
+def test_stereo_data():
+    for stereo_index in range(stereo_count):
+        data_np = stereo_frame.data(False, stereo_index)
+        assert data_np.dtype == np.uint8
+        assert stereo_frame.data_length(stereo_index) == data_np.size
 
 
 @mark.numpy_compatibility
@@ -38,6 +51,29 @@ def test_data_length():
         data_np[data_len - 1]
     except IndexError as e:
         fail(e.message)
+
+
+@mark.numpy_compatibility
+def test_stereo_data_length():
+    global stereo_frame
+
+    for stereo_index in range(stereo_count):
+        data_np = stereo_frame.data(False, stereo_index)
+        data_len = stereo_frame.data_length(stereo_index)
+
+        with raises(IndexError):
+            data_np[data_len]
+        try:
+            data_np[data_len - 1]
+        except IndexError as e:
+            fail(e.message)
+
+
+@mark.numpy_compatibility
+def test_invalid_stereo_data_index_raises():
+    for stereo_index in range(stereo_count, 2 * stereo_count):
+        with raises(IndexError):
+            stereo_frame.data(False, stereo_index)
 
 
 @mark.numpy_compatibility

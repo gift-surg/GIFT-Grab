@@ -10,22 +10,26 @@ VideoFrame::VideoFrame()
 }
 
 VideoFrame::VideoFrame(enum ColourSpace colour, bool manage_data)
-  : _colour(colour),
-    _manage_data(manage_data),
-    _data(nullptr),
-    _data_length(0)
+    : _colour(colour)
+    , _manage_data(manage_data)
+    , _data(nullptr)
+    , _data_length(0)
+    , _stereo_count(1)
 {
     set_dimensions(0, 0);
 }
 
-VideoFrame::VideoFrame(ColourSpace colour, size_t cols, size_t rows)
+VideoFrame::VideoFrame(ColourSpace colour, size_t cols, size_t rows,
+                       size_t stereo_count)
     : _colour(colour)
     , _manage_data(true)
     , _data(nullptr)
     , _data_length(0)
+    , _stereo_count(stereo_count)
 {
     set_dimensions(cols, rows);
     size_t data_length = required_data_length(_colour, _cols, _rows);
+    data_length *= _stereo_count;
     allocate_memory(data_length);
     set_pixels_black();
 }
@@ -35,6 +39,7 @@ VideoFrame::VideoFrame(const VideoFrame & rhs)
     , _manage_data(true)
     , _data(nullptr)
     , _data_length(0)
+    , _stereo_count(1)
 {
     clone(rhs);
 }
@@ -145,8 +150,10 @@ void VideoFrame::operator=(const VideoFrame & rhs)
 }
 
 void VideoFrame::init_from_specs(unsigned char * data, size_t data_length,
-                                 size_t cols, size_t rows)
+                                 size_t cols, size_t rows, size_t stereo_count)
 {
+    _stereo_count = stereo_count;
+
     if (_manage_data)
     {
         allocate_memory(data_length);
@@ -161,6 +168,20 @@ void VideoFrame::init_from_specs(unsigned char * data, size_t data_length,
     set_dimensions(cols, rows);
 }
 
+const size_t VideoFrame::data_length(size_t stereo_index) const
+{
+    validate_stereo_index(stereo_index);
+    return _data_length / _stereo_count;
+}
+
+unsigned char * const VideoFrame::data(size_t stereo_index) const
+{
+    validate_stereo_index(stereo_index);
+    if (_data == nullptr)
+        return nullptr;
+    return &_data[stereo_index * (_data_length / _stereo_count)];
+}
+
 void VideoFrame::clone(const VideoFrame & rhs)
 {
     if (not _manage_data)
@@ -172,7 +193,7 @@ void VideoFrame::clone(const VideoFrame & rhs)
     _manage_data = true;
     _colour = rhs._colour;
     init_from_specs(rhs._data, rhs._data_length,
-                    rhs._cols, rhs._rows);
+                    rhs._cols, rhs._rows, rhs._stereo_count);
 }
 
 void VideoFrame::set_dimensions(size_t cols, size_t rows)
@@ -213,6 +234,7 @@ void VideoFrame::free_memory()
         _data = nullptr;
         _data_length = 0;
         set_dimensions(0, 0);
+        _stereo_count = 0;
     }
 }
 

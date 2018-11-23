@@ -98,6 +98,14 @@ elif [ "$1" = "numpy" ]; then
             test_cmd="$test_cmd $test_dir/videoframe -m numpy_compatibility"
         fi
     fi
+elif [ "$1" = "stereo" ]; then
+    if [ $# -ne "2" ]; then
+        args_ok=false
+    else
+        parse_colour $2
+        test_cmd="$test_cmd --colour-space=$test_colour_space"
+        test_cmd="$test_cmd $test_dir/videoframe -m stereo_frames"
+    fi
 elif [ "$1" = "epiphan-dvi2pcieduo" ]; then
     test_device=$1
     test_device=${test_device:8}
@@ -123,14 +131,25 @@ elif [ "$1" = "blackmagic-decklinksdi4k" ] || [ "$1" = "blackmagic-decklink4kext
     if [ $# -ne "2" ]; then
         args_ok=false
     else
+        if [ "$1" = "blackmagic-decklinksdi4k" ]; then
+            frame_rate=27
+        elif [ "$1" = "blackmagic-decklink4kextreme12g" ]; then
+            frame_rate=22
+        fi
         parse_colour $2
         test_cmd="$test_cmd --device=$test_device"
         test_cmd="$test_cmd --colour-space=$test_colour_space"
         test_cmd_working_dir="$test_dir/blackmagic"
         test_cmd_unit="$test_cmd $test_cmd_working_dir -m unit"
-        test_cmd_observer="$test_cmd --frame-rate=27 --observers=3"
+        test_cmd_observer="$test_cmd --frame-rate=$frame_rate --observers=3"
         test_cmd_observer="$test_cmd_observer $test_cmd_working_dir -m observer_pattern"
+        if [ "$1" = "blackmagic-decklink4kextreme12g" ]; then
+            test_cmd_stereo="$test_cmd $test_cmd_working_dir -m stereo_frames"
+        fi
         test_cmd="$test_cmd_unit && $test_cmd_observer"
+        if [ "$1" = "blackmagic-decklink4kextreme12g" ]; then
+            test_cmd="$test_cmd && $test_cmd_stereo"
+        fi
     fi
 else
     args_ok=false

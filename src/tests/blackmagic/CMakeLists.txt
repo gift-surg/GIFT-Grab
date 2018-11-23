@@ -1,6 +1,7 @@
 FILE(COPY
     test_unit.py
     test_observer.py
+    test_stereo.py
     conftest.py
     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
 )
@@ -45,11 +46,24 @@ foreach(BLACKMAGIC_DEVICE ${BLACKMAGIC_DEVICES})
 
         # Blackmagic device using the observer design pattern
         SET(NAME_TEST Test_Blackmagic_${BLACKMAGIC_DEVICE}_ObserverPattern_${COLOUR_SPACE})
-        SET(FRAME_RATE 27)
+        if(BLACKMAGIC_DEVICE STREQUAL DeckLink4KExtreme12G)
+            SET(FRAME_RATE 22)  # frame rate seems to be reduced, due to stereo?
+        else()
+            SET(FRAME_RATE 27)
+        endif()
         ADD_TEST(NAME ${NAME_TEST}
             COMMAND py.test --device=${BLACKMAGIC_DEVICE} --colour-space=${COLOUR_SPACE} --frame-rate=${FRAME_RATE} --observers=3 test_observer.py
         )
         LIST(APPEND TESTS_LIST ${NAME_TEST})
+
+        # Blackmagic device supporting stereo (3D) video streams
+        if(BLACKMAGIC_DEVICE STREQUAL DeckLink4KExtreme12G AND USE_NUMPY)
+            SET(NAME_TEST Test_Blackmagic_${BLACKMAGIC_DEVICE}_StereoFrames_${COLOUR_SPACE})
+            ADD_TEST(NAME ${NAME_TEST}
+                COMMAND py.test --device=${BLACKMAGIC_DEVICE} --colour-space=${COLOUR_SPACE} test_stereo.py
+            )
+            LIST(APPEND TESTS_LIST ${NAME_TEST})
+        endif()
     endforeach(COLOUR_SPACE)
 endforeach(BLACKMAGIC_DEVICE)
 
