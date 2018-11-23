@@ -344,6 +344,7 @@ void VideoSourceBlackmagicSDK::release_deck_link() noexcept
         if (_bgra_frame_buffers[i] != nullptr)
         {
             _bgra_frame_buffers[i]->Release();
+            delete _bgra_frame_buffers[i];
             _bgra_frame_buffers[i] = nullptr;
         }
 }
