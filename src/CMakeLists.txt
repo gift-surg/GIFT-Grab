@@ -63,6 +63,8 @@ OPTION(USE_EPIPHANSDK
     "Use Epiphan video grabbing SDK (requires zlib and ptreads)" OFF)
 OPTION(GENERATE_PERFORMANCE_OUTPUT
     "Performance benchmark reports (requires Boost.Timer and Boost.System)" OFF)
+OPTION(BUILD_SANDBOX
+    "Build experimental tests, apps, and scripts in sandbox folder" OFF)
 MARK_AS_ADVANCED(GENERATE_PERFORMANCE_OUTPUT)
 
 # Inferred options off by default, and advanced
@@ -344,6 +346,12 @@ if(BUILD_PYTHON)
     SET_TARGET_PROPERTIES(${NAME_PYTHON} PROPERTIES PREFIX "")
     LIST(APPEND INSTALLABLES ${NAME_PYTHON})
 endif(BUILD_PYTHON)
+
+
+# Sandbox
+if (BUILD_SANDBOX)
+    ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/sandbox)
+endif()
 
 
 # Install
