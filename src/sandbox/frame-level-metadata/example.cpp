@@ -28,6 +28,7 @@ int main()
         writer->update(in_frame);
 
     // done, clean up
+    delete writer;
     delete []in_data;
     delete []out_data;
 
