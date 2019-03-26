@@ -26,7 +26,8 @@ int main()
     // encode a number of this dummy frame out to file
     float frame_rate = 30.0;
     size_t num_frames = 120;
-    IVideoTarget *writer = VideoTargetFactory::get_instance().create_file_writer(HEVC, "out.mp4", frame_rate);
+    VideoTargetFactory &tgt_factory = VideoTargetFactory::get_instance();
+    IVideoTarget *writer = tgt_factory.create_file_writer(HEVC, "out.mp4", frame_rate);
     for (size_t i = 0; i < num_frames; i++)
     {
         paint(in_data, data_length, width, height, 2*i);
