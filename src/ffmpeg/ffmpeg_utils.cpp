@@ -27,6 +27,7 @@ std::string to_string(const AVFrame * frame)
 
 void set_metadata(AVFrame * frame)
 {
+    int ret;
     auto ts = std::chrono::system_clock::now();
     std::time_t tm = std::chrono::system_clock::to_time_t(ts);
     std::cout << "before timestamping: " << to_string(frame) << std::endl;
@@ -45,5 +46,5 @@ void get_metadata(const AVFrame * frame)
     dict_entry = av_dict_get(frame->metadata,
                              "human-time", NULL,
                              0);
-    std::cout << "frame: " << to_string(_avframe_original) << std::endl;
+    std::cout << "frame: " << to_string(frame) << std::endl;
 }
