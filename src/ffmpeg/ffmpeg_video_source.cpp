@@ -114,6 +114,10 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
         _avpacket.size -= ret;
     }
     while (_avpacket.size > 0);
+    AVDictionaryEntry *dict_entry = NULL;
+    dict_entry = av_dict_get(_avframe_original->metadata,
+                             "human-time", NULL,
+                             0);
     av_packet_unref(&orig_pkt);
     if (not success)
         return false;
