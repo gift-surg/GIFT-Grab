@@ -391,7 +391,7 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
 
     frame->pts = _frame_index++;
 
-    set_metadata(frame);
+    set_metadata(frame, "ENCODING");
 
     } // END auto_cpu_timer scope
 }

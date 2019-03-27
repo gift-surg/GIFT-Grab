@@ -115,7 +115,7 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
         _avpacket.size -= ret;
     }
     while (_avpacket.size > 0);
-    get_metadata(_avframe_original);
+    get_metadata(_avframe_original, "DECODING");
     av_packet_unref(&orig_pkt);
     if (not success)
         return false;
