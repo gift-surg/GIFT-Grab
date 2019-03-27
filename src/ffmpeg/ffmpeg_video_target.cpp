@@ -1,3 +1,6 @@
+#include <chrono>
+#include <ctime>
+
 #include "ffmpeg_video_target.h"
 #include "except.h"
 
@@ -389,6 +392,13 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
     }
 
     frame->pts = _frame_index++;
+
+    auto ts = std::chrono::system_clock::now();
+    std::time_t tm = std::chrono::system_clock::to_time_t(ts);
+    ret = av_dict_set(&frame->metadata,
+                      "human-time", std::ctime(&tm),
+                      0);
+    // TODO: check ret
 
     } // END auto_cpu_timer scope
 }
