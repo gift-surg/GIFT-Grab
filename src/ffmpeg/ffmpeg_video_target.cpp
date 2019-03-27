@@ -1,8 +1,10 @@
 #include <chrono>
 #include <ctime>
+#include <iostream>
 
 #include "ffmpeg_video_target.h"
 #include "except.h"
+#include "ffmpeg_utils.h"
 
 #ifdef GENERATE_PERFORMANCE_OUTPUT
 #include <boost/timer/timer.hpp>
@@ -395,10 +397,11 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
 
     auto ts = std::chrono::system_clock::now();
     std::time_t tm = std::chrono::system_clock::to_time_t(ts);
+    std::cout << "before timestamping: " << to_string(frame) << std::endl;
     ret = av_dict_set(&frame->metadata,
                       "human-time", std::ctime(&tm),
                       0);
-    // TODO: check ret
+    std::cout << "after timestamping: " << to_string(frame) << std::endl;
 
     } // END auto_cpu_timer scope
 }
