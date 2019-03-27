@@ -230,6 +230,8 @@ if(USE_FFMPEG)
     LIST(APPEND SOURCES ffmpeg/ffmpeg_video_source.cpp)
     LIST(APPEND HEADERS ffmpeg/ffmpeg_video_target.h)
     LIST(APPEND SOURCES ffmpeg/ffmpeg_video_target.cpp)
+    LIST(APPEND HEADERS ffmpeg/ffmpeg_utils.h)
+    LIST(APPEND SOURCES ffmpeg/ffmpeg_utils.cpp)
 endif(USE_FFMPEG)
 
 # X265
