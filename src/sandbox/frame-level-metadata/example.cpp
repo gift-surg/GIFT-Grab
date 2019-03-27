@@ -1,4 +1,5 @@
 #include <cstring>
+#include <thread>
 
 #include "videoframe.h"
 #include "videotargetfactory.h"
@@ -27,7 +28,8 @@ int main()
     float frame_rate = 30.0;
     size_t num_frames = 120;
     VideoTargetFactory &tgt_factory = VideoTargetFactory::get_instance();
-    IVideoTarget *writer = tgt_factory.create_file_writer(HEVC, "out.mp4", frame_rate);
+    std::string out_filename = "out.mp4";
+    IVideoTarget *writer = tgt_factory.create_file_writer(HEVC, out_filename, frame_rate);
     for (size_t i = 0; i < num_frames; i++)
     {
         paint(in_data, data_length, width, height, 2*i);
@@ -38,6 +40,12 @@ int main()
     delete writer;
     delete []in_data;
     delete []out_data;
+
+    // read output file
+    VideoSourceFactory &src_factory = VideoSourceFactory::get_instance();
+    IVideoSource *reader = src_factory.create_file_reader(out_filename, BGRA);
+    std::this_thread::sleep_for(std::chrono::duration<double, std::milli>(5000));
+    delete reader;
 
     return EXIT_SUCCESS;
 }
