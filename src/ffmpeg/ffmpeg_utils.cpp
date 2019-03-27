@@ -24,7 +24,7 @@ std::string to_string(const AVFrame * frame)
         _frame.append(static_cast<char*>(frame->opaque));
     else
         _frame.append("");
-    _frame.append("\"");
+    _frame.append("\" ");
 
     _frame.append("}");
 
