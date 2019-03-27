@@ -40,7 +40,6 @@ void set_metadata(AVFrame * frame, std::string header)
     int ret;
     auto ts = std::chrono::system_clock::now();
     std::time_t tm = std::chrono::system_clock::to_time_t(ts);
-    std::cout << "before timestamping: " << to_string(frame) << std::endl;
     char *_tm = new char[1024];
     strcpy(_tm, std::ctime(&tm));
     ret = av_dict_set(&frame->metadata,
@@ -54,7 +53,7 @@ void set_metadata(AVFrame * frame, std::string header)
     char *opaque = static_cast<char *>(frame->opaque);
     strcpy(opaque, _tm);
     delete []_tm;
-    std::cout << "after timestamping: " << to_string(frame) << std::endl;
+    std::cout << "timestamped: " << to_string(frame) << std::endl;
     if (ret < 0)
         std::cerr << "Could not add metadata due to FFmpeg error code: "
                   << ret << std::endl;
