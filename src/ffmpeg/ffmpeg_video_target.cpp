@@ -402,6 +402,9 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
                       "human-time", std::ctime(&tm),
                       0);
     std::cout << "after timestamping: " << to_string(frame) << std::endl;
+    if (ret < 0)
+        std::cerr << "Could not add metadata due to FFmpeg error code: "
+                  << ret << std::endl;
 
     } // END auto_cpu_timer scope
 }
