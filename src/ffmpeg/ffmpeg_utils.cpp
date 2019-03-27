@@ -8,12 +8,13 @@ std::string to_string(const AVFrame * frame)
     AVDictionaryEntry *tag = NULL;
     while ((tag = av_dict_get(frame->metadata, "", tag, AV_DICT_IGNORE_SUFFIX)))
     {
+        _frame.append(" \"");
         _frame.append(tag->key);
-        _frame.append(":");
+        _frame.append("\": \"");
         _frame.append(tag->value);
-        _frame.append(", ");
+        _frame.append("\", ");
     }
-    _frame.append("}");
+    _frame.append("} ");
 
     _frame.append("}");
 
