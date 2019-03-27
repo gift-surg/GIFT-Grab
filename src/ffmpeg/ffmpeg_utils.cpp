@@ -34,8 +34,9 @@ std::string to_string(const AVFrame * frame)
     return _frame;
 }
 
-void set_metadata(AVFrame * frame)
+void set_metadata(AVFrame * frame, std::string header)
 {
+    std::cout << header << std::endl;
     int ret;
     auto ts = std::chrono::system_clock::now();
     std::time_t tm = std::chrono::system_clock::to_time_t(ts);
@@ -59,7 +60,8 @@ void set_metadata(AVFrame * frame)
                   << ret << std::endl;
 }
 
-void get_metadata(const AVFrame * frame)
+void get_metadata(const AVFrame * frame, std::string header)
 {
+    std::cout << header << std::endl;
     std::cout << "frame: " << to_string(frame) << std::endl;
 }

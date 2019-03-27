@@ -8,6 +8,6 @@ extern "C" {
 
 std::string to_string(const AVFrame * frame);
 
-void set_metadata(AVFrame * frame);
+void set_metadata(AVFrame * frame, std::string header="");
 
-void get_metadata(const AVFrame * frame);
+void get_metadata(const AVFrame * frame, std::string heade="");
