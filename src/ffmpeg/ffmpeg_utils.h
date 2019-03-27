@@ -9,3 +9,5 @@ extern "C" {
 std::string to_string(const AVFrame * frame);
 
 void set_metadata(AVFrame * frame);
+
+void get_metadata(const AVFrame * frame);

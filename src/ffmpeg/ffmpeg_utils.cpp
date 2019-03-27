@@ -39,4 +39,11 @@ void set_metadata(AVFrame * frame)
                   << ret << std::endl;
 }
 
-
+void get_metadata(const AVFrame * frame)
+{
+    AVDictionaryEntry *dict_entry = NULL;
+    dict_entry = av_dict_get(frame->metadata,
+                             "human-time", NULL,
+                             0);
+    std::cout << "frame: " << to_string(_avframe_original) << std::endl;
+}
