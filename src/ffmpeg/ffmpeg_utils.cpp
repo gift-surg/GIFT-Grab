@@ -8,6 +8,7 @@ std::string to_string(const AVFrame * frame)
 {
     std::string _frame = "AVFrame {";
 
+    // metadata field
     _frame.append(" metadata: {");
     AVDictionaryEntry *tag = NULL;
     while ((tag = av_dict_get(frame->metadata, "", tag, AV_DICT_IGNORE_SUFFIX)))
@@ -19,6 +20,8 @@ std::string to_string(const AVFrame * frame)
         _frame.append("\", ");
     }
     _frame.append("} ");
+
+    // opaque field
     _frame.append(", opaque: \"");
     if (frame->opaque)
     {
