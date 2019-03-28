@@ -62,6 +62,11 @@ void set_metadata(AVFrame * frame, std::string header)
     char *_tm = new char[1024];
     strcpy(_tm, std::ctime(&tm));
 
+    // remove trailing newline
+    int size = strlen(_tm);
+    _tm[size - 2] = '\0';
+    size--;
+
     // metadata in metadata field
     ret = av_dict_set(&frame->metadata,
                       "human-time", _tm,
@@ -74,7 +79,7 @@ void set_metadata(AVFrame * frame, std::string header)
     if (not frame->opaque)
     {
         std::cout << "alloc" << std::endl;
-        frame->opaque = malloc(strlen(_tm));
+        frame->opaque = malloc(size);
     }
     char *opaque = static_cast<char *>(frame->opaque);
     strcpy(opaque, _tm);
