@@ -79,6 +79,13 @@ void set_metadata(AVFrame * frame, std::string header)
     char *opaque = static_cast<char *>(frame->opaque);
     strcpy(opaque, _tm);
 
+    // metadata in opaque_ref field
+    if (not frame->opaque_ref)
+    {
+        frame->opaque_ref = av_buffer_alloc(strlen(_tm));
+        strcpy(reinterpret_cast<char*>(frame->opaque_ref->data), _tm);
+    }
+
     // cleanup
     delete []_tm;
     std::cout << "timestamped: " << to_string(frame) << std::endl;
