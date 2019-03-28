@@ -45,6 +45,9 @@ void set_metadata(AVFrame * frame, std::string header)
     ret = av_dict_set(&frame->metadata,
                       "human-time", _tm,
                       0);
+    if (ret < 0)
+        std::cerr << "Could not add metadata due to FFmpeg error code: "
+                  << ret << std::endl;
     if (not frame->opaque)
     {
         std::cout << "alloc" << std::endl;
@@ -54,9 +57,6 @@ void set_metadata(AVFrame * frame, std::string header)
     strcpy(opaque, _tm);
     delete []_tm;
     std::cout << "timestamped: " << to_string(frame) << std::endl;
-    if (ret < 0)
-        std::cerr << "Could not add metadata due to FFmpeg error code: "
-                  << ret << std::endl;
 }
 
 void get_metadata(const AVFrame * frame, std::string header)
