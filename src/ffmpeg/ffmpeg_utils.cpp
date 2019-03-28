@@ -82,12 +82,13 @@ void set_metadata(AVFrame * frame, std::string header)
     // metadata in opaque_ref field
     if (not frame->opaque_ref)
     {
-        frame->opaque_ref = av_buffer_alloc(strlen(_tm));
-        strcpy(reinterpret_cast<char*>(frame->opaque_ref->data), _tm);
+        int size = strlen(_tm);
+        uint8_t *data = reinterpret_cast<uint8_t*>(_tm);
+        frame->opaque_ref = av_buffer_create(data, size, av_buffer_default_free, NULL, 0);
+        // _tm will be freed by FFmpeg as part of AVBuffer's lifecycle management
     }
 
-    // cleanup
-    delete []_tm;
+    // print timestamped frame
     std::cout << "timestamped: " << to_string(frame) << std::endl;
 }
 
