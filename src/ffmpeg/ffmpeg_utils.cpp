@@ -37,12 +37,12 @@ std::string to_string(const AVFrame * frame)
     if (frame->opaque_ref)
     {
         _frame.append("data: \"");
-	// TODO: improve this cast
+        // TODO: improve this cast
         _frame.append(reinterpret_cast<char*>(frame->opaque_ref->data));
-	_frame.append("\", ");
-	_frame.append("size: ");
-	_frame.append(std::to_string(frame->opaque_ref->size));
-	_frame.append(", ");
+        _frame.append("\", ");
+        _frame.append("size: ");
+        _frame.append(std::to_string(frame->opaque_ref->size));
+        _frame.append(", ");
     }
     _frame.append("} ");
 
