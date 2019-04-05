@@ -147,6 +147,8 @@ The instructions below are for other features that require libVLC such as acquir
 The latter currently works **only for BGRA data** and the resulting `ndarray`'s shape is compatible with the axis ordering used in [SciPy routines](https://docs.scipy.org/doc/scipy/reference/).
 Support for this feature with the other colour spaces GIFT-Grab uses is under construction.
 
+### Linux
+
 The current Boost.Python version installable from the Ubuntu repositories does not provide the functionality GIFT-Grab needs for its NumPy support.
 However you can install the 1.63.0 beta version as follows:
 
@@ -156,3 +158,12 @@ However you can install the 1.63.0 beta version as follows:
 1. `./bootstrap.sh --with-libraries=python` (`--with-libraries=python` deactivates all other Boost components, ensuring minimum compilation time)
 1. `./b2`
 1. `./b2 install` (running this without the `./b2` step above might result in the Boost components being installed even if the build fails)
+
+### Windows (**experimental**)
+
+1. Download the source code from the [Boost website][boost]
+1. Go to the `tools\build` sub-folder
+1. (In Windows PowerShell) run `.\bootstrap.bat --with-libraries=python` to configure Boost
+1. Run `.\b2.exe install` to install Boost
+
+[boost]: https://www.boost.org/
