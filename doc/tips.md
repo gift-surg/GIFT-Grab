@@ -1,6 +1,9 @@
 # Dependency installation guidelines
 
-In this document we aim to provide guidelines for installing the GIFT-Grab dependencies.
+In this document we provide guidelines for installing the GIFT-Grab dependencies.
+This is solely intended for the user's convenience.
+**However, these guidelines might be out-of-date.
+As such, if in doubt, please consult the relevant dependency's documentation.**
 A full list of the required and optional dependencies is available in the [required tools and libraries](requirements.md) section.
 If you encounter problems installing any dependency, please have a look at the [known issues and limitations][gg-issues].
 
