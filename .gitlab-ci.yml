@@ -548,3 +548,15 @@ blackmagic-decklink-4k-extreme-12g:
     - 5-support-for-3d-capture-on-blackmagic-cards
     - 18-extend-api-to-support-stereo-streams
     - 30-12-bit-rgb-to-bgra-converter-for-decklink
+
+windows:
+  stage: install
+  script:
+    - pwd
+    - ls
+  tags:
+    - gift-hopper
+    - windows
+  only:
+    - 73-set-up-ci-build-on-hopper-for-69
+    - 69-support-for-epiphan-on-windows-10
