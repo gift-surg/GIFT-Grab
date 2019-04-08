@@ -1,3 +1,5 @@
+#include <ciso646>  // needed for e.g. "and" to be recognised on Windows to mean "&&"
+
 #ifndef __MACROS_H__
 #define __MACROS_H__
 

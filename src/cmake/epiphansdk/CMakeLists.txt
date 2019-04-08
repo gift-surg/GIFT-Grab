@@ -18,6 +18,7 @@ SET(INCLUDE_DIRS
     $ENV{EpiphanSDK_DIR}/epiphan/frmgrab/include
     $ENV{EpiphanSDK_DIR}/opensource/slib/include
     $ENV{EpiphanSDK_DIR}/opensource/slib/src
+    ${ZLIB_INCLUDE_DIRS}
     )
 INCLUDE_DIRECTORIES(${INCLUDE_DIRS})
 
@@ -33,9 +34,21 @@ SET(FrmGrab_HEADERS
     $ENV{EpiphanSDK_DIR}/epiphan/include/v2u_version.h
     $ENV{EpiphanSDK_DIR}/epiphan/frmgrab/include/frmgrab.h
     )
-SET(FrmGrab_LIB
-    $ENV{EpiphanSDK_DIR}/epiphan/frmgrab/lib/linux/x86_64/libfrmgrab.a
-    ) # CMAKE_CURRENT_SOURCE_DIR necessary because of tests linking to this
+if(WIN32)
+    if(${CMAKE_GENERATOR_PLATFORM} MATCHES "x64")
+        SET(FrmGrab_LIB
+            $ENV{EpiphanSDK_DIR}/epiphan/frmgrab/lib/win/x64/frmgrab.lib
+            )
+    else()
+        SET(FrmGrab_LIB
+            $ENV{EpiphanSDK_DIR}/epiphan/frmgrab/lib/win/Win32/frmgrab.lib
+            )
+    endif()
+elseif(UNIX)
+    SET(FrmGrab_LIB
+        $ENV{EpiphanSDK_DIR}/epiphan/frmgrab/lib/linux/x86_64/libfrmgrab.a
+        )
+endif()
 
 # SLIB
 SET(SLIB_HEADERS
@@ -79,6 +92,25 @@ SET(SLIB_HEADERS
     $ENV{EpiphanSDK_DIR}/opensource/slib/include/s_wkq.h
     $ENV{EpiphanSDK_DIR}/opensource/slib/include/s_xml.h
     )
+if(WIN32)
+    SET(PLATFORM_SPECIFIC_SLIB_SOURCES
+        $ENV{EpiphanSDK_DIR}/opensource/slib/src/win32/w_event.c
+        $ENV{EpiphanSDK_DIR}/opensource/slib/src/win32/w_furl.c
+        $ENV{EpiphanSDK_DIR}/opensource/slib/src/win32/w_futil.c
+        $ENV{EpiphanSDK_DIR}/opensource/slib/src/win32/w_mutex.c
+        $ENV{EpiphanSDK_DIR}/opensource/slib/src/win32/w_thread.c
+        $ENV{EpiphanSDK_DIR}/opensource/slib/src/win32/w_trace.c
+        )
+elseif(UNIX)
+    SET(PLATFORM_SPECIFIC_SLIB_SOURCES
+        $ENV{EpiphanSDK_DIR}/opensource/slib/src/unix/u_event.c
+        $ENV{EpiphanSDK_DIR}/opensource/slib/src/unix/u_furl.c
+        $ENV{EpiphanSDK_DIR}/opensource/slib/src/unix/u_futil.c
+        $ENV{EpiphanSDK_DIR}/opensource/slib/src/unix/u_mutex.c
+        $ENV{EpiphanSDK_DIR}/opensource/slib/src/unix/u_thread.c
+        $ENV{EpiphanSDK_DIR}/opensource/slib/src/unix/u_trace.c
+        )
+endif()
 SET(SLIB_SOURCES
     $ENV{EpiphanSDK_DIR}/opensource/slib/src/s_base32.c
     $ENV{EpiphanSDK_DIR}/opensource/slib/src/s_base64.c
@@ -145,12 +177,7 @@ SET(SLIB_SOURCES
     $ENV{EpiphanSDK_DIR}/opensource/slib/src/s_xml.c
     $ENV{EpiphanSDK_DIR}/opensource/slib/src/s_xmlp.c
     $ENV{EpiphanSDK_DIR}/opensource/slib/src/s_xmlp.h
-    $ENV{EpiphanSDK_DIR}/opensource/slib/src/unix/u_event.c
-    $ENV{EpiphanSDK_DIR}/opensource/slib/src/unix/u_furl.c
-    $ENV{EpiphanSDK_DIR}/opensource/slib/src/unix/u_futil.c
-    $ENV{EpiphanSDK_DIR}/opensource/slib/src/unix/u_mutex.c
-    $ENV{EpiphanSDK_DIR}/opensource/slib/src/unix/u_thread.c
-    $ENV{EpiphanSDK_DIR}/opensource/slib/src/unix/u_trace.c
+    ${PLATFORM_SPECIFIC_SLIB_SOURCES}
     )
 SET(SLIB_LIB slib)
 ADD_LIBRARY(${SLIB_LIB} ${SLIB_HEADERS} ${SLIB_SOURCES})
@@ -184,7 +211,7 @@ EXECUTE_PROCESS(
     OUTPUT_STRIP_TRAILING_WHITESPACE
     )
 if(NOT V2U_EXIT_CODE EQUAL 0)
-    MESSAGE(FATAL_ERROR
+    MESSAGE(WARNING
         "No Epiphan cards seem to be installed on your system."
         )
 endif(NOT V2U_EXIT_CODE EQUAL 0)
