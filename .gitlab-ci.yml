@@ -550,6 +550,8 @@ blackmagic-decklink-4k-extreme-12g:
     - 30-12-bit-rgb-to-bgra-converter-for-decklink
 
 windows:
+  variables:
+    EpiphanSDK_DIR: C:/Program Files/Epiphan/epiphan_sdk-3.30.3.0007
   before_script:
     - echo "This is the Windows script's before_script to be able to skip global before_script, which is Linux-specific"
   stage: install
