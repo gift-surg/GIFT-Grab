@@ -18,6 +18,7 @@ SET(INCLUDE_DIRS
     $ENV{EpiphanSDK_DIR}/epiphan/frmgrab/include
     $ENV{EpiphanSDK_DIR}/opensource/slib/include
     $ENV{EpiphanSDK_DIR}/opensource/slib/src
+    ${ZLIB_INCLUDE_DIRS}
     )
 INCLUDE_DIRECTORIES(${INCLUDE_DIRS})
 
