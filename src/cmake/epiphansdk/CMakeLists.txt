@@ -80,6 +80,25 @@ SET(SLIB_HEADERS
     $ENV{EpiphanSDK_DIR}/opensource/slib/include/s_wkq.h
     $ENV{EpiphanSDK_DIR}/opensource/slib/include/s_xml.h
     )
+if(WIN32)
+	SET(PLATFORM_SPECIFIC_SLIB_SOURCES
+		$ENV{EpiphanSDK_DIR}/opensource/slib/src/win32/w_event.c
+		$ENV{EpiphanSDK_DIR}/opensource/slib/src/win32/w_furl.c
+		$ENV{EpiphanSDK_DIR}/opensource/slib/src/win32/w_futil.c
+		$ENV{EpiphanSDK_DIR}/opensource/slib/src/win32/w_mutex.c
+		$ENV{EpiphanSDK_DIR}/opensource/slib/src/win32/w_thread.c
+		$ENV{EpiphanSDK_DIR}/opensource/slib/src/win32/w_trace.c
+		)
+elseif(UNIX)
+	SET(PLATFORM_SPECIFIC_SLIB_SOURCES
+		$ENV{EpiphanSDK_DIR}/opensource/slib/src/unix/u_event.c
+		$ENV{EpiphanSDK_DIR}/opensource/slib/src/unix/u_furl.c
+		$ENV{EpiphanSDK_DIR}/opensource/slib/src/unix/u_futil.c
+		$ENV{EpiphanSDK_DIR}/opensource/slib/src/unix/u_mutex.c
+		$ENV{EpiphanSDK_DIR}/opensource/slib/src/unix/u_thread.c
+		$ENV{EpiphanSDK_DIR}/opensource/slib/src/unix/u_trace.c
+		)
+endif()
 SET(SLIB_SOURCES
     $ENV{EpiphanSDK_DIR}/opensource/slib/src/s_base32.c
     $ENV{EpiphanSDK_DIR}/opensource/slib/src/s_base64.c
@@ -146,12 +165,7 @@ SET(SLIB_SOURCES
     $ENV{EpiphanSDK_DIR}/opensource/slib/src/s_xml.c
     $ENV{EpiphanSDK_DIR}/opensource/slib/src/s_xmlp.c
     $ENV{EpiphanSDK_DIR}/opensource/slib/src/s_xmlp.h
-    $ENV{EpiphanSDK_DIR}/opensource/slib/src/unix/u_event.c
-    $ENV{EpiphanSDK_DIR}/opensource/slib/src/unix/u_furl.c
-    $ENV{EpiphanSDK_DIR}/opensource/slib/src/unix/u_futil.c
-    $ENV{EpiphanSDK_DIR}/opensource/slib/src/unix/u_mutex.c
-    $ENV{EpiphanSDK_DIR}/opensource/slib/src/unix/u_thread.c
-    $ENV{EpiphanSDK_DIR}/opensource/slib/src/unix/u_trace.c
+	${PLATFORM_SPECIFIC_SLIB_SOURCES}
     )
 SET(SLIB_LIB slib)
 ADD_LIBRARY(${SLIB_LIB} ${SLIB_HEADERS} ${SLIB_SOURCES})
