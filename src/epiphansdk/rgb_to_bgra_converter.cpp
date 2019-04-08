@@ -1,4 +1,5 @@
 #include "rgb_to_bgra_converter.h"
+#include "macros.h"
 #include <assert.h>
 
 namespace gg
