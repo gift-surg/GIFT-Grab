@@ -556,7 +556,10 @@ windows:
     - echo "This is the Windows script's before_script to be able to skip global before_script, which is Linux-specific"
   stage: install
   script:
-    - pwd
+    - mkdir build
+    - cd build
+    - cmake -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D ENABLE_NONFREE=ON -D USE_EPIPHANSDK=ON -D USE_BGRA=OFF ../src
+    - cmake --build . --config Release
     - ls
   tags:
     - gift-hopper
