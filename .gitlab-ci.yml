@@ -569,3 +569,4 @@ windows:
     - 73-set-up-ci-build-on-hopper-for-69
     - 69-support-for-epiphan-on-windows-10
     - 75-build-against-epiphan-sdk-on-windows-10-for-69
+    - 78-opencv-free-epiphan-on-windows-10-for-69
