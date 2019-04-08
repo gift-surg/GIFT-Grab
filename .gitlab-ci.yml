@@ -559,7 +559,7 @@ windows:
   script:
     - mkdir build
     - cd build
-    - cmake -D CMAKE_BUILD_TYPE=Release -D ZLIB_ROOT="%zlib_root%" -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D ENABLE_NONFREE=ON -D USE_EPIPHANSDK=ON -D USE_BGRA=OFF ../src
+    - cmake -D CMAKE_BUILD_TYPE=Release -D ZLIB_ROOT="%zlib_root%" -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D ENABLE_NONFREE=ON -D USE_EPIPHANSDK=ON ../src
     - cmake --build . --config Release
     - ls
   tags:
