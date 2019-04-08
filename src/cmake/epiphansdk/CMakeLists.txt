@@ -184,7 +184,7 @@ EXECUTE_PROCESS(
     OUTPUT_STRIP_TRAILING_WHITESPACE
     )
 if(NOT V2U_EXIT_CODE EQUAL 0)
-    MESSAGE(FATAL_ERROR
+    MESSAGE(WARNING
         "No Epiphan cards seem to be installed on your system."
         )
 endif(NOT V2U_EXIT_CODE EQUAL 0)
