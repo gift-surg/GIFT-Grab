@@ -1,7 +1,13 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.2.0)
 
 if(NOT PYTHONLIBS_VERSION_STRING)
-    MESSAGE(FATAL_ERROR "Could not determine Python version")
+    # Needed in case PythonLibs discovery script not run, see
+    # https://github.com/gift-surg/GIFT-Grab/issues/83
+    # TODO handle this more elegantly
+    ADD_SUBDIRECTORY(cmake/pythonlibs)
+    if(NOT PYTHONLIBS_VERSION_STRING)
+        MESSAGE(FATAL_ERROR "Could not determine Python version")
+    endif()
 endif()
 if(PYTHONLIBS_VERSION_STRING MATCHES ^3\.*)
     SET(GG_BOOST_PYTHON_SUFFIX 3)
