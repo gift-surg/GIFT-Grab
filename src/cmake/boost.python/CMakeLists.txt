@@ -4,7 +4,7 @@ if(NOT PYTHONLIBS_VERSION_STRING)
     # Needed in case PythonLibs discovery script not run, see
     # https://github.com/gift-surg/GIFT-Grab/issues/83
     # TODO handle this more elegantly
-    ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/../../cmake/pythonlibs)
+    ADD_SUBDIRECTORY(${CMAKE_SOURCE_DIR}/../../cmake/pythonlibs ${CMAKE_CURRENT_BINARY_DIR}/cmake/pythonlibs-redundant-run)
     if(NOT PYTHONLIBS_VERSION_STRING)
         MESSAGE(FATAL_ERROR "Could not determine Python version")
     endif()
