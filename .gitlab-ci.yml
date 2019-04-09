@@ -556,12 +556,14 @@ windows:
     zlib_root: C:/Program Files/zlib/zlib-1.2.3-lib
     boost_includedir: C:/Boost/boost_1_69_0
     boost_librarydir: C:/Boost/boost_1_69_0/stage/lib
+    python_include_dirs: C:/Python/Python3.7.1/include
+    python_library: C:/Python/Python3.7.1/libs/python37.lib
   before_script:
     - echo "This is the Windows script's before_script to be able to skip global before_script, which is Linux-specific"
   script:
     - mkdir build
     - cd build
-    - cmake -D CMAKE_BUILD_TYPE=Release -D BOOST_INCLUDEDIR="%boost_includedir%" -D BOOST_LIBRARYDIR="%boost_librarydir%" -D ZLIB_ROOT="%zlib_root%" -D BUILD_PYTHON=ON -D USE_NUMPY=ON -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D ENABLE_NONFREE=ON -D USE_EPIPHANSDK=ON ../src
+    - cmake -D CMAKE_BUILD_TYPE=Release -D PYTHON_INCLUDE_DIRS="%python_include_dirs%" -D PYTHON_LIBRARY="%python_library%" -D BOOST_INCLUDEDIR="%boost_includedir%" -D BOOST_LIBRARYDIR="%boost_librarydir%" -D ZLIB_ROOT="%zlib_root%" -D BUILD_PYTHON=ON -D USE_NUMPY=ON -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D ENABLE_NONFREE=ON -D USE_EPIPHANSDK=ON ../src
     - cmake --build . --config Release
     - ls
   tags:
