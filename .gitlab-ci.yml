@@ -109,6 +109,7 @@ linux:
     - 224-add-a-citing-gift-grab-section-to-pypi-page
     - 225-add-citing-gift-grab-section-to-rtd-index
     - 223-add-some-information-on-the-main-doxygen-home-page
+    - fix-boost-python-numpy-discovery
 
 ################## Platform: PyPI ##################
 ################## Target: All #####################
@@ -211,6 +212,7 @@ pypi:
     - 222-add-how-to-cite-block-in-main-readme
     - 225-add-citing-gift-grab-section-to-rtd-index
     - 223-add-some-information-on-the-main-doxygen-home-page
+    - fix-boost-python-numpy-discovery
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 ################## Platform: PyPI ################################
@@ -576,3 +578,4 @@ windows:
     - 78-opencv-free-epiphan-on-windows-10-for-69
     - 76-build-against-boost.python-on-windows-10-for-69
     - 81-build-against-python37-on-windows-10-for-69
+    - fix-boost-python-numpy-discovery
