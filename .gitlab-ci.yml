@@ -556,7 +556,7 @@ windows:
   variables:
     EpiphanSDK_DIR: C:/Program Files/Epiphan/epiphan_sdk-3.30.3.0007
     zlib_root: C:/Program Files/zlib/zlib-1.2.3-lib
-    boost_root: C:/Boost/boost_1_69_0/boost
+    boost_root: C:/Boost/boost_1_69_0
     boost_includedir: C:/Boost/boost_1_69_0
     boost_librarydir: C:/Boost/boost_1_69_0/stage/lib
     python_include_dirs: C:/Python/Python3.7.1/include
