@@ -192,6 +192,7 @@ SET(HEADERS
     api/videosourcefactory.h
     api/videotargetfactory.h
     api/except.h
+    api/exports.h
 )
 SET(SOURCES
     api/iobservable.cpp
