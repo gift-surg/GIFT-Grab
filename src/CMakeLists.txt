@@ -169,14 +169,8 @@ endif(USE_NUMPY AND NOT BUILD_PYTHON)
 # Library name
 SET(NAME giftgrab)
 
+# For generating import lib in Windows
 if(WIN32)
-    INCLUDE(GenerateExportHeader)
-
-    GENERATE_EXPORT_HEADER(${NAME}
-        EXPORT_MACRO_NAME GG_EXPORTS
-        EXPORT_FILE_NAME gg_exports.h
-        STATIC_DEFINE SHARED_EXPORTS_BUILT_AS_STATIC
-        )
     INCLUDE_DIRECTORIES("${CMAKE_CURRENT_BINARY_DIR}")
 endif()
 
@@ -358,6 +352,16 @@ if(BUILD_PYTHON)
     LIST(APPEND INSTALLABLES ${NAME_PYTHON})
 endif(BUILD_PYTHON)
 
+# For generating import lib in Windows
+if(WIN32)
+    INCLUDE(GenerateExportHeader)
+
+    GENERATE_EXPORT_HEADER(${NAME}
+        EXPORT_MACRO_NAME GG_EXPORTS
+        EXPORT_FILE_NAME gg_exports.h
+        STATIC_DEFINE SHARED_EXPORTS_BUILT_AS_STATIC
+        )
+endif()
 
 # Install
 INSTALL(
