@@ -1,5 +1,6 @@
 #pragma once
 
+#include "exports.h"
 #include "ivideosource.h"
 #include "device.h"
 #include "codec.h"
@@ -22,7 +23,7 @@ namespace gg
 //! \sa IVideoSource
 //! \sa Device
 //!
-class VideoSourceFactory
+class GG_EXPORTS VideoSourceFactory
 {
 protected:
     //!
