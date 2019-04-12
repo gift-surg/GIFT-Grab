@@ -20,11 +20,8 @@
 #include "ffmpeg_video_target.h"
 #endif
 
-/* Workaround for MSVC ciso646 / Boost Python conflicts
- * TODO: this should be removed after the issue is fixed
- * See https://github.com/boostorg/python/issues/67
- * and https://github.com/boostorg/python/issues/212
- */
+// Ugly workaround for MSVC ciso646 / Boost Python conflicts
+// See https://github.com/boostorg/python/issues/67
 #if defined(_MSC_VER) && !defined(__clang__)
 #ifndef __GCCXML__
 #if defined(or)
@@ -679,11 +676,8 @@ BOOST_PYTHON_MODULE(pygiftgrab)
     ;
 }
 
-/* Workaround for MSVC ciso646 / Boost Python conflicts
- * TODO: this should be removed after the issue is fixed
- * See https://github.com/boostorg/python/issues/67
- * and https://github.com/boostorg/python/issues/212
- */
+// Ugly workaround for MSVC ciso646 / Boost Python conflicts
+// See https://github.com/boostorg/python/issues/67
 #if defined(_MSC_VER) && !defined(__clang__)
 #ifndef __GCCXML__
 #if defined(or)
