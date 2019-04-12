@@ -8,20 +8,20 @@ if(WIN32)
     # we resort to this kind of workaround. This is inspired by
     # https://github.com/PixarAnimationStudios/OpenSubdiv/pull/817
     list(APPEND NEW_STYLE_LOGICAL_OPERATIONS
-        -Dand=&&
-        -Dand_eq=&=
-        -Dbitand=&
-        -Dbitor=|
-        -Dcompl=~
-        -Dnot=!
-        -Dnot_eq=!=
-        -Dor=||
-        -Dor_eq=|=
+        /Dand=&&
+        /Dand_eq=&=
+        /Dbitand=&
+        /Dbitor=|
+        /Dcompl=~
+        /Dnot=!
+        /Dnot_eq=!=
+        /Dor=||
+        /Dor_eq=|=
         # nvcc does not seem to like a caret being the last character
         # in a command line defined preprocessor symbol, so add an
         # empty trailing comment to avoid this.
-        -Dxor=^/**/
-        -Dxor_eq=^=
+        /Dxor=^/**/
+        /Dxor_eq=^=
     )
     ADD_DEFINITIONS(${NEW_STYLE_LOGICAL_OPERATIONS})
 endif()
