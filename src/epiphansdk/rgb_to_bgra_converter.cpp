@@ -1,5 +1,4 @@
 #include "rgb_to_bgra_converter.h"
-#include "macros.h"
 #include <assert.h>
 
 namespace gg
@@ -51,7 +50,7 @@ void RgbToBgraConverter::set_frame_dimensions(size_t width,
 {
     assert(width > 0);
     assert(height > 0);
-    if (_width == width and _height == height)
+    if (_width == width && _height == height)
         return;
 
     _width = width;
