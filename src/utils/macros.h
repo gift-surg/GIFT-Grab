@@ -1,5 +1,3 @@
-#include <ciso646>
-
 #ifndef __MACROS_H__
 #define __MACROS_H__
 
