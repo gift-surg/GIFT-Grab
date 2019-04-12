@@ -687,9 +687,9 @@ BOOST_PYTHON_MODULE(pygiftgrab)
 #if defined(_MSC_VER) && !defined(__clang__)
 #ifndef __GCCXML__
 #if defined(or)
-#   pragma pop_macro("or")
 #   pragma pop_macro("and")
 #   pragma pop_macro("xor")
+#   pragma pop_macro("or")
 #endif
 #endif
 #endif
