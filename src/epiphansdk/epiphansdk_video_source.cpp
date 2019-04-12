@@ -14,14 +14,14 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
     FrmGrab_Init();
 
     _frame_grabber = FrmGrabLocal_OpenSN(device_id.c_str());
-    if (not _frame_grabber)
+    if (!_frame_grabber)
     {
         // TODO - exception GiftGrab#42
         std::cerr << "Could not open " << device_id << std::endl;
         return;
     }
 
-    if (colour_space != V2U_GRABFRAME_FORMAT_I420 and colour_space != V2U_GRABFRAME_FORMAT_BGR24)
+    if (colour_space != V2U_GRABFRAME_FORMAT_I420 && colour_space != V2U_GRABFRAME_FORMAT_RGB24)
     {
         // TODO - exception GiftGrab#42
         std::cerr << "Colour space " << colour_space << " not supported" << std::endl;
@@ -44,7 +44,7 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
     _full.height = 1080;
     get_full_frame();
     // TODO - exception GiftGrab#42
-    if (not get_frame(frame)) return;
+    if (!get_frame(frame)) return;
 
     _daemon = new gg::BroadcastDaemon(this);
     _daemon->start(get_frame_rate());
@@ -95,9 +95,9 @@ double VideoSourceEpiphanSDK::get_frame_rate()
 {
     if (_frame_grabber)
     {
-#if defined(Epiphan_DVI2PCIeDuo_DVI) and \
-    defined(Epiphan_DVI2PCIeDuo_SDI) and \
-    defined(Epiphan_DVI2PCIeDuo_DVI_MAX_FRAME_RATE) and \
+#if defined(Epiphan_DVI2PCIeDuo_DVI) && \
+    defined(Epiphan_DVI2PCIeDuo_SDI) && \
+    defined(Epiphan_DVI2PCIeDuo_DVI_MAX_FRAME_RATE) && \
     defined(Epiphan_DVI2PCIeDuo_SDI_MAX_FRAME_RATE)
         std::string port_id = FrmGrab_GetId(_frame_grabber);
         if (port_id == Epiphan_DVI2PCIeDuo_DVI)
@@ -113,8 +113,8 @@ double VideoSourceEpiphanSDK::get_frame_rate()
 
 void VideoSourceEpiphanSDK::set_sub_frame(int x, int y, int width, int height)
 {
-    if (x >= _full.x and x + width <= _full.x + _full.width and
-        y >= _full.y and y + height <= _full.y + _full.height)
+    if (x >= _full.x && x + width <= _full.x + _full.width &&
+        y >= _full.y && y + height <= _full.y + _full.height)
     {
         _roi.x = x;
         _roi.y = y;
