@@ -3,11 +3,11 @@
 #ifdef USE_NUMPY
 #include <boost/python/numpy.hpp>
 #endif
-#include "gil.h"
 #include "videosourcefactory.h"
 #include "videotargetfactory.h"
 #include "except.h"
 #include "iobservable.h"
+#include "gil.h"
 #ifdef USE_OPENCV
 #include "opencv_video_source.h"
 #include "opencv_video_target.h"
