@@ -109,6 +109,7 @@ linux:
     - 224-add-a-citing-gift-grab-section-to-pypi-page
     - 225-add-citing-gift-grab-section-to-rtd-index
     - 223-add-some-information-on-the-main-doxygen-home-page
+    - 84-test
 
 ################## Platform: PyPI ##################
 ################## Target: All #####################
@@ -211,6 +212,7 @@ pypi:
     - 222-add-how-to-cite-block-in-main-readme
     - 225-add-citing-gift-grab-section-to-rtd-index
     - 223-add-some-information-on-the-main-doxygen-home-page
+    - 84-test
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 ################## Platform: PyPI ################################
@@ -571,3 +573,4 @@ windows:
     - 75-build-against-epiphan-sdk-on-windows-10-for-69
     - 78-opencv-free-epiphan-on-windows-10-for-69
     - 84-generate-import-library-on-windows-builds-for-69
+    - 84-test
