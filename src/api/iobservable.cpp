@@ -1,5 +1,4 @@
 #include "iobservable.h"
-#include "macros.h"
 #include <algorithm>
 #ifdef BUILD_PYTHON
 #include "gil.h"
@@ -17,10 +16,10 @@ IObservable::~IObservable()
 void IObservable::attach(IObserver & observer)
 {
     std::lock_guard<std::mutex> lock_guard(_observers_lock);
-    if (not attached(observer))
+    if (!attached(observer))
     {
         _observers.push_back(&observer);
-        if (not attached(observer))
+        if (!attached(observer))
             throw ObserverError("Could not attach observer");
     }
 }
