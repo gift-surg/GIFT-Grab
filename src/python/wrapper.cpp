@@ -1,3 +1,8 @@
+#include <boost/python.hpp>
+#include <boost/python/exception_translator.hpp>
+#ifdef USE_NUMPY
+#include <boost/python/numpy.hpp>
+#endif
 #include "videosourcefactory.h"
 #include "videotargetfactory.h"
 #include "except.h"
@@ -19,11 +24,6 @@
 #ifdef USE_FFMPEG
 #include "ffmpeg_video_source.h"
 #include "ffmpeg_video_target.h"
-#endif
-#include <boost/python.hpp>
-#include <boost/python/exception_translator.hpp>
-#ifdef USE_NUMPY
-#include <boost/python/numpy.hpp>
 #endif
 
 using namespace boost::python;
