@@ -28,6 +28,7 @@
 #if defined(_MSC_VER) && !defined(__clang__)
 #ifndef __GCCXML__
 #if defined(or)
+#define GG_MSVC_ISO646_BOOST_COMPATIBILITY_WORKAROUND
 #   pragma push_macro("or")
 #   pragma push_macro("xor")
 #   pragma push_macro("and")
@@ -686,10 +687,11 @@ BOOST_PYTHON_MODULE(pygiftgrab)
  */
 #if defined(_MSC_VER) && !defined(__clang__)
 #ifndef __GCCXML__
-#if defined(or)
+#ifdef GG_MSVC_ISO646_BOOST_COMPATIBILITY_WORKAROUND
 #   pragma pop_macro("and")
 #   pragma pop_macro("xor")
 #   pragma pop_macro("or")
+#undef GG_MSVC_ISO646_BOOST_COMPATIBILITY_WORKAROUND
 #endif
 #endif
 #endif
