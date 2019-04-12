@@ -2,6 +2,7 @@
 #include "videotargetfactory.h"
 #include "except.h"
 #include "iobservable.h"
+#include "gil.h"
 #ifdef USE_OPENCV
 #include "opencv_video_source.h"
 #include "opencv_video_target.h"
@@ -19,7 +20,6 @@
 #include "ffmpeg_video_source.h"
 #include "ffmpeg_video_target.h"
 #endif
-#include "gil.h"
 #include <boost/python.hpp>
 #include <boost/python/exception_translator.hpp>
 #ifdef USE_NUMPY
