@@ -577,3 +577,4 @@ windows:
     - 76-build-against-boost.python-on-windows-10-for-69
     - 81-build-against-python37-on-windows-10-for-69
     - 87-use-old-style-logical-ops-for-69
+    - 84-generate-import-library-on-windows-builds-for-69

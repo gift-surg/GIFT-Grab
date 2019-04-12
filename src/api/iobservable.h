@@ -1,5 +1,6 @@
 #pragma once
 
+#include "exports.h"
 #include "iobserver.h"
 #include <vector>
 #include <mutex>
@@ -39,7 +40,7 @@ namespace gg
 //! ensuring data is promptly copied to their own
 //! data buffer.
 //!
-class IObservable
+class GG_EXPORTS IObservable
 {
 protected:
     //!
