@@ -576,3 +576,4 @@ windows:
     - 78-opencv-free-epiphan-on-windows-10-for-69
     - 76-build-against-boost.python-on-windows-10-for-69
     - 81-build-against-python37-on-windows-10-for-69
+    - 87-use-old-style-logical-ops-for-69
