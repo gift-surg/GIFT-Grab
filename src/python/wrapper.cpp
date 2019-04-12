@@ -22,8 +22,7 @@
 
 // Ugly workaround for MSVC ciso646 / Boost Python conflicts
 // See https://github.com/boostorg/python/issues/67
-#if defined(_MSC_VER) && !defined(__clang__)
-#ifndef __GCCXML__
+#if defined(_MSC_VER)
 #if defined(or)
 #   pragma push_macro("or")
 #   pragma push_macro("xor")
@@ -31,7 +30,6 @@
 #   undef or
 #   undef xor
 #   undef and
-#endif
 #endif
 #endif
 
@@ -678,12 +676,10 @@ BOOST_PYTHON_MODULE(pygiftgrab)
 
 // Ugly workaround for MSVC ciso646 / Boost Python conflicts
 // See https://github.com/boostorg/python/issues/67
-#if defined(_MSC_VER) && !defined(__clang__)
-#ifndef __GCCXML__
+#if defined(_MSC_VER)
 #if defined(or)
 #   pragma pop_macro("or")
 #   pragma pop_macro("and")
 #   pragma pop_macro("xor")
-#endif
 #endif
 #endif
