@@ -1,6 +1,5 @@
 #pragma once
 
-#include "exports.h"
 #include "videoframe.h"
 #include "except.h"
 #include "iobserver.h"
@@ -15,7 +14,7 @@ namespace gg
 //! functionality to save streamed video e.g.
 //! to files
 //!
-class GG_EXPORTS IVideoTarget : public IObserver
+class IVideoTarget : public IObserver
 {
 protected:
     //!

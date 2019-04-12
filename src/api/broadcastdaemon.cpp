@@ -67,7 +67,7 @@ void BroadcastDaemon::run(float sleep_duration_ms)
      * problems
      */
     int cols = 0, rows = 0;
-    if (!_source->get_frame_dimensions(cols, rows))
+    if (not _source->get_frame_dimensions(cols, rows))
     {
         // default values, in case something goes wrong
         cols = 256;
@@ -84,12 +84,12 @@ void BroadcastDaemon::run(float sleep_duration_ms)
         else
         {
             int old_cols = cols, old_rows = rows;
-            if (!_source->get_frame_dimensions(cols, rows))
+            if (not _source->get_frame_dimensions(cols, rows))
             {
                 cols = old_cols;
                 rows = old_rows;
             }
-            if (cols != fill_frame->cols() || rows != fill_frame->rows())
+            if (cols != fill_frame->cols() or rows != fill_frame->rows())
             {
                 delete fill_frame;
                 fill_frame = new VideoFrame(_source->get_colour(), cols, rows);

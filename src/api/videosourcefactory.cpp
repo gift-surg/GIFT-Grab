@@ -240,12 +240,12 @@ IVideoSource * VideoSourceFactory::get_device(Device device,
             // dependencies on hardware specifics
             std::this_thread::sleep_for(std::chrono::milliseconds(75));
         }
-        if (!device_online)
+        if (not device_online)
             throw DeviceOffline(
                 "Device connected but does not return frame dimensions");
 
         // check meaningful frame dimensions
-        if (width <= 0 || height <= 0)
+        if (width <= 0 or height <= 0)
         {
             throw DeviceOffline(
                 "Device connected but returns meaningless frame dimensions");
@@ -253,7 +253,7 @@ IVideoSource * VideoSourceFactory::get_device(Device device,
 
         // check querying frames
         VideoFrame frame(colour, true);
-        if (!src->get_frame(frame))
+        if (not src->get_frame(frame))
         {
             throw DeviceOffline(
                 "Device connected does not return frames");

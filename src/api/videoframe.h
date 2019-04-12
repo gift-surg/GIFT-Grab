@@ -14,7 +14,6 @@ namespace cv
 #endif
 #endif // USE_OPENCV
 
-#include "exports.h"
 #include <memory>
 #include "maskframe.h"
 #include "except.h"
@@ -45,7 +44,7 @@ enum ColourSpace
 //! within a single frame object, so as to preserve temporal
 //! relations and to facilitate potential stereo encoding.
 //!
-class GG_EXPORTS VideoFrame
+class VideoFrame
 {
 protected:
     //!

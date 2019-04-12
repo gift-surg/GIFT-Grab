@@ -1,6 +1,5 @@
 #pragma once
 
-#include "exports.h"
 #include "videoframe.h"
 
 namespace gg
@@ -33,7 +32,7 @@ namespace gg
 //!         pass
 //! \endcode
 //!
-class GG_EXPORTS IObserver
+class IObserver
 {
 public:
     //!
