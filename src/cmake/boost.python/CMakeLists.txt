@@ -2,29 +2,6 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.2.0)
 
 if(WIN32)
     SET(Boost_USE_MULTITHREADED ON)
-    # The proper way to define these is to use the ciso646 header. However
-    # that conflicts with Python's logical operator keywords defined as part
-    # of Boost.Python (see https://github.com/boostorg/python/issues/67). So
-    # we resort to this kind of workaround. This is inspired by
-    # https://github.com/PixarAnimationStudios/OpenSubdiv/pull/817
-    if(MSVC)
-        ADD_DEFINITIONS(
-            /Dand=&&
-            /Dand_eq=&=
-            /Dbitand=&
-            /Dbitor=|
-            /Dcompl=~
-            /Dnot=!
-            /Dnot_eq=!=
-            /Dor=||
-            /Dor_eq=|=
-            # nvcc does not seem to like a caret being the last character
-            # in a command line defined preprocessor symbol, so add an
-            # empty trailing comment to avoid this.
-            /Dxor=^/**/
-            /Dxor_eq=^=
-        )
-    endif()
 endif()
 
 if(NOT PYTHONLIBS_VERSION_STRING)
