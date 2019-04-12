@@ -563,7 +563,7 @@ windows:
   script:
     - mkdir build
     - cd build
-    - cmake -D CMAKE_BUILD_TYPE=Release -D PYTHON_INCLUDE_DIRS="%python_include_dirs%" -D PYTHON_LIBRARY="%python_library%" -D BOOST_INCLUDEDIR="%boost_includedir%" -D BOOST_LIBRARYDIR="%boost_librarydir%" -D ZLIB_ROOT="%zlib_root%" -D BUILD_PYTHON=ON -D USE_NUMPY=ON -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D ENABLE_NONFREE=ON -D USE_EPIPHANSDK=ON -D USE_BGRA=OFF ../src
+    - cmake -A x64 -D CMAKE_BUILD_TYPE=Release -D PYTHON_INCLUDE_DIRS="%python_include_dirs%" -D PYTHON_LIBRARY="%python_library%" -D BOOST_INCLUDEDIR="%boost_includedir%" -D BOOST_LIBRARYDIR="%boost_librarydir%" -D ZLIB_ROOT="%zlib_root%" -D BUILD_PYTHON=ON -D USE_NUMPY=ON -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D ENABLE_NONFREE=ON -D USE_EPIPHANSDK=ON -D USE_BGRA=OFF ../src
     - cmake --build . --config Release
     - ls
     - cd Release
