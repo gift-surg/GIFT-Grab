@@ -1,5 +1,6 @@
 #pragma once
 
+#include "exports.h"
 #include "macros.h"
 #include "codec.h"
 #include "ivideotarget.h"
@@ -19,7 +20,7 @@ namespace gg
 //!
 //! \sa IVideoTarget
 //!
-class VideoTargetFactory
+class GG_EXPORTS VideoTargetFactory
 {
 protected:
     //!

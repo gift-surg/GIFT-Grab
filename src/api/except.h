@@ -1,5 +1,6 @@
 #pragma once
 
+#include "exports.h"
 #include <stdexcept>
 #include <string>
 
@@ -13,7 +14,7 @@ namespace gg {
 //! \attention <b>In Python:</b> This exception
 //! maps to \c RuntimeError
 //!
-class BasicException : public std::exception {
+class GG_EXPORTS BasicException : public std::exception {
 protected:
     //!
     //! \brief Exception details
@@ -47,7 +48,7 @@ public:
 //! \attention <b>In Python:</b> This exception
 //! maps to \c IOError
 //!
-class DeviceAlreadyConnected : public BasicException
+class GG_EXPORTS DeviceAlreadyConnected : public BasicException
 {
 public:
     //!
@@ -71,7 +72,7 @@ public:
 //! \attention <b>In Python:</b> This exception
 //! maps to \c IOError
 //!
-class DeviceNotFound : public BasicException {
+class GG_EXPORTS DeviceNotFound : public BasicException {
 public:
     //!
     //! \brief
@@ -94,7 +95,7 @@ public:
 //! \attention <b>In Python:</b> This exception
 //! maps to \c IOError
 //!
-class DeviceOffline : public BasicException {
+class GG_EXPORTS DeviceOffline : public BasicException {
 public:
     //!
     //! \brief
@@ -117,7 +118,7 @@ public:
 //! \attention <b>In Python:</b> This exception
 //! maps to \c RuntimeError
 //!
-class VideoTargetError : public BasicException
+class GG_EXPORTS VideoTargetError : public BasicException
 {
 public:
     //!
@@ -141,7 +142,7 @@ public:
 //! \attention <b>In Python:</b> This exception
 //! maps to \c RuntimeError
 //!
-class VideoSourceError : public BasicException
+class GG_EXPORTS VideoSourceError : public BasicException
 {
 public:
     //!
@@ -164,7 +165,7 @@ public:
 //! \attention <b>In Python:</b> This exception
 //! maps to \c RuntimeError
 //!
-class ObserverError : public BasicException
+class GG_EXPORTS ObserverError : public BasicException
 {
 public:
     //!
@@ -187,7 +188,7 @@ public:
 //! \attention <b>In Python:</b> This exception
 //! maps to \c IOError
 //!
-class NetworkSourceUnavailable : public BasicException
+class GG_EXPORTS NetworkSourceUnavailable : public BasicException
 {
 public:
     //!
