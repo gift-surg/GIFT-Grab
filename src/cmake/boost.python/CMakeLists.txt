@@ -8,7 +8,7 @@ if(WIN32)
     # we resort to this kind of workaround. This is inspired by
     # https://github.com/PixarAnimationStudios/OpenSubdiv/pull/817
     if(MSVC)
-        list(APPEND NEW_STYLE_LOGICAL_OPERATIONS
+        ADD_DEFINITIONS(
             /Dand=&&
             /Dand_eq=&=
             /Dbitand=&
@@ -24,7 +24,6 @@ if(WIN32)
             /Dxor=^/**/
             /Dxor_eq=^=
         )
-        ADD_DEFINITIONS(${NEW_STYLE_LOGICAL_OPERATIONS})
     endif()
 endif()
 
