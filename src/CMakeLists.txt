@@ -343,16 +343,6 @@ if(BUILD_TESTS)
     SUBDIRS(tests)
 endif(BUILD_TESTS)
 
-# Python wrappers
-if(BUILD_PYTHON)
-    SET(NAME_PYTHON py${NAME})
-    ADD_LIBRARY(${NAME_PYTHON} SHARED python/gil.h python/wrapper.cpp)
-    TARGET_LINK_LIBRARIES(${NAME_PYTHON} ${Boost_LIBRARIES} ${NAME})
-    # no lib prefix
-    SET_TARGET_PROPERTIES(${NAME_PYTHON} PROPERTIES PREFIX "")
-    LIST(APPEND INSTALLABLES ${NAME_PYTHON})
-endif(BUILD_PYTHON)
-
 # For generating import lib in Windows
 if(WIN32)
     INCLUDE(GenerateExportHeader)
@@ -363,6 +353,16 @@ if(WIN32)
         STATIC_DEFINE SHARED_EXPORTS_BUILT_AS_STATIC
         )
 endif()
+
+# Python wrappers
+if(BUILD_PYTHON)
+    SET(NAME_PYTHON py${NAME})
+    ADD_LIBRARY(${NAME_PYTHON} SHARED python/gil.h python/wrapper.cpp)
+    TARGET_LINK_LIBRARIES(${NAME_PYTHON} ${Boost_LIBRARIES} ${NAME})
+    # no lib prefix
+    SET_TARGET_PROPERTIES(${NAME_PYTHON} PROPERTIES PREFIX "")
+    LIST(APPEND INSTALLABLES ${NAME_PYTHON})
+endif(BUILD_PYTHON)
 
 # Install
 INSTALL(
