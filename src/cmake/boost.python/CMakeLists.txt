@@ -6,6 +6,10 @@ message("BOOST_INCLUDEDIR: ${BOOST_INCLUDEDIR}")
 message("BOOST_LIBRARYDIR: ${BOOST_LIBRARYDIR}")
 message("MSVC_TOOLSET_VERSION: ${MSVC_TOOLSET_VERSION}")
 
+if(WIN32)
+    SET(Boost_USE_MULTITHREADED ON)
+endif()
+
 if(NOT PYTHONLIBS_VERSION_STRING)
     # Needed in case PythonLibs discovery script not run, see
     # https://github.com/gift-surg/GIFT-Grab/issues/83
