@@ -1,5 +1,4 @@
 #include "iobservable.h"
-#include "macros.h"
 #include <algorithm>
 #ifdef BUILD_PYTHON
 #include "gil.h"

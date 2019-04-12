@@ -1,5 +1,4 @@
 ﻿#include "videoframe.h"
-#include "macros.h"
 #include <cstring>
 
 namespace gg
