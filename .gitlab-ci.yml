@@ -571,10 +571,10 @@ windows:
     - cd Release
     - ls
     - mv pygiftgrab.pyd pygiftgrab.dll
-    - python -c "import sys; import os; sys.path.append(os.getcwd()); import pygiftgrab"
-    - python -c "import sys; import os; sys.path.append(os.getcwd()); import pygiftgrab"
-    - python -c "import pygiftgrab"
-    - python -c "from pygiftgrab import VideoSourceFactory"
+    - python -v -c "import sys; import os; sys.path.append(os.getcwd()); import pygiftgrab"
+    - python -v -c "import sys; import os; sys.path.append(os.getcwd()); import pygiftgrab"
+    - python -v -c "import pygiftgrab"
+    - python -v -c "from pygiftgrab import VideoSourceFactory"
   tags:
     - gift-hopper
     - windows
