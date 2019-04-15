@@ -344,7 +344,7 @@ endif(BUILD_TESTS)
 # Python wrappers
 if(BUILD_PYTHON)
     SET(NAME_PYTHON py${NAME})
-    ADD_LIBRARY(${NAME_PYTHON} SHARED python/gil.h python/wrapper.cpp)
+    PYTHON_ADD_MODULE(${NAME_PYTHON} python/gil.h python/wrapper.cpp)
     TARGET_LINK_LIBRARIES(${NAME_PYTHON} ${Boost_LIBRARIES} ${NAME})
     # no lib prefix
     SET_TARGET_PROPERTIES(${NAME_PYTHON} PROPERTIES PREFIX "")
