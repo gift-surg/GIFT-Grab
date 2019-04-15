@@ -570,7 +570,6 @@ windows:
     - ls
     - cd Release
     - ls
-    - mv pygiftgrab.pyd pygiftgrab.dll
     - python -v -c "import sys; import os; sys.path.append(os.getcwd()); import pygiftgrab"
     - python -v -c "import sys; import os; sys.path.append(os.getcwd()); import pygiftgrab"
     - python -v -c "import pygiftgrab"
