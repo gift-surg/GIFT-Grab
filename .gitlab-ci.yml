@@ -569,6 +569,7 @@ windows:
     - cmake --build . --config Release
     - ls
     - cd Release
+    - ls
     - python -c "from pygiftgrab import VideoSourceFactory"
   tags:
     - gift-hopper
