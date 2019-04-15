@@ -570,6 +570,7 @@ windows:
     - ls
     - cd Release
     - ls
+    - python -v -c "import sys; import os; sys.path.append(os.getcwd()); print(sys.path)"
     - python -v -c "import sys; import os; sys.path.append(os.getcwd()); import pygiftgrab"
     - python -v -c "import sys; import os; sys.path.append(os.getcwd()); import pygiftgrab"
     - python -v -c "import pygiftgrab"
