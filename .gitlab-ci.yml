@@ -570,6 +570,7 @@ windows:
     - ls
     - cd Release
     - ls
+    - python -c "import pygiftgrab"
     - python -c "from pygiftgrab import VideoSourceFactory"
   tags:
     - gift-hopper
