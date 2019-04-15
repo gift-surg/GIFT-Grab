@@ -358,7 +358,6 @@ if(WIN32)
     GENERATE_EXPORT_HEADER(${NAME}
         EXPORT_MACRO_NAME GG_EXPORTS
         EXPORT_FILE_NAME gg_exports_win.h
-        STATIC_DEFINE GG_EXPORTS_BUILT_AS_STATIC
         )
 endif()
 
