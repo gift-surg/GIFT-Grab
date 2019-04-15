@@ -64,11 +64,12 @@ IVideoSource * VideoSourceFactory::get_device(Device device,
 
         // BGRA ========================================
         case BGRA:
-#ifdef USE_OPENCV
-            src = new VideoSourceOpenCV(0);
+#ifdef USE_EPIPHANSDK
+            src = new VideoSourceEpiphanSDK(Epiphan_DVI2PCIeDuo_DVI,
+                                            V2U_GRABFRAME_FORMAT_RGB24);
 #else
             throw VideoSourceError(
-                "BGRA colour space on Epiphan DVI2PCIe Duo supported only with OpenCV");
+                "BGRA colour space on Epiphan DVI2PCIe Duo supported only with Epiphan SDK");
 #endif
             break;
 
@@ -116,11 +117,12 @@ IVideoSource * VideoSourceFactory::get_device(Device device,
 
         // BGRA ========================================
         case BGRA:
-#ifdef USE_OPENCV
-            src = new VideoSourceOpenCV(1);
+#ifdef USE_EPIPHANSDK
+            src = new VideoSourceEpiphanSDK(Epiphan_DVI2PCIeDuo_SDI,
+                                            V2U_GRABFRAME_FORMAT_RGB24);
 #else
             throw VideoSourceError(
-                "BGRA colour space on Epiphan DVI2PCIe Duo supported only with OpenCV");
+                "BGRA colour space on Epiphan DVI2PCIe Duo supported only with Epiphan SDK");
 #endif
             break;
 
@@ -238,12 +240,12 @@ IVideoSource * VideoSourceFactory::get_device(Device device,
             // dependencies on hardware specifics
             std::this_thread::sleep_for(std::chrono::milliseconds(75));
         }
-        if (not device_online)
+        if (!device_online)
             throw DeviceOffline(
                 "Device connected but does not return frame dimensions");
 
         // check meaningful frame dimensions
-        if (width <= 0 or height <= 0)
+        if (width <= 0 || height <= 0)
         {
             throw DeviceOffline(
                 "Device connected but returns meaningless frame dimensions");
@@ -251,7 +253,7 @@ IVideoSource * VideoSourceFactory::get_device(Device device,
 
         // check querying frames
         VideoFrame frame(colour, true);
-        if (not src->get_frame(frame))
+        if (!src->get_frame(frame))
         {
             throw DeviceOffline(
                 "Device connected does not return frames");

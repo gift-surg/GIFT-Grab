@@ -1,5 +1,6 @@
 #pragma once
 
+#include "exports.h"
 #include "videoframe.h"
 #include "except.h"
 #include "iobservable.h"
@@ -12,7 +13,7 @@
 //! This enables the underlying algorithms to be agnostic of
 //! the data sources.
 //!
-class IVideoSource : public gg::IObservable
+class GG_EXPORTS IVideoSource : public gg::IObservable
 {
 public:
     //!

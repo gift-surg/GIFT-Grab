@@ -1,13 +1,15 @@
 #pragma once
+#include "exports.h"
 #include "frmgrab.h"
 #include "ivideosource.h"
 #include "macros.h"
 #include "broadcastdaemon.h"
+#include "rgb_to_bgra_converter.h"
 
 namespace gg
 {
 
-class VideoSourceEpiphanSDK : public IVideoSource
+class GG_EXPORTS VideoSourceEpiphanSDK : public IVideoSource
 {
 protected:
     //!
@@ -38,9 +40,26 @@ protected:
     V2U_GrabFrame2 * _buffer;
 
     //!
+    //! \brief This mutex to be locked when
+    //! accessing the buffer
+    //! \sa _buffer
+    //!
+    std::mutex _buffer_lock;
+
+    //!
     //! \brief
     //!
     gg::BroadcastDaemon * _daemon;
+
+    //!
+    //! \brief Buffer for converting from RGB to BGRA
+    //!
+    unsigned char *_bgra_data;
+
+    //!
+    //! \brief RGB to BGRA converter
+    //!
+    RgbToBgraConverter _rgb_to_bgra;
 
 public:
     //!
@@ -50,7 +69,7 @@ public:
     //! as \c \#define'd in Epiphan device properties
     //! header
     //! \param colour_space \c V2U_GRABFRAME_FORMAT_I420
-    //! or \c V2U_GRABFRAME_FORMAT_BGR24
+    //! or \c V2U_GRABFRAME_FORMAT_RGB24
     //! \throw VideoSourceError if connection attempt
     //! fails, with a detailed error message
     //!
