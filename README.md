@@ -28,6 +28,9 @@ Please note that currently **only Python 2** is supported.
 
 ## Getting started
 
+* Operating system
+   - GIFT-Grab has been extensively tested on Ubuntu Linux.
+   - Windows compatibility is experimental. Please see the [`experimental-windows` branch][windows].
 * Installation
    - [Required tools and libraries][gg-reqs] and [guidelines for installing them][gg-tips]
    - [Building GIFT-Grab from source][build-from-source] (C++ and Python)
@@ -42,6 +45,7 @@ Please note that currently **only Python 2** is supported.
 * [Known issues and limitations][gg-issues]
 
 
+[windows]: https://github.com/gift-surg/GIFT-Grab/tree/experimental-windows
 [gg-reqs]: doc/requirements.md
 [gg-issues]: doc/issues.md
 [gg-min]: doc/minimal.md
