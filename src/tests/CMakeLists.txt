@@ -74,3 +74,6 @@ endif(USE_FILES)
 
 # VideoSourceFactory leak checker
 ADD_SUBDIRECTORY(videosourcefactory)
+
+# Simple colour space conversion profiling
+ADD_SUBDIRECTORY(rgbswap)

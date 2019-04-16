@@ -136,7 +136,7 @@ if(USE_BLACKMAGIC_DECKLINK_4K_EXTREME_12G)
 endif(USE_BLACKMAGIC_DECKLINK_4K_EXTREME_12G)
 
 # Determine whether OpenCV needed
-if(((USE_EPIPHAN_DVI2PCIE_DUO OR USE_NETWORK_SOURCES) AND USE_BGRA) OR
+if((USE_NETWORK_SOURCES AND USE_BGRA) OR
     USE_XVID)
     SET(USE_OPENCV ON CACHE BOOL "OFF ON" FORCE)
 endif()
@@ -270,7 +270,9 @@ if(USE_EPIPHANSDK)
 
     INCLUDE_DIRECTORIES(epiphansdk)
     LIST(APPEND HEADERS epiphansdk/epiphansdk_video_source.h)
+    LIST(APPEND HEADERS epiphansdk/rgb_to_bgra_converter.h)
     LIST(APPEND SOURCES epiphansdk/epiphansdk_video_source.cpp)
+    LIST(APPEND SOURCES epiphansdk/rgb_to_bgra_converter.cpp)
 endif(USE_EPIPHANSDK)
 
 # Blackmagic SDK video source
