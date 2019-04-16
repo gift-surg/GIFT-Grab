@@ -169,6 +169,11 @@ endif(USE_NUMPY AND NOT BUILD_PYTHON)
 # Library name
 SET(NAME giftgrab)
 
+# For generating import lib in Windows
+if(WIN32)
+    INCLUDE_DIRECTORIES("${CMAKE_CURRENT_BINARY_DIR}")
+endif()
+
 # Library include dirs
 INCLUDE_DIRECTORIES(api)
 INCLUDE_DIRECTORIES(utils)
@@ -187,6 +192,7 @@ SET(HEADERS
     api/videosourcefactory.h
     api/videotargetfactory.h
     api/except.h
+    api/exports.h
 )
 SET(SOURCES
     api/iobservable.cpp
@@ -338,13 +344,23 @@ endif(BUILD_TESTS)
 # Python wrappers
 if(BUILD_PYTHON)
     SET(NAME_PYTHON py${NAME})
-    ADD_LIBRARY(${NAME_PYTHON} SHARED python/gil.h python/wrapper.cpp)
+    PYTHON_ADD_MODULE(${NAME_PYTHON} python/gil.h python/wrapper.cpp)
     TARGET_LINK_LIBRARIES(${NAME_PYTHON} ${Boost_LIBRARIES} ${NAME})
     # no lib prefix
     SET_TARGET_PROPERTIES(${NAME_PYTHON} PROPERTIES PREFIX "")
     LIST(APPEND INSTALLABLES ${NAME_PYTHON})
 endif(BUILD_PYTHON)
 
+# For generating import lib in Windows
+if(WIN32)
+    INCLUDE(GenerateExportHeader)
+
+    GENERATE_EXPORT_HEADER(${NAME}
+        EXPORT_MACRO_NAME GG_EXPORTS
+        EXPORT_FILE_NAME gg_exports_win.h
+        STATIC_DEFINE GG_EXPORTS_BUILT_AS_STATIC
+        )
+endif()
 
 # Install
 INSTALL(

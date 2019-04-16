@@ -1,4 +1,5 @@
 #pragma once
+#include "exports.h"
 #include "frmgrab.h"
 #include "ivideosource.h"
 #include "macros.h"
@@ -7,7 +8,7 @@
 namespace gg
 {
 
-class VideoSourceEpiphanSDK : public IVideoSource
+class GG_EXPORTS VideoSourceEpiphanSDK : public IVideoSource
 {
 protected:
     //!
