@@ -566,15 +566,8 @@ windows:
     - cmake -A x64 -D CMAKE_BUILD_TYPE=Release -D PYTHON_INCLUDE_DIRS="%python_include_dirs%" -D PYTHON_LIBRARY="%python_library%" -D BOOST_INCLUDEDIR="%boost_includedir%" -D BOOST_LIBRARYDIR="%boost_librarydir%" -D ZLIB_ROOT="%zlib_root%" -D BUILD_PYTHON=ON -D USE_NUMPY=ON -D USE_EPIPHAN_DVI2PCIE_DUO=ON -D ENABLE_NONFREE=ON -D USE_EPIPHANSDK=ON ../src
     - cmake --build . --config Release
     - ls
+    - cd Release
+    - python -c "from pygiftgrab import VideoSourceFactory"
   tags:
     - gift-hopper
     - windows
-  only:
-    - 73-set-up-ci-build-on-hopper-for-69
-    - 69-support-for-epiphan-on-windows-10
-    - 75-build-against-epiphan-sdk-on-windows-10-for-69
-    - 78-opencv-free-epiphan-on-windows-10-for-69
-    - 76-build-against-boost.python-on-windows-10-for-69
-    - 81-build-against-python37-on-windows-10-for-69
-    - 87-use-old-style-logical-ops-for-69
-    - 84-generate-import-library-on-windows-builds-for-69
