@@ -47,15 +47,14 @@ In addition, also the following two **BSD-3-incompatible** options are available
 
 ## Epiphan DVI2PCIe Duo
 
-`-D USE_EPIPHAN_DVI2PCIE_DUO=ON` (requires [OpenCV](tips.md#opencv) and [libVLC](tips.md#libvlc))
+`-D USE_EPIPHAN_DVI2PCIE_DUO=ON` (requires [libVLC](tips.md#libvlc), supports only [I420][i420] colour space captures)
 
-OpenCV and libVLC are needed for capturing in the BGRA and [I420][i420] colour spaces respectively.
-Both options are active by default.
-Append `-D USE_BGRA=OFF` or `-D USE_I420=OFF` to deactivate the respective option.
-
-Also Epiphan Video Grabber SDK can be used instead of libVLC:
+To enable BGRA colour space captures, please use Epiphan Video Grabber SDK instead of libVLC:
 `-D USE_EPIPHAN_DVI2PCIE_DUO=ON -D ENABLE_NONFREE=ON -D USE_EPIPHANSDK=ON` (requires zlib, pthreads and [Epiphan Video Grabber SDK](tips.md#epiphan-video-grabbing-sdk)).
 This option **makes GIFT-Grab undistributable**.
+
+Both colour spaces are active by default.
+Append `-D USE_BGRA=OFF` or `-D USE_I420=OFF` to deactivate the respective option.
 
 [i420]: https://wiki.videolan.org/YUV/#I420
 
