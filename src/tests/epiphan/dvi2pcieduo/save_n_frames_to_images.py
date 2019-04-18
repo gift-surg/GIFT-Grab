@@ -5,12 +5,12 @@ from time import sleep
 import scipy.misc
 import numpy as np
 
-from pygiftgrab import IObservableObserver
+from pygiftgrab import IObserver
 from pygiftgrab import VideoSourceFactory
 from pygiftgrab import ColourSpace, Device
 
 
-class BgraFrameSaver(IObservableObserver):
+class BgraFrameSaver(IObserver):
 
     def __init__(self, max_num_frames):
         super(BgraFrameSaver, self).__init__()
