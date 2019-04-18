@@ -10,10 +10,16 @@ It simply reads in the binary output of that app and saves each
 data file as a PNG image.
 """
 
+
+def four_uint8_to_uint32(four_bytes):
+    """Convert 4 unsigned bytes to an unsigned integer."""
+    return np.fromstring(four_bytes, dtype='<u4')[0]
+
+
 if __name__ == '__main__':
     for i in range(3):
         data_read = np.fromfile(f'snapshot-{i}.bin', dtype=np.uint8)
-        width = np.fromstring(data_read[:4], dtype='>u4')
-        height = np.fromstring(data_read[4:8], dtype='>u4')
-        data_np = data_read[8:].reshape((data_read[1], data_read[0], 4))
+        width = four_uint8_to_uint32(data_read[:4])
+        height = four_uint8_to_uint32(data_read[4:8])
+        data_np = data_read[8:].reshape((height, width, 4))
         scipy.misc.imsave(f'snapshot-{i}.png', data_np)
