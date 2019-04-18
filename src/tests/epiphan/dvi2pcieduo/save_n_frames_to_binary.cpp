@@ -1,13 +1,13 @@
 #include <cstdlib>
 #include <thread>
 #include <chrono>
-#include <fstream>
 #include <string>
 
 #include "iobservable.h"
 #include "iobserver.h"
 #include "videosourcefactory.h"
 #include "device.h"
+#include "io_utils.h"
 
 
 using namespace gg;
@@ -61,16 +61,11 @@ void BgraFrameSaver::update(VideoFrame &frame)
     if (_num_saved >= _max_num_to_save)
         return;
 
-    unsigned char *data = frame.data(true);
-
     string filename = "snapshot-";
     filename.append(to_string(_num_saved));
     filename.append(".bin");
-    ofstream outfile(filename, ofstream::binary);
-    uint32_t width = frame.cols(), height = frame.rows();
-    outfile.write(reinterpret_cast<char *>(&width), 4);
-    outfile.write(reinterpret_cast<char *>(&height), 4);
-    outfile.write(reinterpret_cast<char *>(data), frame.data_length());
+
+    save_binary(frame, filename);
 
     _num_saved++;
 }
