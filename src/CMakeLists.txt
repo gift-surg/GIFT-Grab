@@ -319,6 +319,11 @@ ADD_LIBRARY(${NAME} SHARED ${HEADERS} ${SOURCES})
 TARGET_LINK_LIBRARIES(${NAME} ${LIBS})
 LIST(APPEND INSTALLABLES ${NAME})
 
+# Sample C++ application for testing Epiphan live
+SET(SAVE_N_FRAMES save_n_frames)
+ADD_EXECUTABLE(${SAVE_N_FRAMES} tests/epiphan/dvi2pcieduo/save_n_frames_to_images.cpp)
+TARGET_LINK_LIBRARIES(${SAVE_N_FRAMES} ${NAME})
+
 # Documentation
 if(BUILD_DOC)
     FIND_PACKAGE(Doxygen REQUIRED)
