@@ -109,6 +109,7 @@ linux:
     - 224-add-a-citing-gift-grab-section-to-pypi-page
     - 225-add-citing-gift-grab-section-to-rtd-index
     - 223-add-some-information-on-the-main-doxygen-home-page
+    - 104-test-epiphan-on-windows
 
 ################## Platform: PyPI ##################
 ################## Target: All #####################
@@ -211,6 +212,7 @@ pypi:
     - 222-add-how-to-cite-block-in-main-readme
     - 225-add-citing-gift-grab-section-to-rtd-index
     - 223-add-some-information-on-the-main-doxygen-home-page
+    - 104-test-epiphan-on-windows
 
 ################## Device: Epiphan DVI2PCIe Duo ##################
 ################## Platform: PyPI ################################
