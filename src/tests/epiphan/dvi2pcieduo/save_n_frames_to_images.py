@@ -34,6 +34,6 @@ if __name__ == '__main__':
 
     epiphan.attach(saver)
 
-    sleep(10)  # operate pipeline for 20 sec
+    sleep(10)  # operate pipeline for this duration
 
     epiphan.detach(saver)
