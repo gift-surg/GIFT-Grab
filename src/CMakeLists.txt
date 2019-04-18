@@ -322,7 +322,7 @@ LIST(APPEND INSTALLABLES ${NAME})
 # Sample C++ application for testing Epiphan live
 SET(SAVE_N_FRAMES save_n_frames)
 ADD_EXECUTABLE(${SAVE_N_FRAMES} tests/epiphan/dvi2pcieduo/save_n_frames_to_images.cpp)
-TARGET_LINK_LIBRARIES(${SAVE_N_FRAMES} ${NAME})
+TARGET_LINK_LIBRARIES(${SAVE_N_FRAMES} ${NAME} ${EpiphanSDK_LIBS})
 
 # Documentation
 if(BUILD_DOC)
