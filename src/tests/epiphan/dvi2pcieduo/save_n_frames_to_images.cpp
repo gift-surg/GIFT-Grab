@@ -19,6 +19,7 @@ class BgraFrameSaver : public IObserver
 private:
     size_t _max_num_to_save;
     size_t _num_saved;
+    char _dims_buf[2];
 
 public:
     BgraFrameSaver(size_t max_num_frames);
@@ -67,6 +68,9 @@ void BgraFrameSaver::update(VideoFrame &frame)
     filename.append(to_string(_num_saved));
     filename.append(".bin");
     ofstream outfile(filename, ofstream::binary);
+    _dims_buf[0] = frame.cols();
+    _dims_buf[1] = frame.rows();
+    outfile.write(_dims_buf, 2);
     outfile.write(reinterpret_cast<char *>(data), frame.data_length());
 
     _num_saved++;
