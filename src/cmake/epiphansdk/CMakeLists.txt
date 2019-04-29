@@ -203,7 +203,11 @@ SET(EpiphanSDK_LIBS
     CACHE INTERNAL "Epiphan video grabbing SDK link libraries"
     )
 # Variables to be used for Epiphan DVI2PCIe Duo port specs
-SET(V2U "$ENV{EpiphanSDK_DIR}/epiphan/samples/v2u/build/release/v2u")
+if(UNIX)
+    SET(V2U "$ENV{EpiphanSDK_DIR}/epiphan/samples/v2u/build/release/v2u")
+elseif(WIN32)
+    SET(V2U "$ENV{EpiphanSDK_DIR}/epiphan/bin/v2u.exe")
+endif()
 EXECUTE_PROCESS(
     COMMAND ${V2U} -s
     OUTPUT_VARIABLE V2U_OUT
