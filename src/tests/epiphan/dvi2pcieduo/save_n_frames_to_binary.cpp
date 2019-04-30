@@ -32,7 +32,7 @@ public:
 int main()
 {
     VideoSourceFactory &sfac = VideoSourceFactory::get_instance();
-    IVideoSource *epiphan = sfac.get_device(DVI2PCIeDuo_DVI, BGRA);
+    IVideoSource *epiphan = sfac.get_device(DVI2PCIeDuo_SDI, BGRA);
     BgraFrameSaver saver(3);
 
     epiphan->attach(saver);
