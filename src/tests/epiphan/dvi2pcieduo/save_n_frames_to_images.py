@@ -2,8 +2,8 @@
 
 from time import sleep
 
-import scipy.misc
 import numpy as np
+from imageio import imwrite
 
 from pygiftgrab import IObserver
 from pygiftgrab import VideoSourceFactory
@@ -22,8 +22,11 @@ class BgraFrameSaver(IObserver):
             return
 
         data_np = np.copy(frame.data(True))
+        blue = np.copy(data_np[:, :, 0])
+        data_np[:, :, 0] = data_np[:, :, 2]
+        data_np[:, :, 2] = blue
 
-        scipy.misc.imsave(f'snapshot-{self.num_saved}.png', data_np)
+        imwrite(f'snapshot-{self.num_saved}.png', data_np)
         self.num_saved += 1
 
 
