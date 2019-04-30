@@ -32,7 +32,7 @@ class BgraFrameSaver(IObserver):
 
 if __name__ == '__main__':
     sfac = VideoSourceFactory.get_instance()
-    epiphan = sfac.get_device(Device.DVI2PCIeDuo_DVI, ColourSpace.BGRA)
+    epiphan = sfac.get_device(Device.DVI2PCIeDuo_SDI, ColourSpace.BGRA)
     saver = BgraFrameSaver(3)
 
     epiphan.attach(saver)
