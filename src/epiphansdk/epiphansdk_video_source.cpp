@@ -50,7 +50,7 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
     if (_colour == BGRA)
     {
         _bgra_data = reinterpret_cast<unsigned char*>(malloc(
-            4 * _full.width * _full.height * sizeof(unsigned char)
+            VideoFrame::required_data_length(_colour, _full.width, _full.height)
         ));
     }
     get_full_frame();
@@ -110,6 +110,7 @@ bool VideoSourceEpiphanSDK::get_frame(VideoFrame & frame)
         case BGRA:
             _rgb_to_bgra.set_frame_dimensions(frame_width, frame_height);
             _rgb_to_bgra.convert(data, _bgra_data);
+            frame_data_length = VideoFrame::required_data_length(_colour, frame_width, frame_height);
             frame_data = _bgra_data;
             break;
         default:
