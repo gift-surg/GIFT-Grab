@@ -34,7 +34,10 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
     else
     {
         _colour = BGRA;
-        _flags |= V2U_GRABFRAME_BOTTOM_UP_FLAG; // for some reason without this the image is flipped
+#ifdef __linux__
+        // for some reason on Linux systems, the image is flipped without this
+        _flags |= V2U_GRABFRAME_BOTTOM_UP_FLAG;
+#endif
     }
     _flags |= colour_space;
 
