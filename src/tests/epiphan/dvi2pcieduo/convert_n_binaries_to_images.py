@@ -22,4 +22,8 @@ if __name__ == '__main__':
         width = four_uint8_to_uint32(data_read[:4])
         height = four_uint8_to_uint32(data_read[4:8])
         data_np = data_read[8:].reshape((height, width, 4))
+        # BGRA to RGBA
+        blue = np.copy(data_np[:, :, 0])
+        data_np[:, :, 0] = data_np[:, :, 2]
+        data_np[:, :, 2] = blue
         imwrite(f'snapshot-{i}.png', data_np)
