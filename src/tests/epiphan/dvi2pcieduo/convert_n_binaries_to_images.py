@@ -13,7 +13,7 @@ data file as a PNG image.
 
 def four_uint8_to_uint32(four_bytes):
     """Convert 4 unsigned bytes to an unsigned integer."""
-    return np.fromstring(four_bytes, dtype='<u4')[0]
+    return np.frombuffer(four_bytes, dtype='<u4')[0]
 
 
 if __name__ == '__main__':
