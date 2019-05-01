@@ -91,3 +91,21 @@ endforeach(COLOUR_SPACE)
 SET_TESTS_PROPERTIES(${TESTS_LIST}
     PROPERTIES ENVIRONMENT "PYTHONPATH=${PYTHONPATH}"
 )
+
+# Convenience applications for manual testing
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo)
+SET(SAVE_N_FRAMES save_n_frames)
+ADD_EXECUTABLE(${SAVE_N_FRAMES}
+	${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/io_utils.h
+	${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/io_utils.cpp
+	${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/save_n_frames_to_binary.cpp
+	)
+TARGET_LINK_LIBRARIES(${SAVE_N_FRAMES} ${NAME} ${EpiphanSDK_LIBS})
+
+SET(SAVE_N_DUMMIES save_n_dummies)
+ADD_EXECUTABLE(${SAVE_N_DUMMIES}
+	${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/io_utils.h
+	${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/io_utils.cpp
+	${CMAKE_SOURCE_DIR}/tests/epiphan/dvi2pcieduo/save_n_dummies.cpp
+	)
+TARGET_LINK_LIBRARIES(${SAVE_N_DUMMIES} ${NAME} ${EpiphanSDK_LIBS})
