@@ -319,24 +319,6 @@ ADD_LIBRARY(${NAME} SHARED ${HEADERS} ${SOURCES})
 TARGET_LINK_LIBRARIES(${NAME} ${LIBS})
 LIST(APPEND INSTALLABLES ${NAME})
 
-# Sample C++ application for testing Epiphan live
-INCLUDE_DIRECTORIES(tests/epiphan/dvi2pcieduo)
-SET(SAVE_N_FRAMES save_n_frames)
-ADD_EXECUTABLE(${SAVE_N_FRAMES}
-	tests/epiphan/dvi2pcieduo/io_utils.h
-	tests/epiphan/dvi2pcieduo/io_utils.cpp
-	tests/epiphan/dvi2pcieduo/save_n_frames_to_binary.cpp
-	)
-TARGET_LINK_LIBRARIES(${SAVE_N_FRAMES} ${NAME} ${EpiphanSDK_LIBS})
-
-SET(SAVE_N_DUMMIES save_n_dummies)
-ADD_EXECUTABLE(${SAVE_N_DUMMIES}
-	tests/epiphan/dvi2pcieduo/io_utils.h
-	tests/epiphan/dvi2pcieduo/io_utils.cpp
-	tests/epiphan/dvi2pcieduo/save_n_dummies.cpp
-	)
-TARGET_LINK_LIBRARIES(${SAVE_N_DUMMIES} ${NAME} ${EpiphanSDK_LIBS})
-
 # Documentation
 if(BUILD_DOC)
     FIND_PACKAGE(Doxygen REQUIRED)
