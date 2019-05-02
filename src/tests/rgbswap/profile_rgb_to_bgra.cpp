@@ -19,7 +19,7 @@ bool rgb_same_as_bgra(const unsigned char *rgb,
                       size_t l)
 {
     for (size_t i = 0, j = 0; i < l; i += 4, j += 3)
-        if (rgb[j] != bgra[i+2] or rgb[j+1] != bgra[i+1] or
+        if (rgb[j] != bgra[i+2] || rgb[j+1] != bgra[i+1] ||
             rgb[j+2] != bgra[i])
             return false;
     return true;
