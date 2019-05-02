@@ -81,7 +81,7 @@ void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
         throw VideoTargetError("Negative fps does not make sense");
     _framerate = framerate;
 
-    if (_codec_name == _CODEC_NAME_HEVC_X265 or
+    if (_codec_name == _CODEC_NAME_HEVC_X265 ||
         _codec_name == _CODEC_NAME_HEVC_NVENC)
         check_filetype_support(filepath, "mp4");
     else if (_codec_name == _CODEC_NAME_VP9_LIBVPX)
@@ -95,7 +95,7 @@ void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
         throw VideoTargetError("Could not allocate output media context");
 
     _codec = avcodec_find_encoder_by_name(_codec_name.c_str());
-    if (not _codec)
+    if (!_codec)
         throw VideoTargetError("Codec not found");
 
     _stream = avformat_new_stream(_format_context, _codec);
@@ -105,7 +105,7 @@ void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
 
     // allocate FFmpeg frame
     _frame = av_frame_alloc();
-    if (not _frame)
+    if (!_frame)
         throw VideoTargetError("Could not allocate video frame");
     _first_frame = true;
 }
@@ -162,7 +162,7 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
     if (_framerate <= 0)
         throw VideoTargetError("Video target not initialised");
 
-    if (not frame)
+    if (!frame)
         throw VideoTargetError("FFmpeg frame not initialised");
 
     // return value buffers
@@ -181,7 +181,12 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
 //        _stream->codec->bit_rate = 400000;
         _stream->codec->width = width;
         _stream->codec->height = height;
-        _stream->time_base = (AVRational){ 1000, static_cast<int>(1000 * _framerate) };
+        /* the following causes "error C4576: a parenthesized type followed by an initializer
+         * list is a non-standard explicit type conversion syntax" on Windows:
+         * _stream->time_base = (AVRational){ 1000, static_cast<int>(1000 * _framerate) };
+         */
+        _stream->time_base.num = 1000;
+        _stream->time_base.den = static_cast<int>(1000 * _framerate);
         _stream->codec->time_base = _stream->time_base;
         _stream->codec->gop_size = 12;
         /* TODO emit one intra frame every twelve frames at most */
@@ -436,7 +441,7 @@ void VideoTargetFFmpeg::encode_and_write(AVFrame * frame, int & got_output)
 void VideoTargetFFmpeg::finalise()
 {
     // Issue #130
-    if (not _is_finaliseable)
+    if (!_is_finaliseable)
         return;
 
     /* This condition means that append

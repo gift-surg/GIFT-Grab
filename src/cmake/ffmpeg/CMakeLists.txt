@@ -15,5 +15,7 @@ if(UNIX)
         CACHE INTERNAL "FFmpeg library dirs"
     )
 elseif(WIN32)
-    # TODO
+    SET(FFmpeg_LIBS avformat avcodec avutil swscale avfilter
+        CACHE INTERNAL "FFmpeg libs"
+    )
 endif()
