@@ -1,3 +1,5 @@
+#pragma once
+
 #include "ivideosource.h"
 #include "broadcastdaemon.h"
 extern "C"
