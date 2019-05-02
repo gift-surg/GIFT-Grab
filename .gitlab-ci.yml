@@ -573,3 +573,5 @@ windows:
   tags:
     - gift-hopper
     - windows
+  only:
+    - 104-test-epiphan-on-windows
