@@ -75,7 +75,7 @@ bool VideoSourceFFmpeg::get_frame_dimensions(int & width, int & height)
 {
     std::lock_guard<std::mutex> buffer_lock_guard(_buffer_lock);
 
-    if (_avframe_processed->width > 0 and _avframe_processed->height > 0)
+    if (_avframe_processed->width > 0 && _avframe_processed->height > 0)
     {
         width = _avframe_processed->width;
         height = _avframe_processed->height;
@@ -115,7 +115,7 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
     }
     while (_avpacket.size > 0);
     av_packet_unref(&orig_pkt);
-    if (not success)
+    if (!success)
         return false;
 
     // push obtained frame down the pipeline
@@ -126,7 +126,7 @@ bool VideoSourceFFmpeg::get_frame(VideoFrame & frame)
 
     // pull processed frame from the pipeline
     ret = av_buffersink_get_frame(_pipeline_end, _avframe_processed);
-    if (ret == AVERROR(EAGAIN) or ret == AVERROR_EOF or ret < 0)
+    if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF || ret < 0)
         return false;
 
     // get non-aligned data from decoded frame
@@ -150,7 +150,7 @@ double VideoSourceFFmpeg::get_frame_rate()
 
     int num = _avformat_context->streams[_avstream_idx]->avg_frame_rate.num;
     int den = _avformat_context->streams[_avstream_idx]->avg_frame_rate.den;
-    if (den == 0 or num == 0)
+    if (den == 0 || num == 0)
         return 0.0;
     return static_cast<double>(num) / den;
 }
@@ -293,20 +293,20 @@ bool VideoSourceFFmpeg::ffmpeg_reset_pipeline(
     int x, int y, int width, int height
 )
 {
-    if (_pipeline_begin != nullptr and
+    if (_pipeline_begin != nullptr &&
         _pipeline_end != nullptr)
     // i.e. modifying existing pipeline
     {
-        if (x == _x and y == _y and
-            width == _avframe_processed->width and
+        if (x == _x && y == _y &&
+            width == _avframe_processed->width &&
             height == _avframe_processed->height)
             // no need to change anything
             return false;
     }
 
     // sanity checks in case need to (re)set pipeline
-    if (x < 0 or y < 0 or width < 0 or height < 0 or
-        x + width > _avformat_context->streams[_avstream_idx]->codec->width or
+    if (x < 0 || y < 0 || width < 0 || height < 0 ||
+        x + width > _avformat_context->streams[_avstream_idx]->codec->width ||
         y + height > _avformat_context->streams[_avstream_idx]->codec->height)
         throw VideoSourceError("Improper cropping parameters");
 
@@ -321,7 +321,7 @@ bool VideoSourceFFmpeg::ffmpeg_reset_pipeline(
     // allocate pipeline elements
     AVFilterInOut * out = avfilter_inout_alloc();
     AVFilterInOut * in  = avfilter_inout_alloc();
-    if (out == nullptr or in == nullptr)
+    if (out == nullptr || in == nullptr)
     {
         error_msg.append("Could not allocate FFmpeg pipeline IO points")
                  .append(get_ffmpeg_error_desc(AVERROR(ENOMEM)));
@@ -389,8 +389,8 @@ bool VideoSourceFFmpeg::ffmpeg_reset_pipeline(
     }
 
     // add cropping if necessary
-    if (x > 0 or y > 0 or
-        width < _avformat_context->streams[_avstream_idx]->codec->width or
+    if (x > 0 || y > 0 ||
+        width < _avformat_context->streams[_avstream_idx]->codec->width ||
         height < _avformat_context->streams[_avstream_idx]->codec->height)
     {
         ret = snprintf(pipeline_desc, sizeof(pipeline_desc),
@@ -471,13 +471,13 @@ bool VideoSourceFFmpeg::ffmpeg_realloc_proc_buffers(
     int ret = 0;
     std::string error_msg = "";
 
-    if (width <= 0 or height <= 0)
+    if (width <= 0 || height <= 0)
         throw VideoSourceError("Frame width and height"
                                " must be positive");
 
     if (_avframe_processed != nullptr)
     {
-        if (_avframe_processed->width == width and
+        if (_avframe_processed->width == width ||
             _avframe_processed->height == height)
             return false;
         av_frame_free(&_avframe_processed);
@@ -549,8 +549,8 @@ int VideoSourceFFmpeg::ffmpeg_decode_packet(AVPacket & avpacket,
         if (got_frame)
         {
             if (avframe->width != _avformat_context->streams[_avstream_idx]->codec->width
-                or avframe->height != _avformat_context->streams[_avstream_idx]->codec->height
-                or avframe->format != _avformat_context->streams[_avstream_idx]->codec->pix_fmt)
+                || avframe->height != _avformat_context->streams[_avstream_idx]->codec->height
+                || avframe->format != _avformat_context->streams[_avstream_idx]->codec->pix_fmt)
                 return -1;
             decoded = ret;
         }
@@ -558,7 +558,7 @@ int VideoSourceFFmpeg::ffmpeg_decode_packet(AVPacket & avpacket,
 
     /* If we use frame reference counting, we own the data and need
      * to de-reference it when we don't use it anymore */
-    if (got_frame and use_refcount)
+    if (got_frame && use_refcount)
         av_frame_unref(avframe);
 
     return decoded;
