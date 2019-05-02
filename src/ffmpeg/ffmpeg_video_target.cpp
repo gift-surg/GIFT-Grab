@@ -81,7 +81,7 @@ void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
         throw VideoTargetError("Negative fps does not make sense");
     _framerate = framerate;
 
-    if (_codec_name == _CODEC_NAME_HEVC_X265 or
+    if (_codec_name == _CODEC_NAME_HEVC_X265 ||
         _codec_name == _CODEC_NAME_HEVC_NVENC)
         check_filetype_support(filepath, "mp4");
     else if (_codec_name == _CODEC_NAME_VP9_LIBVPX)
@@ -95,7 +95,7 @@ void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
         throw VideoTargetError("Could not allocate output media context");
 
     _codec = avcodec_find_encoder_by_name(_codec_name.c_str());
-    if (not _codec)
+    if (!_codec)
         throw VideoTargetError("Codec not found");
 
     _stream = avformat_new_stream(_format_context, _codec);
@@ -105,7 +105,7 @@ void VideoTargetFFmpeg::init(const std::string filepath, const float framerate)
 
     // allocate FFmpeg frame
     _frame = av_frame_alloc();
-    if (not _frame)
+    if (!_frame)
         throw VideoTargetError("Could not allocate video frame");
     _first_frame = true;
 }
@@ -162,7 +162,7 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
     if (_framerate <= 0)
         throw VideoTargetError("Video target not initialised");
 
-    if (not frame)
+    if (!frame)
         throw VideoTargetError("FFmpeg frame not initialised");
 
     // return value buffers
@@ -436,7 +436,7 @@ void VideoTargetFFmpeg::encode_and_write(AVFrame * frame, int & got_output)
 void VideoTargetFFmpeg::finalise()
 {
     // Issue #130
-    if (not _is_finaliseable)
+    if (!_is_finaliseable)
         return;
 
     /* This condition means that append
