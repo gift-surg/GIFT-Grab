@@ -30,7 +30,7 @@ int main(int argc, char * argv[])
         else
             args_ok = false;
     }
-    if (not args_ok)
+    if (!args_ok)
     {
         printf("Synopsis: %s DVI|SDI BGRA|I420\n", argv[0]);
         return EXIT_FAILURE;
