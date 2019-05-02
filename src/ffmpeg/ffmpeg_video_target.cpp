@@ -181,7 +181,12 @@ void VideoTargetFFmpeg::ffmpeg_frame(const unsigned char * data,
 //        _stream->codec->bit_rate = 400000;
         _stream->codec->width = width;
         _stream->codec->height = height;
-        _stream->time_base = (AVRational){ 1000, static_cast<int>(1000 * _framerate) };
+        /* the following causes "error C4576: a parenthesized type followed by an initializer
+         * list is a non-standard explicit type conversion syntax" on Windows:
+         * _stream->time_base = (AVRational){ 1000, static_cast<int>(1000 * _framerate) };
+         */
+        _stream->time_base.num = 1000;
+        _stream->time_base.den = static_cast<int>(1000 * _framerate);
         _stream->codec->time_base = _stream->time_base;
         _stream->codec->gop_size = 12;
         /* TODO emit one intra frame every twelve frames at most */
