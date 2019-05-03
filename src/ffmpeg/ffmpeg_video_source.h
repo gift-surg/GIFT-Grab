@@ -1,3 +1,6 @@
+#pragma once
+
+#include "exports.h"
 #include "ivideosource.h"
 #include "broadcastdaemon.h"
 extern "C"
@@ -14,7 +17,7 @@ namespace gg
 //! \brief Uses FFmpeg for streaming video from
 //! compatible sources such as video files
 //!
-class VideoSourceFFmpeg : public IVideoSource
+class GG_EXPORTS VideoSourceFFmpeg : public IVideoSource
 {
 protected:
     //!

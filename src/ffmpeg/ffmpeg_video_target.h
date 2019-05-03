@@ -1,5 +1,6 @@
 #pragma once
 
+#include "exports.h"
 #include "ivideotarget.h"
 
 extern "C" {
@@ -12,7 +13,7 @@ extern "C" {
 namespace gg
 {
 
-class VideoTargetFFmpeg : public IVideoTarget
+class GG_EXPORTS VideoTargetFFmpeg : public IVideoTarget
 {
 protected:
     //!
