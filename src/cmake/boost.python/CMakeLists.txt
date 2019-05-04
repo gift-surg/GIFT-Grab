@@ -11,7 +11,17 @@ if(NOT PYTHONLIBS_VERSION_STRING)
 endif()
 if(PYTHONLIBS_VERSION_STRING MATCHES ^3\.*)
     if(UNIX)
-        SET(GG_BOOST_PYTHON_SUFFIX 3)
+        if(PYTHONLIBS_VERSION_STRING MATCHES ^3\.7\.*)
+            SET(GG_BOOST_PYTHON_SUFFIX 37)
+            MESSAGE(WARNING
+                "Python version ${PYTHON_VERSION_STRING} on Linux is only experimentally supported")
+            MESSAGE(WARNING
+                "Assuming you have built Boost.Python from source, will use suffix 37 (e.g. boost_python37)"
+                " for attempting to discover Boost.Python components. If your Boost.Python cannot be discovered,"
+                " and you are sure you have it installed, try changing the above GG_BOOST_PYTHON_SUFFIX to 3")
+        else()
+            SET(GG_BOOST_PYTHON_SUFFIX 3)
+	endif()
     elseif(WIN32)
         if(PYTHONLIBS_VERSION_STRING MATCHES ^3\.7\.*)
             SET(GG_BOOST_PYTHON_SUFFIX 37)
