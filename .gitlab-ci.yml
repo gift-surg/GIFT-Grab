@@ -575,3 +575,4 @@ windows:
     - windows
   only:
     - 104-test-epiphan-on-windows
+    - fix-python-libs-discovery-on-linux
