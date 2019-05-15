@@ -102,8 +102,11 @@ void BroadcastDaemon::run(float sleep_duration_ms)
                     end - start
                     );
         auto sleep_duration = inter_frame_duration - processing_duration;
-        if (sleep_duration.count() > 0)
-            std::this_thread::sleep_for(sleep_duration);
+        // Disable sleep temporarily on the experimental Windows
+        // branch, due to the suspected blocking nature of the
+        // Epiphan API calls.
+        // if (sleep_duration.count() > 0)
+        //     std::this_thread::sleep_for(sleep_duration);
     }
     delete fill_frame;
 }
