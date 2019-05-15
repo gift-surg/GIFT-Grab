@@ -22,6 +22,7 @@ VideoSourceEpiphanSDK::VideoSourceEpiphanSDK(
         std::cerr << "Could not open " << device_id << std::endl;
         return;
     }
+    FrmGrab_SetMaxFps(_frame_grabber, 160);
 
     if (colour_space != V2U_GRABFRAME_FORMAT_I420 && colour_space != V2U_GRABFRAME_FORMAT_RGB24)
     {
