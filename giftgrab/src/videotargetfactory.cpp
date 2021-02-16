@@ -1,4 +1,4 @@
-#include "videotargetfactory.h"
+#include "giftgrab/videotargetfactory.h"
 #ifdef USE_OPENCV
 #include "opencv_video_target.h"
 #endif

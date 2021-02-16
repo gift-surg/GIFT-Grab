@@ -1,5 +1,5 @@
 #include <thread>
-#include "videosourcefactory.h"
+#include "giftgrab/videosourcefactory.h"
 #ifdef USE_OPENCV
 #include "opencv_video_source.h"
 #endif

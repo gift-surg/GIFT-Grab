@@ -1,4 +1,4 @@
-#include "maskframe.h"
+#include "giftgrab/maskframe.h"
 #include <string.h>
 
 MaskFrame::MaskFrame()

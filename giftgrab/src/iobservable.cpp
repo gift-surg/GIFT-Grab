@@ -1,4 +1,4 @@
-#include "iobservable.h"
+#include "giftgrab/iobservable.h"
 #include <algorithm>
 #ifdef BUILD_PYTHON
 #include "gil.h"

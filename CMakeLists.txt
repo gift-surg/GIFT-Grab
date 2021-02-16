@@ -7,3 +7,11 @@ project(${project_name}
         DESCRIPTION ${project_description}
         LANGUAGES CXX
         )
+
+# CMake visibility control        
+set(CMAKE_CXX_VISIBILITY_PRESET      hidden)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN  YES)
+
+
+add_subdirectory(giftgrab)
+

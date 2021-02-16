@@ -1,4 +1,4 @@
-﻿#include "videoframe.h"
+﻿#include "giftgrab/videoframe.h"
 #include <cstring>
 
 namespace gg

@@ -1,4 +1,4 @@
-#include "broadcastdaemon.h"
+#include "giftgrab/broadcastdaemon.h"
 #ifdef BUILD_PYTHON
 #include "gil.h"
 #endif
