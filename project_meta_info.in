@@ -1,0 +1,5 @@
+
+set(project_name GiftGrab)
+set(project_version 1.0.0)
+set(project_description "Description of the project")
+set(project_homepage "Project Homepage")
