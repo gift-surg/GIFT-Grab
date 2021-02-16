@@ -184,7 +184,7 @@ unsigned char * const VideoFrame::data(size_t stereo_index) const
 
 void VideoFrame::clone(const VideoFrame & rhs)
 {
-    if (not _manage_data)
+    if ( !_manage_data)
     {
         _data = nullptr;
         _data_length = 0;
@@ -218,7 +218,7 @@ void VideoFrame::set_dimensions(size_t cols, size_t rows)
 
 void VideoFrame::allocate_memory(size_t data_length)
 {
-    if (_manage_data and data_length > _data_length)
+    if (_manage_data && data_length > _data_length)
     {
         _data_length = data_length;
         _data = reinterpret_cast<unsigned char*>(
@@ -241,7 +241,7 @@ void VideoFrame::free_memory()
 size_t VideoFrame::required_data_length(enum ColourSpace colour,
                                         size_t cols, size_t rows)
 {
-    if (cols <= 0 or rows <= 0)
+    if (cols <= 0 | rows <= 0)
         throw BasicException("Frame dimensions must be positive");
 
     switch (colour)
