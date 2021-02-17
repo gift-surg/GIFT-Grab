@@ -1,0 +1,5 @@
+[requires]
+opencv/4.5.1
+
+[generators]
+cmake

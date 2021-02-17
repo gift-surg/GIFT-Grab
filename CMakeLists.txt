@@ -15,3 +15,5 @@ set(CMAKE_VISIBILITY_INLINES_HIDDEN  YES)
 
 add_subdirectory(giftgrab)
 
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
