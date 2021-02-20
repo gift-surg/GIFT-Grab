@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ivideosource.h"
+#include "giftgrab/ivideosource.h"
 #include "device.h"
 #include "codec.h"
 

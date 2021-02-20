@@ -1,13 +1,15 @@
 #ifndef __OPENCV_DATA_SOURCE_H__
 #define __OPENCV_DATA_SOURCE_H__
 
-#include "ivideosource.h"
-#include "macros.h"
-#include "except.h"
-#include "broadcastdaemon.h"
+#include "giftgrab/ivideosource.h"
+#include "giftgrab/macros.h"
+#include "giftgrab/except.h"
+#include "giftgrab/broadcastdaemon.h"
 
 // OpenCV includes
 #include "opencv2/opencv.hpp"
+#include <opencv2/imgproc/types_c.h>
+#include <opencv2/videoio.hpp>
 
 //!
 //! \brief OpenCV video source

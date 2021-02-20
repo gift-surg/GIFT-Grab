@@ -1,11 +1,12 @@
 #pragma once
 
-#include "ivideotarget.h"
-#include "except.h"
-#include <opencv2/core/version.hpp>
-#if CV_MAJOR_VERSION == 3
-#include <opencv2/opencv.hpp>
-#endif
+#include "giftgrab/ivideotarget.h"
+#include "giftgrab/except.h"
+// #include <opencv2/core/version.hpp>
+// #include <opencv2/opencv.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/imgproc/types_c.h>
+#include <opencv2/videoio.hpp>
 
 namespace gg
 {

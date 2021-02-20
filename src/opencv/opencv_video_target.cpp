@@ -43,13 +43,13 @@ void VideoTargetOpenCV::append(const VideoFrame & frame)
         throw VideoTargetError("OpenCV video target supports only BGRA");
 
     // TODO if not init?
-    if (not _writer.isOpened())
+    if (!_writer.isOpened())
     {
         const char * buffer = _fourcc.c_str();
-        int ex = CV_FOURCC(buffer[0],
-                           buffer[1],
-                           buffer[2],
-                           buffer[3]);
+        int ex = cv::VideoWriter::fourcc(buffer[0],
+                                         buffer[1],
+                                         buffer[2],
+                                         buffer[3]);
         cv::Size size(frame.cols(),     // width
                       frame.rows());    // height
         _buffer_bgr = cv::Mat::zeros(frame.rows(), frame.cols(),
@@ -64,7 +64,7 @@ void VideoTargetOpenCV::append(const VideoFrame & frame)
             throw VideoTargetError(e.what());
         }
 
-        if (not _writer.isOpened())
+        if ( !_writer.isOpened())
         {
             std::string msg;
             msg.append("File ")

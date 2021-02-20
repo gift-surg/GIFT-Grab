@@ -12,8 +12,21 @@ project(${project_name}
 set(CMAKE_CXX_VISIBILITY_PRESET      hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN  YES)
 
-
+# Add core library 
 add_subdirectory(giftgrab)
 
+# Install conan dependencies
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
+
+# Add giftgrab library 
+add_library(giftgrab)
+target_link_libraries(giftgrab PUBLIC giftgrab_core ${CONAN_LIBS})
+target_sources(giftgrab
+  PUBLIC
+  src/opencv/opencv_video_source.h
+  src/opencv/opencv_video_target.h
+  PRIVATE
+  src/opencv/opencv_video_source.cpp
+  src/opencv/opencv_video_target.cpp
+)

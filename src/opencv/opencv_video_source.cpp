@@ -1,4 +1,5 @@
 #include "opencv_video_source.h"
+#include <opencv2/videoio.hpp>
 #include <string>
 #include <iostream>
 #include <cmath>
@@ -51,7 +52,7 @@ double VideoSourceOpenCV::get_frame_rate()
         return _frame_rate;
 
     // will work for files, but sometimes <= 0 or nan with online devices
-    _frame_rate = _cap.get(CV_CAP_PROP_FPS);
+    _frame_rate = _cap.get(cv::CAP_PROP_FPS);
     if (std::isnan(_frame_rate))
         _frame_rate = 0;
 
@@ -97,8 +98,8 @@ bool VideoSourceOpenCV::get_frame_dimensions(int &width, int & height)
     width = height = 0;
     if (!_cap.isOpened()) return false;
 
-    width = (int)_cap.get(CV_CAP_PROP_FRAME_WIDTH);
-    height = (int)_cap.get(CV_CAP_PROP_FRAME_HEIGHT);
+    width = (int)_cap.get(cv::CAP_PROP_FRAME_WIDTH);
+    height = (int)_cap.get(cv::CAP_PROP_FRAME_HEIGHT);
 
     return (width != 0 && height != 0);
 }
